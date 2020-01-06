@@ -1,3 +1,2 @@
-## New York Open Data Explorer
-
-Tool to make exploring New York's Open Data easier!
+#Socrata Data Descovery API
+https://socratadiscovery.docs.apiary.io/#
