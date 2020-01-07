@@ -7,6 +7,34 @@ async function getMaifestPage(pageNo, limit = 100) {
   ).then(r => r.json());
 }
 
+function matachableColumnsForDataset(dataset) {
+  return new Set([
+    ...dataset.resource.columns_name,
+    ...dataset.resource.columns_field_name,
+  ]);
+}
+
+function hasJoinableMatch(columns, candidate) {
+  const candidateCols = matachableColumnsForDataset(candidate);
+  let intersection = new Set([...columns].filter(x => candidateCols.has(x)));
+  return Array.from(intersection);
+}
+
+export function findJoinable(dataset, datasets) {
+  const cols = matachableColumnsForDataset(dataset);
+  const matches = datasets
+    .map(candidate => ({
+      dataset: candidate,
+      joinableColumns: hasJoinableMatch(cols, candidate),
+    }))
+    .filter(
+      match =>
+        match.joinableColumns.length > 0 &&
+        match.dataset.resource.id !== dataset.resource.id,
+    );
+  return matches;
+}
+
 /**
  * Get the full manifest from Socrata. This should be cached locally and updated in a smart way.
  *
@@ -42,7 +70,8 @@ export function getCategories(datasets) {
     ],
     [],
   );
-  return Array.from(new Set(categories));
+  const unique = Array.from(new Set(categories));
+  return unique;
 }
 
 /**
