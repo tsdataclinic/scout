@@ -1,5 +1,11 @@
 import React, {createContext, useContext, useReducer, useEffect} from 'react';
 import {getManifest, getCategories, getTagList} from '../utils/socrata';
+import Dexie from 'dexie';
+
+const db = new Dexie('SocrataCache');
+db.version(1).stores({
+  SocrataCache: 'id',
+});
 
 export const AppContext = createContext();
 
@@ -31,48 +37,55 @@ const reducer = (state, action) => {
 export const StateProvider = ({children}) => {
   const [state, dispatch] = useReducer(reducer, initalState);
 
-  useEffect(() => {
-    const storedState = localStorage.getItem('seralizedState');
-    if (storedState) {
-      dispatch({
-        type: 'HYDRATE_STATE',
-        payload: {...JSON.parse(storedState), stateLoaded: true},
-      });
-    } else {
-      getManifest().then(result => {
-        const tagList = getTagList(result);
-        const categories = getCategories(result);
-        dispatch({
-          type: 'UPDATE_OPEN_DATASET_MANIFEST',
-          payload: result,
-        });
-        dispatch({
-          type: 'UPDATE_TAGS',
-          payload: tagList,
-        });
-        dispatch({
-          type: 'UPDATE_CATEGORIES',
-          payload: categories,
-        });
-        dispatch({
-          type: 'SET_LOADED',
-          payload: true,
-        });
-      });
-    }
-  }, []);
+  // Try to get the state locally from indexed db... if we can't find it there, request it from the
+  // socrata API
 
   useEffect(() => {
-    console.log('State updated ', state);
-    if (state.stateLoaded) {
-      console.log('PERSISTING');
-      const {datasets, tagList, categories} = state;
-      //localStorage.setItem(
-      //      'storedState',
-      //      JSON.stringify({datasets, tagList, categories}),
-      //    );
+    db.SocrataCache.get(1).then(result => {
+      if (result) {
+        const cachedState = JSON.parse(result.data);
+        dispatch({
+          type: 'HYDRATE_STATE',
+          payload: {...initalState, ...cachedState, cache_loaded: true},
+        });
+      } else {
+        getManifest().then(result => {
+          const tagList = getTagList(result);
+          const categories = getCategories(result);
+          dispatch({
+            type: 'UPDATE_OPEN_DATASET_MANIFEST',
+            payload: result,
+          });
+          dispatch({
+            type: 'UPDATE_TAGS',
+            payload: tagList,
+          });
+          dispatch({
+            type: 'UPDATE_CATEGORIES',
+            payload: categories,
+          });
+          dispatch({
+            type: 'SET_LOADED',
+          });
+        });
+      }
+    });
+  }, []);
+
+  //If our datasets change, update the cahced version
+  const {datasets, tagList, categories, stateLoaded} = state;
+  useEffect(() => {
+    if (stateLoaded) {
+      db.SocrataCache.put({
+        data: JSON.stringify({
+          datasets,
+          tagList,
+          categories,
+        }),
+        id: 1,
+      });
     }
-  }, [state]);
+  }, [datasets, tagList, categories, stateLoaded]);
 
   return (
     <AppContext.Provider value={[state, dispatch]}>
