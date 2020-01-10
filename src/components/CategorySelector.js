@@ -1,31 +1,36 @@
 import React from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
-const CategoryIcons = {
-  infrastructure: 'building',
-  'public safety': 'hard-hat',
-  economy: 'chart-line',
-  education: 'school',
-  environment: 'tree',
-  demographics: 'users',
-  health: 'syringe',
-  transportation: 'bus',
-  finance: 'money-bill-alt',
-  recreation: 'table-tennis',
-  'housing & development': 'building',
-  'social services': 'thumbs-up',
-  politics: 'handshake',
-};
+export default function CategorySelector({categories, selected, onChange}) {
+  const clearCategories = () => {
+    onChange([]);
+  };
 
-export default function CategorySelector({categories, selected, onSelected}) {
+  const toggleCategory = cat => {
+    const newSelection = selected.includes(cat)
+      ? selected.filter(c => c !== cat)
+      : [...selected, cat];
+
+    onChange(newSelection);
+  };
+
   return (
-    <ul className="categories">
-      {categories.map(cat => (
-        <li className="category-button">
-          {cat}
-          <FontAwesomeIcon icon={CategoryIcons[cat]} />
-        </li>
-      ))}
-    </ul>
+    <div className="category-selector">
+      <h2>Categories</h2>
+      <ul className="category-list">
+        {categories.map(cat => (
+          <li
+            key={cat}
+            onClick={() => toggleCategory(cat)}
+            className={`category-buttons ${
+              selected && selected.includes(cat) ? 'selected' : ''
+            }`}>
+            {cat}
+          </li>
+        ))}
+      </ul>
+      {selected && selected.length > 0 && (
+        <button onClick={clearCategories}>clear</button>
+      )}
+    </div>
   );
 }

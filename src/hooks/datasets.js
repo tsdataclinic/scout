@@ -1,5 +1,6 @@
 import {useMemo} from 'react';
 import {useStateValue} from '../contexts/OpenDataContext';
+import {findJoinable} from '../utils/socrata';
 
 export function useTags() {
   const [{tagList}] = useStateValue();
@@ -11,26 +12,42 @@ export function useCategories() {
   return categories;
 }
 
-export function useDatasets({tags, term}) {
+export function useJoinableDatasets(dataset) {
+  const [{datasets}] = useStateValue();
+  console.log(dataset);
+  return useMemo(() => (dataset ? findJoinable(dataset, datasets) : []), [
+    dataset,
+    datasets,
+  ]);
+}
+
+export function useDataset(datasetID) {
+  let [{datasets}] = useStateValue();
+  return datasets.find(d => d.resource.id === datasetID);
+}
+
+export function useDatasets({tags, term, categories}) {
   let [{datasets}] = useStateValue();
   return useMemo(() => {
     let filteredDatasets = [...datasets];
-    console.log(
-      'Filtering ',
-      filteredDatasets.length,
-      ' with tags ',
-      tags,
-      ' and search term ',
-      term,
-    );
+
     if (tags && tags.length > 0) {
       console.log('applting');
-      filteredDatasets = filteredDatasets.filter(dataset =>
-        dataset.classification.domain_tags.includes(tags[0]),
+      filteredDatasets = filteredDatasets.filter(
+        dataset =>
+          dataset.classification.domain_tags.filter(tag => tags.includes(tag))
+            .length > 0,
       );
     }
 
-    console.log('after tags ', filteredDatasets.length);
+    if (categories && categories.length > 0) {
+      filteredDatasets = filteredDatasets.filter(
+        dataset =>
+          dataset.classification.categories.filter(cat =>
+            categories.includes(cat),
+          ).length > 0,
+      );
+    }
 
     if (term && term.length > 0) {
       filteredDatasets = filteredDatasets.filter(dataset =>
@@ -41,5 +58,5 @@ export function useDatasets({tags, term}) {
     console.log('after term ', filteredDatasets.length);
     console.log('return size ', filteredDatasets.length);
     return filteredDatasets;
-  }, [tags, term, datasets]);
+  }, [tags, term, categories, datasets]);
 }

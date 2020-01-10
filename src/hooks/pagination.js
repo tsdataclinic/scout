@@ -1,6 +1,6 @@
 import React, {useState, useMemo, useEffect} from 'react';
 
-export default function usePagination(data, perPage = 4) {
+export default function usePagination(data, perPage = 20) {
   const items = useMemo(() => data.length, [data]);
 
   useEffect(() => {
@@ -11,7 +11,12 @@ export default function usePagination(data, perPage = 4) {
 
   const [currentPageNo, setCurrentPageNo] = useState(0);
   const pageButtons = [...Array(pages)].map((_, page) => (
-    <span onClick={() => setCurrentPageNo(page)}> {page + 1} </span>
+    <span
+      className={page === currentPageNo ? 'selected' : ''}
+      onClick={() => setCurrentPageNo(page)}>
+      {' '}
+      {page + 1}{' '}
+    </span>
   ));
 
   const content = useMemo(

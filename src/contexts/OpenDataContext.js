@@ -7,6 +7,7 @@ const initalState = {
   datasets: [],
   tagList: [],
   categories: [],
+  stateLoaded: false,
 };
 
 const reducer = (state, action) => {
@@ -18,6 +19,10 @@ const reducer = (state, action) => {
       return {...state, tagList: payload};
     case 'UPDATE_CATEGORIES':
       return {...state, categories: payload};
+    case 'HYDRATE_STATE':
+      return {...state, ...payload};
+    case 'SET_LOADED':
+      return {...state, stateLoaded: true};
     default:
       return state;
   }
@@ -27,26 +32,46 @@ export const StateProvider = ({children}) => {
   const [state, dispatch] = useReducer(reducer, initalState);
 
   useEffect(() => {
-    getManifest().then(result => {
-      const tagList = getTagList(result);
-      const categories = getCategories(result);
+    const storedState = localStorage.getItem('seralizedState');
+    if (storedState) {
       dispatch({
-        type: 'UPDATE_OPEN_DATASET_MANIFEST',
-        payload: result,
+        type: 'HYDRATE_STATE',
+        payload: {...JSON.parse(storedState), stateLoaded: true},
       });
-      dispatch({
-        type: 'UPDATE_TAGS',
-        payload: tagList,
+    } else {
+      getManifest().then(result => {
+        const tagList = getTagList(result);
+        const categories = getCategories(result);
+        dispatch({
+          type: 'UPDATE_OPEN_DATASET_MANIFEST',
+          payload: result,
+        });
+        dispatch({
+          type: 'UPDATE_TAGS',
+          payload: tagList,
+        });
+        dispatch({
+          type: 'UPDATE_CATEGORIES',
+          payload: categories,
+        });
+        dispatch({
+          type: 'SET_LOADED',
+          payload: true,
+        });
       });
-      dispatch({
-        type: 'UPDATE_CATEGORIES',
-        payload: categories,
-      });
-    });
+    }
   }, []);
 
   useEffect(() => {
     console.log('State updated ', state);
+    if (state.stateLoaded) {
+      console.log('PERSISTING');
+      const {datasets, tagList, categories} = state;
+      //localStorage.setItem(
+      //      'storedState',
+      //      JSON.stringify({datasets, tagList, categories}),
+      //    );
+    }
   }, [state]);
 
   return (

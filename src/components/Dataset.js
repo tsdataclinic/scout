@@ -1,15 +1,18 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 
 export default function Dataset({dataset}) {
   return (
-    <div className="dataset" key={dataset.id}>
-      <h4>
-        <a target="_blank" href={dataset.permalink}>
+    <div className="dataset" key={dataset.resource.id}>
+      <h4 className="dataset-title">
+        <Link to={`/dataset/${dataset.resource.id}`}>
           {dataset.resource.name}
-        </a>
+        </Link>
       </h4>
-      <p>{dataset.resource.description}</p>
-      <p>{dataset.classification.domain_tags.join(', ')}</p>
+      <p className="dataset-description">{dataset.resource.description}</p>
+      <p className="dataset-tags">
+        {dataset.classification.domain_tags.join(', ')}
+      </p>
     </div>
   );
 }
