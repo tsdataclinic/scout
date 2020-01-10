@@ -4,64 +4,57 @@ import {findJoinable} from '../utils/socrata';
 import CategorySelector from '../components/CategorySelector';
 import Dataset from '../components/Dataset';
 import usePagination from '../hooks/pagination';
+import TagSelector from '../components/TagSelector';
 
 export default function HomePage({}) {
   const categories = useCategories();
   const tags = useTags();
-  const [tag, setTag] = useState(['buildings']);
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const datasets = useDatasets({tags: tag, term: searchTerm});
+  const datasets = useDatasets({
+    tags: selectedTags,
+    categories: selectedCategories,
+    term: searchTerm,
+  });
   const [pagedDatasets, {pageButtons}] = usePagination(datasets);
 
-  const clearTag = () => {
-    console.log('Clearning tab');
-    setTag([]);
-  };
-
   return (
-    <div className="HomePage">
-      <h1>Home Page</h1>
-      <h2>Categories</h2>
-      <CategorySelector categories={categories} />
-      <h2>
-        Tags: {tag} <span onClick={clearTag}>X</span>
-      </h2>
-      {tags && (
-        <ul className="tag-list">
-          {tags.map(tag => (
-            <li onClick={() => setTag([tag])} key={tag}>
-              {tag}
-            </li>
+    <div className="home-page">
+      <div className="categories">
+        <CategorySelector
+          categories={categories}
+          onChange={setSelectedCategories}
+          selected={selectedCategories}
+        />
+      </div>
+
+      <div className="tags">
+        <TagSelector
+          tags={tags}
+          selected={selectedTags}
+          onChange={setSelectedTags}
+        />
+      </div>
+      <div className="datasets">
+        <h2>
+          Datasets ({pagedDatasets.length} / {datasets.length} )
+        </h2>
+        <div className="search">
+          <input
+            type="text"
+            onChange={e => setSearchTerm(e.target.value)}
+            value={searchTerm}
+            placeholder="search"
+          />
+        </div>
+        <ul className="dataset-list">
+          {pagedDatasets.map(dataset => (
+            <Dataset dataset={dataset} />
           ))}
         </ul>
-      )}
-      <h2>Datasets</h2>
-      {pageButtons}
-      <input
-        type="text"
-        onChange={e => setSearchTerm(e.target.value)}
-        value={searchTerm}
-        placeholder="search"
-      />
-      <ul style={{height: '300px', overflowY: 'auto'}}>
-        {pagedDatasets.map(dataset => (
-          <li>
-            <Dataset dataset={dataset} />
-            <h2>Potential Matches</h2>
-            <ul>
-              {findJoinable(dataset, datasets).map(match => (
-                <li>
-                  <span style={{fontWeight: 'bold'}}>
-                    {' '}
-                    {match.dataset.resource.name}
-                  </span>{' '}
-                  | shares {match.joinableColumns.join(', ')}{' '}
-                </li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ul>
+        <div className="pagination">{pageButtons}</div>
+      </div>
     </div>
   );
 }
