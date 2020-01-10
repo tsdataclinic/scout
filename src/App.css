@@ -1,5 +1,21 @@
+html,
+body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0px;
+  padding: 0px;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+}
+
 .App {
+  width: 100vw;
+  height: 100vh;
   text-align: center;
+  background-color: #f8f8f8;
 }
 
 .App-logo {
@@ -36,20 +52,135 @@
     transform: rotate(360deg);
   }
 }
+.home-page {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  grid-template-columns: 300px 1fr;
+  grid-template-rows: 50% 50%;
+  grid-template-areas: 'Tags Datasets' 'Categories Datasets';
+  width: 100%;
+  height: 100%;
+}
+
+.dataset-page {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 200px 1fr;
+  grid-template-areas: 'Header Header' 'Columns Joins';
+  width: 100%;
+  height: 100%;
+}
+
+.dataset-header {
+  grid-area: Header;
+}
+
+.dataset-columns {
+  grid-area: Columns;
+}
+
+.dataset-joins {
+  grid-area: Joins;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.dataset-joins ul {
+  overflow-y: auto;
+  height: 500px;
+}
+.columns-joins {
+  display: flex;
+}
 
 ul {
   list-style: None;
+  padding: 0px;
+  margin: 0px;
+}
+.dataset {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid;
+  width: 100%;
+  margin-bottom: 20px;
+  -moz-box-shadow: 2px 2px 23px 0px rgba(0, 0, 0, 0.75);
+  webkit-box-shadow: 2px 2px 23px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 2px 2px 23px 0px rgba(0, 0, 0, 0.75);
+  background-color: white;
+  box-sizing: border-box;
+  padding: 10px 20px;
+  text-align: left;
 }
 
+.dataset-tags {
+  text-align: right;
+}
+.dataset-list {
+  overflow-y: auto;
+  flex: 1;
+  box-sizing: border-box;
+  padding: 20px;
+}
 .tag-list li {
   cursor: pointer;
 }
-.tag-list {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-row-gap: 20px;
-  height: 300px;
-  overflow-y: auto;
 
+.category-list li {
+  cursor: pointer;
+}
+
+.tag-selector {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+.tag-list {
+  overflow-y: auto;
   list-style: 'none';
+}
+.selected {
+  font-weight: bold;
+}
+.tags {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  grid-area: Tags;
+}
+.datasets {
+  grid-area: Datasets;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+.search {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0px 0px 20px 0px;
+}
+.search input {
+  width: 80%;
+  box-sizing: border-box;
+  padding: 10px;
+}
+.pagination {
+  width: 100%;
+}
+
+.categories {
+  text-align: left;
+  grid-area: Categories;
+  overflow-y: auto;
+  background-color: white;
+}
+
+.category-selector,
+.tag-selector {
+  box-sizing: border-box;
+  padding: 10px;
 }
