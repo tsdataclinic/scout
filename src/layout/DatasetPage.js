@@ -30,7 +30,7 @@ export default function DatasetPage({match}) {
               {joins.map(j => (
                 <li>
                   <p>
-                    <Link to={`/datasets/${j.dataset.resource.id}`}>
+                    <Link to={`/dataset/${j.dataset.resource.id}`}>
                       {j.dataset.resource.name}{' '}
                     </Link>{' '}
                     on :
