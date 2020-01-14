@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import RawHTML from '../components/RawHTML';
 import { useDataset, useJoinableDatasets } from '../hooks/datasets';
 
 export default function DatasetPage({ match }) {
@@ -12,7 +13,7 @@ export default function DatasetPage({ match }) {
         <>
           <div className="dataset-header">
             <h1>Dataset {dataset.resource.name}</h1>
-            <p>{dataset.resource.description}</p>
+            <RawHTML html={dataset.resource.description} />
           </div>
           <div className="dataset-columns">
             <h2>Columns</h2>
@@ -27,7 +28,7 @@ export default function DatasetPage({ match }) {
           <div className="dataset-joins">
             <h2>Can be joined with</h2>
             <ul style={{ overflowY: 'auto' }}>
-              {joins.map(j => (
+              {joins.map((j) => (
                 <li>
                   <p>
                     <Link to={`/dataset/${j.dataset.resource.id}`}>

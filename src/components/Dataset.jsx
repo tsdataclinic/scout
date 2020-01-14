@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import RawHTML from './RawHTML';
 
 export default function Dataset({ dataset }) {
   return (
@@ -9,7 +10,10 @@ export default function Dataset({ dataset }) {
           {dataset.resource.name}
         </Link>
       </h4>
-      <p className="dataset-description">{dataset.resource.description}</p>
+      <RawHTML
+        className="dataset-description"
+        html={dataset.resource.description}
+      />
       <p className="dataset-tags">
         {dataset.classification.domain_tags.join(', ')}
       </p>
