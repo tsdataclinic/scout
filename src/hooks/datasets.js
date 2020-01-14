@@ -1,19 +1,19 @@
-import {useMemo} from 'react';
-import {useStateValue} from '../contexts/OpenDataContext';
-import {findJoinable} from '../utils/socrata';
+import { useMemo } from 'react';
+import { useStateValue } from '../contexts/OpenDataContext';
+import { findJoinable } from '../utils/socrata';
 
 export function useTags() {
-  const [{tagList}] = useStateValue();
+  const [{ tagList }] = useStateValue();
   return tagList;
 }
 
 export function useCategories() {
-  const [{categories}] = useStateValue();
+  const [{ categories }] = useStateValue();
   return categories;
 }
 
 export function useJoinableDatasets(dataset) {
-  const [{datasets}] = useStateValue();
+  const [{ datasets }] = useStateValue();
   console.log(dataset);
   return useMemo(() => (dataset ? findJoinable(dataset, datasets) : []), [
     dataset,
@@ -22,35 +22,35 @@ export function useJoinableDatasets(dataset) {
 }
 
 export function useDataset(datasetID) {
-  let [{datasets}] = useStateValue();
-  return datasets.find(d => d.resource.id === datasetID);
+  const [{ datasets }] = useStateValue();
+  return datasets.find((d) => d.resource.id === datasetID);
 }
 
-export function useDatasets({tags, term, categories}) {
-  let [{datasets}] = useStateValue();
+export function useDatasets({ tags, term, categories }) {
+  const [{ datasets }] = useStateValue();
   return useMemo(() => {
     let filteredDatasets = [...datasets];
 
     if (tags && tags.length > 0) {
       console.log('applting');
       filteredDatasets = filteredDatasets.filter(
-        dataset =>
-          dataset.classification.domain_tags.filter(tag => tags.includes(tag))
+        (dataset) =>
+          dataset.classification.domain_tags.filter((tag) => tags.includes(tag))
             .length > 0,
       );
     }
 
     if (categories && categories.length > 0) {
       filteredDatasets = filteredDatasets.filter(
-        dataset =>
-          dataset.classification.categories.filter(cat =>
+        (dataset) =>
+          dataset.classification.categories.filter((cat) =>
             categories.includes(cat),
           ).length > 0,
       );
     }
 
     if (term && term.length > 0) {
-      filteredDatasets = filteredDatasets.filter(dataset =>
+      filteredDatasets = filteredDatasets.filter((dataset) =>
         dataset.resource.name.toLowerCase().includes(term.toLowerCase()),
       );
     }

@@ -1,7 +1,8 @@
-import React, {useState, useMemo, useEffect} from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 
 export default function usePagination(data, perPage = 20) {
   const items = useMemo(() => data.length, [data]);
+  const [currentPageNo, setCurrentPageNo] = useState(0);
 
   useEffect(() => {
     setCurrentPageNo(0);
@@ -9,14 +10,16 @@ export default function usePagination(data, perPage = 20) {
 
   const pages = Math.ceil(items / perPage);
 
-  const [currentPageNo, setCurrentPageNo] = useState(0);
   const pageButtons = [...Array(pages)].map((_, page) => (
+    /* eslint-disable */
     <span
       className={page === currentPageNo ? 'selected' : ''}
-      onClick={() => setCurrentPageNo(page)}>
+      onClick={() => setCurrentPageNo(page)}
+    >
       {' '}
       {page + 1}{' '}
     </span>
+    /* eslint-enable */
   ));
 
   const content = useMemo(
@@ -24,5 +27,12 @@ export default function usePagination(data, perPage = 20) {
     [perPage, currentPageNo, data],
   );
 
-  return [content, {pageButtons, setCurrentPageNo, currentPageNo}];
+  return [
+    content,
+    {
+      pageButtons,
+      setCurrentPageNo,
+      currentPageNo,
+    },
+  ];
 }
