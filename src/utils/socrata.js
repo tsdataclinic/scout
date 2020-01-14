@@ -1,5 +1,5 @@
 const SOCRATA_NY_OPENDATA_ENDPOINT =
-  'http://api.us.socrata.com/api/catalog/v1?domains=data.cityofnewyork.us&search_context=data.cityofnewyork.us';
+  'https://api.us.socrata.com/api/catalog/v1?domains=data.cityofnewyork.us&search_context=data.cityofnewyork.us';
 
 async function getMaifestPage(pageNo, limit = 100) {
   return fetch(
