@@ -1,0 +1,17 @@
+{
+  "extends": [
+    "react-app",
+    "airbnb",
+    "plugin:jsx-a11y/recommended",
+    "prettier",
+    "prettier/react"
+  ],
+  "plugins": ["jsx-a11y", "react-hooks", "prettier"],
+  "rules": {
+    "no-use-before-define": "warn",
+    "react/prop-types": "off",
+    "quotes": ["error", "single", "avoid-escape"],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error"
+  }
+}

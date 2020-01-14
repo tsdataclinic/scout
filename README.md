@@ -1,19 +1,19 @@
-# A new searchable interface for New York Open Data (or any socrata data portal) 
+# A new searchable interface for New York Open Data (or any socrata data portal)
 
 To run simply install deps with yarn
 
 ```bash
-yarn 
+yarn
 ```
 
-then run the app with 
+then run the app with
 
 ```
 yarn start
 ```
 
-# Socrata Data Descovery API
-Main data source for the project is the Socrata Data Descovery API. API docs live here:
+# Socrata Data Discovery API
+Main data source for the project is the Socrata Data Discovery API. API docs live here:
 
 https://socratadiscovery.docs.apiary.io/#
 

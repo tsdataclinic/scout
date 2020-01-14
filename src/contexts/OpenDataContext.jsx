@@ -1,6 +1,6 @@
-import React, {createContext, useContext, useReducer, useEffect} from 'react';
-import {getManifest, getCategories, getTagList} from '../utils/socrata';
+import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import Dexie from 'dexie';
+import { getManifest, getCategories, getTagList } from '../utils/socrata';
 
 const db = new Dexie('SocrataCache');
 db.version(1).stores({
@@ -17,44 +17,44 @@ const initalState = {
 };
 
 const reducer = (state, action) => {
-  const {type, payload} = action;
+  const { type, payload } = action;
   switch (type) {
     case 'UPDATE_OPEN_DATASET_MANIFEST':
-      return {...state, datasets: payload};
+      return { ...state, datasets: payload };
     case 'UPDATE_TAGS':
-      return {...state, tagList: payload};
+      return { ...state, tagList: payload };
     case 'UPDATE_CATEGORIES':
-      return {...state, categories: payload};
+      return { ...state, categories: payload };
     case 'HYDRATE_STATE':
-      return {...state, ...payload};
+      return { ...state, ...payload };
     case 'SET_LOADED':
-      return {...state, stateLoaded: true};
+      return { ...state, stateLoaded: true };
     default:
       return state;
   }
 };
 
-export const StateProvider = ({children}) => {
+export const StateProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initalState);
 
   // Try to get the state locally from indexed db... if we can't find it there, request it from the
   // socrata API
 
   useEffect(() => {
-    db.SocrataCache.get(1).then(result => {
+    db.SocrataCache.get(1).then((result) => {
       if (result) {
         const cachedState = JSON.parse(result.data);
         dispatch({
           type: 'HYDRATE_STATE',
-          payload: {...initalState, ...cachedState, cache_loaded: true},
+          payload: { ...initalState, ...cachedState, cache_loaded: true },
         });
       } else {
-        getManifest().then(result => {
-          const tagList = getTagList(result);
-          const categories = getCategories(result);
+        getManifest().then((manifest) => {
+          const tagList = getTagList(manifest);
+          const categories = getCategories(manifest);
           dispatch({
             type: 'UPDATE_OPEN_DATASET_MANIFEST',
-            payload: result,
+            payload: manifest,
           });
           dispatch({
             type: 'UPDATE_TAGS',
@@ -72,8 +72,8 @@ export const StateProvider = ({children}) => {
     });
   }, []);
 
-  //If our datasets change, update the cahced version
-  const {datasets, tagList, categories, stateLoaded} = state;
+  // If our datasets change, update the cahced version
+  const { datasets, tagList, categories, stateLoaded } = state;
   useEffect(() => {
     if (stateLoaded) {
       db.SocrataCache.put({

@@ -1,12 +1,11 @@
-import React, {useState} from 'react';
-import {useCategories, useTags, useDatasets} from '../hooks/datasets';
-import {findJoinable} from '../utils/socrata';
+import React, { useState } from 'react';
+import { useCategories, useTags, useDatasets } from '../hooks/datasets';
 import CategorySelector from '../components/CategorySelector';
 import Dataset from '../components/Dataset';
 import usePagination from '../hooks/pagination';
 import TagSelector from '../components/TagSelector';
 
-export default function HomePage({}) {
+export default function HomePage() {
   const categories = useCategories();
   const tags = useTags();
   const [selectedTags, setSelectedTags] = useState([]);
@@ -17,7 +16,7 @@ export default function HomePage({}) {
     categories: selectedCategories,
     term: searchTerm,
   });
-  const [pagedDatasets, {pageButtons}] = usePagination(datasets);
+  const [pagedDatasets, { pageButtons }] = usePagination(datasets);
 
   return (
     <div className="home-page">
@@ -43,13 +42,13 @@ export default function HomePage({}) {
         <div className="search">
           <input
             type="text"
-            onChange={e => setSearchTerm(e.target.value)}
+            onChange={(e) => setSearchTerm(e.target.value)}
             value={searchTerm}
             placeholder="search"
           />
         </div>
         <ul className="dataset-list">
-          {pagedDatasets.map(dataset => (
+          {pagedDatasets.map((dataset) => (
             <Dataset dataset={dataset} />
           ))}
         </ul>

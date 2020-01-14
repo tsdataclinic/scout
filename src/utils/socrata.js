@@ -3,20 +3,20 @@ const SOCRATA_NY_OPENDATA_ENDPOINT =
 
 async function getMaifestPage(pageNo, limit = 100) {
   return fetch(
-    `${SOCRATA_NY_OPENDATA_ENDPOINT}&offset=${pageNo * limit}&limit=${limit}`,
+    `${SOCRATA_NY_OPENDATA_ENDPOINT}&offset=${pageNo * limit}&limit=${limit}`
   ).then(r => r.json());
 }
 
 function matachableColumnsForDataset(dataset) {
   return new Set([
     ...dataset.resource.columns_name,
-    ...dataset.resource.columns_field_name,
+    ...dataset.resource.columns_field_name
   ]);
 }
 
 function hasJoinableMatch(columns, candidate) {
   const candidateCols = matachableColumnsForDataset(candidate);
-  let intersection = new Set([...columns].filter(x => candidateCols.has(x)));
+  const intersection = new Set([...columns].filter(x => candidateCols.has(x)));
   return Array.from(intersection);
 }
 
@@ -25,12 +25,12 @@ export function findJoinable(dataset, datasets) {
   const matches = datasets
     .map(candidate => ({
       dataset: candidate,
-      joinableColumns: hasJoinableMatch(cols, candidate),
+      joinableColumns: hasJoinableMatch(cols, candidate)
     }))
     .filter(
       match =>
         match.joinableColumns.length > 0 &&
-        match.dataset.resource.id !== dataset.resource.id,
+        match.dataset.resource.id !== dataset.resource.id
     );
   return matches;
 }
@@ -46,13 +46,13 @@ export async function getManifest() {
   const pages = Math.ceil(totalEntries / 100);
   return Promise.all(
     [...Array(pages)].map((_, i) =>
-      getMaifestPage(i).then(resp => resp.results),
-    ),
+      getMaifestPage(i).then(resp => resp.results)
+    )
   ).then(list =>
     list.reduce(
       (datasetPage, allDatasets) => [...allDatasets, ...datasetPage],
-      [],
-    ),
+      []
+    )
   );
 }
 
@@ -66,9 +66,9 @@ export function getCategories(datasets) {
       ...cats,
       ...(dataset.classification.categories
         ? dataset.classification.categories
-        : []),
+        : [])
     ],
-    [],
+    []
   );
   const unique = Array.from(new Set(categories));
   return unique;
@@ -84,9 +84,9 @@ export function getTagList(datasets) {
       ...tags,
       ...(dataset.classification.domain_tags
         ? dataset.classification.domain_tags
-        : []),
+        : [])
     ],
-    [],
+    []
   );
   return Array.from(new Set(tagList));
 }
