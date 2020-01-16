@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useDataset, useJoinableDatasets } from '../hooks/datasets';
+import RawHTML from '../../components/RawHTML/RawHTML';
+import { useDataset, useJoinableDatasets } from '../../hooks/datasets';
 
-const ComparisonPage = ({ match }) => {
+export default function DatasetPage({ match }) {
   const { datasetID } = match.params;
   const dataset = useDataset(datasetID);
   const joins = useJoinableDatasets(dataset);
@@ -12,7 +13,7 @@ const ComparisonPage = ({ match }) => {
         <>
           <div className="dataset-header">
             <h1>Dataset {dataset.resource.name}</h1>
-            <p>{dataset.resource.description}</p>
+            <RawHTML html={dataset.resource.description} />
           </div>
           <div className="dataset-columns">
             <h2>Columns</h2>
@@ -27,7 +28,7 @@ const ComparisonPage = ({ match }) => {
           <div className="dataset-joins">
             <h2>Can be joined with</h2>
             <ul style={{ overflowY: 'auto' }}>
-              {joins.map(j => (
+              {joins.map((j) => (
                 <li>
                   <p>
                     <Link to={`/dataset/${j.dataset.resource.id}`}>
@@ -46,6 +47,4 @@ const ComparisonPage = ({ match }) => {
       )}
     </div>
   );
-};
-
-export default ComparisonPage;
+}

@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import RawHTML from '../components/RawHTML';
-import { useDataset, useJoinableDatasets } from '../hooks/datasets';
+import { useDataset, useJoinableDatasets } from '../../hooks/datasets';
 
-export default function DatasetPage({ match }) {
+const ComparisonPage = ({ match }) => {
   const { datasetID } = match.params;
   const dataset = useDataset(datasetID);
   const joins = useJoinableDatasets(dataset);
@@ -13,7 +12,7 @@ export default function DatasetPage({ match }) {
         <>
           <div className="dataset-header">
             <h1>Dataset {dataset.resource.name}</h1>
-            <RawHTML html={dataset.resource.description} />
+            <p>{dataset.resource.description}</p>
           </div>
           <div className="dataset-columns">
             <h2>Columns</h2>
@@ -47,4 +46,6 @@ export default function DatasetPage({ match }) {
       )}
     </div>
   );
-}
+};
+
+export default ComparisonPage;

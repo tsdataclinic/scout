@@ -1,6 +1,7 @@
 import React from 'react';
+import './Dataset.scss';
 import { Link } from 'react-router-dom';
-import RawHTML from './RawHTML';
+import RawHTML from '../RawHTML/RawHTML';
 
 export default function Dataset({ dataset }) {
   return (

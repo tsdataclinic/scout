@@ -1,8 +1,8 @@
 import React from 'react';
-import './App.css';
+import './App.scss';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import HomePage from './layout/HomePage';
-import DatasetPage from './layout/DatasetPage';
+import HomePage from './layout/HomePage/HomePage';
+import DatasetPage from './layout/DatasetPage/DatasetPage';
 
 function App() {
   return (
