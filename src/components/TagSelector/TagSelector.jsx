@@ -1,4 +1,5 @@
 import React from 'react';
+import './TagSelector.scss';
 
 export default function TagSelector({ tags, selected, onChange }) {
   const clearTags = () => {

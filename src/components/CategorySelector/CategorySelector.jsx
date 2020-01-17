@@ -1,4 +1,5 @@
 import React from 'react';
+import './CategorySelector.scss';
 
 export default function CategorySelector({ categories, selected, onChange }) {
   const clearCategories = () => {

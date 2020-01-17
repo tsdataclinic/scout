@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import 'normalize.css'; // Ensure consistent layout across browsers
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { StateProvider } from './contexts/OpenDataContext';
@@ -9,7 +9,7 @@ ReactDOM.render(
   <StateProvider>
     <App />
   </StateProvider>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
 
 // If you want your app to work offline and load faster, you can change

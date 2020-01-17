@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { useCategories, useTags, useDatasets } from '../hooks/datasets';
-import CategorySelector from '../components/CategorySelector';
-import Dataset from '../components/Dataset';
-import usePagination from '../hooks/pagination';
-import TagSelector from '../components/TagSelector';
+import './HomePage.scss';
+import { useCategories, useTags, useDatasets } from '../../hooks/datasets';
+import CategorySelector from '../../components/CategorySelector/CategorySelector';
+import Dataset from '../../components/Dataset/Dataset';
+import usePagination from '../../hooks/pagination';
+import TagSelector from '../../components/TagSelector/TagSelector';
 
 export default function HomePage() {
   const categories = useCategories();
