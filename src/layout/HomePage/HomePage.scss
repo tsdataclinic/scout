@@ -1,3 +1,7 @@
+// Color Variables
+$PaleGrey: #f1f1f2;
+$LightGrey: #b2b2b2;
+
 .home-page {
   display: grid;
   grid-template-columns: 300px 1fr;
@@ -29,6 +33,28 @@
 
 .pagination {
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0 0;
+
+  li {
+    padding: 5px;
+    cursor: pointer;
+    &.disabled {
+      cursor: not-allowed;
+      color: $LightGrey;
+    }
+    &.active {
+      font-weight: 600;
+    }
+    &:hover {
+      text-decoration: underline;
+      &.disabled {
+        text-decoration: none;
+      }
+    }
+  }
 }
 
 .categories {

@@ -53,7 +53,7 @@ export default function HomePage() {
             <Dataset dataset={dataset} />
           ))}
         </ul>
-        <div className="pagination">{pageButtons}</div>
+        <div>{pageButtons}</div>
       </div>
     </div>
   );
