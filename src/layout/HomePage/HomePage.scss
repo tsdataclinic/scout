@@ -71,6 +71,12 @@ $LightGrey: #b2b2b2;
   flex-direction: column;
   box-sizing: border-box;
   padding: 20px;
+  background-color: #f8f8f8;
+
+  h2,
+  .search {
+    text-align: center;
+  }
 }
 
 .dataset-list {

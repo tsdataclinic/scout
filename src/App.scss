@@ -13,12 +13,18 @@ body {
   height: 100vh;
   margin: 0px;
   padding: 0px;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
 ul {
   list-style: None;
   padding: 0px;
   margin: 0px;
+}
+
+h1 {
+  width: 100%;
 }
 
 #root {
@@ -29,31 +35,9 @@ ul {
 .App {
   width: 100vw;
   height: 100vh;
-  text-align: center;
-  background-color: #f8f8f8;
-}
-
-.dataset-page {
-  display: grid;
-  grid-template-columns: 50% 50%;
-  grid-template-rows: 200px 1fr;
-  grid-template-areas: 'Header Header' 'Columns Joins';
-  width: 100%;
-  height: 100%;
-}
-
-.dataset-header {
-  grid-area: Header;
-}
-
-.dataset-columns {
-  grid-area: Columns;
 }
 
 .dataset-joins {
-  grid-area: Joins;
-  display: flex;
-  flex-direction: column;
   height: 100%;
 
   ul {

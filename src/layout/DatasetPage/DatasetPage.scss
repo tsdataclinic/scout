@@ -1,0 +1,28 @@
+.dataset-page {
+  h1 {
+    text-align: center;
+  }
+
+  .row {
+    padding-bottom: 15px;
+  }
+
+  .dataset-header {
+    border-bottom: 2px solid #e4e4e4;
+    padding-bottom: 15px;
+    margin-bottom: 30px;
+  }
+  table {
+    td:first-of-type {
+      font-weight: bold;
+    }
+
+    .italics {
+      font-style: italic;
+    }
+  }
+}
+.dataset-description {
+  margin: 0 auto;
+  white-space: pre-line;
+}
