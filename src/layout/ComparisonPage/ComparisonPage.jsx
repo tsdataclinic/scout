@@ -1,4 +1,6 @@
 import React from 'react';
+import Row from 'react-bootstrap/Row';
+import Container from 'react-bootstrap/Container';
 import { Link } from 'react-router-dom';
 import { useDataset, useJoinableDatasets } from '../../hooks/datasets';
 
@@ -7,23 +9,23 @@ const ComparisonPage = ({ match }) => {
   const dataset = useDataset(datasetID);
   const joins = useJoinableDatasets(dataset);
   return (
-    <div className="dataset-page">
+    <Container>
       {dataset ? (
         <>
-          <div className="dataset-header">
+          <Row>
             <h1>Dataset {dataset.resource.name}</h1>
             <p>{dataset.resource.description}</p>
-          </div>
-          <div className="dataset-columns">
+          </Row>
+          <Row>
             <h2>Columns</h2>
-            <ul className="columns-list">
+            <ul>
               {dataset.resource.columns_name.map((name, index) => (
                 <li>
                   {name} : {dataset.resource.columns_datatype[index]}
                 </li>
               ))}
             </ul>
-          </div>
+          </Row>
           <div className="dataset-joins">
             <h2>Can be joined with</h2>
             <ul style={{ overflowY: 'auto' }}>
@@ -44,7 +46,7 @@ const ComparisonPage = ({ match }) => {
       ) : (
         <h1>Loading...</h1>
       )}
-    </div>
+    </Container>
   );
 };
 
