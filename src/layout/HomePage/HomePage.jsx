@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './HomePage.scss';
 import { useCategories, useTags, useDatasets } from '../../hooks/datasets';
+import useCollection from '../../hooks/collections';
 import CategorySelector from '../../components/CategorySelector/CategorySelector';
 import Dataset from '../../components/Dataset/Dataset';
 import usePagination from '../../hooks/pagination';
@@ -12,6 +14,11 @@ export default function HomePage() {
   const [selectedTags, setSelectedTags] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [
+    collection,
+    { addToCollection, removeFromCollection },
+  ] = useCollection();
+
   const datasets = useDatasets({
     tags: selectedTags,
     categories: selectedCategories,
@@ -47,10 +54,20 @@ export default function HomePage() {
             value={searchTerm}
             placeholder="search"
           />
+          {collection.datasets.length > 0 && (
+            <Link to="/collection/new">
+              Create Collection ({collection.datasets.length})
+            </Link>
+          )}
         </div>
         <ul className="dataset-list">
           {pagedDatasets.map((dataset) => (
-            <Dataset dataset={dataset} />
+            <Dataset
+              dataset={dataset}
+              inCollection={collection.datasets.includes(dataset.resource.id)}
+              onAddToCollection={addToCollection}
+              onRemoveFromCollection={removeFromCollection}
+            />
           ))}
         </ul>
         <div>{pageButtons}</div>

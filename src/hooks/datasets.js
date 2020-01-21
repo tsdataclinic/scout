@@ -26,10 +26,15 @@ export function useDataset(datasetID) {
   return datasets.find((d) => d.resource.id === datasetID);
 }
 
-export function useDatasets({ tags, term, categories }) {
+export function useDatasets({ tags, term, categories, ids }) {
   const [{ datasets }] = useStateValue();
+
   return useMemo(() => {
     let filteredDatasets = [...datasets];
+
+    if (ids) {
+      return filteredDatasets.filter((d) => ids.includes(d.resource.id));
+    }
 
     if (tags && tags.length > 0) {
       console.log('applting');
@@ -58,5 +63,5 @@ export function useDatasets({ tags, term, categories }) {
     console.log('after term ', filteredDatasets.length);
     console.log('return size ', filteredDatasets.length);
     return filteredDatasets;
-  }, [tags, term, categories, datasets]);
+  }, [datasets, ids, tags, categories, term]);
 }
