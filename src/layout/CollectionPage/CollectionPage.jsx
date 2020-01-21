@@ -1,5 +1,6 @@
 import React from 'react';
 import { useCopyClipboard } from '@lokibai/react-use-copy-clipboard';
+import './CollectionPage.scss';
 
 import {
   EmailShareButton,
@@ -9,8 +10,8 @@ import {
   FacebookIcon,
   TwitterIcon,
 } from 'react-share';
-import { useDatasets } from '../hooks/datasets';
-import Dataset from '../components/Dataset/Dataset';
+import { useDatasets } from '../../hooks/datasets';
+import Dataset from '../../components/Dataset/Dataset';
 
 export default function CollectionPage({ match }) {
   const { name, datasetIDs } = match.params;
