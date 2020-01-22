@@ -1,0 +1,28 @@
+.dataset {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid;
+  width: 100%;
+  margin-bottom: 20px;
+  -moz-box-shadow: 2px 2px 23px 0px rgba(0, 0, 0, 0.75);
+  webkit-box-shadow: 2px 2px 23px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 2px 2px 23px 0px rgba(0, 0, 0, 0.75);
+  background-color: white;
+  box-sizing: border-box;
+  padding: 10px 20px;
+  text-align: left;
+}
+
+.dataset-tags {
+  text-align: right;
+}
+.dataset-title {
+  display: flex;
+  flex-direction: row;
+  aligin-items: center;
+  justify-content: space-between;
+}
+.dataset button {
+  background: none;
+  border: none;
+}

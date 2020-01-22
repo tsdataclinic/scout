@@ -1,13 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'normalize.css'; // Ensure consistent layout across browsers
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import {StateProvider} from './contexts/OpenDataContext';
+import { StateProvider } from './contexts/OpenDataContext';
+import { CollectionsProvider } from './contexts/CollectionsContext';
 
 ReactDOM.render(
   <StateProvider>
-    <App />
+    <CollectionsProvider>
+      <App />
+    </CollectionsProvider>
   </StateProvider>,
   document.getElementById('root'),
 );
