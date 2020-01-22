@@ -16,3 +16,13 @@
 .dataset-tags {
   text-align: right;
 }
+.dataset-title {
+  display: flex;
+  flex-direction: row;
+  aligin-items: center;
+  justify-content: space-between;
+}
+.dataset button {
+  background: none;
+  border: none;
+}

@@ -76,6 +76,10 @@ $LightGrey: #b2b2b2;
   h2,
   .search {
     text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
   }
 }
 
