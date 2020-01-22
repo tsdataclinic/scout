@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.scss';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import { ModalContainer, ModalRoute } from 'react-router-modal';
 import HomePage from './layout/HomePage/HomePage';
 import DatasetPage from './layout/DatasetPage/DatasetPage';
@@ -25,6 +25,7 @@ function App() {
           parentPath="/"
           component={CreateCollectionModal}
         />
+        <Redirect from="/" to="/" />
       </div>
 
       <ModalContainer />
