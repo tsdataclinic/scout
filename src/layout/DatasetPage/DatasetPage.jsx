@@ -31,10 +31,10 @@ export default function DatasetPage({ match }) {
     ({ key }) => key === 'Dataset-Information_Agency',
   )?.value;
   return (
-    <Container fluid className="dataset-page">
+    <Container fluid="true" className="dataset-page">
       {dataset ? (
-        <Container fluid>
-          <Row fluid className="dataset-header">
+        <Container fluid="true">
+          <Row fluid="true" className="dataset-header">
             <h1>Dataset: {resource?.name}</h1>
             <Col>
               <RawHTML
@@ -43,17 +43,17 @@ export default function DatasetPage({ match }) {
               />
             </Col>
           </Row>
-          <Row fluid>
-            <Col fluid>
-              <Row fluid>
-                <Container fluid>
-                  <Row fluid>
+          <Row fluid="true">
+            <Col fluid="true">
+              <Row fluid="true">
+                <Container fluid="true">
+                  <Row fluid="true">
                     <Col>
                       <dt>Updated</dt>
                       <dd>{formatDate(resource?.updatedAt)}</dd>
                     </Col>
                   </Row>
-                  <Row fluid>
+                  <Row fluid="true">
                     <Col>
                       <dt>Data Last Updated</dt>
                       <dd>{formatDate(resource?.updatedAt)}</dd>
@@ -63,7 +63,7 @@ export default function DatasetPage({ match }) {
                       <dd>{formatDate(resource?.metadata_updated_at)}</dd>
                     </Col>
                   </Row>
-                  <Row fluid>
+                  <Row fluid="true">
                     <Col>
                       <dt>Date Created</dt>
                       <dd>{formatDate(resource?.createdAt)}</dd>
@@ -71,7 +71,7 @@ export default function DatasetPage({ match }) {
                   </Row>
                 </Container>
               </Row>
-              <Row fluid>
+              <Row fluid="true">
                 {pageViews?.page_views_total ? (
                   <Col>
                     <dt>Views</dt>
@@ -85,7 +85,7 @@ export default function DatasetPage({ match }) {
                   </Col>
                 ) : null}
               </Row>
-              <Row fluid>
+              <Row fluid="true">
                 <Col>
                   <dt>Dataset Owner</dt>
                   <dd>{dataset?.owner?.display_name}</dd>
@@ -184,7 +184,7 @@ export default function DatasetPage({ match }) {
                   </tbody>
                 </Table>
               </Row>
-              <Row fluid>
+              <Row fluid="true">
                 <div className="dataset-joins">
                   <h3>Can be joined with</h3>
                   <ul style={{ overflowY: 'auto' }}>

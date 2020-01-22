@@ -63,6 +63,7 @@ export default function HomePage() {
         <ul className="dataset-list">
           {pagedDatasets.map((dataset) => (
             <Dataset
+              key={dataset?.resource?.id}
               dataset={dataset}
               inCollection={collection.datasets.includes(dataset.resource.id)}
               onAddToCollection={addToCollection}
