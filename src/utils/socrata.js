@@ -1,36 +1,53 @@
 const SOCRATA_NY_OPENDATA_ENDPOINT =
   'https://api.us.socrata.com/api/catalog/v1?domains=data.cityofnewyork.us&search_context=data.cityofnewyork.us';
 
+const ALLOWED_JOIN_COLUMNS = [
+  'BIN',
+  'BBL',
+  'NTA',
+  'Community Board',
+  'Census Tract',
+  'DBN',
+  'Council District',
+  'School Name',
+  'City Council Districts',
+  'DFTA ID',
+];
+
 async function getMaifestPage(pageNo, limit = 100) {
   return fetch(
-    `${SOCRATA_NY_OPENDATA_ENDPOINT}&offset=${pageNo * limit}&limit=${limit}`
-  ).then(r => r.json());
+    `${SOCRATA_NY_OPENDATA_ENDPOINT}&offset=${pageNo * limit}&limit=${limit}`,
+  ).then((r) => r.json());
 }
 
 function matachableColumnsForDataset(dataset) {
   return new Set([
     ...dataset.resource.columns_name,
-    ...dataset.resource.columns_field_name
+    ...dataset.resource.columns_field_name,
   ]);
 }
 
 function hasJoinableMatch(columns, candidate) {
   const candidateCols = matachableColumnsForDataset(candidate);
-  const intersection = new Set([...columns].filter(x => candidateCols.has(x)));
+  const intersection = new Set(
+    [...columns].filter(
+      (x) => candidateCols.has(x) && ALLOWED_JOIN_COLUMNS.includes(x),
+    ),
+  );
   return Array.from(intersection);
 }
 
 export function findJoinable(dataset, datasets) {
   const cols = matachableColumnsForDataset(dataset);
   const matches = datasets
-    .map(candidate => ({
+    .map((candidate) => ({
       dataset: candidate,
-      joinableColumns: hasJoinableMatch(cols, candidate)
+      joinableColumns: hasJoinableMatch(cols, candidate),
     }))
     .filter(
-      match =>
+      (match) =>
         match.joinableColumns.length > 0 &&
-        match.dataset.resource.id !== dataset.resource.id
+        match.dataset.resource.id !== dataset.resource.id,
     );
   return matches;
 }
@@ -46,13 +63,13 @@ export async function getManifest() {
   const pages = Math.ceil(totalEntries / 100);
   return Promise.all(
     [...Array(pages)].map((_, i) =>
-      getMaifestPage(i).then(resp => resp.results)
-    )
-  ).then(list =>
+      getMaifestPage(i).then((resp) => resp.results),
+    ),
+  ).then((list) =>
     list.reduce(
       (datasetPage, allDatasets) => [...allDatasets, ...datasetPage],
-      []
-    )
+      [],
+    ),
   );
 }
 
@@ -66,9 +83,9 @@ export function getCategories(datasets) {
       ...cats,
       ...(dataset.classification.categories
         ? dataset.classification.categories
-        : [])
+        : []),
     ],
-    []
+    [],
   );
   const unique = Array.from(new Set(categories));
   return unique;
@@ -84,9 +101,28 @@ export function getTagList(datasets) {
       ...tags,
       ...(dataset.classification.domain_tags
         ? dataset.classification.domain_tags
-        : [])
+        : []),
     ],
-    []
+    [],
   );
   return Array.from(new Set(tagList));
+}
+
+export function getUniqueEntriesCount(dataset, column) {
+  return fetch(
+    `https://data.cityofnewyork.us/resource/${
+      dataset.resource.id
+    }.json?$select=distinct|> select count(*) ${column.replace(/ /g, '_')}`,
+  ).then((r) => r.json());
+}
+export function getUniqueEntries(dataset, column) {
+  return fetch(
+    `https://data.cityofnewyork.us/resource/${
+      dataset.resource.id
+    }.json?$select=distinct ${column.replace(/ /g, '_')}`,
+  )
+    .then((r) => r.json())
+    .then((r) => {
+      return r.errorCode ? [] : r.map((entry) => Object.keys(entry)[0]);
+    });
 }
