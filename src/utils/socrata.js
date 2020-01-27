@@ -123,6 +123,6 @@ export function getUniqueEntries(dataset, column) {
   )
     .then((r) => r.json())
     .then((r) => {
-      return r.errorCode ? [] : r.map((entry) => Object.keys(entry)[0]);
+      return r.errorCode ? [] : r.map((entry) => Object.values(entry)[0]);
     });
 }

@@ -1,6 +1,6 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useStateValue } from '../contexts/OpenDataContext';
-import { findJoinable } from '../utils/socrata';
+import { findJoinable, getUniqueEntries } from '../utils/socrata';
 
 export function useTags() {
   const [{ tagList }] = useStateValue();
@@ -14,7 +14,6 @@ export function useCategories() {
 
 export function useJoinableDatasets(dataset) {
   const [{ datasets }] = useStateValue();
-  console.log(dataset);
   return useMemo(() => (dataset ? findJoinable(dataset, datasets) : []), [
     dataset,
     datasets,
@@ -37,7 +36,6 @@ export function useDatasets({ tags, term, categories, ids }) {
     }
 
     if (tags && tags.length > 0) {
-      console.log('applting');
       filteredDatasets = filteredDatasets.filter(
         (dataset) =>
           dataset.classification.domain_tags.filter((tag) => tags.includes(tag))
@@ -60,8 +58,28 @@ export function useDatasets({ tags, term, categories, ids }) {
       );
     }
 
-    console.log('after term ', filteredDatasets.length);
-    console.log('return size ', filteredDatasets.length);
     return filteredDatasets;
   }, [datasets, ids, tags, categories, term]);
+}
+
+export function useJoinColumnUniqueCount(joins) {
+  const [uniqueCounts, setUniqueCounts] = useState([]);
+  useEffect(() => {
+    let promises = [];
+    joins.forEach((j) => {
+      j.joinableColumns.forEach((col) => {
+        promises.push(
+          getUniqueEntries(j.dataset, col).then((res) => ({
+            dataset: j.dataset.resource.id,
+            col,
+            distinct: res,
+          })),
+        );
+      });
+    });
+    // This ensures that we resolve even if one of our fetch requests fail
+    promises = promises.map((p) => p.catch(() => undefined));
+    Promise.all(promises).then((result) => setUniqueCounts(result));
+  }, [joins]);
+  return uniqueCounts;
 }
