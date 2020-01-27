@@ -7,7 +7,12 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import { Link } from 'react-router-dom';
 import RawHTML from '../../components/RawHTML/RawHTML';
-import { useDataset, useJoinableDatasets } from '../../hooks/datasets';
+import usePagination from '../../hooks/pagination';
+import {
+  useDataset,
+  useJoinableDatasets,
+  useJoinColumnUniqueCount,
+} from '../../hooks/datasets';
 import './DatasetPage.scss';
 
 const formatDate = (date) => moment(date).format('MMMM DD, YYYY');
@@ -16,6 +21,9 @@ export default function DatasetPage({ match }) {
   const { datasetID } = match.params;
   const dataset = useDataset(datasetID);
   const joins = useJoinableDatasets(dataset);
+  const [pagedJoins, { pageButtons: joinPageButtons }] = usePagination(joins);
+
+  const joinCounts = useJoinColumnUniqueCount(pagedJoins);
   const resource = dataset?.resource;
   const pageViews = resource?.page_views;
   const classification = dataset?.classification;
@@ -30,6 +38,7 @@ export default function DatasetPage({ match }) {
   const informationAgency = domainMetadata?.find(
     ({ key }) => key === 'Dataset-Information_Agency',
   )?.value;
+
   return (
     <Container fluid="true" className="dataset-page">
       {dataset ? (
@@ -188,18 +197,37 @@ export default function DatasetPage({ match }) {
                 <div className="dataset-joins">
                   <h3>Can be joined with</h3>
                   <ul style={{ overflowY: 'auto' }}>
-                    {joins.map((j, i) => (
+                    {pagedJoins.map((j, i) => (
                       <li key={i}>
                         <p>
-                          <Link to={`/dataset/${j.resource?.id}`}>
-                            {j.resource?.name}{' '}
+                          <Link to={`/dataset/${j.dataset.resource?.id}`}>
+                            {j.dataset.resource?.name}{' '}
                           </Link>{' '}
                           on :
                         </p>
-                        <p> {j.joinableColumns.join(', ')}</p>
+                        <p>
+                          {j.joinableColumns.map((col) => (
+                            <span>
+                              {' '}
+                              {j.dataset.resource?.name}{' '}
+                              <span style={{ fontWeight: 'bold' }}>
+                                (
+                                {`${
+                                  joinCounts.find(
+                                    (jc) =>
+                                      jc.dataset === j.dataset.resource?.id &&
+                                      col === jc.col,
+                                  )?.distinct.length
+                                },`}
+                                )
+                              </span>
+                            </span>
+                          ))}
+                        </p>
                       </li>
                     ))}
                   </ul>
+                  {joinPageButtons}
                 </div>
               </Row>
             </Col>
