@@ -1,6 +1,19 @@
 const SOCRATA_NY_OPENDATA_ENDPOINT =
   'https://api.us.socrata.com/api/catalog/v1?domains=data.cityofnewyork.us&search_context=data.cityofnewyork.us';
 
+const ALLOWED_JOIN_COLUMNS = [
+  'BIN',
+  'BBL',
+  'NTA',
+  'Community Board',
+  'Census Tract',
+  'DBN',
+  'Council District',
+  'School Name',
+  'City Council Districts',
+  'DFTA ID',
+];
+
 async function getMaifestPage(pageNo, limit = 100) {
   return fetch(
     `${SOCRATA_NY_OPENDATA_ENDPOINT}&offset=${pageNo * limit}&limit=${limit}`,
@@ -17,7 +30,9 @@ function matachableColumnsForDataset(dataset) {
 function hasJoinableMatch(columns, candidate) {
   const candidateCols = matachableColumnsForDataset(candidate);
   const intersection = new Set(
-    [...columns].filter((x) => candidateCols.has(x)),
+    [...columns].filter(
+      (x) => candidateCols.has(x) && ALLOWED_JOIN_COLUMNS.includes(x),
+    ),
   );
   return Array.from(intersection);
 }
@@ -127,4 +142,23 @@ export function getTagList(datasets) {
     {},
   );
   return counts;
+}
+
+export function getUniqueEntriesCount(dataset, column) {
+  return fetch(
+    `https://data.cityofnewyork.us/resource/${
+      dataset.resource.id
+    }.json?$select=distinct|> select count(*) ${column.replace(/ /g, '_')}`,
+  ).then((r) => r.json());
+}
+export function getUniqueEntries(dataset, column) {
+  return fetch(
+    `https://data.cityofnewyork.us/resource/${
+      dataset.resource.id
+    }.json?$select=distinct ${column.replace(/ /g, '_')}`,
+  )
+    .then((r) => r.json())
+    .then((r) => {
+      return r.errorCode ? [] : r.map((entry) => Object.values(entry)[0]);
+    });
 }
