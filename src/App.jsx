@@ -9,6 +9,7 @@ import {
 import { ModalContainer, ModalRoute } from 'react-router-modal';
 import HomePage from './layout/HomePage/HomePage';
 import DatasetPage from './layout/DatasetPage/DatasetPage';
+import CollectionBar from './components/CollectionBar/CollectionBar';
 import CollectionPage from './layout/CollectionPage/CollectionPage';
 import CreateCollectionModal from './components/CreateCollectionModal/CreateCollectionModal';
 
@@ -39,6 +40,7 @@ function App() {
             />
             <Redirect from="/" to="/" />
           </Switch>
+          <CollectionBar />
         </Router>
       </div>
     </div>

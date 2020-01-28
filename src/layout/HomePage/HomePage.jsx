@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import './HomePage.scss';
 import {
   useCategories,
@@ -69,11 +68,6 @@ export default function HomePage() {
             value={searchTerm}
             placeholder="Search for dataset"
           />
-          {collection.datasets.length > 0 && (
-            <Link to="/collection/new">
-              Create Collection ({collection.datasets.length})
-            </Link>
-          )}
         </div>
         <div className="count-and-sort">
           <p>

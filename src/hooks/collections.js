@@ -7,5 +7,14 @@ export default function useCollection() {
   const removeFromCollection = (datasetID) =>
     dispatch({ type: 'REMOVE_FROM_COLLECTION', payload: datasetID });
   const setName = (name) => dispatch({ type: 'SET_NAME', payload: name });
-  return [state, { addToCollection, removeFromCollection, setName }];
+
+  const clearCollection = () => {
+    console.log('clearning');
+    dispatch({ type: 'CLEAR_COLLECTION' });
+  };
+
+  return [
+    state,
+    { clearCollection, addToCollection, removeFromCollection, setName },
+  ];
 }

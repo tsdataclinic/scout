@@ -22,6 +22,11 @@ const reducer = (state, action) => {
         ...state,
         name: payload,
       };
+    case 'CLEAR_COLLECTION':
+      return {
+        ...state,
+        datasets: [],
+      };
     default:
       return state;
   }
