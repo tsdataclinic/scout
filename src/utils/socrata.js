@@ -3,34 +3,36 @@ const SOCRATA_NY_OPENDATA_ENDPOINT =
 
 async function getMaifestPage(pageNo, limit = 100) {
   return fetch(
-    `${SOCRATA_NY_OPENDATA_ENDPOINT}&offset=${pageNo * limit}&limit=${limit}`
-  ).then(r => r.json());
+    `${SOCRATA_NY_OPENDATA_ENDPOINT}&offset=${pageNo * limit}&limit=${limit}`,
+  ).then((r) => r.json());
 }
 
 function matachableColumnsForDataset(dataset) {
   return new Set([
     ...dataset.resource.columns_name,
-    ...dataset.resource.columns_field_name
+    ...dataset.resource.columns_field_name,
   ]);
 }
 
 function hasJoinableMatch(columns, candidate) {
   const candidateCols = matachableColumnsForDataset(candidate);
-  const intersection = new Set([...columns].filter(x => candidateCols.has(x)));
+  const intersection = new Set(
+    [...columns].filter((x) => candidateCols.has(x)),
+  );
   return Array.from(intersection);
 }
 
 export function findJoinable(dataset, datasets) {
   const cols = matachableColumnsForDataset(dataset);
   const matches = datasets
-    .map(candidate => ({
+    .map((candidate) => ({
       dataset: candidate,
-      joinableColumns: hasJoinableMatch(cols, candidate)
+      joinableColumns: hasJoinableMatch(cols, candidate),
     }))
     .filter(
-      match =>
+      (match) =>
         match.joinableColumns.length > 0 &&
-        match.dataset.resource.id !== dataset.resource.id
+        match.dataset.resource.id !== dataset.resource.id,
     );
   return matches;
 }
@@ -46,13 +48,13 @@ export async function getManifest() {
   const pages = Math.ceil(totalEntries / 100);
   return Promise.all(
     [...Array(pages)].map((_, i) =>
-      getMaifestPage(i).then(resp => resp.results)
-    )
-  ).then(list =>
+      getMaifestPage(i).then((resp) => resp.results),
+    ),
+  ).then((list) =>
     list.reduce(
       (datasetPage, allDatasets) => [...allDatasets, ...datasetPage],
-      []
-    )
+      [],
+    ),
   );
 }
 
@@ -66,14 +68,43 @@ export function getCategories(datasets) {
       ...cats,
       ...(dataset.classification.categories
         ? dataset.classification.categories
-        : [])
+        : []),
     ],
-    []
+    [],
   );
-  const unique = Array.from(new Set(categories));
-  return unique;
+
+  const counts = categories.reduce(
+    (totals, cat) =>
+      cat in totals
+        ? { ...totals, [cat]: totals[cat] + 1 }
+        : { ...totals, [cat]: 1 },
+    {},
+  );
+  return counts;
 }
 
+/**
+ * Extract from the datasets array, a unique set of categories.
+ * @return {Array<string>} an array of unique categories
+ */
+export function getDepartments(datasets) {
+  const departments = datasets
+    .map((dataset) =>
+      dataset.classification.domain_metadata.find(
+        (md) => md.key === 'Dataset-Information_Agency',
+      ),
+    )
+    .filter((d) => d)
+    .map((d) => d.value);
+  const counts = departments.reduce(
+    (totals, department) =>
+      department in totals
+        ? { ...totals, [department]: totals[department] + 1 }
+        : { ...totals, [department]: 1 },
+    {},
+  );
+  return counts;
+}
 /**
  * Extract from the datasets array, a unique set of tags.
  * @return {Array<string>} an array of unique tags
@@ -84,9 +115,16 @@ export function getTagList(datasets) {
       ...tags,
       ...(dataset.classification.domain_tags
         ? dataset.classification.domain_tags
-        : [])
+        : []),
     ],
-    []
+    [],
   );
-  return Array.from(new Set(tagList));
+  const counts = tagList.reduce(
+    (totals, tag) =>
+      tag in totals
+        ? { ...totals, [tag]: totals[tag] + 1 }
+        : { ...totals, [tag]: 1 },
+    {},
+  );
+  return counts;
 }
