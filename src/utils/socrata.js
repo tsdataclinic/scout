@@ -87,10 +87,39 @@ export function getCategories(datasets) {
     ],
     [],
   );
-  const unique = Array.from(new Set(categories));
-  return unique;
+
+  const counts = categories.reduce(
+    (totals, cat) =>
+      cat in totals
+        ? { ...totals, [cat]: totals[cat] + 1 }
+        : { ...totals, [cat]: 1 },
+    {},
+  );
+  return counts;
 }
 
+/**
+ * Extract from the datasets array, a unique set of categories.
+ * @return {Array<string>} an array of unique categories
+ */
+export function getDepartments(datasets) {
+  const departments = datasets
+    .map((dataset) =>
+      dataset.classification.domain_metadata.find(
+        (md) => md.key === 'Dataset-Information_Agency',
+      ),
+    )
+    .filter((d) => d)
+    .map((d) => d.value);
+  const counts = departments.reduce(
+    (totals, department) =>
+      department in totals
+        ? { ...totals, [department]: totals[department] + 1 }
+        : { ...totals, [department]: 1 },
+    {},
+  );
+  return counts;
+}
 /**
  * Extract from the datasets array, a unique set of tags.
  * @return {Array<string>} an array of unique tags
@@ -105,7 +134,14 @@ export function getTagList(datasets) {
     ],
     [],
   );
-  return Array.from(new Set(tagList));
+  const counts = tagList.reduce(
+    (totals, tag) =>
+      tag in totals
+        ? { ...totals, [tag]: totals[tag] + 1 }
+        : { ...totals, [tag]: 1 },
+    {},
+  );
+  return counts;
 }
 
 export function getUniqueEntriesCount(dataset, column) {

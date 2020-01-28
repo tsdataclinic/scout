@@ -1,6 +1,11 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import Dexie from 'dexie';
-import { getManifest, getCategories, getTagList } from '../utils/socrata';
+import {
+  getManifest,
+  getCategories,
+  getTagList,
+  getDepartments,
+} from '../utils/socrata';
 
 const db = new Dexie('SocrataCache');
 db.version(1).stores({
@@ -13,6 +18,7 @@ const initalState = {
   datasets: [],
   tagList: [],
   categories: [],
+  departments: [],
   stateLoaded: false,
 };
 
@@ -25,6 +31,8 @@ const reducer = (state, action) => {
       return { ...state, tagList: payload };
     case 'UPDATE_CATEGORIES':
       return { ...state, categories: payload };
+    case 'UPDATE_DEPARTMENTS':
+      return { ...state, departments: payload };
     case 'HYDRATE_STATE':
       return { ...state, ...payload };
     case 'SET_LOADED':
@@ -52,6 +60,7 @@ export const StateProvider = ({ children }) => {
         getManifest().then((manifest) => {
           const tagList = getTagList(manifest);
           const categories = getCategories(manifest);
+          const departments = getDepartments(manifest);
           dispatch({
             type: 'UPDATE_OPEN_DATASET_MANIFEST',
             payload: manifest,
@@ -65,6 +74,10 @@ export const StateProvider = ({ children }) => {
             payload: categories,
           });
           dispatch({
+            type: 'UPDATE_DEPARTMENTS',
+            payload: departments,
+          });
+          dispatch({
             type: 'SET_LOADED',
           });
         });
@@ -73,7 +86,7 @@ export const StateProvider = ({ children }) => {
   }, []);
 
   // If our datasets change, update the cahced version
-  const { datasets, tagList, categories, stateLoaded } = state;
+  const { datasets, tagList, categories, departments, stateLoaded } = state;
   useEffect(() => {
     if (stateLoaded) {
       db.SocrataCache.put({
@@ -81,11 +94,12 @@ export const StateProvider = ({ children }) => {
           datasets,
           tagList,
           categories,
+          departments,
         }),
         id: 1,
       });
     }
-  }, [datasets, tagList, categories, stateLoaded]);
+  }, [datasets, tagList, categories, departments, stateLoaded]);
 
   return (
     <AppContext.Provider value={[state, dispatch]}>

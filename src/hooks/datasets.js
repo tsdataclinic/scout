@@ -12,6 +12,11 @@ export function useCategories() {
   return categories;
 }
 
+export function useDepartments() {
+  const [{ departments }] = useStateValue();
+  return departments;
+}
+
 export function useJoinableDatasets(dataset) {
   const [{ datasets }] = useStateValue();
   return useMemo(() => (dataset ? findJoinable(dataset, datasets) : []), [
@@ -25,7 +30,7 @@ export function useDataset(datasetID) {
   return datasets.find((d) => d.resource.id === datasetID);
 }
 
-export function useDatasets({ tags, term, categories, ids }) {
+export function useDatasets({ tags, term, categories, departments, ids }) {
   const [{ datasets }] = useStateValue();
 
   return useMemo(() => {
@@ -52,6 +57,15 @@ export function useDatasets({ tags, term, categories, ids }) {
       );
     }
 
+    if (departments && departments > 0) {
+      filteredDatasets = filteredDatasets.filter((dataset) =>
+        departments.includes(
+          dataset.classification.domain_metadata.find(
+            (d) => d.key === 'Dataset-Information_Agency',
+          )?.value,
+        ),
+      );
+    }
     if (term && term.length > 0) {
       filteredDatasets = filteredDatasets.filter((dataset) =>
         dataset.resource.name.toLowerCase().includes(term.toLowerCase()),
@@ -59,7 +73,7 @@ export function useDatasets({ tags, term, categories, ids }) {
     }
 
     return filteredDatasets;
-  }, [datasets, ids, tags, categories, term]);
+  }, [datasets, ids, tags, categories, departments, term]);
 }
 
 export function useJoinColumnUniqueCount(joins) {

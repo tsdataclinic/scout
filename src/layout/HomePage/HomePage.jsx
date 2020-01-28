@@ -1,18 +1,24 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './HomePage.scss';
-import { useCategories, useTags, useDatasets } from '../../hooks/datasets';
+import {
+  useCategories,
+  useTags,
+  useDepartments,
+  useDatasets,
+} from '../../hooks/datasets';
 import useCollection from '../../hooks/collections';
-import CategorySelector from '../../components/CategorySelector/CategorySelector';
 import Dataset from '../../components/Dataset/Dataset';
 import usePagination from '../../hooks/pagination';
-import TagSelector from '../../components/TagSelector/TagSelector';
+import MultiSelector from '../../components/MultiSelector/MultiSelector';
 
 export default function HomePage() {
   const categories = useCategories();
   const tags = useTags();
+  const departments = useDepartments();
   const [selectedTags, setSelectedTags] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedDepartments, setSelectedDepartments] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [
     collection,
@@ -23,36 +29,45 @@ export default function HomePage() {
     tags: selectedTags,
     categories: selectedCategories,
     term: searchTerm,
+    departments: selectedDepartments,
   });
-  const [pagedDatasets, { pageButtons }] = usePagination(datasets);
+  const [pagedDatasets, { pageButtons }] = usePagination(datasets, 5);
 
   return (
     <div className="home-page">
-      <div className="categories">
-        <CategorySelector
-          categories={categories}
-          onChange={setSelectedCategories}
-          selected={selectedCategories}
-        />
-      </div>
-
-      <div className="tags">
-        <TagSelector
-          tags={tags}
-          selected={selectedTags}
-          onChange={setSelectedTags}
-        />
+      <div className="filters">
+        <div className="categories">
+          <MultiSelector
+            items={categories}
+            onChange={setSelectedCategories}
+            selected={selectedCategories}
+            title="Categories"
+          />
+        </div>
+        <div className="tags">
+          <MultiSelector
+            items={tags}
+            selected={selectedTags}
+            onChange={setSelectedTags}
+            title="Tags"
+          />
+        </div>
+        <div className="departments">
+          <MultiSelector
+            items={departments}
+            selected={selectedDepartments}
+            onChange={setSelectedDepartments}
+            title="Departments"
+          />
+        </div>
       </div>
       <div className="datasets">
-        <h2>
-          Datasets ({pagedDatasets.length} / {datasets.length} )
-        </h2>
         <div className="search">
           <input
             type="text"
             onChange={(e) => setSearchTerm(e.target.value)}
             value={searchTerm}
-            placeholder="search"
+            placeholder="Search for dataset"
           />
           {collection.datasets.length > 0 && (
             <Link to="/collection/new">
@@ -60,6 +75,15 @@ export default function HomePage() {
             </Link>
           )}
         </div>
+        <div className="count-and-sort">
+          <p>
+            <span className="bold">{datasets.length}</span> datasets
+          </p>
+          <p>
+            Sort by: <span className="bold">Recently updated</span>
+          </p>
+        </div>
+
         <ul className="dataset-list">
           {pagedDatasets.map((dataset) => (
             <Dataset

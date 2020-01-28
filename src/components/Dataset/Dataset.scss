@@ -1,28 +1,69 @@
 .dataset {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr min-content;
+  grid-template-rows: max-content mimmax(1fr, 2rem) min-content;
+  grid-template-areas: 'title collection' 'description updated' 'meta .';
+  grid-column-gap: 40px;
+  grid-row-gap: 13px;
   flex-direction: column;
   border: 1px solid;
   width: 100%;
   margin-bottom: 20px;
-  -moz-box-shadow: 2px 2px 23px 0px rgba(0, 0, 0, 0.75);
-  webkit-box-shadow: 2px 2px 23px 0px rgba(0, 0, 0, 0.75);
-  box-shadow: 2px 2px 23px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
   background-color: white;
   box-sizing: border-box;
-  padding: 10px 20px;
+  padding: 20px;
   text-align: left;
+  border-radius: 2px;
 }
 
-.dataset-tags {
-  text-align: right;
+.dataset-last-update {
+  grid-area: updated;
+  .header {
+    font-weight: bold;
+  }
+  p {
+    margin: 0px;
+    padding: 0px;
+  }
+}
+.dataset-description {
+  grid-area: description;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0px 0px 0px;
+}
+
+.dataset-meta {
+  grid-area: meta;
+  text-align: left;
+  display: flex;
+  flex-direction: row;
+  span {
+    font-weight: bold;
+    margin-right: 5px;
+  }
+  .update-frequency {
+    margin-right: 10px;
+  }
 }
 .dataset-title {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   aligin-items: center;
-  justify-content: space-between;
+  grid-area: 'title';
+  p {
+    margin-top: 0px;
+  }
 }
 .dataset button {
   background: none;
   border: none;
+  grid-area: collection;
+
+  background-color: #e7f2ff;
+  color: #0078ff;
+  height: 24px;
+  width: 109px;
 }
