@@ -1,5 +1,5 @@
 export function formatDate(date) {
-  var options = {
+  const options = {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
