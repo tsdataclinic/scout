@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import moment from 'moment';
 import RawHTML from '../../components/RawHTML/RawHTML';
 import ColumnMatchTable from '../../components/ColumnMatchTable/ColumnMatchTable';
-import { useDataset, useJoinableDatasets } from '../../hooks/datasets';
+import Dataset from '../../components/Dataset/Dataset';
+import {
+  useDataset,
+  useDatasets,
+  useJoinableDatasets,
+} from '../../hooks/datasets';
 import './DatasetPage.scss';
 
 const formatDate = (date) => moment(date).format('MMMM DD, YYYY');
@@ -10,10 +15,9 @@ const formatDate = (date) => moment(date).format('MMMM DD, YYYY');
 export default function DatasetPage({ match }) {
   const { datasetID } = match.params;
   const dataset = useDataset(datasetID);
+  const similarDatasets = useDatasets({});
   const joins = useJoinableDatasets(dataset);
-
-  console.log(dataset);
-
+  const [activeTab, setActiveTab] = useState('joins');
   const resource = dataset?.resource;
   const pageViews = resource?.page_views;
   const classification = dataset?.classification;
@@ -29,7 +33,7 @@ export default function DatasetPage({ match }) {
   const informationAgency = domainMetadata?.find(
     ({ key }) => key === 'Dataset-Information_Agency',
   )?.value;
-  console.log(dataset);
+
   return dataset ? (
     <div className="dataset-page">
       <div className="dataset-details">
@@ -78,13 +82,43 @@ export default function DatasetPage({ match }) {
       </div>
       <div className="dataset-recomendataions">
         <h2>Other datasets to consider</h2>
-        <h3>Potential Join Columns</h3>
-        <p>
-          Find datasets that share a column with the current dataset. These
-          columns might be interesting datasets to join with the current dataset
-          to add additional details or bring in context
-        </p>
-        <ColumnMatchTable dataset={dataset} joinColumns={joins} />
+        <div className="tabs">
+          <button
+            type="button"
+            className={activeTab === 'joins' ? 'active' : ''}
+            onClick={() => setActiveTab('joins')}
+          >
+            Potential Join Columns
+          </button>
+          <button
+            type="button"
+            className={activeTab === 'theme' ? 'active' : ''}
+            onClick={() => setActiveTab('theme')}
+          >
+            Thematically Similar
+          </button>
+        </div>
+        {activeTab === 'joins' && (
+          <>
+            <p>
+              Find datasets that share a column with the current dataset. These
+              columns might be interesting datasets to join with the current
+              dataset to add additional details or bring in context
+            </p>
+            <ColumnMatchTable dataset={dataset} joinColumns={joins} />
+          </>
+        )}
+        {activeTab === 'theme' && (
+          <>
+            <p>
+              Dataset that are thematically similar based on name and
+              description
+            </p>
+            {similarDatasets.slice(0, 10).map((d) => (
+              <Dataset dataset={d} />
+            ))}
+          </>
+        )}
       </div>
     </div>
   ) : (

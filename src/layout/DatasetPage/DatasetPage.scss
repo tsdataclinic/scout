@@ -17,6 +17,25 @@
     background-color: #f7fafc;
     padding: 20px 40px;
   }
+  .tabs {
+    display: flex;
+    border-bottom: 3px solid #edf2f5;
+    box-sizing: border-box;
+    padding: 20px 0px 5px 0px;
+    margin-bottom: 10px;
+
+    button {
+      font-size: 14px;
+      margin-right: 20px;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+    button.active {
+      color: #0078ff;
+      border-bottom: 1px solid #0078ff;
+    }
+  }
   section {
     margin-bottom: 20px;
     display: flex;
