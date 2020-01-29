@@ -12,6 +12,8 @@ export default function DatasetPage({ match }) {
   const dataset = useDataset(datasetID);
   const joins = useJoinableDatasets(dataset);
 
+  console.log(dataset);
+
   const resource = dataset?.resource;
   const pageViews = resource?.page_views;
   const classification = dataset?.classification;
@@ -19,6 +21,7 @@ export default function DatasetPage({ match }) {
   const updatedAutomation = domainMetadata?.find(
     ({ key, value }) => key === 'Update_Automation' && value === 'No',
   )?.value;
+
   const updateFrequency = domainMetadata?.find(
     ({ key }) => key === 'Update_Update-Frequency',
   )?.value;
@@ -30,34 +33,48 @@ export default function DatasetPage({ match }) {
   return dataset ? (
     <div className="dataset-page">
       <div className="dataset-details">
-        <h2>{resource.name}</h2>
-        <p>{informationAgency}</p>
-        <RawHTML html={resource.description} />
-        <h2>Metadata</h2>
-        <h3>Update Automation</h3>
-        <p>{updatedAutomation}</p>
-        <h3>Update Frequency</h3>
-        <p>{updateFrequency}</p>
-        <h3>Dataset Owner</h3>
-        <p>{dataset?.owner.display_name}</p>
-        {informationAgency && (
-          <>
-            <h3>Agency</h3>
-            <p>{informationAgency}</p>
-          </>
-        )}
-        {classification?.domain_category && (
-          <>
-            <h3>Category</h3>
-            <p>{classification.domain_category}</p>
-          </>
-        )}
-        <h3>Updated</h3>
-        <p>{formatDate(resource?.updatedAt)}</p>
-        <h3>Metadata Updated at</h3>
-        <p>{formatDate(resource?.metadata_updated_at)}</p>
-        <h3>Page Views</h3>
-        <p>{pageViews?.page_views_total}</p>
+        <section>
+          <h2>{resource.name}</h2>
+          <p>{informationAgency}</p>
+          <RawHTML html={resource.description} />
+        </section>
+        <section className="external-link">
+          <p>Powered by</p>
+          <img
+            alt="NYC Open Data"
+            src="https://opendata.cityofnewyork.us/wp-content/themes/opendata-wp/assets/img/nyc-open-data-logo.svg"
+          />
+          <a target="_blank" rel="noopener noreferrer" href={dataset.permalink}>
+            View on Open Data
+          </a>
+        </section>
+        <section className="metadata">
+          <h2>Metadata</h2>
+          <h3>Update Automation</h3>
+          <p>{updatedAutomation}</p>
+          <h3>Update Frequency</h3>
+          <p>{updateFrequency}</p>
+          <h3>Dataset Owner</h3>
+          <p>{dataset?.owner.display_name}</p>
+          {informationAgency && (
+            <>
+              <h3>Agency</h3>
+              <p>{informationAgency}</p>
+            </>
+          )}
+          {classification?.domain_category && (
+            <>
+              <h3>Category</h3>
+              <p>{classification.domain_category}</p>
+            </>
+          )}
+          <h3>Updated</h3>
+          <p>{formatDate(resource?.updatedAt)}</p>
+          <h3>Metadata Updated at</h3>
+          <p>{formatDate(resource?.metadata_updated_at)}</p>
+          <h3>Page Views</h3>
+          <p>{pageViews?.page_views_total}</p>
+        </section>
       </div>
       <div className="dataset-recomendataions">
         <h2>Other datasets to consider</h2>

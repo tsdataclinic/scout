@@ -17,4 +17,34 @@
     background-color: #f7fafc;
     padding: 20px 40px;
   }
+  section {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    a {
+      box-sizing: border-box;
+      padding: 5px 10px;
+      border-radius: 6px;
+      border: 1px solid black;
+      width: 118px;
+      font-weight: 700;
+    }
+  }
+  .external-link {
+    p {
+      font-weight: 700;
+    }
+  }
+  img {
+    width: 120px;
+    margin-bottom: 10px;
+  }
+  .metadata {
+    h2 {
+      margin-bottom: 20px;
+    }
+    p {
+      margin-bottom: 20px;
+    }
+  }
 }
