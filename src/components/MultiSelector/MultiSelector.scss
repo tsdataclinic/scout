@@ -1,0 +1,42 @@
+.mutli-selector {
+  box-sizing: border-box;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  max-height: 500px;
+
+  .multi-list {
+    overflow-y: auto;
+    flex: 1;
+
+    li {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      margin-top: 5px;
+      input {
+        margin-right: 10px;
+      }
+      .item-name {
+        flex: 1;
+      }
+      span.pill {
+        color: #5d7380;
+        background-color: #e7eef7;
+        padding: 2px 3px;
+        border-radius: 5px;
+        font-weight: 700;
+      }
+    }
+  }
+  .checkbox {
+    width: 16px;
+    height: 16px;
+  }
+  .search {
+    padding: 10px 0px 10px 0px;
+    input {
+      padding: 5px;
+    }
+  }
+}

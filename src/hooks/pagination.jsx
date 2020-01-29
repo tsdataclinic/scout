@@ -2,29 +2,35 @@ import React, { useState, useMemo, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 
 export default function usePagination(data, perPage = 20) {
-  const items = useMemo(() => data.length, [data]);
+  const pages = useMemo(() => Math.ceil(data.length / perPage), [
+    data,
+    perPage,
+  ]);
   const [currentPageNo, setCurrentPageNo] = useState(0);
 
   useEffect(() => {
     setCurrentPageNo(0);
   }, [data]);
 
-  const pages = Math.ceil(items / perPage);
-
   const pageButtons = (
-    <ReactPaginate
-      previousLabel="previous"
-      nextLabel="next"
-      breakLabel="..."
-      breakClassName="break-me"
-      pageCount={pages.length}
-      onPageChange={({ selected: page }) => {
-        setCurrentPageNo(page);
-      }}
-      containerClassName="pagination"
-      subContainerClassName="pages pagination"
-      activeClassName="active"
-    />
+    <nav>
+      <ReactPaginate
+        previousLabel="previous"
+        nextLabel="next"
+        breakLabel="..."
+        breakClassName="break-me"
+        pageCount={pages}
+        onPageChange={({ selected: page }) => {
+          setCurrentPageNo(page);
+        }}
+        containerClassName="pagination"
+        subContainerClassName="pages pagination"
+        activeClassName="active"
+        previousClassName="page-item"
+        nextClassName="page-item"
+        pageClassName="page-item"
+      />
+    </nav>
   );
 
   const content = useMemo(
