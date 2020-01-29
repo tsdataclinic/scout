@@ -76,24 +76,16 @@ export function useDatasets({ tags, term, categories, departments, ids }) {
   }, [datasets, ids, tags, categories, departments, term]);
 }
 
-export function useJoinColumnUniqueCount(joins) {
-  const [uniqueCounts, setUniqueCounts] = useState([]);
+export function useUniqueColumnEntries(dataset, column) {
+  const [uniqueEntries, setUniqueEntries] = useState(null);
   useEffect(() => {
-    let promises = [];
-    joins.forEach((j) => {
-      j.joinableColumns.forEach((col) => {
-        promises.push(
-          getUniqueEntries(j.dataset, col).then((res) => ({
-            dataset: j.dataset.resource.id,
-            col,
-            distinct: res,
-          })),
-        );
+    getUniqueEntries(dataset, column).then((res) => {
+      setUniqueEntries({
+        dataset: dataset.resource.id,
+        column,
+        distinct: res,
       });
     });
-    // This ensures that we resolve even if one of our fetch requests fail
-    promises = promises.map((p) => p.catch(() => undefined));
-    Promise.all(promises).then((result) => setUniqueCounts(result));
-  }, [joins]);
-  return uniqueCounts;
+  }, [dataset, column]);
+  return uniqueEntries;
 }
