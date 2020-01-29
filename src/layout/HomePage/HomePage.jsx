@@ -23,6 +23,7 @@ export default function HomePage() {
     collection,
     { addToCollection, removeFromCollection },
   ] = useCollection();
+  const sort_by = useTags();
 
   const datasets = useDatasets({
     tags: selectedTags,
@@ -30,6 +31,7 @@ export default function HomePage() {
     term: searchTerm,
     departments: selectedDepartments,
   });
+  // debugger
   const [pagedDatasets, { pageButtons }] = usePagination(datasets, 5);
 
   return (
@@ -73,9 +75,20 @@ export default function HomePage() {
           <p>
             <span className="bold">{datasets.length}</span> datasets
           </p>
-          <p>
-            Sort by: <span className="bold">Recently updated</span>
-          </p>
+          <div className="sort">
+            <div className="sort-group">
+              <label for="sort-types">Sort by:</label>
+              <div className="dropdown">
+                <select className="sort-types">
+                  <option value="alpha">Alphabetical</option>
+                  <option value="views">Most Viewed</option>
+                  <option value="downloads">Most Downloaded</option>
+                  <option value="added">Recently Added</option>
+                  <option value="updated">Recently Updated</option>
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
 
         <ul className="dataset-list">
