@@ -1,0 +1,17 @@
+.column-suggestions {
+  border: 1px solid #edf2f5;
+  .table-row {
+    background-color: #e7f6fc;
+    cursor: pointer;
+  }
+}
+
+.column-suggestions.collapsed {
+  .table-row {
+    background-color: white;
+  }
+}
+
+.columns-suggestions-matches {
+  padding: 10px 10px 10px 60px;
+}
