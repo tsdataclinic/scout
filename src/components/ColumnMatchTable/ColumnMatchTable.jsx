@@ -1,12 +1,15 @@
-import React, { useCallback,useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import ColumnSuggestions from '../ColumnSuggestions/ColumnSuggestions';
 import './ColumnMatchTable.scss';
 
 export default function ColumnMatchTable({ dataset, joinColumns }) {
   const columns = dataset.resource.columns_name;
 
-  const suggestionsForColumn = useCallback((col, candidates) =>
-    columns ? candidates.filter((c) => c.joinableColumns[0] === col) : [], [joinColumns]);
+  const suggestionsForColumn = useCallback(
+    (col, candidates) =>
+      columns ? candidates.filter((c) => c.joinableColumns[0] === col) : [],
+    [columns],
+  );
 
   const sortedColumns = useMemo(
     () =>

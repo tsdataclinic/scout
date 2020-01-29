@@ -27,11 +27,17 @@ export default function ColumnSuggestions({ column, joins, dataset }) {
 
   return (
     <div className={`column-suggestions ${collapsed ? 'collapsed' : ''}`}>
-		<div className="table-row" role='button'
-            onKeydown ={(e)=> {if(e.keyCode===36) { setCollapsed(!collapsed)}  }}
-			onClick={() => setCollapsed(!collapsed)}
-			tabIndex="0"
-		>
+      <div
+        className="table-row"
+        role="button"
+        onKeydown={(e) => {
+          if (e.keyCode === 36) {
+            setCollapsed(!collapsed);
+          }
+        }}
+        onClick={() => setCollapsed(!collapsed)}
+        tabIndex="0"
+      >
         <span className="column-collapse">
           <FontAwesomeIcon icon={collapsed ? faAngleRight : faAngleDown} />{' '}
           {column}

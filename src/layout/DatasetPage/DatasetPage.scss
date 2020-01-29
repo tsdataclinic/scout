@@ -1,24 +1,20 @@
 .dataset-page {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background-color: white;
   h1 {
     text-align: center;
   }
-
-  .row {
-    padding-bottom: 15px;
+  .dataset-details {
+    width: 360px;
+    padding: 20px 40px;
   }
-
-  .dataset-header {
-    border-bottom: 2px solid #e4e4e4;
-    padding-bottom: 15px;
-    margin-bottom: 30px;
-  }
-  table {
-    td:first-of-type {
-      font-weight: bold;
-    }
-
-    .italics {
-      font-style: italic;
-    }
+  .dataset-recomendataions {
+    flex: 1;
+    background-color: #f7fafc;
+    padding: 20px 40px;
   }
 }
