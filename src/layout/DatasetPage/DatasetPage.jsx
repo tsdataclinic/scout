@@ -57,7 +57,7 @@ export default function DatasetPage({ match }) {
         <h3>Metadata Updated at</h3>
         <p>{formatDate(resource?.metadata_updated_at)}</p>
         <h3>Page Views</h3>
-        <p>{pageViews}</p>
+        <p>{pageViews?.page_views_total}</p>
       </div>
       <div className="dataset-recomendataions">
         <h2>Other datasets to consider</h2>
