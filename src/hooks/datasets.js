@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect } from 'react';
 import { useStateValue } from '../contexts/OpenDataContext';
 import { findJoinable, getUniqueEntries } from '../utils/socrata';
+import moment from 'moment';
 
 export function useStateLoaded() {
   const [{ stateLoaded }] = useStateValue();
@@ -103,6 +104,38 @@ export function useDatasets({ tags, term, categories, departments, ids }) {
 
     return filteredDatasets;
   }, [datasets, ids, tags, categories, departments, term]);
+}
+
+export function useSortDatsetsBy(datasets, type, asc = false) {
+  console.log('here ', type, asc);
+  return useMemo(() => {
+    console.log('updating sort ');
+    const result = datasets.sort((a, b) => {
+      let valA = null;
+      let valB = null;
+      switch (type) {
+        case 'Name':
+          valA = a.resource.name;
+          valB = b.resource.name;
+          break;
+        case 'Created At':
+          valA = a.resource.createdAt;
+          valB = b.resource.createdAt;
+          break;
+        case 'Updated At':
+          valA = a.resource.updatedAt;
+          valB = b.resource.updatedAt;
+          break;
+
+        default:
+      }
+      return (valA < valB ? 1 : -1) * (asc ? 1 : -1);
+    });
+    if (result && result.length > 0) {
+      console.log(result[0].resource.name);
+    }
+    return result;
+  }, [datasets, type, asc]);
 }
 
 export function useUniqueColumnEntries(dataset, column) {

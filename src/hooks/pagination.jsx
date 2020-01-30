@@ -33,9 +33,11 @@ export default function usePagination(data, perPage = 20) {
     </nav>
   );
 
+  // This wouldnt trigger on changes to data order without the data[0] need to
+  // find a better solution to this going forward
   const content = useMemo(
     () => data.slice(currentPageNo * perPage, (currentPageNo + 1) * perPage),
-    [perPage, currentPageNo, data],
+    [perPage, currentPageNo, data, data[0]],
   );
 
   return [
