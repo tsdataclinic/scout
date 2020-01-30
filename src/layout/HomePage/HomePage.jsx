@@ -5,9 +5,11 @@ import {
   useTags,
   useDepartments,
   useDatasets,
+  useStateLoaded,
 } from '../../hooks/datasets';
 import useCollection from '../../hooks/collections';
 import Dataset from '../../components/Dataset/Dataset';
+import DatasetLoading from '../../components/Loading/DatasetLoading/DatasetLoading';
 import usePagination from '../../hooks/pagination';
 import MultiSelector from '../../components/MultiSelector/MultiSelector';
 
@@ -15,6 +17,7 @@ export default function HomePage() {
   const categories = useCategories();
   const tags = useTags();
   const departments = useDepartments();
+  const loaded = useStateLoaded();
   const [selectedTags, setSelectedTags] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedDepartments, setSelectedDepartments] = useState([]);
@@ -79,15 +82,19 @@ export default function HomePage() {
         </div>
 
         <ul className="dataset-list">
-          {pagedDatasets.map((dataset) => (
-            <Dataset
-              key={dataset?.resource?.id}
-              dataset={dataset}
-              inCollection={collection.datasets.includes(dataset.resource.id)}
-              onAddToCollection={addToCollection}
-              onRemoveFromCollection={removeFromCollection}
-            />
-          ))}
+          {loaded ? (
+            pagedDatasets.map((dataset) => (
+              <Dataset
+                key={dataset?.resource?.id}
+                dataset={dataset}
+                inCollection={collection.datasets.includes(dataset.resource.id)}
+                onAddToCollection={addToCollection}
+                onRemoveFromCollection={removeFromCollection}
+              />
+            ))
+          ) : (
+            <DatasetLoading />
+          )}
         </ul>
         <div>{pageButtons}</div>
       </div>
