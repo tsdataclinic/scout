@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import useFuse from 'react-use-fuse';
 import usePagenation from '../../hooks/pagination';
 import './MultiSelector.scss';
 
@@ -19,13 +20,21 @@ export default function MultiSelector({ items, selected, onChange, title }) {
 
   const itemNames = useMemo(() => Object.keys(items), [items]);
 
-  const filteredItems = useMemo(
-    () =>
-      itemNames ? itemNames.filter((item) => item.includes(searchTerm)) : [],
-    [itemNames, searchTerm],
-  );
+  const { filteredItems, search } = useFuse({
+    data: itemNames,
+    options: {
+      shouldSort: false,
+      findAllMatches: true,
+      caseSensitive: false,
+    },
+  });
 
-  const [pagedItems, { pageButtons }] = usePagenation(filteredItems, 10);
+  useEffect(() => search(searchTerm), [search, searchTerm]);
+  console.log('filtering categories ', searchTerm, itemNames, filteredItems);
+  const [pagedItems, { pageButtons }] = usePagenation(
+    filteredItems || itemNames,
+    10,
+  );
 
   return (
     <div className="mutli-selector">
