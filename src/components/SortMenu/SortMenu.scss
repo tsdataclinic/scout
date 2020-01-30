@@ -1,0 +1,40 @@
+.sort-menu {
+  position: relative;
+  cursor: pointer;
+  margin-bottom: 5px;
+  width: 150px;
+  margin-bottom: 1rem;
+  height: 13px;
+  .wrapper {
+    position: absolute;
+    z-index: 10px;
+    align-items: top;
+    display: flex;
+    justify-content: flex-end;
+    width: 150px;
+    ul {
+      position: relative;
+      z-index: 10;
+      margin: 0px 10px 0px 10px;
+      background-color: #f8f8f8;
+      box-sizing: border-box;
+      padding: 0px 5px 5px 5px;
+
+      li {
+        display: none;
+        cursor: pointer;
+      }
+      li:first-child {
+        display: block;
+      }
+    }
+  }
+}
+
+.sort-menu.expanded {
+  ul {
+    li {
+      display: block;
+    }
+  }
+}

@@ -6,9 +6,11 @@ import {
   useDepartments,
   useDatasets,
   useStateLoaded,
+  useSortDatsetsBy,
 } from '../../hooks/datasets';
 import useCollection from '../../hooks/collections';
 import Dataset from '../../components/Dataset/Dataset';
+import SortMenu from '../../components/SortMenu/SortMenu';
 import DatasetLoading from '../../components/Loading/DatasetLoading/DatasetLoading';
 import usePagination from '../../hooks/pagination';
 import MultiSelector from '../../components/MultiSelector/MultiSelector';
@@ -22,6 +24,9 @@ export default function HomePage() {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedDepartments, setSelectedDepartments] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState('Name');
+  const [sortDirection, setSortDirection] = useState('asc');
+
   const [
     collection,
     { addToCollection, removeFromCollection },
@@ -33,7 +38,17 @@ export default function HomePage() {
     term: searchTerm,
     departments: selectedDepartments,
   });
-  const [pagedDatasets, { pageButtons }] = usePagination(datasets, 5);
+
+  const sortedDatasets = useSortDatsetsBy(
+    datasets,
+    sortBy,
+    sortDirection === 'asc',
+  );
+
+  if (sortedDatasets && sortedDatasets[0]) {
+    console.log('Sorted datasets ', sortedDatasets[0].resource.name);
+  }
+  const [pagedDatasets, { pageButtons }] = usePagination(sortedDatasets, 5);
 
   return (
     <div className="home-page">
@@ -76,9 +91,13 @@ export default function HomePage() {
           <p>
             <span className="bold">{datasets.length}</span> datasets
           </p>
-          <p>
-            Sort by: <span className="bold">Recently updated</span>
-          </p>
+          <SortMenu
+            options={['Name', 'Created At', 'Updated At']}
+            onDirection={(direction) => setSortDirection(direction)}
+            selected={sortBy}
+            direction={sortDirection}
+            onSelected={(selected) => setSortBy(selected)}
+          />
         </div>
 
         <ul className="dataset-list">
