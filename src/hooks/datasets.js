@@ -2,6 +2,11 @@ import { useMemo, useState, useEffect } from 'react';
 import { useStateValue } from '../contexts/OpenDataContext';
 import { findJoinable, getUniqueEntries } from '../utils/socrata';
 
+export function useStateLoaded() {
+  const [{ stateLoaded }] = useStateValue();
+  return stateLoaded;
+}
+
 export function useTags() {
   const [{ tagList }] = useStateValue();
   return tagList;
