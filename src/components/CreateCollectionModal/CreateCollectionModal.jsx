@@ -1,18 +1,12 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import useCollection from '../../hooks/collections';
 import { useDatasets } from '../../hooks/datasets';
 import './CreateCollectionModal.scss';
 
-export default function CreateCollectionModal({ history }) {
-  const [collection, { setName }] = useCollection();
+export default function CreateCollectionModal() {
+  const [collection, { clearCollection, setName }] = useCollection();
   const datasets = useDatasets({ ids: collection.datasets });
-
-  const createCollection = (newCollection) => {
-    const collectionURL = `/collection/${
-      newCollection.name
-    }/${newCollection.datasets.join(',')}`;
-    history.push(collectionURL);
-  };
 
   return (
     <div className="create-collection-modal">
@@ -28,9 +22,13 @@ export default function CreateCollectionModal({ history }) {
         value={collection.name}
         onChange={(e) => setName(e.target.value)}
       />
-      <button type="submit" onClick={() => createCollection(collection)}>
-        Create
-      </button>
+      <Link
+        to={`/collection/${collection.name}/${collection.datasets.join(',')}`}
+      >
+        <button type="submit" onClick={clearCollection}>
+          Create
+        </button>
+      </Link>
     </div>
   );
 }
