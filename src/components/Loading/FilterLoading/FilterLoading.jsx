@@ -1,5 +1,6 @@
 import React from 'react';
 import './FilterLoading.scss';
+import '../Loading.scss';
 
 export default () => (
   <div className="">

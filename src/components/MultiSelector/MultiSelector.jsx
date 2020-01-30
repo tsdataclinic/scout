@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import usePagenation from '../../hooks/pagination';
 import { useStateLoaded } from '../../hooks/datasets';
-import FilterLoading from '../Loading/FilterLoading';
+import FilterLoading from '../Loading/FilterLoading/FilterLoading';
 import './MultiSelector.scss';
 
 export default function MultiSelector({ items, selected, onChange, title }) {
