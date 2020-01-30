@@ -12,6 +12,7 @@ import DatasetPage from './layout/DatasetPage/DatasetPage';
 import CollectionBar from './components/CollectionBar/CollectionBar';
 import CollectionPage from './layout/CollectionPage/CollectionPage';
 import CreateCollectionModal from './components/CreateCollectionModal/CreateCollectionModal';
+import GHPagesRedirect from './components/GHPagesRedirect/GHPagesRedirect';
 
 import 'react-router-modal/css/react-router-modal.css';
 
@@ -26,6 +27,7 @@ function App() {
       <ModalContainer />
       <div className="content">
         <Router basename={process.env.PUBLIC_URL}>
+          <GHPagesRedirect />
           <Switch>
             <Route path="/" exact component={HomePage} />
             <Route path="/dataset/:datasetID" exact component={DatasetPage} />
