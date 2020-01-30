@@ -21,8 +21,8 @@ import 'react-router-modal/css/react-router-modal.css';
 function App() {
   return (
     <div className="App">
-      <ModalContainer />
       <Router basename={process.env.PUBLIC_URL}>
+        <ModalContainer />
         <header>
           <Link to="/">
             <h1>Data Clinic</h1>
