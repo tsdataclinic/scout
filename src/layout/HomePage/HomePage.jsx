@@ -43,20 +43,20 @@ export default function HomePage() {
             title="Categories"
           />
         </div>
-        <div className="tags">
-          <MultiSelector
-            items={tags}
-            selected={selectedTags}
-            onChange={setSelectedTags}
-            title="Tags"
-          />
-        </div>
         <div className="departments">
           <MultiSelector
             items={departments}
             selected={selectedDepartments}
             onChange={setSelectedDepartments}
             title="Departments"
+          />
+        </div>
+        <div className="tags">
+          <MultiSelector
+            items={tags}
+            selected={selectedTags}
+            onChange={setSelectedTags}
+            title="Tags"
           />
         </div>
       </div>
