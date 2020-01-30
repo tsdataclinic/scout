@@ -25,7 +25,12 @@ export default function MultiSelector({ items, selected, onChange, title }) {
     [itemNames, searchTerm],
   );
 
-  const [pagedItems, { pageButtons }] = usePagenation(filteredItems, 10);
+  const sortedItems = useMemo(
+    () => filteredItems.sort((a, b) => (items[a] < items[b] ? 1 : -1)),
+    [filteredItems, items],
+  );
+
+  const [pagedItems, { pageButtons }] = usePagenation(sortedItems, 10);
 
   return (
     <div className="mutli-selector">
