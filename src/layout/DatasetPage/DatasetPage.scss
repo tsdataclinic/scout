@@ -40,6 +40,10 @@
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
+    margin-bottom: 20px;
+    .collection-button {
+      margin-top: 20px;
+    }
     a {
       box-sizing: border-box;
       padding: 5px 10px;
@@ -47,6 +51,8 @@
       border: 1px solid black;
       width: 118px;
       font-weight: 700;
+      margin-bottom: 20px;
+      text-align: center;
     }
   }
   .external-link {

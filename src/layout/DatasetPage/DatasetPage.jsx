@@ -3,10 +3,11 @@ import moment from 'moment';
 import RawHTML from '../../components/RawHTML/RawHTML';
 import ColumnMatchTable from '../../components/ColumnMatchTable/ColumnMatchTable';
 import Dataset from '../../components/Dataset/Dataset';
+import useCollection from '../../hooks/collections';
 import {
   useDataset,
-  useDatasets,
   useJoinableDatasets,
+  useGetSimilarDatasets,
 } from '../../hooks/datasets';
 import './DatasetPage.scss';
 
@@ -15,13 +16,18 @@ const formatDate = (date) => moment(date).format('MMMM DD, YYYY');
 export default function DatasetPage({ match }) {
   const { datasetID } = match.params;
   const dataset = useDataset(datasetID);
-  const similarDatasets = useDatasets({});
   const joins = useJoinableDatasets(dataset);
   const [activeTab, setActiveTab] = useState('joins');
   const resource = dataset?.resource;
   const pageViews = resource?.page_views;
   const classification = dataset?.classification;
   const domainMetadata = classification?.domain_metadata;
+  const similarDatasets = useGetSimilarDatasets(datasetID);
+  const [
+    collection,
+    { addToCollection, removeFromCollection },
+  ] = useCollection();
+
   const updatedAutomation = domainMetadata?.find(
     ({ key, value }) => key === 'Update_Automation' && value === 'No',
   )?.value;
@@ -41,6 +47,19 @@ export default function DatasetPage({ match }) {
           <h2>{resource.name}</h2>
           <p>{informationAgency}</p>
           <RawHTML html={resource.description} />
+          <button
+            type="button"
+            className="collection-button"
+            onClick={() =>
+              collection.datasets.includes(datasetID)
+                ? removeFromCollection(datasetID)
+                : addToCollection(datasetID)
+            }
+          >
+            {collection.datasets.includes(datasetID)
+              ? 'Remove From Collection'
+              : 'Add to Collection'}{' '}
+          </button>
         </section>
         <section className="external-link">
           <p>Powered by</p>
@@ -115,7 +134,15 @@ export default function DatasetPage({ match }) {
               description
             </p>
             {similarDatasets.slice(0, 10).map((d) => (
-              <Dataset dataset={d} />
+              <Dataset
+                onAddToCollection={addToCollection}
+                onRemoveFromCollection={removeFromCollection}
+                dataset={d.dataset}
+                similarity={d.similarity}
+                inCollection={collection.datasets.includes(
+                  d.dataset.resource.id,
+                )}
+              />
             ))}
           </>
         )}
