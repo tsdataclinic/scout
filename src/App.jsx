@@ -5,8 +5,10 @@ import {
   Route,
   Redirect,
   Switch,
+  Link,
 } from 'react-router-dom';
 import { ModalContainer, ModalRoute } from 'react-router-modal';
+
 import HomePage from './layout/HomePage/HomePage';
 import DatasetPage from './layout/DatasetPage/DatasetPage';
 import CollectionBar from './components/CollectionBar/CollectionBar';
@@ -19,14 +21,14 @@ import 'react-router-modal/css/react-router-modal.css';
 function App() {
   return (
     <div className="App">
-      <header>
-        <a href="/">
-          <h1>Data Clinic</h1>
-        </a>
-      </header>
       <ModalContainer />
-      <div className="content">
-        <Router basename={process.env.PUBLIC_URL}>
+      <Router basename={process.env.PUBLIC_URL}>
+        <header>
+          <Link to="/">
+            <h1>Data Clinic</h1>
+          </Link>
+        </header>
+        <div className="content">
           <GHPagesRedirect />
           <Switch>
             <Route path="/" exact component={HomePage} />
@@ -45,8 +47,8 @@ function App() {
             <Redirect from="/" to="/" />
           </Switch>
           <CollectionBar />
-        </Router>
-      </div>
+        </div>
+      </Router>
     </div>
   );
 }

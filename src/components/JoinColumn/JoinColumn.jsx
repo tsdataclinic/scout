@@ -11,11 +11,7 @@ import { useUniqueColumnEntries } from '../../hooks/datasets';
 import useCollection from '../../hooks/collections';
 import './JoinColumn.scss';
 
-export default function ColumnJoin({
-  rightDataset,
-  joinCol,
-  parentUniques,
-}) {
+export default function ColumnJoin({ rightDataset, joinCol, parentUniques }) {
   const [collapsed, setCollapsed] = useState(true);
   const uniqueIds = useUniqueColumnEntries(rightDataset, joinCol);
   const jointlyUnique = useMemo(
@@ -35,7 +31,11 @@ export default function ColumnJoin({
       <div className="join-column-row">
         <span
           onClick={() => setCollapsed(!collapsed)}
-          onKeyDown={(e) =>{  if (e.keycode === 32){ setCollapsed(!collapsed)} }}
+          onKeyDown={(e) => {
+            if (e.keycode === 32) {
+              setCollapsed(!collapsed);
+            }
+          }}
           className="join-column-name"
           role="button"
           tabIndex="0"
@@ -45,18 +45,18 @@ export default function ColumnJoin({
           {rightDataset.resource.name}
         </span>
         <span>
-          {jointlyUnique ? `${jointlyUnique.length} matching id's` : 'loading'} 
+          {jointlyUnique ? `${jointlyUnique.length} matching id's` : 'loading'}
         </span>
         <span>
           <Link to={`/dataset/${rightDataset.resource.id}`}>View dataset</Link>
         </span>
         <button
           type="button"
-          onClick={() => {
+          onClick={() =>
             collection.datasets.includes(rightDataset.resource.id)
               ? removeFromCollection(rightDataset.resource.id)
-              : addToCollection(rightDataset.resource.id);
-          }}
+              : addToCollection(rightDataset.resource.id)
+          }
         >
           {collection.datasets.includes(rightDataset.resource.id)
             ? 'Remove dataset from collection'
