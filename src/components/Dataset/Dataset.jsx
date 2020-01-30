@@ -12,6 +12,7 @@ export default function Dataset({
   onRemoveFromCollection,
   inCollection,
   viewInOpenPortal = false,
+  similarity,
 }) {
   return (
     <div className="dataset" key={dataset.resource.id}>
@@ -22,8 +23,10 @@ export default function Dataset({
         <p>{dataset.resource.attribution}</p>
       </div>
 
+      {similarity && <p>Similarity: {(similarity * 100).toPrecision(2)}%</p>}
       {onAddToCollection && (
         <button
+          className="collection-button"
           type="button"
           onClick={() =>
             inCollection

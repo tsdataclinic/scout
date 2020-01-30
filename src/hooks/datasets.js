@@ -25,6 +25,30 @@ export function useJoinableDatasets(dataset) {
   ]);
 }
 
+export function useGetSimilarDatasets(datasetID) {
+  const [similarityMetrics, setSimilarityMetrics] = useState({});
+  const [{ datasets }] = useStateValue();
+
+  useEffect(() => {
+    fetch('/similarity_metrics.json')
+      .then((r) => r.json())
+      .then((r) => setSimilarityMetrics(r));
+  }, []);
+
+  const similarDatasets = useMemo(
+    () =>
+      similarityMetrics[datasetID]
+        ? similarityMetrics[datasetID].map((match) => ({
+            ...match,
+            dataset: datasets.find((d) => d.resource.id === match.dataset),
+          }))
+        : [],
+
+    [similarityMetrics, datasetID, datasets],
+  );
+  return similarDatasets;
+}
+
 export function useDataset(datasetID) {
   const [{ datasets }] = useStateValue();
   return datasets.find((d) => d.resource.id === datasetID);
