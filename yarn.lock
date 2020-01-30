@@ -1267,11 +1267,6 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@lokibai/react-use-copy-clipboard@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@lokibai/react-use-copy-clipboard/-/react-use-copy-clipboard-1.0.5.tgz#129febdcd629ee23db8023babd2fb1c1b150fc89"
-  integrity sha512-S7vVvXmJSHpCorFG/zxMJh/1Mht6VbBMWw/sNvrJod/1nDsvpnXQAzqDejh6z0h8x5mth/TWcx4ej2rm8bRJNw==
-
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
