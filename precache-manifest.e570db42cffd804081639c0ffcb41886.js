@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "89629981846d7dcc42af63181e4d9cf4",
+    "revision": "464e00268646bb5310d7695e9072e3df",
     "url": "/NewYorkOpenDataExplorer/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/NewYorkOpenDataExplorer/static/css/2.c934cad8.chunk.css"
   },
   {
-    "revision": "baacf96404a4fefa16d8",
+    "revision": "efaa30750b87331df606",
     "url": "/NewYorkOpenDataExplorer/static/css/main.f91e9ea0.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/NewYorkOpenDataExplorer/static/js/2.5c1f7493.chunk.js.LICENSE"
   },
   {
-    "revision": "baacf96404a4fefa16d8",
-    "url": "/NewYorkOpenDataExplorer/static/js/main.0bd0dc04.chunk.js"
+    "revision": "efaa30750b87331df606",
+    "url": "/NewYorkOpenDataExplorer/static/js/main.52027c22.chunk.js"
   },
   {
     "revision": "84342e89dba09b5246b3",
