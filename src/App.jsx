@@ -19,7 +19,9 @@ function App() {
   return (
     <div className="App">
       <header>
-        <h1>Data Clinic</h1>
+        <a href="/">
+          <h1>Data Clinic</h1>
+        </a>
       </header>
       <ModalContainer />
       <div className="content">

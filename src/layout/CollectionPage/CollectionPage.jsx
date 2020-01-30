@@ -1,7 +1,5 @@
 import React from 'react';
-import { useCopyClipboard } from '@lokibai/react-use-copy-clipboard';
 import './CollectionPage.scss';
-
 import {
   EmailShareButton,
   FacebookShareButton,
@@ -10,6 +8,7 @@ import {
   FacebookIcon,
   TwitterIcon,
 } from 'react-share';
+import useClipboard from '../../hooks/useClipboard';
 import { useDatasets } from '../../hooks/datasets';
 import Dataset from '../../components/Dataset/Dataset';
 
@@ -18,33 +17,39 @@ export default function CollectionPage({ match }) {
   const url = window.location.href;
   const datasets = useDatasets({ ids: datasetIDs.split(',') });
 
-  const [isCopied, setCopied] = useCopyClipboard(`${url}`);
+  const [isCopied, setCopied] = useClipboard(url);
   return (
     <div className="collections-page">
-      <h1>{name}</h1>
-      {datasets.map((dataset) => (
-        <Dataset dataset={dataset} />
-      ))}
-      <div className="share">
-        Share this collection:
+      <div className="collections-details">
+        <h2>{name}</h2>
         <p>
-          <FacebookShareButton url={url}>
-            <FacebookIcon />
-          </FacebookShareButton>{' '}
-          <TwitterShareButton url={url}>
-            <TwitterIcon />
-          </TwitterShareButton>
-          <EmailShareButton url={url}>
-            <EmailIcon />
-          </EmailShareButton>
+          {datasets.length} dataset{datasets.length > 1 ? 's' : ''}
         </p>
-        <p>
-          Share link {url}{' '}
+
+        <div>
+          <h3>Share this collection:</h3>
+          <p>{url} </p>
           <button type="button" onClick={setCopied}>
-            {' '}
-            {isCopied ? 'Copied' : 'Copy'}{' '}
+            Copy link
           </button>
-        </p>
+          <span>{isCopied ? 'Copied!' : ' '} </span>
+          <p className="share-icons">
+            <FacebookShareButton url={url}>
+              <FacebookIcon size={36} />
+            </FacebookShareButton>{' '}
+            <TwitterShareButton url={url}>
+              <TwitterIcon size={36} />
+            </TwitterShareButton>
+            <EmailShareButton url={url}>
+              <EmailIcon size={36} />
+            </EmailShareButton>
+          </p>
+        </div>
+      </div>
+      <div className="collections-content">
+        {datasets.map((dataset) => (
+          <Dataset viewInOpenPortal key={dataset.id} dataset={dataset} />
+        ))}
       </div>
     </div>
   );

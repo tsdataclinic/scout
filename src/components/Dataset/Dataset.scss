@@ -15,10 +15,34 @@
   padding: 20px;
   text-align: left;
   border-radius: 2px;
+
+  button {
+    background: none;
+    border: none;
+    grid-area: collection;
+
+    background-color: #e7f2ff;
+    color: #0078ff;
+    height: 24px;
+    width: 109px;
+  }
+  .external-link {
+    button {
+      background: none;
+      border: 1px solid #336699;
+      grid-area: collection;
+      background-color: #ffffff;
+      color: #336699;
+      height: 24px;
+      width: max-content;
+      border-radius: 2px;
+    }
+  }
 }
 
 .dataset-last-update {
   grid-area: updated;
+  min-width: 100px;
   .header {
     font-weight: bold;
   }
@@ -56,14 +80,4 @@
   p {
     margin-top: 0px;
   }
-}
-.dataset button {
-  background: none;
-  border: none;
-  grid-area: collection;
-
-  background-color: #e7f2ff;
-  color: #0078ff;
-  height: 24px;
-  width: 109px;
 }
