@@ -28,7 +28,7 @@ export default function CollectionPage({ match }) {
 
         <div>
           <h3>Share this collection:</h3>
-          <p>{url} </p>
+          <p className="dataset-url">{url} </p>
           <button type="button" onClick={setCopied}>
             Copy link
           </button>

@@ -11,6 +11,15 @@
   .collections-details {
     width: 360px;
     padding: 20px 40px;
+
+    h2 {
+      word-break: break-all;
+    }
+
+    .dataset-url {
+      word-break: break-all;
+    }
+
     button {
       background: none;
       border: 1px solid #336699;
