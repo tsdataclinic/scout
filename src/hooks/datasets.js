@@ -1,7 +1,6 @@
 import { useMemo, useState, useEffect } from 'react';
 import { useStateValue } from '../contexts/OpenDataContext';
 import { findJoinable, getUniqueEntries } from '../utils/socrata';
-import moment from 'moment';
 
 export function useStateLoaded() {
   const [{ stateLoaded }] = useStateValue();
@@ -36,7 +35,7 @@ export function useGetSimilarDatasets(datasetID) {
   const [{ datasets }] = useStateValue();
 
   useEffect(() => {
-    fetch('/similarity_metrics.json')
+    fetch(`${process.env.PUBLIC_URL}/similarity_metrics.json`)
       .then((r) => r.json())
       .then((r) => setSimilarityMetrics(r));
   }, []);
