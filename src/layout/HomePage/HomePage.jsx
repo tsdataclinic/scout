@@ -77,7 +77,7 @@ export default function HomePage() {
           </p>
           <div className="sort">
             <div className="sort-group">
-              <label for="sort-types">Sort by:</label>
+              <label htmlFor="sort-types">Sort by:</label>
               <div className="dropdown">
                 <select className="sort-types">
                   <option value="alpha">Alphabetical</option>

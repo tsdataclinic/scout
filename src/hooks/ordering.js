@@ -6,11 +6,11 @@ export default function orderData(data, criteria) {
 
 	// order by criteria
 	return useMemo(() => {	
-		let sortedDatasets = data;
+		const sortedDatasets = data;
 		
 	// return ordered data
 		return sortedDatasets;
-	}, [data, criteria]);	
+	}, [data]);	
 
 	
 }
