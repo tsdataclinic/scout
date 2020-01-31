@@ -136,6 +136,7 @@ export function useSortDatsetsBy(datasets, type, asc = false) {
           break;
         default:
       }
+
       return (valA < valB ? 1 : -1) * (asc ? 1 : -1);
     });
     // if (result && result.length > 0) {
