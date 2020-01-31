@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
+
 import Dexie from 'dexie';
 import {
   getManifest,
@@ -55,6 +56,10 @@ export const StateProvider = ({ children }) => {
         dispatch({
           type: 'HYDRATE_STATE',
           payload: { ...initalState, ...cachedState, cache_loaded: true },
+        });
+        // Set state as loaded to indicate that data is ready to use
+        dispatch({
+          type: 'SET_LOADED',
         });
       } else {
         getManifest().then((manifest) => {

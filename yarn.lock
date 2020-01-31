@@ -1068,6 +1068,13 @@
   dependencies:
     "@fortawesome/fontawesome-common-types" "^0.2.26"
 
+"@fortawesome/free-regular-svg-icons@^5.12.0":
+  version "5.12.0"
+  resolved "https://registry.yarnpkg.com/@fortawesome/free-regular-svg-icons/-/free-regular-svg-icons-5.12.0.tgz#9b7ed5dbd7581aab47960802cc116fdc8b6c8b7d"
+  integrity sha512-FAvpmylTs0PosHwHrWPQX6/7ODc9M11kCE6AOAujFufDYzqTj2cPHT4yJO7zTEkKdAbbusJzbWpnOboMuyjeQA==
+  dependencies:
+    "@fortawesome/fontawesome-common-types" "^0.2.26"
+
 "@fortawesome/free-solid-svg-icons@^5.12.0":
   version "5.12.0"
   resolved "https://registry.yarnpkg.com/@fortawesome/free-solid-svg-icons/-/free-solid-svg-icons-5.12.0.tgz#8decac5844e60453cc0c7c51437d1461df053a35"
@@ -1262,11 +1269,6 @@
     "@types/istanbul-lib-coverage" "^2.0.0"
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
-
-"@lokibai/react-use-copy-clipboard@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@lokibai/react-use-copy-clipboard/-/react-use-copy-clipboard-1.0.5.tgz#129febdcd629ee23db8023babd2fb1c1b150fc89"
-  integrity sha512-S7vVvXmJSHpCorFG/zxMJh/1Mht6VbBMWw/sNvrJod/1nDsvpnXQAzqDejh6z0h8x5mth/TWcx4ej2rm8bRJNw==
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"

@@ -1,6 +1,8 @@
 import React from 'react';
 import './Dataset.scss';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { formatDate } from '../../utils/formatters';
 import RawHTML from '../RawHTML/RawHTML';
 
@@ -9,6 +11,8 @@ export default function Dataset({
   onAddToCollection,
   onRemoveFromCollection,
   inCollection,
+  viewInOpenPortal = false,
+  similarity,
 }) {
   return (
     <div className="dataset" key={dataset.resource.id}>
@@ -19,6 +23,7 @@ export default function Dataset({
         <p>{dataset.resource.attribution}</p>
       </div>
 
+      {similarity && <p>Similarity: {(similarity * 100).toPrecision(2)}%</p>}
       {onAddToCollection && (
         <button
           className="collection-button"
@@ -31,6 +36,19 @@ export default function Dataset({
         >
           {inCollection ? 'Remove from collection' : 'Add to collection'}
         </button>
+      )}
+      {viewInOpenPortal && (
+        <a
+          className="external-link"
+          target="_blank"
+          rel="noopener noreferrer"
+          href={dataset.permalink}
+        >
+          <button type="button">
+            View on Open Data&nbsp;
+            <FontAwesomeIcon icon={faExternalLinkAlt} />
+          </button>
+        </a>
       )}
 
       <div className="dataset-last-update">

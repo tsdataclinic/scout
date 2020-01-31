@@ -1,6 +1,12 @@
 import { useMemo, useState, useEffect } from 'react';
 import { useStateValue } from '../contexts/OpenDataContext';
 import { findJoinable, getUniqueEntries } from '../utils/socrata';
+import moment from 'moment';
+
+export function useStateLoaded() {
+  const [{ stateLoaded }] = useStateValue();
+  return stateLoaded;
+}
 
 export function useTags() {
   const [{ tagList }] = useStateValue();
@@ -23,6 +29,30 @@ export function useJoinableDatasets(dataset) {
     dataset,
     datasets,
   ]);
+}
+
+export function useGetSimilarDatasets(datasetID) {
+  const [similarityMetrics, setSimilarityMetrics] = useState({});
+  const [{ datasets }] = useStateValue();
+
+  useEffect(() => {
+    fetch('/similarity_metrics.json')
+      .then((r) => r.json())
+      .then((r) => setSimilarityMetrics(r));
+  }, []);
+
+  const similarDatasets = useMemo(
+    () =>
+      similarityMetrics[datasetID]
+        ? similarityMetrics[datasetID].map((match) => ({
+            ...match,
+            dataset: datasets.find((d) => d.resource.id === match.dataset),
+          }))
+        : [],
+
+    [similarityMetrics, datasetID, datasets],
+  );
+  return similarDatasets;
 }
 
 export function useDataset(datasetID) {
@@ -76,24 +106,55 @@ export function useDatasets({ tags, term, categories, departments, ids }) {
   }, [datasets, ids, tags, categories, departments, term]);
 }
 
-export function useJoinColumnUniqueCount(joins) {
-  const [uniqueCounts, setUniqueCounts] = useState([]);
+export function useSortDatsetsBy(datasets, type, asc = false) {
+  // console.log('here ', type, asc);
+  return useMemo(() => {
+    // console.log('updating sort ');
+    const result = datasets.sort((a, b) => {
+      let valA = null;
+      let valB = null;
+      switch (type) {
+        case 'Name':
+          valA = a.resource.name;
+          valB = b.resource.name;
+          break;
+        case 'Created At':
+          valA = a.resource.createdAt;
+          valB = b.resource.createdAt;
+          break;
+        case 'Updated At':
+          valA = a.resource.updatedAt;
+          valB = b.resource.updatedAt;
+          break;
+        case 'Downloads':
+          valA = a.resource.download_count;
+          valB = b.resource.download_count;
+          break;
+        case 'Views':
+          valA = a.resource.page_views.page_views_total;
+          valB = b.resource.page_views.page_views_total;
+          break;
+        default:
+      }
+      return (valA < valB ? 1 : -1) * (asc ? 1 : -1);
+    });
+    // if (result && result.length > 0) {
+    //   console.log(result[0].resource.name);
+    // }
+    return result;
+  }, [datasets, type, asc]);
+}
+
+export function useUniqueColumnEntries(dataset, column) {
+  const [uniqueEntries, setUniqueEntries] = useState(null);
   useEffect(() => {
-    let promises = [];
-    joins.forEach((j) => {
-      j.joinableColumns.forEach((col) => {
-        promises.push(
-          getUniqueEntries(j.dataset, col).then((res) => ({
-            dataset: j.dataset.resource.id,
-            col,
-            distinct: res,
-          })),
-        );
+    getUniqueEntries(dataset, column).then((res) => {
+      setUniqueEntries({
+        dataset: dataset.resource.id,
+        column,
+        distinct: res,
       });
     });
-    // This ensures that we resolve even if one of our fetch requests fail
-    promises = promises.map((p) => p.catch(() => undefined));
-    Promise.all(promises).then((result) => setUniqueCounts(result));
-  }, [joins]);
-  return uniqueCounts;
+  }, [dataset, column]);
+  return uniqueEntries;
 }
