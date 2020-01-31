@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect } from 'react';
+// import moment from 'moment';
 import { useStateValue } from '../contexts/OpenDataContext';
 import { findJoinable, getUniqueEntries } from '../utils/socrata';
-import moment from 'moment';
 
 export function useStateLoaded() {
   const [{ stateLoaded }] = useStateValue();
