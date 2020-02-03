@@ -23,6 +23,11 @@ export function useDepartments() {
   return departments;
 }
 
+export function useColumns() {
+  const [{ columns }] = useStateValue();
+  return columns;
+}
+
 export function useJoinableDatasets(dataset) {
   const [{ datasets }] = useStateValue();
   return useMemo(() => (dataset ? findJoinable(dataset, datasets) : []), [
@@ -68,7 +73,7 @@ export function useGetDatasetsByIds(ids) {
   ]);
 }
 
-export function useDatasets({ tags, term, categories, departments }) {
+export function useDatasets({ tags, term, categories, columns, departments }) {
   const [{ datasets }] = useStateValue();
 
   const { result: searchedDatasets, search } = useFuse({
@@ -105,6 +110,16 @@ export function useDatasets({ tags, term, categories, departments }) {
             ).length > 0,
         );
       }
+      console.log('filtering with cols ', columns);
+      if (columns && columns.length > 0) {
+        console.log('filtering with columns ', columns);
+        resultDatasets = resultDatasets.filter(
+          (dataset) =>
+            dataset.resource.columns_name &&
+            dataset.resource.columns_name.filter((col) => columns.includes(col))
+              .length > 0,
+        );
+      }
 
       if (departments && departments > 0) {
         resultDatasets = resultDatasets.filter((dataset) =>
@@ -119,7 +134,7 @@ export function useDatasets({ tags, term, categories, departments }) {
       return resultDatasets;
     }
     return datasets;
-  }, [searchedDatasets, tags, categories, departments, datasets]);
+  }, [searchedDatasets, tags, categories, columns, departments, datasets]);
 }
 
 export function useSortDatsetsBy(datasets, type, asc = false) {

@@ -1,19 +1,6 @@
 const SOCRATA_NY_OPENDATA_ENDPOINT =
   'https://api.us.socrata.com/api/catalog/v1?domains=data.cityofnewyork.us&search_context=data.cityofnewyork.us';
 
-const ALLOWED_JOIN_COLUMNS = [
-  'BIN',
-  'BBL',
-  'NTA',
-  'Community Board',
-  'Census Tract',
-  'DBN',
-  'Council District',
-  'School Name',
-  'City Council Districts',
-  'DFTA ID',
-];
-
 async function getMaifestPage(pageNo, limit = 100) {
   return fetch(
     `${SOCRATA_NY_OPENDATA_ENDPOINT}&offset=${pageNo * limit}&limit=${limit}`,
@@ -65,12 +52,33 @@ export async function getManifest() {
     [...Array(pages)].map((_, i) =>
       getMaifestPage(i).then((resp) => resp.results),
     ),
-  ).then((list) =>
-    list.reduce(
+  ).then((list) => {
+    return list.reduce(
       (datasetPage, allDatasets) => [...allDatasets, ...datasetPage],
       [],
-    ),
-  );
+    );
+  });
+}
+
+/**
+ * Extract from the datasets array, a unique set of columns.
+ * @return {Array<string>} an array of unique categories
+ */
+export function getColumns(datasets) {
+  const columnList = {};
+
+  datasets.forEach((dataset) => {
+    if (dataset.resource.columns_name) {
+      dataset.resource.columns_name.forEach((col) => {
+        if (col in columnList) {
+          columnList[col] += 1;
+        } else {
+          columnList[col] = 1;
+        }
+      });
+    }
+  });
+  return columnList;
 }
 
 /**
@@ -125,23 +133,20 @@ export function getDepartments(datasets) {
  * @return {Array<string>} an array of unique tags
  */
 export function getTagList(datasets) {
-  const tagList = datasets.reduce(
-    (tags, dataset) => [
-      ...tags,
-      ...(dataset.classification.domain_tags
-        ? dataset.classification.domain_tags
-        : []),
-    ],
-    [],
-  );
-  const counts = tagList.reduce(
-    (totals, tag) =>
-      tag in totals
-        ? { ...totals, [tag]: totals[tag] + 1 }
-        : { ...totals, [tag]: 1 },
-    {},
-  );
-  return counts;
+  const tagList = {};
+
+  datasets.forEach((dataset) => {
+    if (dataset.classification.domain_tags) {
+      dataset.classification.domain_tags.forEach((tag) => {
+        if (tag in tagList) {
+          tagList[tag] += 1;
+        } else {
+          tagList[tag] = 1;
+        }
+      });
+    }
+  });
+  return tagList;
 }
 
 export function getUniqueEntriesCount(dataset, column) {
