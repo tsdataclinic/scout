@@ -47,7 +47,7 @@ export function useDatasets({ tags, term, categories, departments }) {
     options: {
       shouldSort: true,
       findAllMatches: true,
-      keys: ['resource.name'],
+      keys: ['resource.name', 'resource.description'],
       caseSensitive: false,
     },
   });

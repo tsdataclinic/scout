@@ -67,6 +67,7 @@ export default function HomePage() {
             type="text"
             onChange={(e) => setSearchTerm(e.target.value)}
             value={searchTerm}
+            debounceTimeout={300}
             placeholder="Search for dataset"
           />
         </div>
