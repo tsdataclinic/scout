@@ -1,25 +1,25 @@
 {
   "files": {
     "main.css": "/NewYorkOpenDataExplorer/static/css/main.fc08217a.chunk.css",
-    "main.js": "/NewYorkOpenDataExplorer/static/js/main.956ce58a.chunk.js",
-    "main.js.map": "/NewYorkOpenDataExplorer/static/js/main.956ce58a.chunk.js.map",
+    "main.js": "/NewYorkOpenDataExplorer/static/js/main.086c507d.chunk.js",
+    "main.js.map": "/NewYorkOpenDataExplorer/static/js/main.086c507d.chunk.js.map",
     "runtime-main.js": "/NewYorkOpenDataExplorer/static/js/runtime-main.eb4b83cb.js",
     "runtime-main.js.map": "/NewYorkOpenDataExplorer/static/js/runtime-main.eb4b83cb.js.map",
     "static/css/2.7cb32921.chunk.css": "/NewYorkOpenDataExplorer/static/css/2.7cb32921.chunk.css",
-    "static/js/2.18afdd1f.chunk.js": "/NewYorkOpenDataExplorer/static/js/2.18afdd1f.chunk.js",
-    "static/js/2.18afdd1f.chunk.js.map": "/NewYorkOpenDataExplorer/static/js/2.18afdd1f.chunk.js.map",
+    "static/js/2.4504dfac.chunk.js": "/NewYorkOpenDataExplorer/static/js/2.4504dfac.chunk.js",
+    "static/js/2.4504dfac.chunk.js.map": "/NewYorkOpenDataExplorer/static/js/2.4504dfac.chunk.js.map",
     "index.html": "/NewYorkOpenDataExplorer/index.html",
-    "precache-manifest.06cc0b8c0ab64bdc7505f39eb14c28cc.js": "/NewYorkOpenDataExplorer/precache-manifest.06cc0b8c0ab64bdc7505f39eb14c28cc.js",
+    "precache-manifest.17dbbc9e35066881dfa5e24ad7f6b169.js": "/NewYorkOpenDataExplorer/precache-manifest.17dbbc9e35066881dfa5e24ad7f6b169.js",
     "service-worker.js": "/NewYorkOpenDataExplorer/service-worker.js",
     "static/css/2.7cb32921.chunk.css.map": "/NewYorkOpenDataExplorer/static/css/2.7cb32921.chunk.css.map",
     "static/css/main.fc08217a.chunk.css.map": "/NewYorkOpenDataExplorer/static/css/main.fc08217a.chunk.css.map",
-    "static/js/2.18afdd1f.chunk.js.LICENSE": "/NewYorkOpenDataExplorer/static/js/2.18afdd1f.chunk.js.LICENSE"
+    "static/js/2.4504dfac.chunk.js.LICENSE": "/NewYorkOpenDataExplorer/static/js/2.4504dfac.chunk.js.LICENSE"
   },
   "entrypoints": [
     "static/js/runtime-main.eb4b83cb.js",
     "static/css/2.7cb32921.chunk.css",
-    "static/js/2.18afdd1f.chunk.js",
+    "static/js/2.4504dfac.chunk.js",
     "static/css/main.fc08217a.chunk.css",
-    "static/js/main.956ce58a.chunk.js"
+    "static/js/main.086c507d.chunk.js"
   ]
 }
