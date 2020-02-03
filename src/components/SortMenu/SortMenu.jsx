@@ -33,7 +33,7 @@ export default function SortMenu({
         </ul>
         <FontAwesomeIcon
           onClick={() => onDirection(direction === 'asc' ? 'desc' : 'asc')}
-          icon={direction == 'asc' ? faSortUp : faSortDown}
+          icon={direction === 'asc' ? faSortUp : faSortDown}
         />
       </div>
     </div>

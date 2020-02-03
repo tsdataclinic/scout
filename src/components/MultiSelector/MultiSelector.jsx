@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import useFuse from 'react-use-fuse';
 import usePagenation from '../../hooks/pagination';
 import { useStateLoaded } from '../../hooks/datasets';
 import FilterLoading from '../Loading/FilterLoading/FilterLoading';
@@ -17,20 +18,30 @@ export default function MultiSelector({ items, selected, onChange, title }) {
     const newSelection = selected.includes(item)
       ? selected.filter((i) => i !== item)
       : [...selected, item];
-
     onChange(newSelection);
   };
 
   const itemNames = useMemo(() => items && Object.keys(items), [items]);
 
-  const filteredItems = useMemo(
-    () =>
-      itemNames ? itemNames.filter((item) => item.includes(searchTerm)) : [],
-    [itemNames, searchTerm],
-  );
+  const { result: filteredItems, search } = useFuse({
+    data: itemNames.map((item) => ({
+      name: item,
+    })),
+    options: {
+      keys: ['name'],
+      shouldSort: false,
+      findAllMatches: true,
+      caseSensitive: false,
+    },
+  });
+
+  useEffect(() => search(searchTerm), [search, searchTerm]);
 
   const sortedItems = useMemo(
-    () => filteredItems?.sort((a, b) => (items[a] < items[b] ? 1 : -1)),
+    () =>
+      filteredItems
+        ?.map((item) => item.name)
+        .sort((a, b) => (items[a] < items[b] ? 1 : -1)),
     [filteredItems, items],
   );
 

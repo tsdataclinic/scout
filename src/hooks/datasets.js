@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
+import useFuse from 'react-use-fuse';
 import { useStateValue } from '../contexts/OpenDataContext';
 import { findJoinable, getUniqueEntries } from '../utils/socrata';
 
@@ -59,50 +60,66 @@ export function useDataset(datasetID) {
   return datasets.find((d) => d.resource.id === datasetID);
 }
 
-export function useDatasets({ tags, term, categories, departments, ids }) {
+export function useGetDatasetsByIds(ids) {
+  const [{ datasets }] = useStateValue();
+  return useMemo(() => datasets.filter((d) => ids.includes(d.resource.id)), [
+    datasets,
+    ids,
+  ]);
+}
+
+export function useDatasets({ tags, term, categories, departments }) {
   const [{ datasets }] = useStateValue();
 
+  const { result: searchedDatasets, search } = useFuse({
+    data: datasets,
+    options: {
+      shouldSort: true,
+      findAllMatches: true,
+      keys: ['resource.name', 'resource.description'],
+      caseSensitive: false,
+    },
+  });
+
+  useEffect(() => {
+    search(term);
+  }, [search, term]);
+
   return useMemo(() => {
-    let filteredDatasets = [...datasets];
+    if (searchedDatasets) {
+      let resultDatasets = [...searchedDatasets];
+      if (tags && tags.length > 0) {
+        resultDatasets = resultDatasets.filter(
+          (dataset) =>
+            dataset.classification.domain_tags.filter((tag) =>
+              tags.includes(tag),
+            ).length > 0,
+        );
+      }
 
-    if (ids) {
-      return filteredDatasets.filter((d) => ids.includes(d.resource.id));
-    }
+      if (categories && categories.length > 0) {
+        resultDatasets = resultDatasets.filter(
+          (dataset) =>
+            dataset.classification.categories.filter((cat) =>
+              categories.includes(cat),
+            ).length > 0,
+        );
+      }
 
-    if (tags && tags.length > 0) {
-      filteredDatasets = filteredDatasets.filter(
-        (dataset) =>
-          dataset.classification.domain_tags.filter((tag) => tags.includes(tag))
-            .length > 0,
-      );
-    }
+      if (departments && departments > 0) {
+        resultDatasets = resultDatasets.filter((dataset) =>
+          departments.includes(
+            dataset.classification.domain_metadata.find(
+              (d) => d.key === 'Dataset-Information_Agency',
+            )?.value,
+          ),
+        );
+      }
 
-    if (categories && categories.length > 0) {
-      filteredDatasets = filteredDatasets.filter(
-        (dataset) =>
-          dataset.classification.categories.filter((cat) =>
-            categories.includes(cat),
-          ).length > 0,
-      );
+      return resultDatasets;
     }
-
-    if (departments && departments > 0) {
-      filteredDatasets = filteredDatasets.filter((dataset) =>
-        departments.includes(
-          dataset.classification.domain_metadata.find(
-            (d) => d.key === 'Dataset-Information_Agency',
-          )?.value,
-        ),
-      );
-    }
-    if (term && term.length > 0) {
-      filteredDatasets = filteredDatasets.filter((dataset) =>
-        dataset.resource.name.toLowerCase().includes(term.toLowerCase()),
-      );
-    }
-
-    return filteredDatasets;
-  }, [datasets, ids, tags, categories, departments, term]);
+    return datasets;
+  }, [searchedDatasets, tags, categories, departments, datasets]);
 }
 
 export function useSortDatsetsBy(datasets, type, asc = false) {
