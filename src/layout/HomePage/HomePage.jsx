@@ -46,9 +46,6 @@ export default function HomePage() {
     sortDirection === 'asc',
   );
 
-  if (sortedDatasets && sortedDatasets[0]) {
-    console.log('Sorted datasets ', sortedDatasets[0].resource.name);
-  }
   const [pagedDatasets, { pageButtons }] = usePagination(sortedDatasets, 5);
 
   return (
@@ -93,8 +90,9 @@ export default function HomePage() {
           <p>
             <span className="bold">{datasets.length}</span> datasets
           </p>
+
           <SortMenu
-            options={['Name', 'Created At', 'Updated At']}
+            options={['Name', 'Created At', 'Updated At','Downloads','Views']}
             onDirection={(direction) => setSortDirection(direction)}
             selected={sortBy}
             direction={sortDirection}

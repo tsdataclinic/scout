@@ -123,9 +123,9 @@ export function useDatasets({ tags, term, categories, departments }) {
 }
 
 export function useSortDatsetsBy(datasets, type, asc = false) {
-  console.log('here ', type, asc);
+  // console.log('here ', type, asc);
   return useMemo(() => {
-    console.log('updating sort ');
+    // console.log('updating sort ');
     const result = datasets.sort((a, b) => {
       let valA = null;
       let valB = null;
@@ -142,14 +142,19 @@ export function useSortDatsetsBy(datasets, type, asc = false) {
           valA = a.resource.updatedAt;
           valB = b.resource.updatedAt;
           break;
-
+        case 'Downloads':
+          valA = a.resource.download_count;
+          valB = b.resource.download_count;
+          break;
+        case 'Views':
+          valA = a.resource.page_views.page_views_total;
+          valB = b.resource.page_views.page_views_total;
+          break;
         default:
       }
+
       return (valA < valB ? 1 : -1) * (asc ? 1 : -1);
     });
-    if (result && result.length > 0) {
-      console.log(result[0].resource.name);
-    }
     return result;
   }, [datasets, type, asc]);
 }
