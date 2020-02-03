@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './HomePage.scss';
+import { DebounceInput } from 'react-debounce-input';
 import {
   useCategories,
   useTags,
@@ -77,10 +78,11 @@ export default function HomePage() {
       </div>
       <div className="datasets">
         <div className="search">
-          <input
+          <DebounceInput
             type="text"
             onChange={(e) => setSearchTerm(e.target.value)}
             value={searchTerm}
+            debounceTimeout={300}
             placeholder="Search for dataset"
           />
         </div>

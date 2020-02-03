@@ -9,13 +9,13 @@ import {
   TwitterIcon,
 } from 'react-share';
 import useClipboard from '../../hooks/useClipboard';
-import { useDatasets } from '../../hooks/datasets';
+import { useGetDatasetsByIds } from '../../hooks/datasets';
 import Dataset from '../../components/Dataset/Dataset';
 
 export default function CollectionPage({ match }) {
   const { name, datasetIDs } = match.params;
   const url = window.location.href;
-  const datasets = useDatasets({ ids: datasetIDs.split(',') });
+  const datasets = useGetDatasetsByIds(datasetIDs.split(','));
 
   const [isCopied, setCopied] = useClipboard(url);
   return (
