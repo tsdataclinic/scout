@@ -14,15 +14,17 @@ export default function MultiSelector({ items, selected, onChange, title }) {
     const newSelection = selected.includes(item)
       ? selected.filter((i) => i !== item)
       : [...selected, item];
-
     onChange(newSelection);
   };
 
   const itemNames = useMemo(() => Object.keys(items), [items]);
 
-  const { filteredItems, search } = useFuse({
-    data: itemNames,
+  const { result: filteredItems, search } = useFuse({
+    data: itemNames.map((item) => ({
+      name: item,
+    })),
     options: {
+      keys: ['name'],
       shouldSort: false,
       findAllMatches: true,
       caseSensitive: false,
@@ -30,9 +32,8 @@ export default function MultiSelector({ items, selected, onChange, title }) {
   });
 
   useEffect(() => search(searchTerm), [search, searchTerm]);
-  console.log('filtering categories ', searchTerm, itemNames, filteredItems);
   const [pagedItems, { pageButtons }] = usePagenation(
-    filteredItems || itemNames,
+    filteredItems ? filteredItems.map((item) => item.name) : itemNames,
     10,
   );
 
