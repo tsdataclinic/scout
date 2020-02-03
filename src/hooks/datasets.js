@@ -42,12 +42,12 @@ export function useGetDatasetsByIds(ids) {
 export function useDatasets({ tags, term, categories, departments }) {
   const [{ datasets }] = useStateValue();
 
-  const { searchedDatasets, search } = useFuse({
+  const { result: searchedDatasets, search } = useFuse({
     data: datasets,
     options: {
       shouldSort: true,
       findAllMatches: true,
-      keys: ['resource.name', 'resource.description'],
+      keys: ['resource.name'],
       caseSensitive: false,
     },
   });
@@ -57,7 +57,6 @@ export function useDatasets({ tags, term, categories, departments }) {
   }, [search, term]);
 
   return useMemo(() => {
-    console.log('searched datasets ', searchedDatasets, datasets);
     if (searchedDatasets) {
       let resultDatasets = [...searchedDatasets];
       if (tags && tags.length > 0) {
