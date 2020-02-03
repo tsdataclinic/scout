@@ -6,6 +6,7 @@ import {
   useTags,
   useDepartments,
   useDatasets,
+  useColumns,
   useStateLoaded,
   useSortDatsetsBy,
 } from '../../hooks/datasets';
@@ -20,8 +21,10 @@ export default function HomePage() {
   const categories = useCategories();
   const tags = useTags();
   const departments = useDepartments();
+  const columns = useColumns();
   const loaded = useStateLoaded();
   const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedColumns, setSelectedColumns] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedDepartments, setSelectedDepartments] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -36,6 +39,7 @@ export default function HomePage() {
   const datasets = useDatasets({
     tags: selectedTags,
     categories: selectedCategories,
+    columns: selectedColumns,
     term: searchTerm,
     departments: selectedDepartments,
   });
@@ -68,6 +72,14 @@ export default function HomePage() {
             selected={selectedDepartments}
             onChange={setSelectedDepartments}
             title="Departments"
+          />
+        </div>
+        <div className="columns">
+          <MultiSelector
+            items={columns}
+            selected={selectedColumns}
+            onChange={setSelectedColumns}
+            title="Columns"
           />
         </div>
         <div className="tags">
