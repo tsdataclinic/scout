@@ -31,7 +31,7 @@ function hasJoinableMatch(columns, candidate) {
   const candidateCols = matachableColumnsForDataset(candidate);
   const intersection = new Set(
     [...columns].filter(
-      (x) => candidateCols.has(x) && ALLOWED_JOIN_COLUMNS.includes(x),
+      (x) => candidateCols.has(x), // && ALLOWED_JOIN_COLUMNS.includes(x),
     ),
   );
   return Array.from(intersection);

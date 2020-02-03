@@ -6,9 +6,13 @@ import {
   useTags,
   useDepartments,
   useDatasets,
+  useStateLoaded,
+  useSortDatsetsBy,
 } from '../../hooks/datasets';
 import useCollection from '../../hooks/collections';
 import Dataset from '../../components/Dataset/Dataset';
+import SortMenu from '../../components/SortMenu/SortMenu';
+import DatasetLoading from '../../components/Loading/DatasetLoading/DatasetLoading';
 import usePagination from '../../hooks/pagination';
 import MultiSelector from '../../components/MultiSelector/MultiSelector';
 
@@ -16,10 +20,14 @@ export default function HomePage() {
   const categories = useCategories();
   const tags = useTags();
   const departments = useDepartments();
+  const loaded = useStateLoaded();
   const [selectedTags, setSelectedTags] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedDepartments, setSelectedDepartments] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState('Name');
+  const [sortDirection, setSortDirection] = useState('asc');
+
   const [
     collection,
     { addToCollection, removeFromCollection },
@@ -31,7 +39,17 @@ export default function HomePage() {
     term: searchTerm,
     departments: selectedDepartments,
   });
-  const [pagedDatasets, { pageButtons }] = usePagination(datasets, 5);
+
+  const sortedDatasets = useSortDatsetsBy(
+    datasets,
+    sortBy,
+    sortDirection === 'asc',
+  );
+
+  if (sortedDatasets && sortedDatasets[0]) {
+    console.log('Sorted datasets ', sortedDatasets[0].resource.name);
+  }
+  const [pagedDatasets, { pageButtons }] = usePagination(sortedDatasets, 5);
 
   return (
     <div className="home-page">
@@ -44,20 +62,20 @@ export default function HomePage() {
             title="Categories"
           />
         </div>
-        <div className="tags">
-          <MultiSelector
-            items={tags}
-            selected={selectedTags}
-            onChange={setSelectedTags}
-            title="Tags"
-          />
-        </div>
         <div className="departments">
           <MultiSelector
             items={departments}
             selected={selectedDepartments}
             onChange={setSelectedDepartments}
             title="Departments"
+          />
+        </div>
+        <div className="tags">
+          <MultiSelector
+            items={tags}
+            selected={selectedTags}
+            onChange={setSelectedTags}
+            title="Tags"
           />
         </div>
       </div>
@@ -75,21 +93,29 @@ export default function HomePage() {
           <p>
             <span className="bold">{datasets.length}</span> datasets
           </p>
-          <p>
-            Sort by: <span className="bold">Recently updated</span>
-          </p>
+          <SortMenu
+            options={['Name', 'Created At', 'Updated At']}
+            onDirection={(direction) => setSortDirection(direction)}
+            selected={sortBy}
+            direction={sortDirection}
+            onSelected={(selected) => setSortBy(selected)}
+          />
         </div>
 
         <ul className="dataset-list">
-          {pagedDatasets.map((dataset) => (
-            <Dataset
-              key={dataset?.resource?.id}
-              dataset={dataset}
-              inCollection={collection.datasets.includes(dataset.resource.id)}
-              onAddToCollection={addToCollection}
-              onRemoveFromCollection={removeFromCollection}
-            />
-          ))}
+          {loaded ? (
+            pagedDatasets.map((dataset) => (
+              <Dataset
+                key={dataset?.resource?.id}
+                dataset={dataset}
+                inCollection={collection.datasets.includes(dataset.resource.id)}
+                onAddToCollection={addToCollection}
+                onRemoveFromCollection={removeFromCollection}
+              />
+            ))
+          ) : (
+            <DatasetLoading />
+          )}
         </ul>
         <div>{pageButtons}</div>
       </div>

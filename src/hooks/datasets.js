@@ -3,6 +3,11 @@ import useFuse from 'react-use-fuse';
 import { useStateValue } from '../contexts/OpenDataContext';
 import { findJoinable, getUniqueEntries } from '../utils/socrata';
 
+export function useStateLoaded() {
+  const [{ stateLoaded }] = useStateValue();
+  return stateLoaded;
+}
+
 export function useTags() {
   const [{ tagList }] = useStateValue();
   return tagList;
@@ -24,6 +29,30 @@ export function useJoinableDatasets(dataset) {
     dataset,
     datasets,
   ]);
+}
+
+export function useGetSimilarDatasets(datasetID) {
+  const [similarityMetrics, setSimilarityMetrics] = useState({});
+  const [{ datasets }] = useStateValue();
+
+  useEffect(() => {
+    fetch(`${process.env.PUBLIC_URL}/similarity_metrics.json`)
+      .then((r) => r.json())
+      .then((r) => setSimilarityMetrics(r));
+  }, []);
+
+  const similarDatasets = useMemo(
+    () =>
+      similarityMetrics[datasetID]
+        ? similarityMetrics[datasetID].map((match) => ({
+            ...match,
+            dataset: datasets.find((d) => d.resource.id === match.dataset),
+          }))
+        : [],
+
+    [similarityMetrics, datasetID, datasets],
+  );
+  return similarDatasets;
 }
 
 export function useDataset(datasetID) {
@@ -91,6 +120,38 @@ export function useDatasets({ tags, term, categories, departments }) {
     }
     return datasets;
   }, [searchedDatasets, tags, categories, departments, datasets]);
+}
+
+export function useSortDatsetsBy(datasets, type, asc = false) {
+  console.log('here ', type, asc);
+  return useMemo(() => {
+    console.log('updating sort ');
+    const result = datasets.sort((a, b) => {
+      let valA = null;
+      let valB = null;
+      switch (type) {
+        case 'Name':
+          valA = a.resource.name;
+          valB = b.resource.name;
+          break;
+        case 'Created At':
+          valA = a.resource.createdAt;
+          valB = b.resource.createdAt;
+          break;
+        case 'Updated At':
+          valA = a.resource.updatedAt;
+          valB = b.resource.updatedAt;
+          break;
+
+        default:
+      }
+      return (valA < valB ? 1 : -1) * (asc ? 1 : -1);
+    });
+    if (result && result.length > 0) {
+      console.log(result[0].resource.name);
+    }
+    return result;
+  }, [datasets, type, asc]);
 }
 
 export function useUniqueColumnEntries(dataset, column) {

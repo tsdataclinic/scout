@@ -57,6 +57,10 @@ export const StateProvider = ({ children }) => {
           type: 'HYDRATE_STATE',
           payload: { ...initalState, ...cachedState, cache_loaded: true },
         });
+        // Set state as loaded to indicate that data is ready to use
+        dispatch({
+          type: 'SET_LOADED',
+        });
       } else {
         getManifest().then((manifest) => {
           const tagList = getTagList(manifest);
