@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/NewYorkOpenDataExplorer/static/css/main.fadf49bb.chunk.css",
-    "main.js": "/NewYorkOpenDataExplorer/static/js/main.5b5e868c.chunk.js",
-    "main.js.map": "/NewYorkOpenDataExplorer/static/js/main.5b5e868c.chunk.js.map",
+    "main.css": "/NewYorkOpenDataExplorer/static/css/main.180dc653.chunk.css",
+    "main.js": "/NewYorkOpenDataExplorer/static/js/main.5541730e.chunk.js",
+    "main.js.map": "/NewYorkOpenDataExplorer/static/js/main.5541730e.chunk.js.map",
     "runtime-main.js": "/NewYorkOpenDataExplorer/static/js/runtime-main.eb4b83cb.js",
     "runtime-main.js.map": "/NewYorkOpenDataExplorer/static/js/runtime-main.eb4b83cb.js.map",
-    "static/css/2.7cb32921.chunk.css": "/NewYorkOpenDataExplorer/static/css/2.7cb32921.chunk.css",
-    "static/js/2.4504dfac.chunk.js": "/NewYorkOpenDataExplorer/static/js/2.4504dfac.chunk.js",
-    "static/js/2.4504dfac.chunk.js.map": "/NewYorkOpenDataExplorer/static/js/2.4504dfac.chunk.js.map",
+    "static/css/2.c934cad8.chunk.css": "/NewYorkOpenDataExplorer/static/css/2.c934cad8.chunk.css",
+    "static/js/2.e5f4ce42.chunk.js": "/NewYorkOpenDataExplorer/static/js/2.e5f4ce42.chunk.js",
+    "static/js/2.e5f4ce42.chunk.js.map": "/NewYorkOpenDataExplorer/static/js/2.e5f4ce42.chunk.js.map",
     "index.html": "/NewYorkOpenDataExplorer/index.html",
-    "precache-manifest.1c2c06834c0d0ac97e98758fcca459f5.js": "/NewYorkOpenDataExplorer/precache-manifest.1c2c06834c0d0ac97e98758fcca459f5.js",
+    "precache-manifest.0ff55f7af3689e399fea44a49d458872.js": "/NewYorkOpenDataExplorer/precache-manifest.0ff55f7af3689e399fea44a49d458872.js",
     "service-worker.js": "/NewYorkOpenDataExplorer/service-worker.js",
-    "static/css/2.7cb32921.chunk.css.map": "/NewYorkOpenDataExplorer/static/css/2.7cb32921.chunk.css.map",
-    "static/css/main.fadf49bb.chunk.css.map": "/NewYorkOpenDataExplorer/static/css/main.fadf49bb.chunk.css.map",
-    "static/js/2.4504dfac.chunk.js.LICENSE": "/NewYorkOpenDataExplorer/static/js/2.4504dfac.chunk.js.LICENSE"
+    "static/css/2.c934cad8.chunk.css.map": "/NewYorkOpenDataExplorer/static/css/2.c934cad8.chunk.css.map",
+    "static/css/main.180dc653.chunk.css.map": "/NewYorkOpenDataExplorer/static/css/main.180dc653.chunk.css.map",
+    "static/js/2.e5f4ce42.chunk.js.LICENSE": "/NewYorkOpenDataExplorer/static/js/2.e5f4ce42.chunk.js.LICENSE"
   },
   "entrypoints": [
     "static/js/runtime-main.eb4b83cb.js",
-    "static/css/2.7cb32921.chunk.css",
-    "static/js/2.4504dfac.chunk.js",
-    "static/css/main.fadf49bb.chunk.css",
-    "static/js/main.5b5e868c.chunk.js"
+    "static/css/2.c934cad8.chunk.css",
+    "static/js/2.e5f4ce42.chunk.js",
+    "static/css/main.180dc653.chunk.css",
+    "static/js/main.5541730e.chunk.js"
   ]
 }
