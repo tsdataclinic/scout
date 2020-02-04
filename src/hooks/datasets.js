@@ -110,7 +110,7 @@ export function useDatasets({ tags, term, categories, columns, departments }) {
             ).length > 0,
         );
       }
-      console.log('filtering with cols ', columns);
+
       if (columns && columns.length > 0) {
         console.log('filtering with columns ', columns);
         resultDatasets = resultDatasets.filter(
@@ -121,7 +121,7 @@ export function useDatasets({ tags, term, categories, columns, departments }) {
         );
       }
 
-      if (departments && departments > 0) {
+      if (departments && departments.length > 0) {
         resultDatasets = resultDatasets.filter((dataset) =>
           departments.includes(
             dataset.classification.domain_metadata.find(
