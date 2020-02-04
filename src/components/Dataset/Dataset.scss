@@ -24,7 +24,7 @@
     background-color: #e7f2ff;
     color: #0078ff;
     height: 24px;
-    width: 109px;
+    width: 131px;
   }
   .external-link {
     button {
@@ -42,7 +42,7 @@
 
 .dataset-last-update {
   grid-area: updated;
-  min-width: 100px;
+  min-width: 140px;
   .header {
     font-weight: bold;
   }
@@ -75,7 +75,6 @@
 .dataset-title {
   display: flex;
   flex-direction: column;
-  aligin-items: center;
   grid-area: 'title';
   p {
     margin-top: 0px;

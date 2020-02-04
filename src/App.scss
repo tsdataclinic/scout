@@ -42,10 +42,11 @@ h2 {
   text-align: left;
 }
 
-a {
+a.title {
   color: black;
   text-align: left;
 }
+
 h3 {
   font-size: 11px;
   font-weight: bold;
@@ -84,7 +85,7 @@ p {
   background-color: #e7f2ff;
   color: #0078ff;
   height: 24px;
-  width: 140px;
+  width: fit-content;
 }
 .dataset-joins {
   height: 100%;
