@@ -10,6 +10,7 @@ import {
   useGetSimilarDatasets,
 } from '../../hooks/datasets';
 import './DatasetPage.scss';
+import ViewOnOpenPortal from '../../components/ViewOnOpenPortal/ViewOnOpenPortal';
 
 const formatDate = (date) => moment(date).format('MMMM DD, YYYY');
 
@@ -67,9 +68,7 @@ export default function DatasetPage({ match }) {
             alt="NYC Open Data"
             src="https://opendata.cityofnewyork.us/wp-content/themes/opendata-wp/assets/img/nyc-open-data-logo.svg"
           />
-          <a target="_blank" rel="noopener noreferrer" href={dataset.permalink}>
-            View on Open Data
-          </a>
+          <ViewOnOpenPortal permalink={dataset.permalink} />
         </section>
         <section className="metadata">
           <h2>Metadata</h2>

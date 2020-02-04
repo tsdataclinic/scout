@@ -24,7 +24,7 @@ function App() {
       <Router basename={process.env.PUBLIC_URL}>
         <ModalContainer />
         <header>
-          <Link to="/">
+          <Link className="title" to="/">
             <h1>Data Clinic</h1>
           </Link>
         </header>

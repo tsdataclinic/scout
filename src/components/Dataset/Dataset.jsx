@@ -1,10 +1,9 @@
 import React from 'react';
 import './Dataset.scss';
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 import { formatDate } from '../../utils/formatters';
 import RawHTML from '../RawHTML/RawHTML';
+import ViewOnOpenPortal from '../ViewOnOpenPortal/ViewOnOpenPortal';
 
 export default function Dataset({
   dataset,
@@ -17,7 +16,7 @@ export default function Dataset({
   return (
     <div className="dataset" key={dataset.resource.id}>
       <div className="dataset-title">
-        <Link to={`/dataset/${dataset.resource.id}`}>
+        <Link className="title" to={`/dataset/${dataset.resource.id}`}>
           <h2>{dataset.resource.name}</h2>
         </Link>
         <p>{dataset.resource.attribution}</p>
@@ -37,19 +36,7 @@ export default function Dataset({
           {inCollection ? 'Remove from collection' : 'Add to collection'}
         </button>
       )}
-      {viewInOpenPortal && (
-        <a
-          className="external-link"
-          target="_blank"
-          rel="noopener noreferrer"
-          href={dataset.permalink}
-        >
-          <button type="button">
-            View on Open Data&nbsp;
-            <FontAwesomeIcon icon={faExternalLinkAlt} />
-          </button>
-        </a>
-      )}
+      {viewInOpenPortal && <ViewOnOpenPortal permalink={dataset.permalink} />}
 
       <div className="dataset-last-update">
         <p className="header">Last Updated</p>

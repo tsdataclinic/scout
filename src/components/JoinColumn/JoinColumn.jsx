@@ -45,7 +45,7 @@ export default function ColumnJoin({ rightDataset, joinCol, parentUniques }) {
           {rightDataset.resource.name}
         </span>
         <span>
-          {jointlyUnique ? `${jointlyUnique.length} matching id's` : 'loading'}
+          {jointlyUnique ? `${jointlyUnique.length} matching ids` : 'loading'}
         </span>
         <span>
           <Link to={`/dataset/${rightDataset.resource.id}`}>View dataset</Link>
