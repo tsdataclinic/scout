@@ -81,6 +81,7 @@ export function useDatasets({ tags, term, categories, columns, departments }) {
     options: {
       shouldSort: true,
       findAllMatches: true,
+      includeMatches: true,
       keys: ['resource.name', 'resource.description'],
       caseSensitive: false,
     },
@@ -92,11 +93,23 @@ export function useDatasets({ tags, term, categories, columns, departments }) {
 
   return useMemo(() => {
     if (searchedDatasets) {
-      let resultDatasets = [...searchedDatasets];
+      let resultDatasets =
+        searchedDatasets[0] && searchedDatasets[0].item
+          ? searchedDatasets.map((match) => match.item)
+          : [...searchedDatasets];
+
+      const matches =
+        searchedDatasets && searchedDatasets[0] && searchedDatasets[0].item
+          ? searchedDatasets.map((d) => ({
+              id: d.item.resource.id,
+              matches: d.matches,
+            }))
+          : [];
+
       if (tags && tags.length > 0) {
         resultDatasets = resultDatasets.filter(
           (dataset) =>
-            dataset.classification.domain_tags.filter((tag) =>
+            dataset.itemclassification.domain_tags.filter((tag) =>
               tags.includes(tag),
             ).length > 0,
         );
@@ -131,7 +144,12 @@ export function useDatasets({ tags, term, categories, columns, departments }) {
         );
       }
 
-      return resultDatasets;
+      return {
+        datasets: resultDatasets,
+        matches: matches.filter((match) =>
+          resultDatasets.find((r) => r.resource.id === match.id),
+        ),
+      };
     }
     return datasets;
   }, [searchedDatasets, tags, categories, columns, departments, datasets]);
