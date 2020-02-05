@@ -36,7 +36,7 @@ export default function HomePage() {
     { addToCollection, removeFromCollection },
   ] = useCollection();
 
-  const datasets = useDatasets({
+  const { datasets, matches } = useDatasets({
     tags: selectedTags,
     categories: selectedCategories,
     columns: selectedColumns,
@@ -104,7 +104,7 @@ export default function HomePage() {
           </p>
 
           <SortMenu
-            options={['Name', 'Created At', 'Updated At','Downloads','Views']}
+            options={['Name', 'Created At', 'Updated At', 'Downloads', 'Views']}
             onDirection={(direction) => setSortDirection(direction)}
             selected={sortBy}
             direction={sortDirection}
@@ -121,6 +121,10 @@ export default function HomePage() {
                 inCollection={collection.datasets.includes(dataset.resource.id)}
                 onAddToCollection={addToCollection}
                 onRemoveFromCollection={removeFromCollection}
+                matches={
+                  matches.find((match) => match.id === dataset?.resource?.id)
+                    ?.matches
+                }
               />
             ))
           ) : (
