@@ -10,7 +10,7 @@ export default function usePagination(data, perPage = 20) {
 
   useEffect(() => {
     setCurrentPageNo(0);
-  }, []);
+  }, [pages]);
 
   const pageButtons = (
     <nav>
