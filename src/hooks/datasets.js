@@ -46,11 +46,13 @@ export function useGetSimilarDatasets(datasetID) {
       .then((r) => setSimilarityMetrics(r));
   }, []);
 
+  console.log('datasets ', datasets, similarityMetrics);
+
   const similarDatasets = useMemo(
     () =>
-      similarityMetrics[datasetID]
+      similarityMetrics[datasetID] && datasets && datasets.length > 0
         ? similarityMetrics[datasetID].map((match) => ({
-            ...match,
+            similarity: match.similarity,
             dataset: datasets.find((d) => d.resource.id === match.dataset),
           }))
         : [],
