@@ -24,6 +24,10 @@ export default function DatasetPage({ match }) {
   const classification = dataset?.classification;
   const domainMetadata = classification?.domain_metadata;
   const similarDatasets = useGetSimilarDatasets(datasetID);
+  const mostSimilarDatasets = similarDatasets
+    .filter((suggestion) => suggestion.dataset.resource.id !== datasetID)
+    .slice(0, 10);
+
   const [
     collection,
     { addToCollection, removeFromCollection },
@@ -132,7 +136,7 @@ export default function DatasetPage({ match }) {
               Dataset that are thematically similar based on name and
               description
             </p>
-            {similarDatasets.slice(0, 10).map((d) => (
+            {mostSimilarDatasets.map((d) => (
               <Dataset
                 onAddToCollection={addToCollection}
                 onRemoveFromCollection={removeFromCollection}
