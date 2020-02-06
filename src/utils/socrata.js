@@ -9,8 +9,8 @@ async function getMaifestPage(pageNo, limit = 100) {
 
 function matachableColumnsForDataset(dataset) {
   return new Set([
-    ...dataset.resource.columns_name,
-    ...dataset.resource.columns_field_name,
+    ...dataset.resource.columns_name.map((s) => s.toLocaleLowerCase()),
+    ...dataset.resource.columns_field_name.map((s) => s.toLocaleLowerCase()),
   ]);
 }
 
@@ -164,6 +164,15 @@ export function getUniqueEntries(dataset, column) {
   )
     .then((r) => r.json())
     .then((r) => {
-      return r.errorCode ? [] : r.map((entry) => Object.values(entry)[0]);
+      if (r.errorCode || r.error) {
+        console.warn(
+          'Failed to load unique entries for dataset ',
+          dataset,
+          ' column ',
+          column,
+        );
+        return [];
+      }
+      return r.map((entry) => Object.values(entry)[0]);
     });
 }
