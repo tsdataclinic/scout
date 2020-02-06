@@ -6,8 +6,13 @@ export default function ColumnMatchTable({ dataset, joinColumns }) {
   const columns = dataset.resource.columns_name;
 
   const suggestionsForColumn = useCallback(
-    (col, candidates) =>
-      columns ? candidates.filter((c) => c.joinableColumns[0] === col) : [],
+    (col, candidates) => {
+      return columns
+        ? candidates.filter((c) =>
+            c.joinableColumns.includes(col.toLowerCase()),
+          )
+        : [];
+    },
     [columns],
   );
 
