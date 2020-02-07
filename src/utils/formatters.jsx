@@ -12,16 +12,43 @@ export function formatDate(date) {
 export function hilightMatches(text, matches) {
   if (matches) {
     const result = [];
-    const indices = matches.indices.filter((pair) => pair[1] - pair[0] > 2);
+    const indices = matches.indices.filter((pair) => pair[1] - pair[0] > 1);
 
-    indices.forEach((pair, index) => {
-      result.push(
-        <span className="hilight">{text.slice(pair[0], pair[1])}</span>,
-      );
-      const nextPairStart =
-        index + 1 < indices.length ? indices[index + 1][0] : text.length;
-      result.push(<span>{text.slice(pair[1], nextPairStart)}</span>);
+    const highlightedText = text.split('').map((char) => ({
+      char,
+      highlight: false,
+    }));
+
+    indices.forEach((pair) => {
+      // eslint-disable-next-line no-plusplus
+      for (let i = pair[0]; i < pair[1] + 1; i++) {
+        highlightedText[i].highlight = true;
+      }
     });
+
+    let isHighlighting = false;
+    let curResult = '';
+    highlightedText.forEach(({ char, highlight }) => {
+      if (isHighlighting) {
+        if (highlight) {
+          curResult += char;
+        } else {
+          isHighlighting = false;
+          result.push(<span className="hilight">{curResult}</span>);
+          curResult = char;
+        }
+      } else if (!highlight) {
+        curResult += char;
+      } else {
+        isHighlighting = true;
+        result.push(<span>{curResult}</span>);
+        curResult = char;
+      }
+    });
+    result.push(
+      <span className={isHighlighting ? 'hilight' : ''}>{curResult}</span>,
+    );
+
     return result;
   }
   return text;
