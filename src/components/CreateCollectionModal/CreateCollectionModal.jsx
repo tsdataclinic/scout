@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import useCollection from '../../hooks/collections';
-import { useDatasets } from '../../hooks/datasets';
+import { useGetDatasetsByIds } from '../../hooks/datasets';
 import './CreateCollectionModal.scss';
 
 export default function CreateCollectionModal() {
   const [collection, { clearCollection, setName }] = useCollection();
-  const datasets = useDatasets({ ids: collection.datasets });
+  const datasets = useGetDatasetsByIds(collection.datasets);
 
   return (
     <div className="create-collection-modal">
