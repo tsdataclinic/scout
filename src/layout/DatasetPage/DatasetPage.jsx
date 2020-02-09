@@ -3,6 +3,7 @@ import moment from 'moment';
 import RawHTML from '../../components/RawHTML/RawHTML';
 import ColumnMatchTable from '../../components/ColumnMatchTable/ColumnMatchTable';
 import Dataset from '../../components/Dataset/Dataset';
+import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
 import useCollection from '../../hooks/collections';
 import {
   useDataset,
@@ -48,6 +49,9 @@ export default function DatasetPage({ match }) {
   return dataset ? (
     <div className="dataset-page">
       <div className="dataset-details">
+        <section>
+          <Breadcrumb currentPage={resource.name} />
+        </section>
         <section>
           <h2>{resource.name}</h2>
           <p>{informationAgency}</p>
