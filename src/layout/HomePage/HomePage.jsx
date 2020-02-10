@@ -36,7 +36,7 @@ export default function HomePage() {
     { addToCollection, removeFromCollection },
   ] = useCollection();
 
-  const { datasets, matches } = useDatasets({
+  const { datasets } = useDatasets({
     tags: selectedTags,
     categories: selectedCategories,
     columns: selectedColumns,
@@ -121,10 +121,7 @@ export default function HomePage() {
                 inCollection={collection.datasets.includes(dataset.resource.id)}
                 onAddToCollection={addToCollection}
                 onRemoveFromCollection={removeFromCollection}
-                matches={
-                  matches.find((match) => match.id === dataset?.resource?.id)
-                    ?.matches
-                }
+                query={searchTerm}
               />
             ))
           ) : (
