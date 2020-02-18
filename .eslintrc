@@ -22,6 +22,10 @@
     "react/no-array-index-key": "off",
     "react-hooks/exhaustive-deps": "error",
     "react-hooks/rules-of-hooks": "error",
-    "camelcase": "warn"
+    "camelcase": "warn",
+ "jsx-a11y/anchor-is-valid": [ "error", {
+      "components": [ "Link" ],
+      "specialLink": [ "to" ]
+    }]
   }
 }

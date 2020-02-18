@@ -5,10 +5,10 @@ import {
   Route,
   Redirect,
   Switch,
-  Link,
 } from 'react-router-dom';
 import { ModalContainer, ModalRoute } from 'react-router-modal';
 
+import SideNav from './components/SideNav/SideNav';
 import HomePage from './layout/HomePage/HomePage';
 import DatasetPage from './layout/DatasetPage/DatasetPage';
 import CollectionBar from './components/CollectionBar/CollectionBar';
@@ -23,11 +23,7 @@ function App() {
     <div className="App">
       <Router basename={process.env.PUBLIC_URL}>
         <ModalContainer />
-        <header>
-          <Link className="title" to="/">
-            <h1>Data Clinic</h1>
-          </Link>
-        </header>
+        <SideNav />
         <div className="content">
           <GHPagesRedirect />
           <Switch>

@@ -6,6 +6,8 @@ import FilterLoading from '../Loading/FilterLoading/FilterLoading';
 import './MultiSelector.scss';
 
 export default function MultiSelector({ items, selected, onChange, title }) {
+  const [collapsed, setCollapsed] = useState(true);
+
   const clearItems = () => {
     onChange([]);
   };
@@ -49,44 +51,57 @@ export default function MultiSelector({ items, selected, onChange, title }) {
 
   return (
     <div className="mutli-selector">
-      <h2>{title}</h2>
-      <div className="search">
-        <input
-          disabled={!loaded}
-          placeholder="filter"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
-      <ul className="multi-list">
-        {!loaded ? (
-          <FilterLoading />
-        ) : (
-          pagedItems.map((item) => (
-            // eslint-disable-next-line
-            <li
-              key={item}
-              onClick={() => toggleItem(item)}
-              className={`multi-buttons ${
-                selected && selected.includes(item) ? 'selected' : ''
-              }`}
-            >
-              <input
-                type="checkbox"
-                checked={selected && selected.includes(item)}
-                className="checkbox"
-              />
-              <span className="item-name">{item}</span>
-              <span className="pill">{items[item]}</span>
-            </li>
-          ))
-        )}
-      </ul>
-      {pageButtons}
-      {selected && selected.length > 0 && (
-        <button type="button" onClick={clearItems}>
-          clear
+      <h2>
+        <button
+          className="header-button"
+          type="button"
+          onClick={() => setCollapsed(!collapsed)}
+        >
+          {title} <span> {collapsed ? '+' : '-'}</span>{' '}
         </button>
+      </h2>
+
+      {!collapsed && (
+        <>
+          <div className="search">
+            <input
+              disabled={!loaded}
+              placeholder="filter"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <ul className="multi-list">
+            {!loaded ? (
+              <FilterLoading />
+            ) : (
+              pagedItems.map((item) => (
+                // eslint-disable-next-line
+                <li
+                  key={item}
+                  onClick={() => toggleItem(item)}
+                  className={`multi-buttons ${
+                    selected && selected.includes(item) ? 'selected' : ''
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={selected && selected.includes(item)}
+                    className="checkbox"
+                  />
+                  <span className="item-name">{item}</span>
+                  <span className="pill">{items[item]}</span>
+                </li>
+              ))
+            )}
+          </ul>
+          {pageButtons}
+          {selected && selected.length > 0 && (
+            <button type="button" onClick={clearItems}>
+              clear
+            </button>
+          )}
+        </>
       )}
     </div>
   );
