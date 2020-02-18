@@ -13,15 +13,12 @@ export default function Dataset({
   inCollection,
   viewInOpenPortal = false,
   similarity,
-  matches,
+  query,
 }) {
-  const formattedName = hilightMatches(
-    dataset.resource.name,
-    matches?.find((m) => m.key === 'resource.name'),
-  );
+  const formattedName = hilightMatches(dataset.resource.name, query);
   const formattedDescription = hilightMatches(
     dataset.resource.description,
-    matches?.find((m) => m.key === 'resource.description'),
+    query,
   );
   return (
     <div className="dataset" key={dataset.resource.id}>
