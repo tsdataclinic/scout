@@ -12,7 +12,7 @@ export default function SideNav() {
   return (
     <nav className="side-nav">
       <Link  alt="Data Clinic" className="title" to="/">
-        <img alt="Data Clinic logo" src="/DataClinicLogo.png" />
+          <img alt="Data Clinic logo" src={`${process.env.PUBLIC_URL}/DataClinicLogo.png`} />
       </Link>
       <Link alt="Explore" className="explore" to="/">
         <FontAwesomeIcon size="lg" icon={faEye} />
