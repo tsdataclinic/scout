@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './HomePage.scss';
 import { DebounceInput } from 'react-debounce-input';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAngleLeft, faSearch } from '@fortawesome/free-solid-svg-icons';
 import {
   useCategories,
   useTags,
@@ -24,6 +26,7 @@ export default function HomePage() {
   const columns = useColumns();
   const loaded = useStateLoaded();
   const [selectedTags, setSelectedTags] = useState([]);
+  const [colpaseFilters, setCollapseFilters] = useState(true);
   const [selectedColumns, setSelectedColumns] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedDepartments, setSelectedDepartments] = useState([]);
@@ -54,42 +57,70 @@ export default function HomePage() {
 
   return (
     <div className="home-page">
-      <div className="filters">
-        <div className="categories">
-          <MultiSelector
-            items={categories}
-            onChange={setSelectedCategories}
-            selected={selectedCategories}
-            title="Categories"
-          />
-        </div>
-        <div className="departments">
-          <MultiSelector
-            items={departments}
-            selected={selectedDepartments}
-            onChange={setSelectedDepartments}
-            title="Departments"
-          />
-        </div>
-        <div className="columns">
-          <MultiSelector
-            items={columns}
-            selected={selectedColumns}
-            onChange={setSelectedColumns}
-            title="Columns"
-          />
-        </div>
-        <div className="tags">
-          <MultiSelector
-            items={tags}
-            selected={selectedTags}
-            onChange={setSelectedTags}
-            title="Tags"
-          />
-        </div>
+      <div className={`filters ${colpaseFilters ? 'collapsed' : ''}`}>
+        {!colpaseFilters ? (
+          <>
+            <h2 className="filter-header">
+              <button
+                onKeyDown={() => setCollapseFilters(true)}
+                onClick={() => setCollapseFilters(true)}
+                className="header-button"
+                type="button"
+              >
+                Filters <FontAwesomeIcon icon={faAngleLeft} />
+              </button>
+            </h2>
+            <div className="categories">
+              <MultiSelector
+                items={categories}
+                onChange={setSelectedCategories}
+                selected={selectedCategories}
+                title="Categories"
+              />
+            </div>
+            <div className="departments">
+              <MultiSelector
+                items={departments}
+                selected={selectedDepartments}
+                onChange={setSelectedDepartments}
+                title="Departments"
+              />
+            </div>
+            <div className="columns">
+              <MultiSelector
+                items={columns}
+                selected={selectedColumns}
+                onChange={setSelectedColumns}
+                title="Columns"
+              />
+            </div>
+            <div className="tags">
+              <MultiSelector
+                items={tags}
+                selected={selectedTags}
+                onChange={setSelectedTags}
+                title="Tags"
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            <h2>
+              <button
+                onKeyDown={() => setCollapseFilters(false)}
+                onClick={() => setCollapseFilters(false)}
+                className="header-button"
+                type="button"
+              >
+                Filters
+              </button>
+            </h2>
+          </>
+        )}
       </div>
       <div className="datasets">
         <div className="search">
+          <FontAwesomeIcon size="lg" icon={faSearch} />
           <DebounceInput
             type="text"
             onChange={(e) => setSearchTerm(e.target.value)}
