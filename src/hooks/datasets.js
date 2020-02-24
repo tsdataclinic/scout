@@ -157,11 +157,13 @@ export function useDatasets({ tags, term, categories, columns, departments }) {
   }, [searchedDatasets, tags, categories, columns, departments, datasets]);
 }
 
-export function useSortDatsetsBy(datasets, type, asc = false) {
-  // console.log('here ', type, asc);
+export function useSortDatsetsBy(datasets, type, asc = false, searchTerm = '') {
   return useMemo(() => {
-    // console.log('updating sort ');
-    const result = datasets.sort((a, b) => {
+    // If we have a search term, do not sort the datasets
+    if (searchTerm) {
+      return datasets;
+    }
+    return datasets.sort((a, b) => {
       let valA = null;
       let valB = null;
       switch (type) {
@@ -190,8 +192,7 @@ export function useSortDatsetsBy(datasets, type, asc = false) {
 
       return (valA < valB ? 1 : -1) * (asc ? 1 : -1);
     });
-    return result;
-  }, [datasets, type, asc]);
+  }, [searchTerm, datasets, type, asc]);
 }
 
 export function useUniqueColumnEntries(dataset, column) {
