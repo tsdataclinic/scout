@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/NewYorkOpenDataExplorer/precache-manifest.7ff4e6525b331261533acf4d1b7501a0.js"
+  "/NewYorkOpenDataExplorer/precache-manifest.e23b34dfb6ebd6fa61e5e8ac0888ebfc.js"
 );
 
 self.addEventListener('message', (event) => {
