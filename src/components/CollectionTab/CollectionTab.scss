@@ -1,0 +1,216 @@
+.collection-tab {
+    position: absolute;
+    left: 100px;
+    top: -25px;
+    background-color: white;
+    box-sizing: border-box;
+    padding: 0px;
+    z-index: 2;
+    width: 330px;
+    height: 371px;
+    border: 1px solid #b9c8d1;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    border-radius: 2px;
+
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    color: black;
+    h2 {
+        text-align: left;
+        color: #0b0e12;
+        font-weight: 700;
+        padding: 20px 20px 0px 20px;
+    }
+    h3 {
+        font-size: 14px;
+        padding: 5px 0px;
+    }
+}
+
+.collections-tab-create {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    ul {
+        overflow-y: auto;
+        flex: 1;
+        height: 228px;
+    }
+    li {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+.collections-tab-create-options {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 5px 20px;
+    input {
+        box-sizing: border-box;
+        padding: 5px 10px;
+        margin-bottom: 10px;
+    }
+}
+
+.existing-collections-list {
+    .existing-collection {
+        padding: 5px 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        svg {
+            color: #1c4d5e;
+        }
+        p {
+            padding: 0px;
+            margin: 0px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 2px 0px;
+        }
+        .name {
+            font-size: 12px;
+            color: black;
+        }
+        .dataset-count {
+            font-size: 11px;
+            color: #5a7598;
+        }
+    }
+}
+
+.collection-tab:after,
+.collection-tab:before {
+    right: 100%;
+    top: 40px;
+    border: solid transparent;
+    content: ' ';
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.collection-tab:after {
+    border-color: rgba(136, 183, 213, 0);
+    border-right-color: white;
+    border-width: 15px;
+    margin-top: -15px;
+}
+.collection-tab:before {
+    border-color: rgba(0, 0, 0, 0);
+    border-right-color: white;
+    border-width: 18px;
+    margin-top: -18px;
+}
+.collection-tab-current-collection {
+    flex: 1;
+    padding: 0px;
+    color: black;
+    display: flex;
+    p {
+        font-size: 12px;
+    }
+    ul {
+        overflow-y: auto;
+        flex: 1;
+        height: 228px;
+    }
+    li {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 5px 20px;
+    }
+}
+
+.collection-tab-tabs {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px 20px 0px 20px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #5a7595;
+    button {
+        background-color: transparent;
+        border: none;
+        font-size: 12px;
+        color: #5a7595;
+        width: fit-content;
+        padding: 5px;
+
+        &.selected {
+            border-bottom: 3px solid #0b0e12;
+            color: #1c4d5e;
+        }
+    }
+}
+.collection-tab-dataset {
+    margin: 0px;
+    position: relative;
+    div {
+        margin-bottom: 0px;
+        padding: 0px;
+    }
+    > button {
+        display: none !important;
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        z-index: 2;
+        height: 100%;
+        color: #d9003a;
+        background-color: #f7fafc;
+    }
+    p {
+        padding: 0px;
+        margin: 0px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: 2px 0px;
+        &.name {
+            font-size: 12px;
+            color: black;
+        }
+        &.agency {
+            font-size: 11px;
+            color: #5a7598;
+        }
+    }
+    &:hover {
+        background-color: #f7fafc;
+    }
+    &:hover > button {
+        display: block !important;
+    }
+}
+.datasets-placeholder {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.collections-tab-existing-collections {
+    flex: 1;
+}
+.collection-tab-buttons {
+    box-sizing: border-box;
+    border-top: 1px solid #5a7595;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    button {
+        height: 32px;
+    }
+}

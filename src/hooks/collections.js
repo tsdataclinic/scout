@@ -1,20 +1,55 @@
 import { useCollectionsValue } from '../contexts/CollectionsContext';
 
-export default function useCollection() {
-  const [state, dispatch] = useCollectionsValue();
-  const addToCollection = (datasetID) =>
-    dispatch({ type: 'ADD_TO_COLLECTION', payload: datasetID });
-  const removeFromCollection = (datasetID) =>
-    dispatch({ type: 'REMOVE_FROM_COLLECTION', payload: datasetID });
-  const setName = (name) => dispatch({ type: 'SET_NAME', payload: name });
+export function useCurrentCollection() {
+    const [state, dispatch] = useCollectionsValue();
+    const { activeCollectionID, pendingCollection } = state;
 
-  const clearCollection = () => {
-    console.log('clearning');
-    dispatch({ type: 'CLEAR_COLLECTION' });
-  };
+    const collection = activeCollectionID
+        ? state.collections.find((c) => c.id === state.activeCollectionID)
+        : pendingCollection;
 
-  return [
-    state,
-    { clearCollection, addToCollection, removeFromCollection, setName },
-  ];
+    const addToCollection = (collectionID, datasetID) => {
+        dispatch({
+            type: 'ADD_TO_COLLECTION',
+            payload: { id: collectionID, datasetID },
+        });
+    };
+
+    const createCollectionFromPending = (name) => {
+        dispatch({
+            type: 'CREATE_COLLECTION_FROM_PENDING',
+            payload: { name },
+        });
+    };
+
+    const removeFromCollection = (collectionID, datasetID) =>
+        dispatch({
+            type: 'REMOVE_FROM_COLLECTION',
+            payload: { id: collectionID, datasetID },
+        });
+
+    const setName = (name, collectionID) =>
+        dispatch({
+            type: 'SET_NAME',
+            payload: { id: collectionID, name },
+        });
+
+    const clearCollection = (collectionID) => {
+        dispatch({ type: 'CLEAR_COLLECTION', payload: { id: collectionID } });
+    };
+    return [
+        collection,
+        {
+            clearCollection,
+            addToCollection,
+            removeFromCollection,
+            setName,
+            createCollectionFromPending,
+        },
+    ];
+}
+
+export function useCollections() {
+    const [state, dispatch] = useCollectionsValue();
+    return state;
 }

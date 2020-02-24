@@ -1,89 +1,163 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import Dexie from 'dexie';
+import uuidv4 from 'uuid/v4';
 
 export const CollectionsContext = createContext();
 
+// A collection has the form
+// datasets : array of dataset ids
+// name : the name of the collection
+// id : a random id for the collection
+// description : short 255 character description of the collection
+//
 const initalState = {
-  datasets: [],
-  name: null,
-  cacheLoaded: false,
+    collections: [{ id: 'pending', datasets: [], name: 'pending' }],
+    activeCollectionID: 'pending',
 };
 
 const db = new Dexie('CollectionCache');
 db.version(1).stores({
-  CollectionCache: 'id',
+    CollectionCache: 'id',
 });
 
 const reducer = (state, action) => {
-  const { type, payload } = action;
-  switch (type) {
-    case 'ADD_TO_COLLECTION':
-      return { ...state, datasets: [...state.datasets, payload] };
-    case 'REMOVE_FROM_COLLECTION':
-      return {
-        ...state,
-        datasets: state.datasets.filter((d) => d !== payload),
-      };
-    case 'SET_NAME':
-      return {
-        ...state,
-        name: payload,
-      };
-    case 'CLEAR_COLLECTION':
-      return {
-        ...state,
-        datasets: [],
-      };
-    case 'HYDRATE_STATE':
-      return {
-        ...state,
-        ...payload,
-      };
-    default:
-      return state;
-  }
+    const { type, payload } = action;
+    switch (type) {
+        case 'CREATE_COLLECTION_FROM_PENDING':
+            return {
+                ...state,
+                collections: [
+                    ...state.collections,
+                    {
+                        ...state.collections.find((c) => c.id === 'pending'),
+                        id: uuidv4(),
+                        name: payload.name,
+                    },
+                ].map((c) =>
+                    c.id === 'pending'
+                        ? { id: 'pending', datasets: [], name: 'pending' }
+                        : c,
+                ),
+            };
+        case 'ADD_TO_COLLECTION':
+            return {
+                ...state,
+                collections: state.collections.map((col) =>
+                    col.id === payload.id
+                        ? {
+                              ...col,
+                              datasets: [...col.datasets, payload.datasetID],
+                          }
+                        : col,
+                ),
+            };
+        case 'REMOVE_FROM_COLLECTION':
+            return {
+                ...state,
+                collections: state.collections.map((col) =>
+                    col.id === payload.id
+                        ? {
+                              ...col,
+                              datasets: col.datasets.filter(
+                                  (d) => d !== payload.datasetID,
+                              ),
+                          }
+                        : col,
+                ),
+            };
+        case 'SET_NAME':
+            return {
+                ...state,
+                collections: [
+                    ...state,
+                    state.collections.map((col) =>
+                        col.id === payload.id
+                            ? { ...col, name: payload.name }
+                            : col,
+                    ),
+                ],
+            };
+        case 'CLEAR_COLLECTION':
+            return {
+                ...state,
+                collections: [
+                    ...state,
+                    state.collections.map((col) =>
+                        col.id === payload.id ? { ...col, datasets: [] } : col,
+                    ),
+                ],
+            };
+
+        case 'DELETE_COLLECTION':
+            return {
+                ...state,
+                collections: state.collections.filter(
+                    (col) => col.id !== payload.id,
+                ),
+            };
+
+        case 'CREATE_COLLECTION':
+            return {
+                ...state,
+                collections: [
+                    ...state.collections,
+                    { ...payload, id: uuidv4() },
+                ],
+            };
+        case 'HYDRATE_STATE':
+            return {
+                ...state,
+                ...payload,
+            };
+        default:
+            return state;
+    }
 };
 
 export const CollectionsProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, initalState);
-  const { cacheLoaded, datasets, name } = state;
+    const [state, dispatch] = useReducer(reducer, initalState);
+    const { cacheLoaded, collections, activeCollectionID } = state;
 
-  // Restore state
-  useEffect(() => {
-    db.CollectionCache.get(1).then((result) => {
-      if (result) {
-        const cachedState = JSON.parse(result.data);
-        dispatch({
-          type: 'HYDRATE_STATE',
-          payload: { ...initalState, ...cachedState, cacheLoaded: true },
+    // Restore state
+    useEffect(() => {
+        db.CollectionCache.get(1).then((result) => {
+            if (result) {
+                const cachedState = JSON.parse(result.data);
+                dispatch({
+                    type: 'HYDRATE_STATE',
+                    payload: {
+                        ...initalState,
+                        ...cachedState,
+                        cacheLoaded: true,
+                    },
+                });
+            } else {
+                dispatch({
+                    payload: { ...initalState, cacheLoaded: true },
+                    type: 'HYDRATE_STATE',
+                });
+            }
         });
-      } else {
-        dispatch({
-          payload: { ...initalState, cacheLoaded: true },
-          type: 'HYDRATE_STATE',
-        });
-      }
-    });
-  }, []);
+    }, []);
 
-  // Cache state
-  useEffect(() => {
-    if (cacheLoaded) {
-      db.CollectionCache.put({
-        data: JSON.stringify({
-          datasets,
-          name,
-        }),
-        id: 1,
-      });
-    }
-  }, [cacheLoaded, datasets, name]);
+    // Cache state
+    useEffect(() => {
+        if (cacheLoaded) {
+            db.CollectionCache.put({
+                data: JSON.stringify({
+                    collections,
+                    activeCollectionID,
+                }),
+                id: 1,
+            });
+        }
+    }, [cacheLoaded, collections, activeCollectionID]);
 
-  return (
-    <CollectionsContext.Provider value={[state, dispatch]}>
-      {children}
-    </CollectionsContext.Provider>
-  );
+    return (
+        <CollectionsContext.Provider value={[state, dispatch]}>
+            {children}
+        </CollectionsContext.Provider>
+    );
 };
 
 export const useCollectionsValue = () => useContext(CollectionsContext);
