@@ -51,6 +51,7 @@ export default function HomePage() {
     datasets,
     sortBy,
     sortDirection === 'asc',
+    searchTerm,
   );
 
   const [pagedDatasets, { pageButtons }] = usePagination(sortedDatasets, 5);
@@ -131,16 +132,25 @@ export default function HomePage() {
         </div>
         <div className="count-and-sort">
           <p>
-            <span className="bold">{datasets.length}</span> datasets
+            <span className="bold">{datasets.length}</span> datasets{' '}
+            {searchTerm ? 'sorted by relevance' : ''}
           </p>
 
-          <SortMenu
-            options={['Name', 'Created At', 'Updated At', 'Downloads', 'Views']}
-            onDirection={(direction) => setSortDirection(direction)}
-            selected={sortBy}
-            direction={sortDirection}
-            onSelected={(selected) => setSortBy(selected)}
-          />
+          {searchTerm ? null : (
+            <SortMenu
+              options={[
+                'Name',
+                'Created At',
+                'Updated At',
+                'Downloads',
+                'Views',
+              ]}
+              onDirection={(direction) => setSortDirection(direction)}
+              selected={sortBy}
+              direction={sortDirection}
+              onSelected={(selected) => setSortBy(selected)}
+            />
+          )}
         </div>
 
         <ul className="dataset-list">
