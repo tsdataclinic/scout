@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './HomePage.scss';
 import { DebounceInput } from 'react-debounce-input';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -26,6 +26,8 @@ import {
   useSearchTerm,
   useSortVariable,
   useSortOrder,
+  useFilterBarState,
+  useFilterUIStates,
 } from '../../hooks/search';
 
 export default function HomePage() {
@@ -34,7 +36,7 @@ export default function HomePage() {
   const departments = useDepartments();
   const columns = useColumns();
   const loaded = useStateLoaded();
-  const [colpaseFilters, setCollapseFilters] = useState(true);
+  //    const [colpaseFilters, setCollapseFilters] = useState(true);
 
   const [selectedTags, setSelectedTags] = useSelectedTags();
   const [selectedColumns, setSelectedColumns] = useSelectedColumns();
@@ -60,6 +62,9 @@ export default function HomePage() {
     departments: selectedDepartments,
   });
 
+  const [collapseFilterBar, setCollapseFilterBar] = useFilterBarState();
+  const [filterStates, setFilterState] = useFilterUIStates();
+
   const sortedDatasets = useSortDatsetsBy(
     datasets,
     sortBy,
@@ -71,13 +76,13 @@ export default function HomePage() {
 
   return (
     <div className="home-page">
-      <div className={`filters ${colpaseFilters ? 'collapsed' : ''}`}>
-        {!colpaseFilters ? (
+      <div className={`filters ${collapseFilterBar ? 'collapsed' : ''}`}>
+        {!collapseFilterBar ? (
           <>
             <h2 className="filter-header">
               <button
-                onKeyDown={() => setCollapseFilters(true)}
-                onClick={() => setCollapseFilters(true)}
+                onKeyDown={() => setCollapseFilterBar(true)}
+                onClick={() => setCollapseFilterBar(true)}
                 className="header-button"
                 type="button"
               >
@@ -90,6 +95,10 @@ export default function HomePage() {
                   items={categories}
                   onChange={setSelectedCategories}
                   selected={selectedCategories}
+                  collapse={filterStates.categories}
+                  onCollapse={(collapsed) =>
+                    setFilterState('categories', collapsed)
+                  }
                   title="Categories"
                 />
               </div>
@@ -98,6 +107,10 @@ export default function HomePage() {
                   items={departments}
                   selected={selectedDepartments}
                   onChange={setSelectedDepartments}
+                  collapse={filterStates.departments}
+                  onCollapse={(collapsed) =>
+                    setFilterState('departments', collapsed)
+                  }
                   title="Departments"
                 />
               </div>
@@ -106,6 +119,10 @@ export default function HomePage() {
                   items={columns}
                   selected={selectedColumns}
                   onChange={setSelectedColumns}
+                  collapse={filterStates.columns}
+                  onCollapse={(collapsed) =>
+                    setFilterState('columns', collapsed)
+                  }
                   title="Columns"
                 />
               </div>
@@ -114,6 +131,8 @@ export default function HomePage() {
                   items={tags}
                   selected={selectedTags}
                   onChange={setSelectedTags}
+                  collapse={filterStates.tags}
+                  onCollapse={(collapsed) => setFilterState('tags', collapsed)}
                   title="Tags"
                 />
               </div>
@@ -123,8 +142,8 @@ export default function HomePage() {
           <>
             <h2>
               <button
-                onKeyDown={() => setCollapseFilters(false)}
-                onClick={() => setCollapseFilters(false)}
+                onKeyDown={() => setCollapseFilterBar(false)}
+                onClick={() => setCollapseFilterBar(false)}
                 className="header-button"
                 type="button"
               >
