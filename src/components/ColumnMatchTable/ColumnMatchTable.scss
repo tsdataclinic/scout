@@ -1,12 +1,13 @@
 .column-match-table {
-  background-color: white;
-
-  display: flex;
-  flex-direction: column;
-  .table-row {
-    box-sizing: border-box;
-    padding: 10px 40px;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-  }
+    background-color: white;
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    .table-row {
+        box-sizing: border-box;
+        padding: 10px 40px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+    }
 }

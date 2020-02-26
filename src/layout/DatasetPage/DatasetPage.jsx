@@ -140,17 +140,19 @@ export default function DatasetPage({ match }) {
               Dataset that are thematically similar based on name and
               description
             </p>
-            {mostSimilarDatasets.map((d) => (
-              <Dataset
-                onAddToCollection={addToCollection}
-                onRemoveFromCollection={removeFromCollection}
-                dataset={d.dataset}
-                similarity={d.similarity}
-                inCollection={collection.datasets.includes(
-                  d.dataset.resource.id,
-                )}
-              />
-            ))}
+            <div className="dataset-recomendataions-theme-list">
+              {mostSimilarDatasets.map((d) => (
+                <Dataset
+                  onAddToCollection={addToCollection}
+                  onRemoveFromCollection={removeFromCollection}
+                  dataset={d.dataset}
+                  similarity={d.similarity}
+                  inCollection={collection.datasets.includes(
+                    d.dataset.resource.id,
+                  )}
+                />
+              ))}
+            </div>
           </>
         )}
       </div>
