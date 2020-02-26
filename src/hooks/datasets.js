@@ -111,7 +111,7 @@ export function useDatasets({ tags, term, categories, columns, departments }) {
       if (tags && tags.length > 0) {
         resultDatasets = resultDatasets.filter(
           (dataset) =>
-            dataset.itemclassification.domain_tags.filter((tag) =>
+            dataset.classification.domain_tags.filter((tag) =>
               tags.includes(tag),
             ).length > 0,
         );

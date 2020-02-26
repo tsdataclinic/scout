@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './HomePage.scss';
 import { DebounceInput } from 'react-debounce-input';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,12 +12,23 @@ import {
   useStateLoaded,
   useSortDatsetsBy,
 } from '../../hooks/datasets';
-import useCollection from '../../hooks/collections';
+import { useCurrentCollection } from '../../hooks/collections';
 import Dataset from '../../components/Dataset/Dataset';
 import SortMenu from '../../components/SortMenu/SortMenu';
 import DatasetLoading from '../../components/Loading/DatasetLoading/DatasetLoading';
 import usePagination from '../../hooks/pagination';
 import MultiSelector from '../../components/MultiSelector/MultiSelector';
+import {
+  useSelectedCategories,
+  useSelectedTags,
+  useSelectedDepartments,
+  useSelectedColumns,
+  useSearchTerm,
+  useSortVariable,
+  useSortOrder,
+  useFilterBarState,
+  useFilterUIStates,
+} from '../../hooks/search';
 
 export default function HomePage() {
   const categories = useCategories();
@@ -25,19 +36,23 @@ export default function HomePage() {
   const departments = useDepartments();
   const columns = useColumns();
   const loaded = useStateLoaded();
-  const [selectedTags, setSelectedTags] = useState([]);
-  const [colpaseFilters, setCollapseFilters] = useState(true);
-  const [selectedColumns, setSelectedColumns] = useState([]);
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [selectedDepartments, setSelectedDepartments] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('Name');
-  const [sortDirection, setSortDirection] = useState('asc');
+  //    const [colpaseFilters, setCollapseFilters] = useState(true);
+
+  const [selectedTags, setSelectedTags] = useSelectedTags();
+  const [selectedColumns, setSelectedColumns] = useSelectedColumns();
+  const [selectedCategories, setSelectedCategories] = useSelectedCategories();
+  const [
+    selectedDepartments,
+    setSelectedDepartments,
+  ] = useSelectedDepartments();
+  const [searchTerm, setSearchTerm] = useSearchTerm();
+  const [sortBy, setSortBy] = useSortVariable();
+  const [sortDirection, setSortDirection] = useSortOrder();
 
   const [
     collection,
     { addToCollection, removeFromCollection },
-  ] = useCollection();
+  ] = useCurrentCollection();
 
   const { datasets } = useDatasets({
     tags: selectedTags,
@@ -46,6 +61,9 @@ export default function HomePage() {
     term: searchTerm,
     departments: selectedDepartments,
   });
+
+  const [collapseFilterBar, setCollapseFilterBar] = useFilterBarState();
+  const [filterStates, setFilterState] = useFilterUIStates();
 
   const sortedDatasets = useSortDatsetsBy(
     datasets,
@@ -58,58 +76,74 @@ export default function HomePage() {
 
   return (
     <div className="home-page">
-      <div className={`filters ${colpaseFilters ? 'collapsed' : ''}`}>
-        {!colpaseFilters ? (
+      <div className={`filters ${collapseFilterBar ? 'collapsed' : ''}`}>
+        {!collapseFilterBar ? (
           <>
             <h2 className="filter-header">
               <button
-                onKeyDown={() => setCollapseFilters(true)}
-                onClick={() => setCollapseFilters(true)}
+                onKeyDown={() => setCollapseFilterBar(true)}
+                onClick={() => setCollapseFilterBar(true)}
                 className="header-button"
                 type="button"
               >
                 Filters <FontAwesomeIcon icon={faAngleLeft} />
               </button>
             </h2>
-            <div className="categories">
-              <MultiSelector
-                items={categories}
-                onChange={setSelectedCategories}
-                selected={selectedCategories}
-                title="Categories"
-              />
-            </div>
-            <div className="departments">
-              <MultiSelector
-                items={departments}
-                selected={selectedDepartments}
-                onChange={setSelectedDepartments}
-                title="Departments"
-              />
-            </div>
-            <div className="columns">
-              <MultiSelector
-                items={columns}
-                selected={selectedColumns}
-                onChange={setSelectedColumns}
-                title="Columns"
-              />
-            </div>
-            <div className="tags">
-              <MultiSelector
-                items={tags}
-                selected={selectedTags}
-                onChange={setSelectedTags}
-                title="Tags"
-              />
+            <div className="filters-scroll-area">
+              <div className="categories">
+                <MultiSelector
+                  items={categories}
+                  onChange={setSelectedCategories}
+                  selected={selectedCategories}
+                  collapse={filterStates.categories}
+                  onCollapse={(collapsed) =>
+                    setFilterState('categories', collapsed)
+                  }
+                  title="Categories"
+                />
+              </div>
+              <div className="departments">
+                <MultiSelector
+                  items={departments}
+                  selected={selectedDepartments}
+                  onChange={setSelectedDepartments}
+                  collapse={filterStates.departments}
+                  onCollapse={(collapsed) =>
+                    setFilterState('departments', collapsed)
+                  }
+                  title="Departments"
+                />
+              </div>
+              <div className="columns">
+                <MultiSelector
+                  items={columns}
+                  selected={selectedColumns}
+                  onChange={setSelectedColumns}
+                  collapse={filterStates.columns}
+                  onCollapse={(collapsed) =>
+                    setFilterState('columns', collapsed)
+                  }
+                  title="Columns"
+                />
+              </div>
+              <div className="tags">
+                <MultiSelector
+                  items={tags}
+                  selected={selectedTags}
+                  onChange={setSelectedTags}
+                  collapse={filterStates.tags}
+                  onCollapse={(collapsed) => setFilterState('tags', collapsed)}
+                  title="Tags"
+                />
+              </div>
             </div>
           </>
         ) : (
           <>
             <h2>
               <button
-                onKeyDown={() => setCollapseFilters(false)}
-                onClick={() => setCollapseFilters(false)}
+                onKeyDown={() => setCollapseFilterBar(false)}
+                onClick={() => setCollapseFilterBar(false)}
                 className="header-button"
                 type="button"
               >
@@ -160,8 +194,12 @@ export default function HomePage() {
                 key={dataset?.resource?.id}
                 dataset={dataset}
                 inCollection={collection.datasets.includes(dataset.resource.id)}
-                onAddToCollection={addToCollection}
-                onRemoveFromCollection={removeFromCollection}
+                onAddToCollection={(datasetID) =>
+                  addToCollection(collection.id, datasetID)
+                }
+                onRemoveFromCollection={(datasetID) =>
+                  removeFromCollection(collection.id, datasetID)
+                }
                 query={searchTerm}
               />
             ))

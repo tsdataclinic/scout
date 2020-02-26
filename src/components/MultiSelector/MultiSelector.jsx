@@ -5,8 +5,25 @@ import { useStateLoaded } from '../../hooks/datasets';
 import FilterLoading from '../Loading/FilterLoading/FilterLoading';
 import './MultiSelector.scss';
 
-export default function MultiSelector({ items, selected, onChange, title }) {
+export default function MultiSelector({
+  items,
+  selected,
+  onChange,
+  title,
+  collapse,
+  onCollapse,
+}) {
   const [collapsed, setCollapsed] = useState(true);
+
+  const collapsedActual = collapse === null ? collapsed : collapse;
+
+  const toggleCollapsed = () => {
+    if (onCollapse) {
+      onCollapse(!collapsedActual);
+    } else {
+      setCollapsed(!collapsedActual);
+    }
+  };
 
   const clearItems = () => {
     onChange([]);
@@ -55,13 +72,13 @@ export default function MultiSelector({ items, selected, onChange, title }) {
         <button
           className="header-button"
           type="button"
-          onClick={() => setCollapsed(!collapsed)}
+          onClick={() => toggleCollapsed()}
         >
-          {title} <span> {collapsed ? '+' : '-'}</span>{' '}
+          {title} <span> {collapsedActual ? '+' : '-'}</span>{' '}
         </button>
       </h2>
 
-      {!collapsed && (
+      {!collapsedActual && (
         <>
           <div className="search">
             <input

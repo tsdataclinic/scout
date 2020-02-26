@@ -4,11 +4,11 @@ import RawHTML from '../../components/RawHTML/RawHTML';
 import ColumnMatchTable from '../../components/ColumnMatchTable/ColumnMatchTable';
 import Dataset from '../../components/Dataset/Dataset';
 import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
-import useCollection from '../../hooks/collections';
+import { useCurrentCollection } from '../../hooks/collections';
 import {
-  useDataset,
-  useJoinableDatasets,
-  useGetSimilarDatasets,
+    useDataset,
+    useJoinableDatasets,
+    useGetSimilarDatasets,
 } from '../../hooks/datasets';
 import './DatasetPage.scss';
 import ViewOnOpenPortal from '../../components/ViewOnOpenPortal/ViewOnOpenPortal';
@@ -16,35 +16,35 @@ import ViewOnOpenPortal from '../../components/ViewOnOpenPortal/ViewOnOpenPortal
 const formatDate = (date) => moment(date).format('MMMM DD, YYYY');
 
 export default function DatasetPage({ match }) {
-  const { datasetID } = match.params;
-  const dataset = useDataset(datasetID);
-  const joins = useJoinableDatasets(dataset);
-  const [activeTab, setActiveTab] = useState('joins');
-  const resource = dataset?.resource;
-  const pageViews = resource?.page_views;
-  const classification = dataset?.classification;
-  const domainMetadata = classification?.domain_metadata;
-  const similarDatasets = useGetSimilarDatasets(datasetID);
-  const mostSimilarDatasets = similarDatasets
-    .filter((suggestion) => suggestion.dataset.resource.id !== datasetID)
-    .slice(0, 10);
+    const { datasetID } = match.params;
+    const dataset = useDataset(datasetID);
+    const joins = useJoinableDatasets(dataset);
+    const [activeTab, setActiveTab] = useState('joins');
+    const resource = dataset?.resource;
+    const pageViews = resource?.page_views;
+    const classification = dataset?.classification;
+    const domainMetadata = classification?.domain_metadata;
+    const similarDatasets = useGetSimilarDatasets(datasetID);
+    const mostSimilarDatasets = similarDatasets
+        .filter((suggestion) => suggestion.dataset.resource.id !== datasetID)
+        .slice(0, 10);
 
-  const [
-    collection,
-    { addToCollection, removeFromCollection },
-  ] = useCollection();
+    const [
+        collection,
+        { addToCollection, removeFromCollection },
+    ] = useCurrentCollection();
 
-  const updatedAutomation = domainMetadata?.find(
-    ({ key, value }) => key === 'Update_Automation' && value === 'No',
-  )?.value;
+    const updatedAutomation = domainMetadata?.find(
+        ({ key, value }) => key === 'Update_Automation' && value === 'No',
+    )?.value;
 
-  const updateFrequency = domainMetadata?.find(
-    ({ key }) => key === 'Update_Update-Frequency',
-  )?.value;
+    const updateFrequency = domainMetadata?.find(
+        ({ key }) => key === 'Update_Update-Frequency',
+    )?.value;
 
-  const informationAgency = domainMetadata?.find(
-    ({ key }) => key === 'Dataset-Information_Agency',
-  )?.value;
+    const informationAgency = domainMetadata?.find(
+        ({ key }) => key === 'Dataset-Information_Agency',
+    )?.value;
 
   return dataset ? (
     <div className="dataset-page">

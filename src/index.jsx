@@ -6,12 +6,15 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { StateProvider } from './contexts/OpenDataContext';
 import { CollectionsProvider } from './contexts/CollectionsContext';
+import { SearchProvider } from './contexts/SearchContext';
 
 ReactDOM.render(
   <StateProvider>
-    <CollectionsProvider>
-      <App />
-    </CollectionsProvider>
+    <SearchProvider>
+      <CollectionsProvider>
+        <App />
+      </CollectionsProvider>
+    </SearchProvider>
   </StateProvider>,
   document.getElementById('root'),
 );

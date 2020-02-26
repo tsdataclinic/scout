@@ -11,7 +11,6 @@ import { ModalContainer, ModalRoute } from 'react-router-modal';
 import SideNav from './components/SideNav/SideNav';
 import HomePage from './layout/HomePage/HomePage';
 import DatasetPage from './layout/DatasetPage/DatasetPage';
-import CollectionBar from './components/CollectionBar/CollectionBar';
 import CollectionPage from './layout/CollectionPage/CollectionPage';
 import AboutPage from './layout/AboutPage/AboutPage';
 import CreateCollectionModal from './components/CreateCollectionModal/CreateCollectionModal';
@@ -23,7 +22,6 @@ import GHPagesRedirect from './components/GHPagesRedirect/GHPagesRedirect';
 import 'react-router-modal/css/react-router-modal.css';
 
 function App() {
-
   return (
     <div className="App">
       <Router basename={process.env.PUBLIC_URL}>
