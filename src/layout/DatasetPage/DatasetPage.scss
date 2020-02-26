@@ -1,73 +1,79 @@
 .dataset-page {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-  background-color: white;
-  h1 {
-    text-align: center;
-  }
-  .dataset-details {
-    width: 360px;
-    padding: 20px 32px;
-  }
-  .dataset-recomendataions {
-    flex: 1;
-    background-color: #f7fafc;
-    padding: 20px 32px;
-  }
-  .tabs {
     display: flex;
-    border-bottom: 3px solid #edf2f5;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
     box-sizing: border-box;
-    padding: 20px 0px 5px 0px;
-    margin-bottom: 10px;
+    background-color: white;
+    h1 {
+        text-align: center;
+    }
+    .dataset-details {
+        width: 360px;
+        padding: 20px 32px;
+    }
+    .dataset-recomendataions {
+        flex: 1;
+        background-color: #f7fafc;
+        padding: 20px 32px;
+        display: flex;
+        flex-direction: column;
+    }
+    .tabs {
+        display: flex;
+        border-bottom: 3px solid #edf2f5;
+        box-sizing: border-box;
+        padding: 20px 0px 5px 0px;
+        margin-bottom: 10px;
 
-    button {
-      font-size: 14px;
-      margin-right: 20px;
-      cursor: pointer;
-      background: none;
-      border: none;
+        button {
+            font-size: 14px;
+            margin-right: 20px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        button.active {
+            color: #0078ff;
+            border-bottom: 1px solid #0078ff;
+        }
     }
-    button.active {
-      color: #0078ff;
-      border-bottom: 1px solid #0078ff;
+    .dataset-recomendataions-theme-list {
+        flex: 1;
+        overflow-y: auto;
     }
-  }
-  section {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-    .collection-button {
-      margin-top: 20px;
+    section {
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+        .collection-button {
+            margin-top: 20px;
+        }
+        button {
+            box-sizing: border-box;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
     }
-    button {
-      box-sizing: border-box;
-      padding: 5px 10px;
-      border-radius: 6px;
-      font-weight: 700;
-      margin-bottom: 20px;
-      text-align: center;
+    .external-link {
+        p {
+            font-weight: 700;
+        }
     }
-  }
-  .external-link {
-    p {
-      font-weight: 700;
+    img {
+        width: 120px;
+        margin-bottom: 10px;
     }
-  }
-  img {
-    width: 120px;
-    margin-bottom: 10px;
-  }
-  .metadata {
-    h2 {
-      margin-bottom: 20px;
+    .metadata {
+        h2 {
+            margin-bottom: 20px;
+        }
+        p {
+            margin-bottom: 20px;
+        }
     }
-    p {
-      margin-bottom: 20px;
-    }
-  }
 }
