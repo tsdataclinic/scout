@@ -10,7 +10,6 @@ import {
 import CollectionTab from '../CollectionTab/CollectionTab';
 import { useCurrentCollection } from '../../hooks/collections';
 
-
 export default function SideNav() {
     const [showCollectionTab, setShowCollectionTab] = useState(false);
     const [collection] = useCurrentCollection();
@@ -42,7 +41,7 @@ export default function SideNav() {
                 </button>
                 <CollectionTab visible={showCollectionTab} />
             </div>
-            <Link alt="about" className="about">
+            <Link alt="about" className="about" to="/about">
                 <FontAwesomeIcon size="2x" icon={faQuestionCircle} />
                 <h1>About Data Clinic</h1>
             </Link>
