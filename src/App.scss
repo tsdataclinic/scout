@@ -138,6 +138,19 @@ button.header-button {
     }
 }
 
+button.header-button {
+  color: white;
+  width: 100%;
+  background-color: transparent;
+  color: white;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  &:active {
+    outline: none;
+  }
+}
+
 .bold {
     font-weight: 700;
 }
