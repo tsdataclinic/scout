@@ -1,0 +1,18 @@
+.about-page {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 20px;
+    h1 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+    section section {
+        padding: 0px 0px 0px 20px;
+        p {
+            padding: 0px 0px 0px 20px;
+        }
+    }
+}
