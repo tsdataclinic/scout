@@ -65,6 +65,28 @@ export function useSortVariable() {
   };
   return [sortVariable, setSortVariable];
 }
+
+export function useFilterUIStates() {
+  const [{ collapsedFilterList }, dispatch] = useSearchState();
+  const setFilterState = (filter, state) => {
+    dispatch({
+      type: 'SET_FILTER_STATE',
+      payload: { filter, state },
+    });
+  };
+  return [collapsedFilterList, setFilterState];
+}
+export function useFilterBarState() {
+  const [{ collapseFilters }, dispatch] = useSearchState();
+
+  const setCollapseFilter = (collapse) => {
+    dispatch({
+      type: 'SET_COLLAPSE_FILTER_BAR',
+      payload: collapse,
+    });
+  };
+  return [collapseFilters, setCollapseFilter];
+}
 export function useSortOrder() {
   const [{ sortOrder }, dispatch] = useSearchState();
   const setSearchTerm = (newSortOrder) => {

@@ -10,6 +10,13 @@ const initalState = {
   columns: [],
   sortVariable: 'name',
   sortOrder: 'asc',
+  collapseFilters: true,
+  collapsedFilterList: {
+    categories: true,
+    tags: true,
+    departments: true,
+    columns: true,
+  },
 };
 
 const reducer = (state, action) => {
@@ -43,7 +50,6 @@ const reducer = (state, action) => {
     case 'CLEAR':
       return initalState;
     case 'SET_TAGS':
-      console.log('setting tags ', payload);
       return { ...state, tags: payload };
     case 'SET_DEPARTMENTS':
       return { ...state, departments: payload };
@@ -53,6 +59,16 @@ const reducer = (state, action) => {
       return { ...state, columns: payload };
     case 'SET_SORT_ORDER':
       return { ...state, sortOrder: payload };
+    case 'SET_COLLAPSE_FILTER_BAR':
+      return { ...state, collapseFilters: payload };
+    case 'SET_FILTER_STATE':
+      return {
+        ...state,
+        collapsedFilterList: {
+          ...state.collapsedFilterList,
+          [payload.filter]: payload.state,
+        },
+      };
     case 'SET_SORT_VARIABLE':
       return { ...state, sortVariable: payload };
     case 'SET_TERM':
