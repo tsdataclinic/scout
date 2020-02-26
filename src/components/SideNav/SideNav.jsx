@@ -14,6 +14,7 @@ import { useCurrentCollection } from '../../hooks/collections';
 export default function SideNav() {
     const [showCollectionTab, setShowCollectionTab] = useState(false);
     const [collection] = useCurrentCollection();
+
     return (
         <nav className="side-nav">
             <Link alt="Data Clinic" className="title" to="/">
@@ -22,7 +23,6 @@ export default function SideNav() {
                     src={`${process.env.PUBLIC_URL}/DataClinicLogo.png`}
                 />
             </Link>
-
             <Link alt="Explore" className="explore" to="/">
                 <FontAwesomeIcon size="2x" icon={faEye} />
                 <h1>Explore</h1>
