@@ -78,19 +78,21 @@ export function useGetDatasetsByIds(ids) {
 export function useDatasets({ tags, term, categories, columns, departments }) {
   const [{ datasets }] = useStateValue();
 
+  console.log('datasets ', datasets);
   const { result: searchedDatasets, search } = useFuse({
     data: datasets,
     options: {
       shouldSort: true,
       findAllMatches: true,
       includeMatches: true,
+      tokenize: true,
       keys: ['resource.name', 'resource.description'],
       caseSensitive: false,
     },
   });
 
   useEffect(() => {
-    search(term);
+    search(term.toLocaleLowerCase());
   }, [search, term]);
 
   return useMemo(() => {
