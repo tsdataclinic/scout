@@ -19,6 +19,12 @@
         display: flex;
         flex-direction: column;
     }
+    .intro {
+        font-weight: 700;
+    }
+    > p {
+        line-height: 17px;
+    }
     .tabs {
         display: flex;
         border-bottom: 3px solid #edf2f5;
@@ -37,8 +43,8 @@
             white-space: nowrap;
         }
         button.active {
-            color: #0078ff;
-            border-bottom: 2px solid #0078ff;
+            color: #009aa6;
+            border-bottom: 2px solid #009aa6;
         }
     }
     .dataset-recomendataions-theme-list {
@@ -72,6 +78,7 @@
         margin-bottom: 10px;
     }
     .metadata {
+        overflow-y: auto;
         h2 {
             margin-bottom: 20px;
         }

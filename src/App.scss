@@ -62,7 +62,7 @@ p {
 
 #root {
     width: 100vw;
-    height: calc(100vh - 30px);
+    height: 100vh; //calc(100vh - 30px);
 }
 
 .App {
@@ -80,8 +80,8 @@ p {
 .collection-button {
     border: none;
     background: none;
-    background-color: #e7f2ff;
-    color: #0078ff;
+    color: white;
+    background-color: #1c4d5e;
     height: 24px;
     width: fit-content;
 }
@@ -178,16 +178,6 @@ button.header-button {
         }
     }
 }
-.networkNav__cta {
-    position: absolute;
-    bottom: 0px;
-    width: 100%;
-    justify-content: center;
-    button {
-        width: fit-content;
-    }
-}
-
 .search {
     width: 100%;
     box-sizing: border-box;

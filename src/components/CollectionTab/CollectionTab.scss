@@ -85,6 +85,10 @@
     }
 }
 
+.collection-tab {
+    border: 1px solid #b9c8d1;
+}
+
 .collection-tab:after,
 .collection-tab:before {
     right: 100%;
@@ -98,16 +102,16 @@
 }
 
 .collection-tab:after {
-    border-color: rgba(136, 183, 213, 0);
-    border-right-color: white;
-    border-width: 15px;
-    margin-top: -15px;
+    border-color: rgba(255, 255, 255, 0);
+    border-right-color: #ffffff;
+    border-width: 25px;
+    margin-top: -25px;
 }
 .collection-tab:before {
-    border-color: rgba(0, 0, 0, 0);
-    border-right-color: white;
-    border-width: 18px;
-    margin-top: -18px;
+    border-color: rgba(185, 200, 209, 0);
+    border-right-color: #b9c8d1;
+    border-width: 26px;
+    margin-top: -26px;
 }
 .collection-tab-current-collection {
     flex: 1;
