@@ -20,7 +20,6 @@ body {
     font-family: 'Lato', sans-serif;
     font-size: 11px;
 }
-
 ul {
     list-style: None;
     padding: 0px;
@@ -63,18 +62,19 @@ p {
 
 #root {
     width: 100vw;
-    height: 100vh;
+    height: calc(100vh - 30px);
 }
 
 .App {
     width: 100vw;
-    height: 100vh;
+    height: 100%;
     display: flex;
     flex-direction: row;
 }
 .content {
     flex: 1;
     display: flex;
+    overflow-x: auto;
 }
 
 .collection-button {
@@ -139,16 +139,16 @@ button.header-button {
 }
 
 button.header-button {
-  color: white;
-  width: 100%;
-  background-color: transparent;
-  color: white;
-  border: none;
-  display: flex;
-  justify-content: space-between;
-  &:active {
-    outline: none;
-  }
+    color: white;
+    width: 100%;
+    background-color: transparent;
+    color: white;
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    &:active {
+        outline: none;
+    }
 }
 
 .bold {
@@ -176,6 +176,15 @@ button.header-button {
                 text-decoration: none;
             }
         }
+    }
+}
+.networkNav__cta {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    justify-content: center;
+    button {
+        width: fit-content;
     }
 }
 
