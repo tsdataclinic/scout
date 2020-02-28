@@ -2,7 +2,11 @@ import React from 'react';
 import './HomePage.scss';
 import { DebounceInput } from 'react-debounce-input';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleLeft, faSearch } from '@fortawesome/free-solid-svg-icons';
+import {
+  faAngleLeft,
+  faAngleDown,
+  faSearch,
+} from '@fortawesome/free-solid-svg-icons';
 import {
   useCategories,
   useTags,
@@ -148,6 +152,7 @@ export default function HomePage() {
                 type="button"
               >
                 Filters
+                <FontAwesomeIcon icon={faAngleDown} />
               </button>
             </h2>
           </>

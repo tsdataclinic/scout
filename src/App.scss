@@ -20,7 +20,6 @@ body {
     font-family: 'Lato', sans-serif;
     font-size: 11px;
 }
-
 ul {
     list-style: None;
     padding: 0px;
@@ -63,25 +62,26 @@ p {
 
 #root {
     width: 100vw;
-    height: 100vh;
+    height: 100vh; //calc(100vh - 30px);
 }
 
 .App {
     width: 100vw;
-    height: 100vh;
+    height: 100%;
     display: flex;
     flex-direction: row;
 }
 .content {
     flex: 1;
     display: flex;
+    overflow-x: auto;
 }
 
 .collection-button {
     border: none;
     background: none;
-    background-color: #e7f2ff;
-    color: #0078ff;
+    color: white;
+    background-color: #1c4d5e;
     height: 24px;
     width: fit-content;
 }
@@ -139,16 +139,16 @@ button.header-button {
 }
 
 button.header-button {
-  color: white;
-  width: 100%;
-  background-color: transparent;
-  color: white;
-  border: none;
-  display: flex;
-  justify-content: space-between;
-  &:active {
-    outline: none;
-  }
+    color: white;
+    width: 100%;
+    background-color: transparent;
+    color: white;
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    &:active {
+        outline: none;
+    }
 }
 
 .bold {
@@ -178,7 +178,6 @@ button.header-button {
         }
     }
 }
-
 .search {
     width: 100%;
     box-sizing: border-box;

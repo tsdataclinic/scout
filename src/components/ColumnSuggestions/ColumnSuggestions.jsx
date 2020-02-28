@@ -70,7 +70,7 @@ export default function ColumnSuggestions({ column, joins, dataset }) {
           {column}
         </span>
         <span>{dataTypeForCol}</span>
-        <span>{joins.length} datasets also have this column</span>
+        <span>{joins.length} datasets</span>
       </div>
       {!collapsed && pagedJoins && (
         <div className="columns-suggestions-matches">

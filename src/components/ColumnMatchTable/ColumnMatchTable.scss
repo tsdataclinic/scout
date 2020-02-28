@@ -4,6 +4,12 @@
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+    .table-header {
+        .table-row {
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+    }
     .table-row {
         box-sizing: border-box;
         padding: 10px 40px;
