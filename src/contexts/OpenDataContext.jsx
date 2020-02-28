@@ -52,6 +52,11 @@ export const StateProvider = ({ children }) => {
 
   // Try to get the state locally from indexed db... if we can't find it there, request it from the
   // socrata API
+  //
+  //
+  useEffect(() => {
+    console.log('state is ', state);
+  }, [state]);
 
   useEffect(() => {
     db.SocrataCache.get(1).then((result) => {
@@ -59,7 +64,11 @@ export const StateProvider = ({ children }) => {
         const cachedState = JSON.parse(result.data);
         dispatch({
           type: 'HYDRATE_STATE',
-          payload: { ...initalState, ...cachedState, cache_loaded: true },
+          payload: {
+            ...initalState,
+            ...cachedState,
+            cache_loaded: true,
+          },
         });
         // Set state as loaded to indicate that data is ready to use
         dispatch({

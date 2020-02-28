@@ -7,23 +7,53 @@ import usePagination from '../../hooks/pagination';
 import { getUniqueEntries } from '../../utils/socrata';
 
 export default function ColumnSuggestions({ column, joins, dataset }) {
-  const [columnUniques, setColumnsUniques] = useState([]);
-
   const [collapsed, setCollapsed] = useState(true);
+  const [overlaps, setOverlaps] = useState([]);
+
   const dataTypeForCol =
     dataset.resource.columns_datatype[
       dataset.resource.columns_name.indexOf(column)
     ];
 
-  const [pagedJoins, { pageButtons }] = usePagination(joins, 10);
+  const [pagedJoins, { pageButtons }] = usePagination(
+    overlaps
+      ? overlaps
+          .sort((a, b) => (a.matches.length < b.matches.length ? 1 : -1))
+          .map((o) => joins.find((j) => j.dataset.resource.id === o.id))
+      : joins,
+    10,
+  );
 
   useEffect(() => {
-    if (joins.length > 0) {
-      getUniqueEntries(dataset, column).then((res) => {
-        setColumnsUniques(res);
-      });
+    if (collapsed === false && overlaps.length === 0) {
+      if (joins.length > 0) {
+        getUniqueEntries(dataset, column).then((parentUniques) => {
+          joins.forEach((j) =>
+            getUniqueEntries(j.dataset, column)
+              .then((res) =>
+                setOverlaps((perviousOverlaps) => [
+                  ...perviousOverlaps,
+                  {
+                    id: j.dataset.resource.id,
+                    matches: parentUniques.filter((e) => res.includes(e)),
+                  },
+                ]),
+              )
+              .catch(() => {
+                setOverlaps((perviousOverlaps) => [
+                  ...perviousOverlaps,
+                  {
+                    id: j.dataset.resource.id,
+                    matches: 0,
+                    error: 'failed to fetch',
+                  },
+                ]);
+              }),
+          );
+        });
+      }
     }
-  }, [column, dataset, joins]);
+  }, [column, dataset, joins, collapsed, overlaps]);
 
   return (
     <div className={`column-suggestions ${collapsed ? 'collapsed' : ''}`}>
@@ -48,7 +78,7 @@ export default function ColumnSuggestions({ column, joins, dataset }) {
       {!collapsed && pagedJoins && (
         <div className="columns-suggestions-matches">
           <h3>MATCHING DATSETS</h3>
-          {joins && (
+          {joins && overlaps && (
             <ul>
               {pagedJoins.map((join) => (
                 <li key={join.dataset.resource.id}>
@@ -56,7 +86,10 @@ export default function ColumnSuggestions({ column, joins, dataset }) {
                     leftDataset={dataset}
                     rightDataset={join.dataset}
                     joinCol={column}
-                    parentUniques={columnUniques}
+                    matches={
+                      overlaps.find((o) => o.id === join.dataset.resource.id)
+                        .matches
+                    }
                   />
                 </li>
               ))}
