@@ -129,10 +129,13 @@ export default function DatasetPage({ match }) {
         </div>
         {activeTab === 'joins' && (
           <>
+            <p className="intro">
+              Find datasets that share a column with the current dataset.
+            </p>{' '}
             <p>
-              Find datasets that share a column with the current dataset. These
-              columns might be interesting datasets to join with the current
-              dataset to add additional details or bring in context
+              {' '}
+              These columns might be interesting datasets to join with the
+              current dataset to add additional details or bring in context
             </p>
             <ColumnMatchTable dataset={dataset} joinColumns={joins} />
           </>

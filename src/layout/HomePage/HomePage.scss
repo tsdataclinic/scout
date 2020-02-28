@@ -28,6 +28,9 @@ $LightGrey: #b2b2b2;
             display: none;
         }
     }
+    svg {
+        padding-left: 0px;
+    }
     &.collapsed {
         width: 64px;
         position: relative;
@@ -36,9 +39,16 @@ $LightGrey: #b2b2b2;
             transform-origin: 1 1;
             transform: rotate(-90deg);
             position: absolute;
-            top: 40px;
+            top: 60px;
             left: 0px;
             cursor: pointer;
+        }
+        button {
+            display: flex;
+            justify-content: center;
+            svg {
+                margin: 0px 12px;
+            }
         }
     }
     h2.filter-header {

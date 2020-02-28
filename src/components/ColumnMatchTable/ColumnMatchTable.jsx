@@ -35,7 +35,7 @@ export default function ColumnMatchTable({ dataset, joinColumns }) {
         <ul className="table-row">
           <li>Column name</li>
           <li>Column type</li>
-          <li>No potential joins</li>
+          <li># Potential joins</li>
         </ul>
       </div>
       {sortedColumns.map((column) => (

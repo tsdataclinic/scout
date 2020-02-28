@@ -5,13 +5,16 @@ nav.side-nav {
     color: white;
     width: 88px;
     align-items: center;
-    padding: 16px 16px;
     box-sizing: border-box;
+    padding: 16px 0px;
+    .active-nav {
+        border-right: 4px solid #ffbb00;
+    }
 
     .collection-counter {
         position: absolute;
-        top: -10px;
-        right: 10px;
+        top: -5px;
+        right: 16px;
         color: white;
         background-color: red;
         width: 20px;
@@ -28,13 +31,29 @@ nav.side-nav {
     > div {
         text-align: center;
         margin-bottom: 69px;
-
+        width: 100%;
+        padding: 0px 14px;
+        box-sizing: border-box;
+        min-height: 60px;
         svg {
             color: white;
             width: 32px;
             height: 32px;
         }
     }
+    .scout-h2 {
+        color: white;
+        font-weight: 300;
+        size: 14px;
+        text-align: center;
+    }
+    .scout-sub {
+        color: white;
+        font-weight: 400;
+        font-size: 8px;
+        text-align: center;
+    }
+
     h1 {
         color: white;
         font-size: 11px;

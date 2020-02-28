@@ -46,8 +46,8 @@ function App() {
           </Switch>
         </div>
         <GHPagesRedirect />
-        <WelcomeRedirect />
         <ModalRoute path="/welcome" parentPath="/" component={WelcomeModal} />
+        <WelcomeRedirect />
       </Router>
     </div>
   );
