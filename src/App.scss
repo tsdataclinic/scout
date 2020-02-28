@@ -19,11 +19,6 @@ body {
     padding: 0px;
     font-family: 'Lato', sans-serif;
     font-size: 11px;
-    display: grid;
-    grid-template-rows: 1fr 30px;
-    grid-template-areas:
-        'content'
-        'footer';
 }
 ul {
     list-style: None;
@@ -68,7 +63,6 @@ p {
 #root {
     width: 100vw;
     height: calc(100vh - 30px);
-    grid-area: content;
 }
 
 .App {
@@ -80,6 +74,7 @@ p {
 .content {
     flex: 1;
     display: flex;
+    overflow-x: auto;
 }
 
 .collection-button {
