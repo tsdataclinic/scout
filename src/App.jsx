@@ -14,9 +14,7 @@ import DatasetPage from './layout/DatasetPage/DatasetPage';
 import CollectionPage from './layout/CollectionPage/CollectionPage';
 import AboutPage from './layout/AboutPage/AboutPage';
 import CreateCollectionModal from './components/CreateCollectionModal/CreateCollectionModal';
-import WelcomeModal, {
-  WelcomeRedirect,
-} from './components/WelcomeModal/WelcomeModal';
+import WelcomeModal from './components/WelcomeModal/WelcomeModal';
 import GHPagesRedirect from './components/GHPagesRedirect/GHPagesRedirect';
 
 import 'react-router-modal/css/react-router-modal.css';
@@ -46,8 +44,7 @@ function App() {
           </Switch>
         </div>
         <GHPagesRedirect />
-        <ModalRoute path="/welcome" parentPath="/" component={WelcomeModal} />
-        <WelcomeRedirect />
+        <WelcomeModal />
       </Router>
     </div>
   );
