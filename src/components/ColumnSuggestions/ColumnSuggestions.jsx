@@ -8,7 +8,7 @@ import { getUniqueEntries } from '../../utils/socrata';
 
 export default function ColumnSuggestions({ column, joins, dataset }) {
   const [collapsed, setCollapsed] = useState(true);
-  const [overlaps, setOverlaps] = useState(null);
+  const [overlaps, setOverlaps] = useState([]);
 
   const dataTypeForCol =
     dataset.resource.columns_datatype[
@@ -17,35 +17,38 @@ export default function ColumnSuggestions({ column, joins, dataset }) {
 
   const [pagedJoins, { pageButtons }] = usePagination(
     overlaps
-      ? overlaps.map((o) => joins.find((j) => j.dataset.resource.id === o.id))
+      ? overlaps
+          .sort((a, b) => (a.matches.length < b.matches.length ? 1 : -1))
+          .map((o) => joins.find((j) => j.dataset.resource.id === o.id))
       : joins,
     10,
   );
 
-  if (overlaps) {
-    console.log('overlaps are ', overlaps);
-  }
-  if (overlaps) {
-    console.log('paged joins are ', pagedJoins);
-  }
-
   useEffect(() => {
-    if (collapsed === false && overlaps === null) {
+    if (collapsed === false && overlaps.length === 0) {
       if (joins.length > 0) {
         getUniqueEntries(dataset, column).then((parentUniques) => {
-          Promise.all(
-            joins.map((j) =>
-              getUniqueEntries(j.dataset, column).then((res) => ({
-                id: j.dataset.resource.id,
-                matches: parentUniques.filter((e) => res.includes(e)),
-              })),
-            ),
-          ).then((results) =>
-            setOverlaps(
-              results.sort((a, b) =>
-                a.matches.length > b.matches.length ? -1 : 1,
-              ),
-            ),
+          joins.forEach((j) =>
+            getUniqueEntries(j.dataset, column)
+              .then((res) =>
+                setOverlaps((perviousOverlaps) => [
+                  ...perviousOverlaps,
+                  {
+                    id: j.dataset.resource.id,
+                    matches: parentUniques.filter((e) => res.includes(e)),
+                  },
+                ]),
+              )
+              .catch(() => {
+                setOverlaps((perviousOverlaps) => [
+                  ...perviousOverlaps,
+                  {
+                    id: j.dataset.resource.id,
+                    matches: 0,
+                    error: 'failed to fetch',
+                  },
+                ]);
+              }),
           );
         });
       }
