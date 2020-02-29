@@ -60,7 +60,7 @@ export default function ColumnSuggestions({ column, joins, dataset }) {
       <div
         className="table-row"
         role="button"
-        onKeydown={(e) => {
+        onKeyDown={(e) => {
           if (e.keyCode === 36) {
             setCollapsed(!collapsed);
           }
@@ -77,7 +77,7 @@ export default function ColumnSuggestions({ column, joins, dataset }) {
       </div>
       {!collapsed && pagedJoins && (
         <div className="columns-suggestions-matches">
-          <h3>MATCHING DATSETS</h3>
+          <h3>MATCHING DATASETS</h3>
           {joins && overlaps && (
             <ul>
               {pagedJoins.map((join) => (
