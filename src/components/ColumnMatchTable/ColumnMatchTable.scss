@@ -1,19 +1,23 @@
 .column-match-table {
-    background-color: white;
-    flex: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    .table-header {
-        .table-row {
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-    }
+  background-color: white;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  .table-header {
     .table-row {
-        box-sizing: border-box;
-        padding: 10px 40px;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
+      font-weight: 700;
+      text-transform: uppercase;
     }
+  }
+  .table-row {
+    box-sizing: border-box;
+    padding: 10px 40px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    span.animate {
+      width: 50px;
+    }
+  }
 }

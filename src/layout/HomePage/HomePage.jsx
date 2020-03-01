@@ -14,12 +14,12 @@ import {
   useDatasets,
   useColumns,
   useStateLoaded,
-  useSortDatsetsBy,
+  useSortDatasetsBy,
 } from '../../hooks/datasets';
 import { useCurrentCollection } from '../../hooks/collections';
 import Dataset from '../../components/Dataset/Dataset';
 import SortMenu from '../../components/SortMenu/SortMenu';
-import DatasetLoading from '../../components/Loading/DatasetLoading/DatasetLoading';
+import DatasetsLoading from '../../components/Loading/DatasetsLoading/DatasetsLoading';
 import usePagination from '../../hooks/pagination';
 import MultiSelector from '../../components/MultiSelector/MultiSelector';
 import {
@@ -69,7 +69,7 @@ export default function HomePage() {
   const [collapseFilterBar, setCollapseFilterBar] = useFilterBarState();
   const [filterStates, setFilterState] = useFilterUIStates();
 
-  const sortedDatasets = useSortDatsetsBy(
+  const sortedDatasets = useSortDatasetsBy(
     datasets,
     sortBy,
     sortDirection === 'asc',
@@ -209,7 +209,7 @@ export default function HomePage() {
               />
             ))
           ) : (
-            <DatasetLoading />
+            <DatasetsLoading />
           )}
         </ul>
         <div>{pageButtons}</div>
