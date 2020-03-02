@@ -42,20 +42,26 @@ export default function ColumnJoin({ rightDataset, matches }) {
                 </span>
                 <span>
                     <Link to={`/dataset/${rightDataset.resource.id}`}>
-                        View dataset
+                        View
                     </Link>
                 </span>
                 <button
                     type="button"
                     onClick={() =>
                         collection.datasets.includes(rightDataset.resource.id)
-                            ? removeFromCollection(rightDataset.resource.id)
-                            : addToCollection(rightDataset.resource.id)
+                            ? removeFromCollection(
+                                  collection.id,
+                                  rightDataset.resource.id,
+                              )
+                            : addToCollection(
+                                  collection.id,
+                                  rightDataset.resource.id,
+                              )
                     }
                 >
                     {collection.datasets.includes(rightDataset.resource.id)
-                        ? 'Remove dataset from collection'
-                        : 'Add dataset to collection'}
+                        ? 'Remove from collection'
+                        : 'Add to collection'}
                 </button>
             </div>
             {!collapsed &&

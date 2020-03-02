@@ -68,6 +68,7 @@ export default function DatasetPage({ match }) {
             </p>
         );
     };
+
     const [
         collection,
         { addToCollection, removeFromCollection },
@@ -100,8 +101,8 @@ export default function DatasetPage({ match }) {
                         className="collection-button"
                         onClick={() =>
                             collection.datasets.includes(datasetID)
-                                ? removeFromCollection(datasetID)
-                                : addToCollection(datasetID)
+                                ? removeFromCollection(collection.id, datasetID)
+                                : addToCollection(collection.id, datasetID)
                         }
                     >
                         {collection.datasets.includes(datasetID)
@@ -193,9 +194,17 @@ export default function DatasetPage({ match }) {
                         <div className="dataset-recomendataions-theme-list">
                             {mostSimilarDatasets.map((d) => (
                                 <Dataset
-                                    onAddToCollection={addToCollection}
-                                    onRemoveFromCollection={
-                                        removeFromCollection
+                                    onAddToCollection={() =>
+                                        addToCollection(
+                                            collection.id,
+                                            d.dataset.resource.id,
+                                        )
+                                    }
+                                    onRemoveFromCollection={() =>
+                                        removeFromCollection(
+                                            collection.id,
+                                            d.dataset.resource.id,
+                                        )
                                     }
                                     dataset={d.dataset}
                                     similarity={d.similarity}

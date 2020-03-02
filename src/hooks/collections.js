@@ -50,6 +50,6 @@ export function useCurrentCollection() {
 }
 
 export function useCollections() {
-    const [state, dispatch] = useCollectionsValue();
+    const [state] = useCollectionsValue();
     return state;
 }
