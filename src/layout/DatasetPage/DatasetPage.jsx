@@ -4,6 +4,7 @@ import RawHTML from '../../components/RawHTML/RawHTML';
 import ColumnMatchTable from '../../components/ColumnMatchTable/ColumnMatchTable';
 import Dataset from '../../components/Dataset/Dataset';
 import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
+import '../../components/Loading/Loading.scss';
 import { useCurrentCollection } from '../../hooks/collections';
 import {
     useDataset,
@@ -31,8 +32,7 @@ export default function DatasetPage({ match }) {
     const mostSimilarDatasets = similarDatasets
         .filter(
             (suggestion) =>
-                suggestion.dataset &&
-                suggestion.dataset.resource.id !== datasetID,
+                suggestion.dataset && suggestion.dataset.resource.id !== datasetID,
         )
         .slice(0, 10);
     const renderNotFound = (currentDataset, parentData) => {
@@ -40,35 +40,35 @@ export default function DatasetPage({ match }) {
             return (
                 <p className="intro">
                     This dataset is actually a view of dataset{' '}
-                    {parentData.resource.name}
+                    {parentData?.resource?.name}
                 </p>
             );
         }
-        if (currentDataset.resource.type === 'file') {
+        if (currentDataset?.resource?.type === 'file') {
             return (
                 <p className="intro">
-                    This resource points of a file which we currently don't have
-                    the ability to analyse. We are working to bring more types
-                    of data to Scout. Check back shortly
-                </p>
+                    {/* eslint-disable-next-line react/no-unescaped-entities */}
+                    This resource points of a file which we currently don't have the
+                    ability to analyse. We are working to bring more types of data to
+                    Scout. Check back shortly
+        </p>
             );
         }
-        if (currentDataset.resource.type === 'href') {
+        if (currentDataset?.resource?.type === 'href') {
             return (
                 <p className="intro">
-                    This resource is actually just a link to a website resource.
-                    We currently dont have the ability to provide information on
-                    such resources
-                </p>
+                    This resource is actually just a link to a website resource. We
+                    currently dont have the ability to provide information on such
+                    resources
+        </p>
             );
         }
         return (
             <p className="intro">
                 We currently dont have the ability to analyse this dataset.
-            </p>
+      </p>
         );
     };
-
     const [
         collection,
         { addToCollection, removeFromCollection },
@@ -86,23 +86,27 @@ export default function DatasetPage({ match }) {
         ({ key }) => key === 'Dataset-Information_Agency',
     )?.value;
 
-    return dataset ? (
+    return (
         <div className="dataset-page">
             <div className="dataset-details">
                 <section>
-                    <Breadcrumb currentPage={resource.name} />
+                    <Breadcrumb currentPage={resource ? resource.name : '...'} />
                 </section>
                 <section>
-                    <h2>{resource.name}</h2>
-                    <p>{informationAgency}</p>
-                    <RawHTML html={resource.description} />
+                    <h2 className={resource ? '' : 'animate'}>{resource?.name}</h2>
+                    <p className={resource ? '' : 'animate'}>{informationAgency}</p>
+                    <RawHTML
+                        className={resource ? '' : 'animate'}
+                        html={resource?.description}
+                    />
                     <button
                         type="button"
                         className="collection-button"
+                        disabled={!resource}
                         onClick={() =>
                             collection.datasets.includes(datasetID)
                                 ? removeFromCollection(collection.id, datasetID)
-                                : addToCollection(collection.id, datasetID)
+                                : addToCollection(colleciton.id, datasetID)
                         }
                     >
                         {collection.datasets.includes(datasetID)
@@ -116,7 +120,7 @@ export default function DatasetPage({ match }) {
                         alt="NYC Open Data"
                         src="https://opendata.cityofnewyork.us/wp-content/themes/opendata-wp/assets/img/nyc-open-data-logo.svg"
                     />
-                    <ViewOnOpenPortal permalink={dataset.permalink} />
+                    <ViewOnOpenPortal permalink={dataset ? dataset?.permalink : '#'} />
                 </section>
                 <section className="metadata">
                     <h2>Metadata</h2>
@@ -125,7 +129,7 @@ export default function DatasetPage({ match }) {
                     <h3>Update Frequency</h3>
                     <p>{updateFrequency}</p>
                     <h3>Dataset Owner</h3>
-                    <p>{dataset?.owner.display_name}</p>
+                    <p>{dataset?.owner?.display_name}</p>
                     {informationAgency && (
                         <>
                             <h3>Agency</h3>
@@ -155,57 +159,42 @@ export default function DatasetPage({ match }) {
                         onClick={() => setActiveTab('joins')}
                     >
                         Potential Join Columns
-                    </button>
+          </button>
                     <button
                         type="button"
                         className={activeTab === 'theme' ? 'active' : ''}
                         onClick={() => setActiveTab('theme')}
                     >
                         Thematically Similar
-                    </button>
+          </button>
                 </div>
                 {activeTab === 'joins' &&
-                    (dataset.resource.type === 'dataset' ? (
+                    (!dataset || dataset?.resource?.type === 'dataset' ? (
                         <>
                             <p className="intro">
-                                Find datasets that share a column with the
-                                current dataset.
-                            </p>{' '}
+                                Find datasets that share a column with the current dataset.
+              </p>{' '}
                             <p>
                                 {' '}
-                                These columns might be interesting datasets to
-                                join with the current dataset to add additional
-                                details or bring in context
-                            </p>
-                            <ColumnMatchTable
-                                dataset={dataset}
-                                joinColumns={joins}
-                            />
+                                These columns might be interesting datasets to join with the
+                                current dataset to add additional details or bring in context
+              </p>
+                            <ColumnMatchTable dataset={dataset} joinColumns={joins} />
                         </>
                     ) : (
-                        renderNotFound(dataset, parentDataset)
-                    ))}
+                            renderNotFound(dataset, parentDataset)
+                        ))}
                 {activeTab === 'theme' && (
                     <>
                         <p>
-                            Dataset that are thematically similar based on name
-                            and description
-                        </p>
+                            Dataset that are thematically similar based on name and
+                            description
+            </p>
                         <div className="dataset-recomendataions-theme-list">
-                            {mostSimilarDatasets.map((d) => (
+                            {mostSimilarDatasets?.map((d) => (
                                 <Dataset
-                                    onAddToCollection={() =>
-                                        addToCollection(
-                                            collection.id,
-                                            d.dataset.resource.id,
-                                        )
-                                    }
-                                    onRemoveFromCollection={() =>
-                                        removeFromCollection(
-                                            collection.id,
-                                            d.dataset.resource.id,
-                                        )
-                                    }
+                                    onAddToCollection={() => addToCollection(collection.id, d.dataset.resource.id)}
+                                    onRemoveFromCollection={() => removeFromCollection(collection.id, d.dataset.resource.id)}
                                     dataset={d.dataset}
                                     similarity={d.similarity}
                                     inCollection={collection.datasets.includes(
@@ -218,7 +207,5 @@ export default function DatasetPage({ match }) {
                 )}
             </div>
         </div>
-    ) : (
-        <h1>Loading...</h1>
     );
 }
