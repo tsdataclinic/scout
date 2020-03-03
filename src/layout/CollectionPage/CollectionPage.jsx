@@ -20,15 +20,16 @@ export default function CollectionPage({ match }) {
 
   const [isCopied, setCopied] = useClipboard(url);
   return (
-    <div className="collections-page">
-      <div className="collections-details">
+    <div className="collection-page">
+      <div className="collection-details">
         <section>
           <Breadcrumb currentPage="Collections" />
         </section>
         <section>
           <h2>{name}</h2>
           <p>
-            {datasets.length} dataset{datasets.length > 1 ? 's' : ''}
+            {datasets.length} dataset
+            {datasets.length > 1 ? 's' : ''}
           </p>
         </section>
 
@@ -52,7 +53,7 @@ export default function CollectionPage({ match }) {
           </p>
         </div>
       </div>
-      <div className="collections-content">
+      <div className="collection-content">
         {datasets.map((dataset) => (
           <Dataset viewInOpenPortal key={dataset.id} dataset={dataset} />
         ))}

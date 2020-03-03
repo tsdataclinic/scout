@@ -1,0 +1,30 @@
+.collection-card {
+    background-color: white;
+    padding: 20px 20px 5px 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    border-radius: 1px;
+    border: 1px solid #c5cede;
+    box-shadow: 1px 1px 2px rgba(90, 117, 152, 0.3);
+    .collection-stats {
+        font-weight: 700;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .created-at {
+        color: #5a7598;
+        font-size: 11px;
+        padding: 0px;
+        margin: 0px;
+        margin-bottom: 2px;
+    }
+    h3 {
+        color: #152935;
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+}

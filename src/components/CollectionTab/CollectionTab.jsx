@@ -2,24 +2,27 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useGetDatasetsByIds } from '../../hooks/datasets';
 import { useCollections, useCurrentCollection } from '../../hooks/collections';
-import { constructCollectionLink } from '../../utils/formatters';
 
 import './CollectionTab.scss';
 
-export default function CollectionTab({ visible }) {
-  const collections = useCollections();
+export default function CollectionTab({ visible, onDismiss }) {
+  const [{ collections }, { setActiveCollection }] = useCollections();
   const [
     collection,
     { removeFromCollection, createCollectionFromPending },
   ] = useCurrentCollection();
   const currentCollectionDatasets = useGetDatasetsByIds(collection.datasets);
   const [newCollectionName, setNewCollectionName] = useState('');
-  const [tab, setTab] = useState('new');
-  const [showCreate, setShowCreate] = useState(false);
+  const [tab, setTab] = useState('add');
 
   const createCollection = () => {
     createCollectionFromPending(newCollectionName);
-    setShowCreate(false);
+    setTab('add');
+  };
+
+  const selectCollection = (collectionID) => {
+    setActiveCollection(collectionID);
+    setTab('add');
   };
 
   const getAgency = (dataset) => {
@@ -32,7 +35,7 @@ export default function CollectionTab({ visible }) {
 
   return (
     <div className="collection-tab">
-      {showCreate ? (
+      {tab === 'create' && (
         <div className="collections-tab-create">
           <h2>Create Collection</h2>
           <div className="collections-tab-create-options">
@@ -43,115 +46,136 @@ export default function CollectionTab({ visible }) {
               value={newCollectionName}
               onChange={(e) => setNewCollectionName(e.target.value)}
             />
-            <ul>
-              {currentCollectionDatasets.map((c) => (
-                <li className="collection-tab-dataset">
-                  <div>
-                    <p className="name">{c.resource.name}</p>
-                    <p className="agency"> {getAgency(c)}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="collection-tab-buttons">
-            <button type="submit" onClick={createCollection}>
-              Create
-            </button>
-            <button type="button" onClick={() => setShowCreate(false)}>
-              Cancel
-            </button>
+            {collection.id === 'pending' && (
+              <>
+                <p>With datasets:</p>
+                <ul>
+                  {currentCollectionDatasets.map((c) => (
+                    <li className="collection-tab-dataset">
+                      <div>
+                        <p className="name">{c.resource.name}</p>
+                        <p className="agency"> {getAgency(c)}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
           </div>
         </div>
-      ) : (
-        <div className="collections-tab-view">
-          <h2>Collections</h2>
-          <div className="collection-tab-tabs">
-            <button
-              type="button"
-              onClick={() => setTab('new')}
-              className={`header-button' ${tab === 'new' ? 'selected' : ''}`}
-            >
-              Create new
-            </button>
-            <button
-              type="button"
-              onClick={() => setTab('existing')}
-              className={`header-button' ${
-                tab === 'existing' ? 'selected' : ''
-              }`}
-            >
-              Existing Collections
+      )}
+
+      {tab === 'add' && (
+        <div className="add-to-collection">
+          <div className="add-to-header">
+            {collection.id !== 'pending' ? (
+              <>
+                <h3>Currently adding to</h3>
+                <p className="collection-name">{collection.name}</p>
+              </>
+            ) : (
+              <>
+                <h3>Create a new dataset form selection</h3>
+              </>
+            )}
+            <button type="button" onClick={() => setTab('switch')}>
+              Switch Collection
             </button>
           </div>
-          {tab === 'new' && (
-            <>
-              <div className="collection-tab-current-collection">
-                {currentCollectionDatasets.length === 0 ? (
-                  <div className="datasets-placeholder">
-                    <h3>No datasets selected</h3>
-                    <p>
-                      Select `&quot;`Add to Collection`&quot;` to begin creating
-                      local collections.
-                    </p>
-                  </div>
-                ) : (
-                  <ul>
-                    {currentCollectionDatasets.map((d) => (
-                      <li
-                        key={d.resource.name}
-                        className="collection-tab-dataset"
-                      >
-                        <div>
-                          <p className="name">{d.resource.name}</p>
-                          <p className="agency">{getAgency(d)}</p>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            removeFromCollection(collection.id, d.resource.id)
-                          }
-                        >
-                          Remove
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+
+          <div className="collection-tab-current-collection">
+            {currentCollectionDatasets.length === 0 ? (
+              <div className="datasets-placeholder">
+                <h3>
+                  {collection.id === 'pending'
+                    ? 'No datasets selected'
+                    : 'This collection is empty'}
+                </h3>
+
+                <p>
+                  Select `&quot;`Add to Collection`&quot;` to begin creating
+                  local collections.
+                </p>
               </div>
-              <div className="collection-tab-buttons">
-                <button type="submit" onClick={() => setShowCreate(true)}>
-                  Create Collection
-                </button>
-              </div>
-            </>
-          )}
-          {tab === 'existing' && (
-            <div className="collections-tab-existing-collections">
-              {collections.collections.length === 1 ? (
-                <div className="datasets-placeholder">
-                  <h3>No collections yet</h3>
-                </div>
-              ) : (
-                <ul className="existing-collections-list">
-                  {collections.collections
-                    .filter((c) => c.id !== 'pending')
-                    .map((c) => (
-                      <li className="existing-collection">
-                        <div className="exisiting-colections-deets">
-                          <p className="name">{c.name}</p>
-                          <p className="dataset-count">
-                            {' '}
-                            {c.datasets.length} datasets{' '}
-                          </p>
-                        </div>
-                        <Link to={constructCollectionLink(c)}>View</Link>
-                      </li>
-                    ))}
-                </ul>
-              )}
+            ) : (
+              <ul>
+                {currentCollectionDatasets.map((d) => (
+                  <li key={d.resource.name} className="collection-tab-dataset">
+                    <div>
+                      <p className="name">{d.resource.name}</p>
+                      <p className="agency">{getAgency(d)}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        removeFromCollection(collection.id, d.resource.id)
+                      }
+                    >
+                      Remove
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      )}
+      {tab === 'switch' && (
+        <div className="collections-tab-switch">
+          <div className="switch-header">
+            <h3>Select a Collection to add to</h3>
+          </div>
+          {collections.length === 1 ? (
+            <div className="datasets-placeholder">
+              <h3>No collections yet</h3>
             </div>
+          ) : (
+            <ul className="existing-collections-list">
+              {collections
+                .filter((c) => c.id !== 'pending')
+                .map((c) => (
+                  <li className="existing-collection">
+                    <div className="exisiting-colections-deets">
+                      <button
+                        type="button"
+                        className="select-collection-button"
+                        onClick={() => selectCollection(c.id)}
+                      >
+                        <p className="name">{c.name}</p>
+                        <p className="dataset-count">
+                          {' '}
+                          {c.datasets.length} datasets{' '}
+                        </p>
+                      </button>
+                    </div>
+                  </li>
+                ))}
+            </ul>
           )}
+        </div>
+      )}
+
+      {tab === 'create' && (
+        <div className="collection-tab-buttons">
+          <button type="submit" onClick={createCollection}>
+            Create
+          </button>
+          <button type="button" onClick={() => setTab('add')}>
+            Cancel
+          </button>
+        </div>
+      )}
+      {tab === 'add' && (
+        <div className="collection-tab-buttons">
+          <button type="submit" onClick={() => setTab('create')}>
+            Create Collection
+          </button>
+
+          <Link to="/collections">
+            <button onClick={onDismiss} type="submit">
+              My Collections
+            </button>
+          </Link>
         </div>
       )}
     </div>

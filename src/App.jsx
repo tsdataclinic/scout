@@ -13,6 +13,7 @@ import HomePage from './layout/HomePage/HomePage';
 import DatasetPage from './layout/DatasetPage/DatasetPage';
 import CollectionPage from './layout/CollectionPage/CollectionPage';
 import AboutPage from './layout/AboutPage/AboutPage';
+import CollectionsPage from './layout/CollectionsPage/CollectionsPage';
 import CreateCollectionModal from './components/CreateCollectionModal/CreateCollectionModal';
 import WelcomeModal from './components/WelcomeModal/WelcomeModal';
 import GHPagesRedirect from './components/GHPagesRedirect/GHPagesRedirect';
@@ -34,6 +35,8 @@ function App() {
             />
 
             <Route path="/about" component={AboutPage} />
+            <Route path="/collections" component={CollectionsPage} />
+
             <ModalRoute
               path="/collection/new"
               parentPath="/"

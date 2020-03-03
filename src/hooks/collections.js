@@ -1,3 +1,4 @@
+import uuidv4 from 'uuid/v4';
 import { useCollectionsValue } from '../contexts/CollectionsContext';
 
 export function useCurrentCollection() {
@@ -16,9 +17,14 @@ export function useCurrentCollection() {
   };
 
   const createCollectionFromPending = (name) => {
+    const id = uuidv4();
     dispatch({
       type: 'CREATE_COLLECTION_FROM_PENDING',
-      payload: { name },
+      payload: { name, id },
+    });
+    dispatch({
+      type: 'SET_ACTIVE_COLLECTION',
+      payload: id,
     });
   };
 
@@ -50,6 +56,18 @@ export function useCurrentCollection() {
 }
 
 export function useCollections() {
-  const [state] = useCollectionsValue();
-  return state;
+  const [state, dispatch] = useCollectionsValue();
+  const deleteCollection = (collectionID) => {
+    dispatch({
+      type: 'DELETE_COLLECTION',
+      payload: collectionID,
+    });
+  };
+  const setActiveCollection = (collectionID) => {
+    dispatch({
+      type: 'SET_ACTIVE_COLLECTION',
+      payload: collectionID,
+    });
+  };
+  return [state, { deleteCollection, setActiveCollection }];
 }
