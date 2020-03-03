@@ -42,7 +42,7 @@ export default function AboutPage() {
                 </div>
             </section>
             <section className="about-section-two-up">
-                <div>
+                <div className="center">
                     <img src={`${process.env.PUBLIC_URL}/circles.png`} />
                 </div>
                 <div>

@@ -1,9 +1,9 @@
 import React from 'react';
-import { useCollections } from '../../hooks/collections';
-import CollectionCard from '../../components/CollectionCard/CollectionCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLayerGroup } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
+import CollectionCard from '../../components/CollectionCard/CollectionCard';
+import { useCollections } from '../../hooks/collections';
 import './CollectionsPage.scss';
 import { constructCollectionLink } from '../../utils/formatters';
 
