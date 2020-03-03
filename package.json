@@ -4,6 +4,7 @@
     "private": true,
     "dependencies": {
         "@fortawesome/fontawesome-svg-core": "^1.2.26",
+        "@fortawesome/free-brands-svg-icons": "^5.12.1",
         "@fortawesome/free-regular-svg-icons": "^5.12.0",
         "@fortawesome/free-solid-svg-icons": "^5.12.0",
         "@fortawesome/react-fontawesome": "^0.1.8",
@@ -57,7 +58,11 @@
         "lint": "eslint src/**/**/*.{js,jsx}"
     },
     "browserslist": {
-        "production": [">0.2%", "not dead", "not op_mini all"],
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
         "development": [
             "last 1 chrome version",
             "last 1 firefox version",
