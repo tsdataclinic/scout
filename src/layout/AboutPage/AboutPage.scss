@@ -10,7 +10,10 @@
     }
 
     section {
-        padding: 87px 60px 40px 60px;
+        padding: 20px;
+        @media (min-width: 859px) {
+            padding: 87px 60px 40px 60px;
+        }
         > div {
             width: 50%;
             padding: 0px 20px;
@@ -94,6 +97,10 @@
         .center {
             margin-bottom: 20px;
             text-align: center;
+            img {
+                width: 100%;
+                max-width: 300px;
+            }
         }
     }
     h1 {
