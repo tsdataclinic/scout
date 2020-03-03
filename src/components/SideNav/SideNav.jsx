@@ -9,54 +9,55 @@ import CollectionTab from '../CollectionTab/CollectionTab';
 import { useCurrentCollection } from '../../hooks/collections';
 
 export default function SideNav() {
-    const location = window.location.href;
-    console.log('location ', location);
-    const [showCollectionTab, setShowCollectionTab] = useState(false);
-    const [collection] = useCurrentCollection();
+  const location = window.location.href;
+  console.log('location ', location);
+  const [showCollectionTab, setShowCollectionTab] = useState(false);
+  const [collection] = useCurrentCollection();
 
-    return (
-        <nav className="side-nav">
-            <Link alt="Data Clinic" className="title" to="/">
-                <h2 className="scout-h2">scout</h2>
+  return (
+    <nav className="side-nav">
+      <Link alt="Data Clinic" className="title" to="/">
+        <h2 className="scout-h2">scout</h2>
 
-                <p className="scout-sub">by data clinic</p>
-            </Link>
-            <NavLink
-                activeClassName="active-nav"
-                alt="Explore"
-                className="explore"
-                exact
-                to="/"
-            >
-                <ExploreSVG />
-                <h1>Explore</h1>
-            </NavLink>
-            <div style={{ position: 'relative' }}>
-                {collection.datasets.length > 0 && (
-                    <div className="collection-counter">
-                        {collection.datasets.length}
-                    </div>
-                )}
-                <button
-                    onClick={() => setShowCollectionTab(!showCollectionTab)}
-                    type="button"
-                    className="header-button"
-                >
-                    <CollectionsSVG />
-                    <h1>Collections</h1>
-                </button>
-                <CollectionTab visible={showCollectionTab} />
-            </div>
-            <NavLink
-                exact
-                activeClassName="active-nav"
-                alt="about"
-                className="about"
-                to="/about"
-            >
-                <DataClinicSVG />
-                <h1>About</h1>
-            </NavLink>
-        </nav>
-    );
+        <p className="scout-sub">by data clinic</p>
+      </Link>
+      <NavLink
+        activeClassName="active-nav"
+        alt="Explore"
+        className="explore"
+        exact
+        to="/"
+      >
+        <ExploreSVG />
+        <h1>Explore</h1>
+      </NavLink>
+      <div style={{ position: 'relative' }}>
+        {collection.datasets.length > 0 && (
+          <div className="collection-counter">{collection.datasets.length}</div>
+        )}
+        <button
+          onClick={() => setShowCollectionTab(!showCollectionTab)}
+          type="button"
+          className="header-button"
+        >
+          <CollectionsSVG />
+          <h1>Collections</h1>
+        </button>
+        <CollectionTab
+          visible={showCollectionTab}
+          onDismiss={() => setShowCollectionTab(false)}
+        />
+      </div>
+      <NavLink
+        exact
+        activeClassName="active-nav"
+        alt="about"
+        className="about"
+        to="/about"
+      >
+        <DataClinicSVG />
+        <h1>About</h1>
+      </NavLink>
+    </nav>
+  );
 }

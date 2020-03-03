@@ -1,51 +1,51 @@
-.collections-page {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-  background-color: white;
+.collection-page {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    background-color: white;
 
-  section {
-    margin-bottom: 20px;
-  }
-
-  h1 {
-    text-align: center;
-  }
-  .collections-details {
-    width: 360px;
-    padding: 20px 40px;
-
-    h2 {
-      word-break: break-all;
+    section {
+        margin-bottom: 20px;
     }
 
-    .dataset-url {
-      word-break: break-all;
+    h1 {
+        text-align: center;
     }
+    .collection-details {
+        width: 360px;
+        padding: 20px 40px;
 
-    button {
-      background: none;
-      border: 1px solid #336699;
-      grid-area: collection;
-      background-color: #ffffff;
-      color: #336699;
-      height: 24px;
-      width: max-content;
-      border-radius: 2px;
-    }
+        h2 {
+            word-break: break-all;
+        }
 
-    .share-icons {
-      padding: 10px 10px 10px 0;
-      button {
-        margin-right: 10px;
-      }
+        .dataset-url {
+            word-break: break-all;
+        }
+
+        button {
+            background: none;
+            border: 1px solid #336699;
+            grid-area: collection;
+            background-color: #ffffff;
+            color: #336699;
+            height: 24px;
+            width: max-content;
+            border-radius: 2px;
+        }
+
+        .share-icons {
+            padding: 10px 10px 10px 0;
+            button {
+                margin-right: 10px;
+            }
+        }
     }
-  }
-  .collections-content {
-    flex: 1;
-    background-color: #f7fafc;
-    padding: 20px 40px;
-  }
+    .collection-content {
+        flex: 1;
+        background-color: #f7fafc;
+        padding: 20px 40px;
+    }
 }

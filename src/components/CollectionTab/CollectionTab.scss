@@ -27,7 +27,36 @@
         padding: 5px 0px;
     }
 }
+.collections-tab-switch {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow-y: hidden;
+    .switch-header {
+        border-bottom: 1px solid #e7eef7;
+        padding: 10px 20px 0px 20px;
+        h3 {
+            color: #0b0e12;
+            font-size: 14px;
+        }
+    }
+}
+.select-collection-button {
+    background-color: transparent;
+    width: 100%;
+}
+.exisiting-collections-deets {
+    display: flex;
+    flex-direciton: column;
+}
 
+.exisiting-collections-list {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
 .collections-tab-create {
     flex: 1;
     display: flex;
@@ -57,12 +86,19 @@
 }
 
 .existing-collections-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
     .existing-collection {
         padding: 5px 10px;
+        height: 29px;
+        width: 100%;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
+        margin-bottom: 16px;
         svg {
             color: #1c4d5e;
         }
@@ -81,6 +117,8 @@
         .dataset-count {
             font-size: 11px;
             color: #5a7598;
+            padding: 0px;
+            text-align: left;
         }
     }
 }
@@ -99,8 +137,35 @@
     width: 0;
     position: absolute;
     pointer-events: none;
+    display: flex;
+    flex: 1;
 }
-
+.add-to-collection {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    .add-to-header {
+        border-bottom: 1px solid #e7eef7;
+        padding: 10px 20px 0px 20px;
+        .collection-name {
+            color: #152935;
+            font-size: 14px;
+            font-weight: normal;
+            padding-bottom: 0px;
+            margin-bottom: 4px;
+        }
+        button {
+            color: #1693a3;
+            background-color: transparent;
+            padding: 0px;
+            width: fit-content;
+        }
+    }
+}
+.collections-tab-view {
+    display: flex;
+    flex-direction: column;
+}
 .collection-tab:after {
     border-color: rgba(255, 255, 255, 0);
     border-right-color: #ffffff;
@@ -216,5 +281,9 @@
     justify-content: space-between;
     button {
         height: 32px;
+        color: white;
+    }
+    a {
+        color: white;
     }
 }
