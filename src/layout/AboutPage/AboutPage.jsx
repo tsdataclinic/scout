@@ -43,7 +43,7 @@ export default function AboutPage() {
             </section>
             <section className="about-section-two-up">
                 <div>
-                    <img src="/circles.png" />
+                    <img src={`${process.env.PUBLIC_URL}/circles.png`} />
                 </div>
                 <div>
                     <h3>Lot's of datasets are loney</h3>
@@ -93,7 +93,7 @@ export default function AboutPage() {
                     </p>
                 </div>
                 <div className="center">
-                    <img src="/DataClinicLogo.png" />
+                    <img src={`${process.env.PUBLIC_URL}/DataClinicLogo.png`} />
                 </div>
             </section>
 
