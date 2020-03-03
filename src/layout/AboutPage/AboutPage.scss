@@ -4,7 +4,78 @@
     flex-direction: column;
     overflow-y: auto;
     box-sizing: border-box;
-    padding: 20px;
+    p {
+        font-size: 14px;
+        line-height: 17px;
+    }
+
+    section {
+        padding: 87px 60px 40px 60px;
+        > div {
+            width: 50%;
+            padding: 0px 20px;
+        }
+    }
+    .about-dark-header {
+        background-color: #1c4d5e;
+        color: white;
+        box-sizing: border-box;
+        .about-header-full {
+            width: 100%;
+        }
+        h2 {
+            font-weight: 300;
+            font-size: 40px;
+            color: #ffbb00;
+            margin-bottom: 40px;
+        }
+        h3 {
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+        .content {
+            width: 100%;
+            > div {
+                width: 50%;
+            }
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            > p:first-child {
+                font-weight: 700;
+            }
+        }
+    }
+
+    .about-section-two-up {
+        &.teal {
+            background-color: #009aa6;
+            color: white;
+            h3 {
+                color: white;
+            }
+            p {
+                color: white;
+            }
+        }
+        display: flex;
+        padding-top: 50px;
+        align-items: center;
+        h3 {
+            font-size: 32px;
+            font-weight: 300;
+            color: #00acee;
+            margin-bottom: 40px;
+            font-family: lato;
+        }
+        p {
+            color: #152935;
+        }
+        .center {
+            text-align: center;
+        }
+    }
     h1 {
         font-size: 2rem;
         margin-bottom: 20px;
@@ -13,6 +84,18 @@
         padding: 0px 0px 0px 20px;
         p {
             padding: 0px 0px 0px 20px;
+        }
+    }
+    .social {
+        a {
+            color: white;
+        }
+        ul {
+            font-size: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
         }
     }
 }

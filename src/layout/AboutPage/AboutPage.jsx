@@ -1,101 +1,149 @@
 import React from 'react';
 import './AboutPage.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    faGithub,
+    faTwitter,
+    faMedium,
+} from '@fortawesome/free-brands-svg-icons';
 
 export default function AboutPage() {
     return (
         <div className="about-page">
-            <section>
-                <h1>Scout</h1>
-                <section>
-                    <h2>What is Scout?</h2>
+            <section className="about-dark-header">
+                <div className="about-header-full">
+                    <h3>Introducing scout</h3>
+                    <h2>Uncover the city's data.</h2>
+                </div>
+                <div className="content">
+                    <div>
+                        <p>
+                            We built scout by partnering with the NYC Mayor's
+                            office to make data more accessible.
+                        </p>
+                    </div>
+                    <div>
+                        <p>
+                            scout is a new way to browse New York's open data
+                            portal. It focuses on data descoverability,
+                            joinability and creating curated collections of
+                            dataset's that deal with a specific subject.
+                        </p>
+                        <p>
+                            By focusing not on agencies, or departments, scot
+                            allows you to quickly identify datasets that are
+                            releated to each other and can even potentially be
+                            joined together using a common ID. Having found
+                            these collections of datasets, scout makes it easy
+                            to share your findings with others through our data
+                            collections.
+                        </p>
+                    </div>
+                </div>
+            </section>
+            <section className="about-section-two-up">
+                <div>
+                    <img src="/circles.png" />
+                </div>
+                <div>
+                    <h3>Lot's of datasets are loney</h3>
                     <p>
-                        Scout is a tool to make it easier to navigate Open Data
-                        Portals and find groups of related datasets. It sits on
-                        top of Socrata Open Data portals and provides tools that
-                        augment those data portals and make more obscure
-                        datasets more descoverable
+                        While many open data sets are downloaded and viewed
+                        dailty, there are many more that get far less attention.
+                        We think there is lots of untapped potential in these
+                        datasets, espcially when combined with some of the
+                        better known ones.
                     </p>
-                </section>
-                <section>
-                    <h2>What cities does Scout support?</h2>
                     <p>
-                        Scout currently only works with the New York City open
-                        data portal, however we are planning to release versions
-                        for other cities in the near future. In addition we are
-                        planning on making suggestions for datasets from other
-                        citie.
+                        Our goal is to make sure that when you search for a
+                        dataset, you are exposed to everyother dataset that
+                        might also have relevance
                     </p>
-                </section>
+                </div>
+            </section>
+            <section className="about-section-two-up">
+                <div>
+                    <h3>What is Data Clinic?</h3>
 
-                <section>
-                    <h2>
-                        How do the thematically similar recomendations work?
-                    </h2>
                     <p>
-                        Scout tries to surface datasets that have a similar
-                        theme to the one you are currently looking at. It does
-                        this using a technique called Doc2Vec which builds a
-                        mapping of each of the dataset names and descriptions
-                        and uses these mappings to find documents that have a
-                        similar meaning.
+                        As the data and tech philanthropic arm of the investment
+                        manager Two Sigma, Data Clinic provides pro bono data
+                        science and engineering support to nonprofits and
+                        engages in open source tooling and research that
+                        contribute to the Data for Good movement.
                     </p>
-                </section>
-                <section>
-                    <h2>How can I contribute to Scout?</h2>
                     <p>
-                        Scout is a tool to make it easier to navigate Open Data
-                        Portals and find groups of related datasets. It sits on
-                        top of Socrata Open Data portals and provides tools that
-                        augment those data portals and make more obscure
-                        datasets more descoverable
+                        {' '}
+                        We leverage Two Sigma’s people, data science skills, and
+                        technological know-how to support communities, mission
+                        driven organizations, and the broader public in their
+                        effort to use data more effectively.
                     </p>
-                </section>
+                    <p>
+                        {' '}
+                        To learn more visit{' '}
+                        <a href="dataclinic.twosigma.com" target="_blank">
+                            dataclinic.twosigma.com
+                        </a>{' '}
+                        and connect with us via{' '}
+                        <a href="mailto:dataclinic@twosigma.com">
+                            dataclinic@twosigma.com
+                        </a>
+                        .
+                    </p>
+                </div>
+                <div className="center">
+                    <img src="/DataClinicLogo.png" />
+                </div>
             </section>
 
-            <section>
-                <h1>Data Clinic</h1>
-                <section>
-                    <h2>What is the Data Clinic?</h2>
+            <section className="about-section-two-up teal">
+                <div className="social">
+                    <ul>
+                        <li>
+                            <a
+                                href="https://github.com/tsdataclinic/scout"
+                                target="_blank"
+                            >
+                                <FontAwesomeIcon icon={faGithub} />
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="https://medium.com/dataclinic"
+                                targer="_blank"
+                            >
+                                <FontAwesomeIcon icon={faMedium} />
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="https://twitter.com/tsdataclinic"
+                                target="_blank"
+                            >
+                                <FontAwesomeIcon icon={faTwitter} />
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>How can I contribute?</h3>
                     <p>
-                        We bring Two Sigma’s people, data science skills, and
-                        technological know-how to help our partners to use data
-                        and tech more effectively.
-                    </p>
-
-                    <p>
-                        We share our scientific process and source the right
-                        talent from within Two Sigma to address your unique
-                        challenges.
-                    </p>
-
-                    <p>
-                        We can help optimize and automate daily operations,
-                        translate data into insights, or demonstrate potential
-                        for even greater change in the service of your
-                        community.
-                    </p>
-                </section>
-            </section>
-            <section>
-                <h1>Two Sigma</h1>
-                <section>
-                    <h2>What is Two Sigma?</h2>
-                    <p>
-                        We’re not your typical investment manager. We follow
-                        principles of technology and innovation as much as
-                        principles of investment management. Fields like machine
-                        learning and distributed computing guide us. Since 2001,
-                        we’ve searched for ways that these kinds of technologies
-                        can make us better at what we do. We never stop
-                        researching and developing.
+                        We want scout to grow to help support the needs of the
+                        open data community. That means that we need a lot of
+                        voices helping us shape the features we are developing.
+                        If you would like to suggest a feature, please either
+                        open a ticket on github or reach out to us on one of our
+                        socal media channels.
                     </p>
                     <p>
-                        In the process, we work to help real people. Through our
-                        investors, we support the retirements of millions around
-                        the world. And we help fund breakthrough research,
-                        education and a wide range of charities and foundations.
+                        If you are a developer, designer or want to contribute
+                        in a technical capcity we would love your help! Head
+                        over to our github page to open issues, suggest
+                        features, contribute pull requests and find begginer
+                        issues
                     </p>
-                </section>
+                </div>
             </section>
         </div>
     );
