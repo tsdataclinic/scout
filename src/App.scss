@@ -68,13 +68,23 @@ p {
 .App {
     width: 100vw;
     height: 100%;
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-rows: 1fr 88px;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+        'content'
+        'side-nav';
+    @media (min-width: 859px) {
+        grid-template-rows: 1fr;
+        grid-template-columns: 88px 1fr;
+        grid-template-areas: 'side-nav content';
+    }
 }
 .content {
     flex: 1;
     display: flex;
     overflow-x: auto;
+    grid-area: content;
 }
 
 .collection-button {

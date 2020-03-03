@@ -9,8 +9,6 @@ import CollectionTab from '../CollectionTab/CollectionTab';
 import { useCurrentCollection } from '../../hooks/collections';
 
 export default function SideNav() {
-  const location = window.location.href;
-  console.log('location ', location);
   const [showCollectionTab, setShowCollectionTab] = useState(false);
   const [collection] = useCurrentCollection();
 

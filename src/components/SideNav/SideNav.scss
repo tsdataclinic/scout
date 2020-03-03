@@ -1,18 +1,29 @@
 nav.side-nav {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    padding: 0px;
+    justify-content: space-between;
+    align-items: center;
+    @media (min-width: 859px) {
+        flex-direction: column;
+        padding: 16px 0px;
+        align-items: center;
+    }
     background-color: #0b0e12;
     color: white;
-    width: 88px;
-    align-items: center;
     box-sizing: border-box;
-    padding: 16px 0px;
+    grid-area: side-nav;
     svg {
         fill: white;
         stroke: white;
     }
     .active-nav {
-        border-right: 4px solid #ffbb00;
+        border-right: none;
+        border-top: 4px solid #ffbb00;
+        @media (min-width: 859px) {
+            border-right: 4px solid #ffbb00;
+            border-top: 0px;
+        }
     }
 
     .collection-counter {
@@ -35,11 +46,16 @@ nav.side-nav {
     > a,
     > div {
         text-align: center;
-        margin-bottom: 69px;
-        width: 100%;
-        padding: 0px 14px;
+        min-width: 90px;
+        height: 70px;
+        padding-top: 10px;
+        @media (min-width: 859px) {
+            padding: 0px 14px;
+            min-height: 60px;
+            margin-bottom: 69px;
+            width: 100%;
+        }
         box-sizing: border-box;
-        min-height: 60px;
         svg {
             color: white;
             width: 32px;
