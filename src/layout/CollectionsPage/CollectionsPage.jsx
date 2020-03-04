@@ -6,8 +6,10 @@ import CollectionCard from '../../components/CollectionCard/CollectionCard';
 import { useCollections } from '../../hooks/collections';
 import './CollectionsPage.scss';
 import { constructCollectionLink } from '../../utils/formatters';
+import usePageView from '../../hooks/analytics';
 
 export default function CollectionsPage() {
+    usePageView();
     const [{ collections }] = useCollections();
 
     return (

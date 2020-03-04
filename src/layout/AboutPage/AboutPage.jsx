@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './AboutPage.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import usePageView from '../../hooks/analytics';
 import {
     faGithub,
     faTwitter,
@@ -8,6 +9,8 @@ import {
 } from '@fortawesome/free-brands-svg-icons';
 
 export default function AboutPage() {
+    usePageView('/about');
+
     return (
         <div className="about-page">
             <section className="about-dark-header">
