@@ -29,7 +29,7 @@ export default function SideNav() {
         <ExploreSVG />
         <h1>Explore</h1>
       </NavLink>
-      <div style={{ position: 'relative' }}>
+      <div className="collections-button" style={{ position: 'relative' }}>
         {collection.datasets.length > 0 && (
           <div className="collection-counter">{collection.datasets.length}</div>
         )}

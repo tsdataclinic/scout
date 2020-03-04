@@ -44,6 +44,15 @@ nav.side-nav {
         display: flex;
         flex-direction: column;
     }
+    .collections-button {
+        > button {
+            height: 57px;
+        }
+        h1 {
+            margin-left: -6px;
+        }
+    }
+
     > a,
     > div {
         text-align: center;
