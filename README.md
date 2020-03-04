@@ -1,5 +1,7 @@
 # A new searchable interface for New York Open Data (or any socrata data portal)
 
+![screenshot](https://tsdataclinic.github.io/scout/screenshot.png)
+
 Introducing scout, an open source browser-based tool that eases the discovery and curation of thematically related and joinable datasets to broaden the application of open data to uncover new insights.
 
 Scout is designed to help surface datasets in the NYC Open Data Portal that might have escaped your attention before.
