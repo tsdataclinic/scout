@@ -36,6 +36,7 @@ export default function ColumnSuggestions({ column, joins, dataset }) {
                   {
                     id: j.dataset.resource.id,
                     matches: parentUniques.filter((e) => res.includes(e)),
+                    leftSize: parentUniques.length,
                   },
                 ]),
               )
@@ -86,10 +87,9 @@ export default function ColumnSuggestions({ column, joins, dataset }) {
                     leftDataset={dataset}
                     rightDataset={join.dataset}
                     joinCol={column}
-                    matches={
-                      overlaps.find((o) => o.id === join.dataset.resource.id)
-                        .matches
-                    }
+                    matches={overlaps.find(
+                      (o) => o.id === join.dataset.resource.id,
+                    )}
                   />
                 </li>
               ))}
