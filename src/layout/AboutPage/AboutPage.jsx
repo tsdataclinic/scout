@@ -28,14 +28,14 @@ export default function AboutPage() {
                     <div>
                         <p>
                             scout is a new way to browse New York's open data
-                            portal. It focuses on data descoverability,
+                            portal. It focuses on data discoverability,
                             joinability and creating curated collections of
                             dataset's that deal with a specific subject.
                         </p>
                         <p>
                             By focusing not on agencies, or departments, scot
                             allows you to quickly identify datasets that are
-                            releated to each other and can even potentially be
+                            related to each other and can even potentially be
                             joined together using a common ID. Having found
                             these collections of datasets, scout makes it easy
                             to share your findings with others through our data
@@ -49,18 +49,18 @@ export default function AboutPage() {
                     <img src={`${process.env.PUBLIC_URL}/circles.png`} />
                 </div>
                 <div>
-                    <h3>Lot's of datasets are loney</h3>
+                    <h3>Lot's of datasets are lonely</h3>
                     <p>
                         While many open data sets are downloaded and viewed
-                        dailty, there are many more that get far less attention.
+                        daily, there are many more that get far less attention.
                         We think there is lots of untapped potential in these
-                        datasets, espcially when combined with some of the
+                        datasets, especially when combined with some of the
                         better known ones.
                     </p>
                     <p>
                         Our goal is to make sure that when you search for a
-                        dataset, you are exposed to everyother dataset that
-                        might also have relevance
+                        dataset, you are exposed to every other dataset that
+                        might also be relevant.
                     </p>
                 </div>
             </section>
@@ -114,7 +114,7 @@ export default function AboutPage() {
                         <li>
                             <a
                                 href="https://medium.com/dataclinic"
-                                targer="_blank"
+                                target="_blank"
                             >
                                 <FontAwesomeIcon icon={faMedium} />
                             </a>
@@ -137,14 +137,14 @@ export default function AboutPage() {
                         voices helping us shape the features we are developing.
                         If you would like to suggest a feature, please either
                         open a ticket on github or reach out to us on one of our
-                        socal media channels.
+                        social media channels.
                     </p>
                     <p>
                         If you are a developer, designer or want to contribute
-                        in a technical capcity we would love your help! Head
+                        in a technical capacity we would love your help! Head
                         over to our github page to open issues, suggest
-                        features, contribute pull requests and find begginer
-                        issues
+                        features, contribute pull requests and find beginner
+                        issues.
                     </p>
                 </div>
             </section>
