@@ -1,5 +1,11 @@
 .dataset {
     display: grid;
+    @media (min-size: 875px) {
+        display: grid;
+    }
+    display: flex;
+    flex-direction: column;
+
     grid-template-columns: 1fr min-content;
     grid-template-rows: max-content mimmax(1fr, 2rem) min-content;
     grid-template-areas: 'title collection' 'description updated' 'meta .';
@@ -41,6 +47,10 @@
     }
 }
 .comparison-stat {
+    @media (min-size: 875px) {
+        flex-direction: column;
+    }
+    flex-direction: row;
     display: flex;
     align-items: center;
     margin-top: 10px;
