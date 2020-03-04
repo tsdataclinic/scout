@@ -27,6 +27,8 @@ $LightGrey: #b2b2b2;
         &::-webkit-scrollbar {
             display: none;
         }
+
+        scrollbar-width: 0px;
     }
     svg {
         padding-left: 0px;
