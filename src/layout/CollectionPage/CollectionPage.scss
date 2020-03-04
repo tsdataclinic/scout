@@ -1,6 +1,9 @@
 .collection-page {
+    @media (min-width: 875px) {
+        flex-direction: row;
+    }
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     width: 100%;
     height: 100%;
     box-sizing: border-box;
