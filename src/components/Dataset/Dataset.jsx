@@ -2,6 +2,9 @@ import React from 'react';
 import './Dataset.scss';
 import { Link } from 'react-router-dom';
 import { hilightMatches, formatDate } from '../../utils/formatters';
+import { useGetSimilarDatasets, useGetJoinNumbers } from '../../hooks/datasets';
+import { ReactComponent as ThematicIcon } from '../../icons/joinable.svg';
+import { ReactComponent as JoinIcon } from '../../icons/thematicSimilarity.svg';
 
 // import RawHTML from '../RawHTML/RawHTML';
 import ViewOnOpenPortal from '../ViewOnOpenPortal/ViewOnOpenPortal';
@@ -16,6 +19,8 @@ export default function Dataset({
   query,
 }) {
   const formattedName = hilightMatches(dataset.resource.name, query);
+  const similarDatasets = useGetSimilarDatasets(dataset.resource.id);
+  const joinNumber = useGetJoinNumbers(dataset.resource.id);
   const formattedDescription = hilightMatches(
     dataset.resource.description,
     query,
@@ -48,10 +53,15 @@ export default function Dataset({
         </p>
       )}
       {viewInOpenPortal && <ViewOnOpenPortal permalink={dataset.permalink} />}
-
-      <div className="dataset-join-thematic">
-        <p className="header">Last Updated</p>
-        <p>33</p>
+      <div className="comparison-stats">
+        <div className="comparison-stat dataset-join-thematic">
+          <ThematicIcon />
+          <span>{Math.max(similarDatasets.length - 1, 0)}</span>
+        </div>
+        <div className="comparison-stat dataset-join-join">
+          <JoinIcon />
+          <span>{joinNumber}</span>
+        </div>
       </div>
       <div className="dataset-description">{formattedDescription}</div>
       <div className="dataset-meta">

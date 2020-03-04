@@ -2,12 +2,13 @@ nav.side-nav {
     display: flex;
     flex-direction: row;
     padding: 0px;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
     @media (min-width: 859px) {
         flex-direction: column;
         padding: 16px 0px;
         align-items: center;
+        justify-content: start;
     }
     background-color: #0b0e12;
     color: white;

@@ -36,6 +36,15 @@ export function useJoinableDatasets(dataset) {
   ]);
 }
 
+export function useGetJoinNumbers(datasetID) {
+  const [joinNumbers, setJoinNumbers] = useState({});
+  useEffect(() => {
+    fetch(`${process.env.PUBLIC_URL}/potential_join_numbers.json`)
+      .then((r) => r.json())
+      .then((r) => setJoinNumbers(r));
+  }, []);
+  return datasetID in joinNumbers ? joinNumbers[datasetID] : 0;
+}
 export function useGetSimilarDatasets(datasetID) {
   const [similarityMetrics, setSimilarityMetrics] = useState({});
   const [{ datasets }] = useStateValue();

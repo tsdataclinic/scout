@@ -40,6 +40,15 @@
         }
     }
 }
+.comparison-stat {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    svg {
+        margin-right: 10px;
+        width: 24px;
+    }
+}
 
 .dataset-last-update {
     grid-area: updated;
