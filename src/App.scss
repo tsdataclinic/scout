@@ -86,6 +86,7 @@ p {
     display: flex;
     overflow-x: auto;
     grid-area: content;
+    overflow-y: hidden;
 }
 
 .collection-button {
