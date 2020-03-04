@@ -1,16 +1,14 @@
 .dataset {
     display: grid;
-    @media (min-size: 875px) {
+    @media (min-width: 875px) {
         display: grid;
+        grid-template-columns: 1fr min-content;
+        grid-template-rows: max-content mimmax(1fr, 2rem) min-content;
+        grid-template-areas: 'title collection' 'description updated' 'meta .';
+        grid-column-gap: 40px;
+        grid-row-gap: 13px;
     }
     display: flex;
-    flex-direction: column;
-
-    grid-template-columns: 1fr min-content;
-    grid-template-rows: max-content mimmax(1fr, 2rem) min-content;
-    grid-template-areas: 'title collection' 'description updated' 'meta .';
-    grid-column-gap: 40px;
-    grid-row-gap: 13px;
     flex-direction: column;
     border: 1px solid #c5cede;
     width: 100%;
@@ -46,14 +44,24 @@
         }
     }
 }
-.comparison-stat {
-    @media (min-size: 875px) {
+.comparison-stats {
+    display: flex;
+    @media (min-width: 875px) {
         flex-direction: column;
     }
     flex-direction: row;
+}
+.comparison-stat {
+    flex-direction: row;
     display: flex;
     align-items: center;
+    @media (min-width: 875px) {
+        margin-right: 0px;
+        margin-bottom: 0px;
+    }
+    margin-right: 10px;
     margin-top: 10px;
+    margin-bottom: 10px;
     svg {
         margin-right: 10px;
         width: 24px;
