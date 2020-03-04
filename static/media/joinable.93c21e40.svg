@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="14" height="16" viewBox="0 0 14 16">
+  <defs>
+    <rect id="joinable-a" width="6" height="16" x="8" y="0"/>
+    <mask id="joinable-b" width="6" height="16" x="0" y="0" fill="#fff" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox">
+      <use xlink:href="#joinable-a"/>
+    </mask>
+  </defs>
+  <g fill="none" fill-rule="evenodd" stroke="#1C4D5E">
+    <rect width="5" height="15" x=".5" y=".5"/>
+    <use stroke-dasharray="2 2" stroke-width="2" mask="url(#joinable-b)" xlink:href="#joinable-a"/>
+  </g>
+</svg>
