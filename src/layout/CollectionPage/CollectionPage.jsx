@@ -1,6 +1,5 @@
 import React from 'react';
 import './CollectionPage.scss';
-import usePageView from '../../hooks/analytics';
 import {
     EmailShareButton,
     FacebookShareButton,
@@ -9,6 +8,7 @@ import {
     FacebookIcon,
     TwitterIcon,
 } from 'react-share';
+import usePageView from '../../hooks/analytics';
 import useClipboard from '../../hooks/useClipboard';
 import { useGetDatasetsByIds } from '../../hooks/datasets';
 import Dataset from '../../components/Dataset/Dataset';

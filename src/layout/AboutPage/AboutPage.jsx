@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import './AboutPage.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import usePageView from '../../hooks/analytics';
 import {
     faGithub,
     faTwitter,
     faMedium,
 } from '@fortawesome/free-brands-svg-icons';
+import usePageView from '../../hooks/analytics';
 
 export default function AboutPage() {
     usePageView('/about');

@@ -32,7 +32,7 @@ export default function DatasetPage({ match }) {
     const similarDatasets = useGetSimilarDatasets(datasetID);
 
     useEffect(() => {
-        const page = window.location.pathname + '/' + activeTab;
+        const page = `${window.location.pathname  }/${  activeTab}`;
         window.fathom('trackPageview', { path: page });
     }, [activeTab]);
     useEffect(() => {
