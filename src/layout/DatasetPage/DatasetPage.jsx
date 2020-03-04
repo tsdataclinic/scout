@@ -28,6 +28,7 @@ export default function DatasetPage({ match }) {
   const classification = dataset?.classification;
   const domainMetadata = classification?.domain_metadata;
   const similarDatasets = useGetSimilarDatasets(datasetID);
+  console.log(dataset);
 
   const mostSimilarDatasets = similarDatasets
     .filter(
@@ -169,7 +170,7 @@ export default function DatasetPage({ match }) {
           </button>
         </div>
         {activeTab === 'joins' &&
-          (!dataset || dataset?.resource?.type === 'dataset' ? (
+          (!dataset || dataset?.resource?.columns_field_name.length > 0 ? (
             <>
               <p className="intro">
                 Find datasets that share a column with the current dataset.
