@@ -62,7 +62,8 @@ p {
 
 #root {
     width: 100vw;
-    height: 100vh; //calc(100vh - 30px);
+    height: 100vh;
+    padding-top: 30px;
 }
 
 .App {
