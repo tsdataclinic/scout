@@ -20,10 +20,7 @@ export default function AboutPage() {
                 </div>
                 <div className="content">
                     <div>
-                        <p>
-                            We built scout by partnering with the NYC Mayor's
-                            office to make data more accessible.
-                        </p>
+                        <p>We built scout to make data more accessible.</p>
                     </div>
                     <div>
                         <p>
