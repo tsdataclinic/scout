@@ -6,6 +6,7 @@ import {
   faTwitter,
   faMedium,
 } from '@fortawesome/free-brands-svg-icons';
+import { ReactComponent as DataClinicSVG } from '../../icons/dataClinicWhite.svg';
 import usePageView from '../../hooks/analytics';
 
 export default function AboutPage() {
@@ -89,10 +90,7 @@ export default function AboutPage() {
           </p>
         </div>
         <div className="center">
-          <img
-            src={`${process.env.PUBLIC_URL}/DataClinicLogo.png`}
-            alt="data-clinic-logo"
-          />
+          <DataClinicSVG />
         </div>
       </section>
 
