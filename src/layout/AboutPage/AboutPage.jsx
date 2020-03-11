@@ -56,7 +56,7 @@ export default function AboutPage() {
           </p>
         </div>
       </section>
-      <section className="about-section-two-up">
+      <section className="about-section-two-up dark">
         <div>
           <h3>What is Data Clinic?</h3>
 
