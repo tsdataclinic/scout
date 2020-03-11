@@ -16,7 +16,7 @@ export default function AboutPage() {
       <section className="about-dark-header">
         <div className="about-header-full">
           <h3>Introducing scout</h3>
-          <h2>Uncover the city`&apos;`s data.</h2>
+          <h2>Uncover the city&apos;s data.</h2>
         </div>
         <div className="content">
           <div>
@@ -24,7 +24,7 @@ export default function AboutPage() {
           </div>
           <div>
             <p>
-              scout is a new way to browse New York`&pos;`s open data portal. It
+              scout is a new way to browse New York&apos;s open data portal. It
               focuses on data discoverability, joinability and creating curated
               collections of datasets that deal with a specific subject.
             </p>
