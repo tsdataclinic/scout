@@ -78,9 +78,11 @@ export default function CollectionTab({ visible, onDismiss }) {
                 <h3>Create a new dataset form selection</h3>
               </>
             )}
-            <button type="button" onClick={() => setTab('switch')}>
-              Switch Collection
-            </button>
+            {collections.length > 2 && (
+              <button type="button" onClick={() => setTab('switch')}>
+                Switch Collection
+              </button>
+            )}
           </div>
 
           <div className="collection-tab-current-collection">
