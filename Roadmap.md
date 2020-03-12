@@ -20,16 +20,16 @@ If you would like to request a feature or want a feature prioritized over others
 -   Launch to all possible cities that use Socrata as a platform with the ability to easily search between cities as well.
 -   Work on making the matching of column names and id's within columns much fuzzier. This could involve looking at some fuzzy matching metrics, manually creating mappings for common id structures (for example BBL as a single entry vs three columns for Borough Block and Lot) or something else entirely.
 
-## June 2002
+## June 2020
 
--   Work to abstract the meta data model so that we can potentially add datasets from other sources (Arcgis, CRAN etc)
+-   Work to abstract the meta data model so that we can potentially add datasets from other sources (Arcgis, CKAN etc)
 -   Migrate the app to typescript to help facilitate this.
 -   Build adaptors for these other solutions
 
-## July 2002
+## July 2020
 
 -   Integrate ways for people to link projects back to a dataset or collection. For example if a blog post is written about a given dataset, or a derivative dataset is produced, allow individuals to submit these to scout for display alongside that dataset or collection.
--   Build interoperability with the other Data Clinic tools (Smooshrand Newerhoods). This would consist of adding "Open in X" buttons for both tools and even potentially embedding a cut down version of scout in those apps to allow the direct browsing of datasets within them.
+-   Build interoperability with the other Data Clinic tools (Smooshr and Newerhoods). This would consist of adding "Open in X" buttons for both tools and even potentially embedding a cut down version of scout in those apps to allow the direct browsing of datasets within them.
 
 ## August 2020
 
