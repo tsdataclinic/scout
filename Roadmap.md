@@ -13,7 +13,7 @@ If you would like to request a new feature or prioritize one over the others, op
 
 -   Add a feature to allow the suggestion of datasets across cities.
 -   Explore adding the ability to share collections and browse other peoples public collections.
--   Work with NYC MODA to develop a strategy for datasets that have no metadata on the open data portal (e.g., a lot of the geospatial datasets).
+-   Develop a strategy for datasets that have no metadata on the open data portal (e.g., a lot of the geospatial datasets).
 
 ## May 2020
 
@@ -25,6 +25,7 @@ If you would like to request a new feature or prioritize one over the others, op
 -   Work to abstract the metadata model so that we can add datasets from other sources (e.g., ArcGIS, CKAN, etc.).
 -   Migrate the app to typescript to help facilitate this.
 -   Build adaptors for these other solutions.
+-   Prototype searching by geography and by time range
 
 ## July 2020
 
