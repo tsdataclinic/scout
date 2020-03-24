@@ -12,6 +12,10 @@ Try it out [here](http://twosigma.com/scout)
 
 We love all contributions, be it a bug report or feature request via a GitHub issue, or feedback over email
 
+## Roadmap 
+
+We will maintain a 6 month roadmap which you can read here: [roadmap](https://github.com/tsdataclinic/scout/blob/master/Roadmap.md). If you want clarification on the roadmap or have suggestions or other comments, please open an [issue](https://github.com/tsdataclinic/scout/issues).
+
 ## Development
 
 If you want to help with the development of scout, you will need to be able to run the code locally. Scout is built using [React](https://reactjs.org/) and for development we use [yarn](https://classic.yarnpkg.com/en/).
