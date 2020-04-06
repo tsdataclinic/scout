@@ -9,7 +9,7 @@ import {
   getDepartments,
 } from '../utils/socrata';
 
-const db = new Dexie('SocrataCache');
+const db = new Dexie(`${window.location.pathname}SocrataCache`);
 db.version(1).stores({
   SocrataCache: 'id',
 });

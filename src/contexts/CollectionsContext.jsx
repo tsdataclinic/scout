@@ -14,7 +14,7 @@ const initalState = {
   activeCollectionID: 'pending',
 };
 
-const db = new Dexie('CollectionCache');
+const db = new Dexie(`${window.location.pathname}CollectionCache`);
 db.version(1).stores({
   CollectionCache: 'id',
 });
