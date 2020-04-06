@@ -83,36 +83,36 @@ A lot of these datasets are other exam results for other years. This is great as
 
 This is really useful information that can give important context to the original dataset. Clicking on the "2017 - 2018 November2017 Avg Class Size School K8 - Open Data Portal" entry will show us some of the common ids that exist in both datasets. 
 
-![expand ids](https://tsdataclinic.github.io/scout/tutorial_images/)
+![expand ids](https://tsdataclinic.github.io/scout/tutorial_images/ids_expanded.png)
 
 Now that we have found some datasets we might want to combine together, we want to make sure we don't lose track of them. To do this we can use another handy feature of scout: collections. On the left side of the page where the dataset details are presented, you will see a button called "Add to Collection". Click this and you will see a red circle with the number 1 on it appear next to the "Collections" button on the navigation bar to the far left. 
 
-![added collection]()
+![added collection]((https://tsdataclinic.github.io/scout/tutorial_images/collection_number.png)
 Next let's click on the collections button to see what has just happened. 
 
-![collections expanded]()
+![collections expanded](https://tsdataclinic.github.io/scout/tutorial_images/collection_tab.png)
 
 You should see the "2013-2018 School Math Results'' dataset listed and a button to create a collection. Click on the Create Collection button and enter "School Math Results'' as the collection name when prompted and then click "Create". We can also add the class size datasets to the current collection by clicking the Add to collection buttons in the "Potential Join Columns'' list. Let's add both the "2017 - 2018 November2017 Avg Class Size School K8 - Open Data Portal" and "2018 - 2019 Average Class Size Report School K-8" datasets to our collection. Doing so, you will notice that the number in the red circle increments to 3 to show the number of datasets in the current collection. 
 
 scout let's us create any number of collections. These can be used as  a personal reference but can also be shared with anyone else on the internet. To  see how we do that. Let's click on the "My Collections'' button.  
 
-![collections expanded]()
+![collections expanded](https://tsdataclinic.github.io/scout/tutorial_images/collections_multi.png)
 
 The collections page shows you a list of all the collections that you have created. Currently there is only one collection, our "School Math Results" collection. Clicking through on this will show us  each of the datasets within that collection along with a number of buttons that you can use to share your collection on social media along with a link that you can copy to reference this collection anywhere you want. 
 
-![Collection page]()
+![Collection page](https://tsdataclinic.github.io/scout/tutorial_images/collections.png)
 
 Currently, scout stores all of your collections in the browser. This means that if you move to another computer, you won't see the same list of collections. The links you use to share the collection will however always refer exactly to the collection you made. We are currently working on a way to let scout sync collections between users.
 
 For now let's go back to the explore page and look at a new dataset. This time let's look for datasets about how the city uses its budget. Let's search for the dataset called "Capital Budget" and click through to it's dataset page.
 
-![Capital budget page]()
+![Capital budget page](https://tsdataclinic.github.io/scout/tutorial_images/capital_budget.png)
 
 According to the description:  "This dataset contains capital appropriation data by project type, budget line and source of funds". That's really interesting. Let's start a new collection to keep track of our budget data. Click on the collections tab again and click "Create Collection". Enter "City Spending" as the name to create a new empty collection. Now that we have two collections, you should see a new button called "Switch Collection" appear. Clicking this will let you quickly switch the collection that you are currently adding to. For now though let's start this new collection off by clicking the "Add to Collection" button for the "Capital Budget" dataset.
 
 We could find more datasets that can potentially join with the "Capital Budget" dataset using the "Potential Join Columns" dataset as we did before with the Math results but let's this time check out "Thematic Similarity" the other way we can suggest interesting datasets. 
 
-![Thematically Similar]()
+![Thematically Similar](https://tsdataclinic.github.io/scout/tutorial_images/thematically_similar.png)
 
 If you click on that tab you will see a list of datasets that scout thinks have a similar theme as the current dataset. To this, scout uses some machine learning to try and find datasets that have a similar topic to the current dataset based on their name and description. For example, here we see a lot of datasets about how the city spends money. Some of these have similar words in their titles and descriptions as the "Capital Budget" dataset but notable "Expense Actuals'' doesn't. The machine learning we use behind the scenes is smart enough to know that they are about a similar topic and are able to offer it up as a suggestion. We can easily add it to our collection as before.
 
