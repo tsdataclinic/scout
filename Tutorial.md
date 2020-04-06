@@ -10,27 +10,27 @@ Let's dive in!
 
 When you first load up scout you should see a page like this 
 
-![scout main page]()
+![scout main page](https://tsdataclinic.github.io/scout/tutorial_images/home_page.png)
 
 This page shows a list of all of the 2800 datasets from the New York City open data portal, complete with their title, a short description and information about when the dataset was last updated.
 
-![scout dataset card callout]()
+
 
  Currently they are ordered by name but you can change that by selecting a different option at the top left of the screen. You can sort by name, created at, updated at, views or downloads. You can also use the small triangle next to the sort by column to to switch between ascending and descending ordering.
  
- ![sort controlls]()
+
 
 Each page shows a maximum of about 5 datasets, but you can see more by clicking the page links at the bottom of the screen.
 
-![scout pagination]()
+
 
 With 2800 datasets, it would take a long time to go through each page and search for something that we are interested in. To make it easier to find what you are looking for, scout allows you to search and filter datasets in a number of different ways.
 
 Let’s start by looking at the filters. Click the Filters strip next to the dataset list to expand it.
 
-![scout filters collapsed]()
+![scout filters collapsed](https://tsdataclinic.github.io/scout/tutorial_images/filters_expanded.png)
 
-![scout filters expanded]()
+
 
 Doing so we see 4 different ways we can filter the currently shown datasets : 
 
@@ -43,12 +43,12 @@ You might notice for some the filters  like columns and tags there are a lot of 
 
 For example searching for school in the Columns filter gives only those columns that match school.
 
-![scout filter filters]()
+![scout filter filters](https://tsdataclinic.github.io/scout/tutorial_images/filters_search.png)
 
 Let's narrow down our search by selecting "Department of Education ( DOE )" in the departments filter and "School Name", "School Type", "School Year" and "School" in hte column name. 
 
 
-![scout filter active]()
+![scout filter active](https://tsdataclinic.github.io/scout/tutorial_images/filters_selected.png)
 
 We can see that the datasets list narrows down to show us only datasets that have been published by the Department of Education and contain at least one of the columns we have selected. 
 
@@ -56,27 +56,26 @@ That still leaves us around 223 datasets! Let's use scouts search feature to nar
 
 In the top bar you can search the names and descriptions of datasets for a specific term. Let's say we are interested in finding datasets that are to do with  "Math" in New York schools. Simply enter math in to the top bar and the datasets should narrow down further to show only 20. 
 
-![scot filtered by math]()
+![scot filtered by math](https://tsdataclinic.github.io/scout/tutorial_images/search_math.png)
 
 Great, let's look in some closer detail to the "2013 -2018 School Math Results" dataset. Simply click on the name of that dataset to see the following page:
 
-![dataset page]()
+![dataset page](https://tsdataclinic.github.io/scout/tutorial_images/dataset_page.png)
 
 The dataset page shows us information on the dataset itself, including on the left hand side of the page, the datasets name, its full description, associated metadata and a button to view the dataset on the Open Data portal website. 
 
-![dataset page metadata]()
+
 
 On the right we see a list of other recommended datasets that you might want to explore. This is the heart of scout, it tries to automatically suggest datasets to you that might be useful or interesting based on your interest in the current dataset. Let's take a look at the "Potential Join Columns" tab. 
 
-![potential join column tab]()
+![potential join column tab](https://tsdataclinic.github.io/scout/tutorial_images/potential_join_columns.png)
 
 This tab shows a list of columns that exist in the current dataset along with the type of each column. On the far right, you can see a number which lists the number of other datasets on the open data portal that also have that column. Why is this useful? For some columns, like latitude or longitude, this might not tell us much about the dataset apart from the fact that it has some geographical information. However for columns that contain a common identifier, like "DBN", "School Name" or "BBL", this can give an idea of how many datasets this dataset can be joined with. What do we mean by join? Well the dataset we are currently looking at is the Math Exam results by school for 2013 - 2018, Perhaps not surprisingly, it contails data about  how students at a particular school did on their math exams in the years 2013 to 2018. Looking at the columns list however it doesn't tell us much about the school itself.
 
-![potential join column callout]()
 
 However scout is helpfully informing us that there are 305 datasets that share the column DBN. DBN stands for "District Borough Number" which is a unique identifier that the city uses to identify a school. One of those might tell us more about each of the schools within the current datasets. Let's go hunting for a dataset that might tell us more about the schools.
 
-![dbn expand]()
+![dbn expand](https://tsdataclinic.github.io/scout/tutorial_images/dbn_expanded.png)
 
 By clicking on the DBN entry in the list, we can see a list of each of the datasets that have DBN as a column. When you do this, scout will quickly query each dataset to see what the overlap is of DBN numbers in the current dataset and each other dataset with DBN as a column. It will report the % of overlap between the datasets or the number of matches we would expect if we join the two datasets.
 
@@ -84,7 +83,7 @@ A lot of these datasets are other exam results for other years. This is great as
 
 This is really useful information that can give important context to the original dataset. Clicking on the "2017 - 2018 November2017 Avg Class Size School K8 - Open Data Portal" entry will show us some of the common ids that exist in both datasets. 
 
-![expand ids]()
+![expand ids](https://tsdataclinic.github.io/scout/tutorial_images/)
 
 Now that we have found some datasets we might want to combine together, we want to make sure we don't lose track of them. To do this we can use another handy feature of scout: collections. On the left side of the page where the dataset details are presented, you will see a button called "Add to Collection". Click this and you will see a red circle with the number 1 on it appear next to the "Collections" button on the navigation bar to the far left. 
 
