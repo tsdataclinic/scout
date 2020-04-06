@@ -1,6 +1,6 @@
 const NYDomain = 'data.ny.gov';
 const NYCDomain = 'data.cityofnewyork.us';
-export const domain = NYCDomain;
+export const domain = NYDomain;
 const SOCRATA_NY_OPENDATA_ENDPOINT = `https://api.us.socrata.com/api/catalog/v1?domains=${domain}&search_context=data.cityofnewyork.us`;
 
 async function getMaifestPage(pageNo, limit = 100) {
