@@ -17,7 +17,7 @@ export default function AboutPage() {
       <section className="about-dark-header">
         <div className="about-header-full">
           <h3>Introducing scout</h3>
-          <h2>Uncover the city&apos;s data.</h2>
+          <h2>Uncover data from New York State.</h2>
         </div>
         <div className="content">
           <div>
@@ -62,10 +62,10 @@ export default function AboutPage() {
           <h3>What is Data Clinic?</h3>
 
           <p>
-            As the data and tech philanthropic arm of the investment manager Two
-            Sigma, Data Clinic provides pro bono data science and engineering
-            support to nonprofits and engages in open source tooling and
-            research that contribute to the Data for Good movement.
+            As the data and tech philanthropic arm of Two Sigma, Data Clinic
+            provides pro bono data science and engineering support to nonprofits
+            and engages in open source tooling and research that contribute to
+            the Data for Good movement.
           </p>
           <p>
             {' '}
