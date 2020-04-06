@@ -32,7 +32,7 @@
         "react-use-fuse": "^0.5.2",
         "uuid": "^3.4.0"
     },
-    "homepage": "https://tsdataclinic.github.io/scout",
+    "homepage": "tsdataclinic.github.io/scoutny",
     "devDependencies": {
         "eslint": "^6.8.0",
         "eslint-config-airbnb": "^18.0.1",
@@ -54,15 +54,11 @@
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "predeploy": "yarn build",
-        "deploy": "gh-pages -d build",
+        "deploy": "gh-pages -d build -r git@github.com:tsdataclinic/scoutny.git",
         "lint": "eslint src/**/**/*.{js,jsx}"
     },
     "browserslist": {
-        "production": [
-            ">0.2%",
-            "not dead",
-            "not op_mini all"
-        ],
+        "production": [">0.2%", "not dead", "not op_mini all"],
         "development": [
             "last 1 chrome version",
             "last 1 firefox version",
