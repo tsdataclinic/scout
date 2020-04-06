@@ -39,7 +39,7 @@ export function useJoinableDatasets(dataset) {
 export function useGetJoinNumbers(datasetID) {
   const [joinNumbers, setJoinNumbers] = useState({});
   useEffect(() => {
-    fetch(`${process.env.PUBLIC_URL}/potential_join_numbers.json`)
+    fetch(`${process.env.PUBLIC_URL}/ny_potential_join_numbers.json`)
       .then((r) => r.json())
       .then((r) => setJoinNumbers(r));
   }, []);
@@ -50,7 +50,7 @@ export function useGetSimilarDatasets(datasetID) {
   const [{ datasets }] = useStateValue();
 
   useEffect(() => {
-    fetch(`${process.env.PUBLIC_URL}/similarity_metrics.json`)
+    fetch(`${process.env.PUBLIC_URL}/ny_similarity_metrics.json`)
       .then((r) => r.json())
       .then((r) => setSimilarityMetrics(r));
   }, []);
