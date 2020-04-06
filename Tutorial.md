@@ -58,6 +58,8 @@ In the top bar you can search the names and descriptions of datasets for a speci
 
 ![scot filtered by math](https://tsdataclinic.github.io/scout/tutorial_images/search_math.png)
 
+## Dataset page - finding interesting datasets to join to.
+
 Great, let's look in some closer detail to the "2013 -2018 School Math Results" dataset. Simply click on the name of that dataset to see the following page:
 
 ![dataset page](https://tsdataclinic.github.io/scout/tutorial_images/dataset_page.png)
@@ -84,6 +86,8 @@ A lot of these datasets are other exam results for other years. This is great as
 This is really useful information that can give important context to the original dataset. Clicking on the "2017 - 2018 November2017 Avg Class Size School K8 - Open Data Portal" entry will show us some of the common ids that exist in both datasets. 
 
 ![expand ids](https://tsdataclinic.github.io/scout/tutorial_images/ids_expanded.png)
+
+## Collections - building your library of datasets.
 
 Now that we have found some datasets we might want to combine together, we want to make sure we don't lose track of them. To do this we can use another handy feature of scout: collections. On the left side of the page where the dataset details are presented, you will see a button called "Add to Collection". Click this and you will see a red circle with the number 1 on it appear next to the "Collections" button on the navigation bar to the far left. 
 
