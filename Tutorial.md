@@ -1,6 +1,6 @@
 # Getting started with scout 
 
-Thanks for trying out scout, a new way to explore the New York City open data portal. This document will walk you through some exercises to help you get familiar with  scout's features. 
+Thanks for trying out *scout*, a new way to explore the New York City open data portal. This document will walk you through some exercises to help you get familiar with  scout's features. 
 
 To get started, load up scout in another browser tab or window by going to this link: [https://twosigma.com/scout](https://twosigma.com/scout)
 
@@ -24,7 +24,7 @@ Each page shows a maximum of about 5 datasets, but you can see more by clicking 
 
 
 
-With 2800 datasets, it would take a long time to go through each page and search for something that we are interested in. To make it easier to find what you are looking for, scout allows you to search and filter datasets in a number of different ways.
+With 2800 datasets, it would take a long time to go through each page and search for something that we are interested in. To make it easier to find what you are looking for, *scout* allows you to search and filter datasets in a number of different ways.
 
 Let’s start by looking at the filters. Click the Filters strip next to the dataset list to expand it.
 
@@ -39,20 +39,20 @@ Doing so we see 4 different ways we can filter the currently shown datasets :
 - Columns: Filter for datasets that have a specific column. For example BBL, School Name, community board etc,
 - Tags: Filter for datasets that have a specific tag. These can be added to a dataset by either the city or by members of the public. For example: gis, parks, client inquiries etc 
 
-You might notice for some the filters  like columns and tags there are a lot of entries for example there are 16,550 possible column names and 3,160 different tags. To make it easier to find the entry you want to filter on, scout allows you to search within each filter. 
+You might notice for some the filters  like columns and tags there are a lot of entries for example there are 16,550 possible column names and 3,160 different tags. To make it easier to find the entry you want to filter on, *scout* allows you to search within each filter. 
 
 For example searching for school in the Columns filter gives only those columns that match school.
 
 ![scout filter filters](https://tsdataclinic.github.io/scout/tutorial_images/filters_search.png)
 
-Let's narrow down our search by selecting "Department of Education ( DOE )" in the departments filter and "School Name", "School Type", "School Year" and "School" in hte column name. 
+Let's narrow down our search by selecting "Department of Education ( DOE )" in the departments filter and "School Name", "School Type", "School Year" and "School" in the column name. 
 
 
 ![scout filter active](https://tsdataclinic.github.io/scout/tutorial_images/filters_selected.png)
 
 We can see that the datasets list narrows down to show us only datasets that have been published by the Department of Education and contain at least one of the columns we have selected. 
 
-That still leaves us around 223 datasets! Let's use scouts search feature to narrow that down a little further. 
+That still leaves us around 223 datasets! Let's use *scout*'s search feature to narrow that down a little further. 
 
 In the top bar you can search the names and descriptions of datasets for a specific term. Let's say we are interested in finding datasets that are to do with  "Math" in New York schools. Simply enter math in to the top bar and the datasets should narrow down further to show only 20. 
 
@@ -64,18 +64,19 @@ Great, let's look in some closer detail to the "2013 -2018 School Math Results" 
 
 ![dataset page](https://tsdataclinic.github.io/scout/tutorial_images/dataset_page.png)
 
-The dataset page shows us information on the dataset itself, including on the left hand side of the page, the datasets name, its full description, associated metadata and a button to view the dataset on the Open Data portal website. 
+The dataset page shows us information on the dataset itself, including on the left hand side of the page, the dataset's name, its full description, associated metadata, and a button to view the dataset on the Open Data portal website. 
 
 
 
-On the right we see a list of other recommended datasets that you might want to explore. This is the heart of scout, it tries to automatically suggest datasets to you that might be useful or interesting based on your interest in the current dataset. Let's take a look at the "Potential Join Columns" tab. 
+On the right, we see a list of other recommended datasets that you might want to explore. This is the heart of *scout*: it tries to automatically suggest datasets to you that might be useful or interesting based on your interest in the current dataset. Let's take a look at the "Potential Join Columns" tab. 
 
 ![potential join column tab](https://tsdataclinic.github.io/scout/tutorial_images/potential_join_columns.png)
 
-This tab shows a list of columns that exist in the current dataset along with the type of each column. On the far right, you can see a number which lists the number of other datasets on the open data portal that also have that column. Why is this useful? For some columns, like latitude or longitude, this might not tell us much about the dataset apart from the fact that it has some geographical information. However for columns that contain a common identifier, like "DBN", "School Name" or "BBL", this can give an idea of how many datasets this dataset can be joined with. What do we mean by join? Well the dataset we are currently looking at is the Math Exam results by school for 2013 - 2018, Perhaps not surprisingly, it contails data about  how students at a particular school did on their math exams in the years 2013 to 2018. Looking at the columns list however it doesn't tell us much about the school itself.
+This tab shows a list of columns that exist in the current dataset along with the type of each column. On the far right, you can see a number which lists the number of other datasets on the open data portal that also have that column. Why is this useful? For some columns, like latitude or longitude, this might not tell us much about the dataset apart from the fact that it has some geographical information. However, for columns that contain a common identifier, like "DBN", "School Name" or "BBL", this can give an idea of how many datasets this dataset can be joined with. 
 
+What do we mean by join? Well, the dataset we are currently looking at is the Math Exam results by school for 2013 - 2018. Perhaps not surprisingly, it contains data about how students at a particular school did on their math exams in the years 2013 to 2018. Looking at the columns list, however, it doesn't tell us much about the school itself.
 
-However scout is helpfully informing us that there are 305 datasets that share the column DBN. DBN stands for "District Borough Number" which is a unique identifier that the city uses to identify a school. One of those might tell us more about each of the schools within the current datasets. Let's go hunting for a dataset that might tell us more about the schools.
+*Scout* is helpfully informing us that there are 305 datasets that share the column DBN. DBN stands for "District Borough Number," which is a unique identifier that the city uses to identify a school. One of those might tell us more about each of the schools within the current datasets. Let's go hunting for a dataset that might tell us more about the schools.
 
 ![dbn expand](https://tsdataclinic.github.io/scout/tutorial_images/dbn_expanded.png)
 
