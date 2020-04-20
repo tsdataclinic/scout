@@ -92,7 +92,7 @@ This is really useful information that can give important context to the origina
 
 Now that we have found some datasets we might want to combine together, we want to make sure we don't lose track of them. To do this we can use another handy feature of scout: collections. On the left side of the page where the dataset details are presented, you will see a button called "Add to Collection". Click this and you will see a red circle with the number 1 on it appear next to the "Collections" button on the navigation bar to the far left. 
 
-![added collection]((https://tsdataclinic.github.io/scout/tutorial_images/collection_number.png)
+![added collection](https://tsdataclinic.github.io/scout/tutorial_images/collection_number.png)
 Next let's click on the collections button to see what has just happened. 
 
 ![collections expanded](https://tsdataclinic.github.io/scout/tutorial_images/collection_tab.png)
