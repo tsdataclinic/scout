@@ -23,13 +23,18 @@ const initalState = {
   departments: [],
   columns: [],
   stateLoaded: false,
+  lastUpdated: null,
 };
 
 const reducer = (state, action) => {
   const { type, payload } = action;
   switch (type) {
     case 'UPDATE_OPEN_DATASET_MANIFEST':
-      return { ...state, datasets: payload };
+      return {
+        ...state,
+        datasets: payload.datasets,
+        lastUpdated: payload.lastUpdated,
+      };
     case 'UPDATE_TAGS':
       return { ...state, tagList: payload };
     case 'UPDATE_CATEGORIES':
@@ -47,6 +52,48 @@ const reducer = (state, action) => {
   }
 };
 
+const updateManifestFromSocrata = (dispatch) => {
+  getManifest().then((manifest) => {
+    const tagList = getTagList(manifest);
+    const categories = getCategories(manifest);
+    const departments = getDepartments(manifest);
+    const columns = getColumns(manifest);
+    dispatch({
+      type: 'UPDATE_OPEN_DATASET_MANIFEST',
+      payload: {
+        datasets: manifest,
+        lastUpdated: new Date(),
+      },
+    });
+    dispatch({
+      type: 'UPDATE_TAGS',
+      payload: tagList,
+    });
+    dispatch({
+      type: 'UPDATE_CATEGORIES',
+      payload: categories,
+    });
+    dispatch({
+      type: 'UPDATE_DEPARTMENTS',
+      payload: departments,
+    });
+    dispatch({
+      type: 'UPDATE_COLUMNS',
+      payload: columns,
+    });
+    dispatch({
+      type: 'SET_LOADED',
+    });
+  });
+};
+
+// Checks to see if the cache is older than 1 daym if so update it
+const shouldUpdateCache = (lastUpdated) => {
+  if (lastUpdated == null) return true;
+  if ((new Date() - lastUpdated) / 1000 > 24 * 60 * 60) return true;
+  return false;
+};
+
 export const StateProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initalState);
 
@@ -62,48 +109,25 @@ export const StateProvider = ({ children }) => {
     db.SocrataCache.get(1).then((result) => {
       if (result) {
         const cachedState = JSON.parse(result.data);
-        dispatch({
-          type: 'HYDRATE_STATE',
-          payload: {
-            ...initalState,
-            ...cachedState,
-            cache_loaded: true,
-          },
-        });
-        // Set state as loaded to indicate that data is ready to use
-        dispatch({
-          type: 'SET_LOADED',
-        });
-      } else {
-        getManifest().then((manifest) => {
-          const tagList = getTagList(manifest);
-          const categories = getCategories(manifest);
-          const departments = getDepartments(manifest);
-          const columns = getColumns(manifest);
+
+        if (shouldUpdateCache(new Date(cachedState.lastUpdated))) {
+          updateManifestFromSocrata(dispatch);
+        } else {
           dispatch({
-            type: 'UPDATE_OPEN_DATASET_MANIFEST',
-            payload: manifest,
+            type: 'HYDRATE_STATE',
+            payload: {
+              ...initalState,
+              ...cachedState,
+              cache_loaded: true,
+            },
           });
-          dispatch({
-            type: 'UPDATE_TAGS',
-            payload: tagList,
-          });
-          dispatch({
-            type: 'UPDATE_CATEGORIES',
-            payload: categories,
-          });
-          dispatch({
-            type: 'UPDATE_DEPARTMENTS',
-            payload: departments,
-          });
-          dispatch({
-            type: 'UPDATE_COLUMNS',
-            payload: columns,
-          });
+          // Set state as loaded to indicate that data is ready to use
           dispatch({
             type: 'SET_LOADED',
           });
-        });
+        }
+      } else {
+        updateManifestFromSocrata(dispatch);
       }
     });
   }, []);
@@ -116,10 +140,10 @@ export const StateProvider = ({ children }) => {
     categories,
     departments,
     stateLoaded,
+    lastUpdated,
   } = state;
   useEffect(() => {
     if (stateLoaded) {
-      console.log('writing cache');
       db.SocrataCache.put({
         data: JSON.stringify({
           datasets,
@@ -127,11 +151,20 @@ export const StateProvider = ({ children }) => {
           categories,
           departments,
           columns,
+          lastUpdated,
         }),
         id: 1,
       });
     }
-  }, [datasets, tagList, categories, columns, departments, stateLoaded]);
+  }, [
+    datasets,
+    tagList,
+    categories,
+    columns,
+    departments,
+    stateLoaded,
+    lastUpdated,
+  ]);
 
   return (
     <AppContext.Provider value={[state, dispatch]}>
