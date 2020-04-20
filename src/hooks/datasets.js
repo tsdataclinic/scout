@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
-import useFuse from 'react-use-fuse';
+import useLunr from './useLunr';
 import { useStateValue } from '../contexts/OpenDataContext';
 import { findJoinable, getUniqueEntries } from '../utils/socrata';
 
@@ -84,22 +84,22 @@ export function useGetDatasetsByIds(ids) {
 
 export function useDatasets({ tags, term, categories, columns, departments }) {
   const [{ datasets }] = useStateValue();
-
-  const { result: searchedDatasets, search } = useFuse({
-    data: datasets,
+  const results = useLunr({
+    query: term,
+    documents: datasets.map((d) => ({
+      id: d.resource.id,
+      name: d.resource.name,
+      description: d.resource.description,
+    })),
     options: {
-      shouldSort: true,
-      findAllMatches: true,
-      includeMatches: true,
-      tokenize: true,
-      keys: ['resource.name', 'resource.description'],
-      caseSensitive: false,
+      fields: ['name', 'description'],
     },
   });
+  console.log('search results', results);
 
-  useEffect(() => {
-    search(term.toLocaleLowerCase());
-  }, [search, term]);
+  const searchedDatasets = results.map((r) =>
+    datasets.find((d) => d.resource.id === r.ref),
+  );
 
   return useMemo(() => {
     if (searchedDatasets) {
