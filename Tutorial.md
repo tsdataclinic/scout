@@ -10,7 +10,7 @@ Let's dive in!
 
 When you first load up _scout_ you should see a page like this:
 
-![scout main page](https://tsdataclinic.github.io/scout/tutorial_images/home_page.png)
+![scout main page](https://tsdataclinic.github.io/scout/tutorial_images/home_page.png){:height="100px" width="200px"}
 
 This page shows a list of the 2,800+ datasets from NYC Open Data, complete with their title, a short description, and information about when the dataset was last updated.
 
