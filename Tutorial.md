@@ -18,7 +18,6 @@ Currently the datasets are ordered by name, but you can change that by selecting
 
 Each page shows a maximum of about 5 datasets, but you can see more by clicking the page links at the bottom of the screen.
 
-
 With over 2,800 datasets, it would take a long time to go through each page and search for something specific. To make it easier, _scout_ allows you to search and filter datasets in a number of different ways.
 
 Click the **Filters** strip to the left of the dataset list to expand it.
@@ -34,12 +33,9 @@ Doing so uncovers four different ways you can filter the currently shown dataset
 
 Some filters, like **Columns** and **Tags**, include a large amount of entries (16,550 and 3,160, respectively). To make it easier to find the values you want to filter on, scout allows you to search within each filter. For example, searching for "school" in the **Columns** filter gives only those columns that include the word school.
 
-
 ![scout filter filters](https://tsdataclinic.github.io/scout/tutorial_images/filters_search.png)
 
-
-Selecting multiple column names under the **Columns** filter, for example _School Name_, _School Type_, and _School Year_, will show any dataset that includes at least one of those columns
-
+Selecting multiple column names under the **Columns** filter, for example _School Name_, _School Type_, and _School Year_, will show any dataset that includes at least one of those columns.
 
 ![scout filter active](https://tsdataclinic.github.io/scout/tutorial_images/filters_selected.png)
 
@@ -61,7 +57,6 @@ The dataset page shows information on the dataset itself. The left hand side of 
 
 On the right, you will see a list of other recommended datasets that you might want to explore. This is the heart of scout: it automatically suggests datasets that might be useful based on your interest in the current dataset. Now take a look at the 
 **Potential Join Columns** tab.
-
 
 ![potential join column tab](https://tsdataclinic.github.io/scout/tutorial_images/potential_join_columns.png)
 
@@ -96,7 +91,6 @@ You should see a pop-up that lists the _2013-2018 School Math Result_ dataset an
 
 _Scout_ lets you create any number of collections. These can be used as a personal reference, and can also be shared with anyone else on the internet. To see how to do that, click on the _My Collections_ button.
 
-
 ![collections expanded](https://tsdataclinic.github.io/scout/tutorial_images/collections_multi.png)
 
 The **Collections** page shows you all the dataset groupings that you have created. Currently, there is only one collection: _School Math Results_. Clicking through, you can see the list of included datasets, as well as shortcuts to share the collection via social media and directly copy its persistent link. 
@@ -107,13 +101,11 @@ Currently, _scout_ stores all of your collections in the browser. This means tha
 
 For now, go back to the **Explore** page and look at a new dataset. This time, try to find a  dataset about how the city uses its budget. Start by searching for one called "Capital Budget" and click through to its dataset page.
 
-
 ![Capital budget page](https://tsdataclinic.github.io/scout/tutorial_images/capital_budget.png)
 
 According to the description, the dataset “contains capital appropriation data by project type, budget line and source of funds." That's really interesting. Next, start a new collection to keep track of the budget data. Click on the **Collections** button and click _Create Collection_. Enter "City Spending" as the name to create a new empty collection. Now that you have two collections, you should see a new button labeled _Switch Collection_. Clicking this will enable you to switch the collection you are currently adding to. For now, though, begin this new collection by clicking the _Add to Collection_ button for the _Capital Budget_ dataset.
 
 You could find more datasets that can potentially join with the _Capital Budget_ dataset using the **Potential Join Columns** tab as you did before with the math exam results, but this time, check out **Thematically Similar**, the other way _scout_ suggests interesting datasets.
-
 
 ![Thematically Similar](https://tsdataclinic.github.io/scout/tutorial_images/thematically_similar.png)
 
