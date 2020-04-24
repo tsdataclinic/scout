@@ -29,7 +29,7 @@ Doing so uncovers four different ways you can filter the currently shown dataset
 - **Categories**: Filter by thematic categories assigned to datasets on NYC Open Data. For example: education, finance, infrastructure, demographics, etc.
 - **Departments**: Filter by the department that uploaded the data. For example: Department of Education (DOE), Department of Transportation (DOT), etc.
 - **Columns**: Filter for datasets that have a specific column label. For example: BBL (Borough-Block-Lot), School Name, Community Board, etc.
-- **Tags**: Filter by descriptive tags assigned to datasets on NYC Open Data. Notes that tags can be added to a dataset by City agencies or by members of the public. For example: gis, parks, client inquiries, etc
+- **Tags**: Filter by descriptive tags assigned to datasets on NYC Open Data. For example: gis, parks, client inquiries, etc
 
 Some filters, like **Columns** and **Tags**, include a large amount of entries (16,550 and 3,160, respectively). To make it easier to find the values you want to filter on, scout allows you to search within each filter. For example, searching for "school" in the **Columns** filter gives only those columns that include the word school.
 
