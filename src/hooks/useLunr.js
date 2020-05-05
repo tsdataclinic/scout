@@ -32,20 +32,16 @@ export default function useLunr({ query, documents, options }) {
     if (cachedIndexStr) {
       const { docCount, cachedIndex } = JSON.parse(cachedIndexStr);
       if (docCount === documents.length || documents.length === 0) {
-        console.log('USING CACHED INDEX ', cachedIndex);
         index.current = lunr.Index.load(cachedIndex);
       } else {
-        console.log('REGENERATING INDEX BECAUSE DOCUMENTS CHANGED ');
         index.current = generateIndex(options, documents);
         storeIndex(index.current, documents.length);
       }
     } else {
-      console.log('USING CACHED INDEX ');
-
       index.current = generateIndex(options, documents);
       storeIndex(index.current, documents.length);
     }
-  }, [documents, options]);
+  }, [documents.map((d) => d.id).join('_')]);
 
   useEffect(() => {
     if (index.current) {
@@ -55,6 +51,6 @@ export default function useLunr({ query, documents, options }) {
         console.log('ignoring bad query format');
       }
     }
-  }, [query]);
+  }, [query,index.current]);
   return results;
 }
