@@ -1,59 +1,86 @@
 import { useMemo, useState, useEffect } from 'react';
 import useLunr from './useLunr';
 import { useStateValue } from '../contexts/OpenDataContext';
-import { findJoinable, getUniqueEntries } from '../utils/socrata';
+import { getUniqueEntries } from '../utils/socrata';
 
 export function useStateLoaded() {
   const [{ stateLoaded }] = useStateValue();
   return stateLoaded;
 }
 
+function useFilterType(collectionName, domain) {
+  const [collection, setCollection] = useState([]);
+  const [{ portal }, , db] = useStateValue();
+
+  const actualDomain = domain || portal.socrataDomain;
+  useEffect(() => {
+    if (actualDomain) {
+      db[collectionName].where({ portal: actualDomain }).toArray((result) => {
+        setCollection(result);
+      });
+    }
+  }, [actualDomain, collectionName, db]);
+  return collection;
+}
 export function useTags() {
-  const [{ tagList }] = useStateValue();
-  return tagList;
+  return useFilterType('Tags');
 }
 
 export function useCategories() {
-  const [{ categories }] = useStateValue();
-  return categories;
+  return useFilterType('Categories');
 }
 
 export function useDepartments() {
-  const [{ departments }] = useStateValue();
-  return departments;
+  return useFilterType('Departments');
 }
 
 export function useColumns() {
-  const [{ columns }] = useStateValue();
-  return columns;
+  const cols = useFilterType('Columns');
+  return cols;
 }
 
 export function useJoinableDatasets(dataset) {
-  const [{ datasets }] = useStateValue();
-  return useMemo(() => (dataset ? findJoinable(dataset, datasets) : []), [
-    dataset,
-    datasets,
-  ]);
+  const [potentialJoins, setPotentialJoins] = useState(null);
+
+  const [, , db] = useStateValue();
+
+  useEffect(() => {
+    if (dataset && dataset.columnFields) {
+      db.Datasets.where('columnFields')
+        .anyOf(dataset.columnFields)
+        .distinct()
+        .toArray()
+        .then((results) => {
+          setPotentialJoins(results);
+        });
+    }
+  }, [dataset, db.Datasets]);
+  return potentialJoins;
 }
 
-export function useGetJoinNumbers(datasetID) {
+export function useGetJoinNumbers(datasetID, portalID) {
   const [joinNumbers, setJoinNumbers] = useState({});
   useEffect(() => {
-    fetch(`${process.env.PUBLIC_URL}/potential_join_numbers.json`)
+    fetch(
+      `${process.env.PUBLIC_URL}/metadata/${portalID}/potential_join_numbers.json`,
+    )
       .then((r) => r.json())
       .then((r) => setJoinNumbers(r));
-  }, []);
+  }, [portalID]);
   return datasetID in joinNumbers ? joinNumbers[datasetID] : 0;
 }
-export function useGetSimilarDatasets(datasetID) {
+
+export function useGetSimilarDatasets(datasetID, portalID) {
   const [similarityMetrics, setSimilarityMetrics] = useState({});
   const [{ datasets }] = useStateValue();
 
   useEffect(() => {
-    fetch(`${process.env.PUBLIC_URL}/similarity_metrics.json`)
+    fetch(
+      `${process.env.PUBLIC_URL}/metadata/${portalID}//similarity_metrics.json`,
+    )
       .then((r) => r.json())
       .then((r) => setSimilarityMetrics(r));
-  }, []);
+  }, [portalID]);
 
   const similarDatasets = useMemo(
     () =>
@@ -70,8 +97,15 @@ export function useGetSimilarDatasets(datasetID) {
 }
 
 export function useDataset(datasetID) {
-  const [{ datasets }] = useStateValue();
-  return datasets.find((d) => d.resource.id === datasetID);
+  const [dataset, setDataset] = useState(null);
+  const [, , db] = useStateValue();
+
+  useEffect(() => {
+    if (datasetID) {
+      db.Datasets.get({ id: datasetID }).then((dataset) => setDataset(dataset));
+    }
+  }, [datasetID, db.Datasets]);
+  return dataset;
 }
 
 export function useGetDatasetsByIds(ids) {
@@ -80,6 +114,19 @@ export function useGetDatasetsByIds(ids) {
     datasets,
     ids,
   ]);
+}
+
+export function usePortal() {
+  const [{ portalID }] = useStateValue();
+  return portalID;
+}
+
+export function useSetPortal(portalID) {
+  const [, dispatch] = useStateValue();
+  dispatch({
+    type: 'SET_PORTAL',
+    payload: portalID,
+  });
 }
 
 export function useDatasets({ tags, term, categories, columns, departments }) {
@@ -95,7 +142,6 @@ export function useDatasets({ tags, term, categories, columns, departments }) {
       fields: ['name', 'description'],
     },
   });
-  console.log('search results', results);
 
   const searchedDatasets = results.map((r) =>
     datasets.find((d) => d.resource.id === r.ref),

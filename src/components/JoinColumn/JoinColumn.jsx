@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
-import { Link } from 'react-router-dom';
 import {
   faAngleRight,
   faAngleDown,
   faTable,
 } from '@fortawesome/free-solid-svg-icons';
+import DatasetLink from '../DatasetLink/DatasetLink';
 import { useCurrentCollection } from '../../hooks/collections';
 import './JoinColumn.scss';
 
@@ -33,7 +33,7 @@ export default function ColumnJoin({ rightDataset, matches }) {
         >
           <FontAwesomeIcon icon={collapsed ? faAngleRight : faAngleDown} />
           <FontAwesomeIcon icon={faFile} />
-          {rightDataset.resource.name}
+          {rightDataset.name}
         </span>
         <span>
           {matches
@@ -43,17 +43,17 @@ export default function ColumnJoin({ rightDataset, matches }) {
             : 'loading'}
         </span>
         <span>
-          <Link to={`/dataset/${rightDataset.resource.id}`}>View</Link>
+          <DatasetLink dataset={rightDataset}>View</DatasetLink>
         </span>
         <button
           type="button"
           onClick={() =>
-            collection.datasets.includes(rightDataset.resource.id)
-              ? removeFromCollection(collection.id, rightDataset.resource.id)
-              : addToCollection(collection.id, rightDataset.resource.id)
+            collection.datasets.includes(rightDataset.id)
+              ? removeFromCollection(collection.id, rightDataset.id)
+              : addToCollection(collection.id, rightDataset.id)
           }
         >
-          {collection.datasets.includes(rightDataset.resource.id)
+          {collection.datasets.includes(rightDataset.id)
             ? 'Remove from collection'
             : 'Add to collection'}
         </button>

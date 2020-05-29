@@ -4,18 +4,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'normalize.css'; // Ensure consistent layout across browsers
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { StateProvider } from './contexts/OpenDataContext';
 import { CollectionsProvider } from './contexts/CollectionsContext';
 import { SearchProvider } from './contexts/SearchContext';
 
 ReactDOM.render(
-  <StateProvider>
     <SearchProvider>
       <CollectionsProvider>
         <App />
       </CollectionsProvider>
     </SearchProvider>
-  </StateProvider>,
+ ,
   document.getElementById('root'),
 );
 

@@ -41,7 +41,7 @@ export default function useLunr({ query, documents, options }) {
       index.current = generateIndex(options, documents);
       storeIndex(index.current, documents.length);
     }
-  }, [documents.map((d) => d.id).join('_')]);
+  }, [documents, options]);
 
   useEffect(() => {
     if (index.current) {
@@ -51,6 +51,6 @@ export default function useLunr({ query, documents, options }) {
         console.log('ignoring bad query format');
       }
     }
-  }, [query,index.current]);
+  }, [query]);
   return results;
 }

@@ -7,6 +7,7 @@ import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
 import '../../components/Loading/Loading.scss';
 import usePageView from '../../hooks/analytics';
 import { useCurrentCollection } from '../../hooks/collections';
+
 import {
   useDataset,
   useJoinableDatasets,
@@ -21,15 +22,11 @@ export default function DatasetPage({ match }) {
   usePageView();
   const { datasetID } = match.params;
   const dataset = useDataset(datasetID);
-  const parentId = dataset ? dataset.resource.parent_fxf : null;
+  const parentId = dataset?.parentDatasetID;
   const parentDataset = useDataset(parentId);
   const joins = useJoinableDatasets(dataset);
+  const similarDatasets = useGetSimilarDatasets(dataset);
   const [activeTab, setActiveTab] = useState('joins');
-  const resource = dataset?.resource;
-  const pageViews = resource?.page_views;
-  const classification = dataset?.classification;
-  const domainMetadata = classification?.domain_metadata;
-  const similarDatasets = useGetSimilarDatasets(datasetID);
 
   useEffect(() => {
     const page = `${window.location.pathname}/${activeTab}`;
@@ -84,35 +81,25 @@ export default function DatasetPage({ match }) {
     { addToCollection, removeFromCollection },
   ] = useCurrentCollection();
 
-  const updatedAutomation = domainMetadata?.find(
-    ({ key, value }) => key === 'Update_Automation' && value === 'No',
-  )?.value;
-
-  const updateFrequency = domainMetadata?.find(
-    ({ key }) => key === 'Update_Update-Frequency',
-  )?.value;
-
-  const informationAgency = domainMetadata?.find(
-    ({ key }) => key === 'Dataset-Information_Agency',
-  )?.value;
-
   return (
-    <div className="dataset-page" key={resource ? resource.id : 'unknown'}>
+    <div className="dataset-page" key={dataset ? dataset.id : 'unknown'}>
       <div className="dataset-details">
         <section>
-          <Breadcrumb currentPage={resource ? resource.name : '...'} />
+          <Breadcrumb currentPage={dataset ? dataset.name : '...'} />
         </section>
         <section>
-          <h2 className={resource ? '' : 'animate'}>{resource?.name}</h2>
-          <p className={resource ? '' : 'animate'}>{informationAgency}</p>
+          <h2 className={dataset ? '' : 'animate'}>{dataset?.name}</h2>
+          <p className={dataset ? '' : 'animate'}>
+            {dataset?.informationAgency}
+          </p>
           <RawHTML
-            className={resource ? '' : 'animate'}
-            html={resource?.description}
+            className={dataset ? '' : 'animate'}
+            html={dataset?.description}
           />
           <button
             type="button"
             className="collection-button"
-            disabled={!resource}
+            disabled={!dataset}
             onClick={() =>
               collection.datasets.includes(datasetID)
                 ? removeFromCollection(collection.id, datasetID)
@@ -130,34 +117,34 @@ export default function DatasetPage({ match }) {
             alt="NYC Open Data"
             src="https://opendata.cityofnewyork.us/wp-content/themes/opendata-wp/assets/img/nyc-open-data-logo.svg"
           />
-          <ViewOnOpenPortal permalink={dataset ? dataset?.permalink : '#'} />
+          <ViewOnOpenPortal permalink={dataset ? dataset?.permaLink : '#'} />
         </section>
         <section className="metadata">
           <h2>Metadata</h2>
           <h3>Update Automation</h3>
-          <p>{updatedAutomation}</p>
+          <p>{dataset?.updatedAutomation}</p>
           <h3>Update Frequency</h3>
-          <p>{updateFrequency}</p>
+          <p>{dataset?.updateFrequency}</p>
           <h3>Dataset Owner</h3>
-          <p>{dataset?.owner?.display_name}</p>
-          {informationAgency && (
+          <p>{dataset?.owner}</p>
+          {dataset?.informationAgency && (
             <>
               <h3>Agency</h3>
-              <p>{informationAgency}</p>
+              <p>{dataset?.informationAgency}</p>
             </>
           )}
-          {classification?.domain_category && (
+          {dataset?.domainCategory && (
             <>
               <h3>Category</h3>
-              <p>{classification.domain_category}</p>
+              <p>{dataset?.domain_category}</p>
             </>
           )}
           <h3>Updated</h3>
-          <p>{formatDate(resource?.updatedAt)}</p>
+          <p>{formatDate(dataset?.updatedAt)}</p>
           <h3>Metadata Updated at</h3>
-          <p>{formatDate(resource?.metadata_updated_at)}</p>
+          <p>{formatDate(dataset?.metaDataUpdatedAt)}</p>
           <h3>Page Views</h3>
-          <p>{pageViews?.page_views_total}</p>
+          <p>{dataset?.views}</p>
         </section>
       </div>
       <div className="dataset-recomendataions">
@@ -179,7 +166,7 @@ export default function DatasetPage({ match }) {
           </button>
         </div>
         {activeTab === 'joins' &&
-          (!dataset || dataset?.resource?.columns_field_name.length > 0 ? (
+          (!dataset || dataset.columnFields.length > 0 ? (
             <>
               <p className="intro">
                 Find datasets that share a column with the current dataset.
@@ -203,17 +190,13 @@ export default function DatasetPage({ match }) {
             <div className="dataset-recomendataions-theme-list">
               {mostSimilarDatasets?.map((d) => (
                 <Dataset
-                  onAddToCollection={() =>
-                    addToCollection(collection.id, d.dataset.resource.id)
-                  }
+                  onAddToCollection={() => addToCollection(collection.id, d.id)}
                   onRemoveFromCollection={() =>
-                    removeFromCollection(collection.id, d.dataset.resource.id)
+                    removeFromCollection(collection.id, d.id)
                   }
                   dataset={d.dataset}
                   similarity={d.similarity}
-                  inCollection={collection.datasets.includes(
-                    d.dataset.resource.id,
-                  )}
+                  inCollection={collection.datasets.includes(d.id)}
                 />
               ))}
             </div>

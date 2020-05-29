@@ -1,42 +1,12 @@
-const SOCRATA_NY_OPENDATA_ENDPOINT =
-  'https://api.us.socrata.com/api/catalog/v1?domains=data.cityofnewyork.us&search_context=data.cityofnewyork.us';
+import { PortalConfigs, DEFAULT_PORTAL } from '../portal_configs';
 
-async function getMaifestPage(pageNo, limit = 100) {
+const socrataEndpoint = (domain) => {
+  return `https://api.us.socrata.com/api/catalog/v1?domains=${domain}&search_context=${domain}`;
+};
+async function getMaifestPage(domain, pageNo, limit = 100) {
   return fetch(
-    `${SOCRATA_NY_OPENDATA_ENDPOINT}&offset=${pageNo * limit}&limit=${limit}`,
+    `${socrataEndpoint(domain)}&offset=${pageNo * limit}&limit=${limit}`,
   ).then((r) => r.json());
-}
-
-function matachableColumnsForDataset(dataset) {
-  return new Set([
-    ...dataset.resource.columns_name.map((s) => s.toLocaleLowerCase()),
-    ...dataset.resource.columns_field_name.map((s) => s.toLocaleLowerCase()),
-  ]);
-}
-
-function hasJoinableMatch(columns, candidate) {
-  const candidateCols = matachableColumnsForDataset(candidate);
-  const intersection = new Set(
-    [...columns].filter(
-      (x) => candidateCols.has(x), // && ALLOWED_JOIN_COLUMNS.includes(x),
-    ),
-  );
-  return Array.from(intersection);
-}
-
-export function findJoinable(dataset, datasets) {
-  const cols = matachableColumnsForDataset(dataset);
-  const matches = datasets
-    .map((candidate) => ({
-      dataset: candidate,
-      joinableColumns: hasJoinableMatch(cols, candidate),
-    }))
-    .filter(
-      (match) =>
-        match.joinableColumns.length > 0 &&
-        match.dataset.resource.id !== dataset.resource.id,
-    );
-  return matches;
 }
 
 /**
@@ -44,13 +14,13 @@ export function findJoinable(dataset, datasets) {
  *
  * @return {Promise(Array)} a promise that resolves to an array of the datasets
  */
-export async function getManifest() {
-  const firstPage = await getMaifestPage(0, 1);
+export async function getManifest(domain) {
+  const firstPage = await getMaifestPage(domain, 0, 1);
   const totalEntries = firstPage.resultSetSize;
   const pages = Math.ceil(totalEntries / 100);
   return Promise.all(
     [...Array(pages)].map((_, i) =>
-      getMaifestPage(i).then((resp) => resp.results),
+      getMaifestPage(domain, i).then((resp) => resp.results),
     ),
   ).then((list) => {
     return list.reduce(
@@ -149,17 +119,24 @@ export function getTagList(datasets) {
   return tagList;
 }
 
-export function getUniqueEntriesCount(dataset, column) {
+export function getUniqueEntriesCount(
+  dataset,
+  column,
+  portalID = DEFAULT_PORTAL,
+) {
+  const domain = PortalConfigs[portalID].socrataDomain;
   return fetch(
-    `https://data.cityofnewyork.us/resource/${
-      dataset.resource.id
+    `https://${domain}/resource/${
+      dataset.id
     }.json?$select=distinct|> select count(*) ${column.replace(/ /g, '_')}`,
   ).then((r) => r.json());
 }
-export function getUniqueEntries(dataset, column) {
+export function getUniqueEntries(dataset, column, portalID = DEFAULT_PORTAL) {
+  const domain = PortalConfigs[portalID].socrataDomain;
+
   return fetch(
-    `https://data.cityofnewyork.us/resource/${
-      dataset.resource.id
+    `https://${domain}/resource/${
+      dataset.id
     }.json?$select=distinct ${column.replace(/ /g, '_')}`,
   )
     .then((r) => r.json())

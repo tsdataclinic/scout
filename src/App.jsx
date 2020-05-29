@@ -17,6 +17,8 @@ import CollectionsPage from './layout/CollectionsPage/CollectionsPage';
 import CreateCollectionModal from './components/CreateCollectionModal/CreateCollectionModal';
 import WelcomeModal from './components/WelcomeModal/WelcomeModal';
 import GHPagesRedirect from './components/GHPagesRedirect/GHPagesRedirect';
+import { PortalConfigs, DEFAULT_PORTAL } from './portal_configs';
+import { OpenDataProvider } from './contexts/OpenDataContext';
 
 import 'react-router-modal/css/react-router-modal.css';
 
@@ -25,27 +27,46 @@ function App() {
     <div className="App">
       <Router basename={process.env.PUBLIC_URL}>
         <ModalContainer />
-        <SideNav />
-        <div className="content">
-          <Switch>
-            <Route path="/dataset/:datasetID" component={DatasetPage} />
-            <Route
-              path="/collection/:name/:datasetIDs"
-              component={CollectionPage}
-            />
+        <Route exact path="/">
+          <Redirect from="/" to="/NYC" />
+        </Route>
+        <Route
+          path="/:portal"
+          render={({ match }) => {
+            const { portal } = match.params;
+            if (!Object.keys(PortalConfigs).includes(portal)) {
+              return <Redirect to={`/${DEFAULT_PORTAL}`} />;
+            }
+            return (
+              <OpenDataProvider portal={PortalConfigs[portal]}>
+                <div className="content">
+                  <Switch>
+                    <Route
+                      path={`${match.path}/dataset/:datasetID`}
+                      component={DatasetPage}
+                    />
+                    <Route
+                      path={`${match.path}/collection/:name/:datasetIDs`}
+                      component={CollectionPage}
+                    />
 
-            <Route path="/about" component={AboutPage} />
-            <Route path="/collections" component={CollectionsPage} />
+                    <Route path="/about" component={AboutPage} />
+                    <Route path="/collections" component={CollectionsPage} />
 
-            <ModalRoute
-              path="/collection/new"
-              parentPath="/"
-              component={CreateCollectionModal}
-            />
-            <Route path="/" component={HomePage} />
-            <Redirect from="/" to="/" />
-          </Switch>
-        </div>
+                    <ModalRoute
+                      path="collection/new"
+                      parentPath="/"
+                      component={CreateCollectionModal}
+                    />
+                    <Route path="" component={HomePage} />
+                    <Redirect from="/" to="/CHI" />
+                  </Switch>
+                </div>
+                <SideNav />
+              </OpenDataProvider>
+            );
+          }}
+        />
         <GHPagesRedirect />
         <WelcomeModal />
       </Router>

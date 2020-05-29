@@ -11,15 +11,13 @@ export default function ColumnSuggestions({ column, joins, dataset }) {
   const [overlaps, setOverlaps] = useState([]);
 
   const dataTypeForCol =
-    dataset.resource.columns_datatype[
-      dataset.resource.columns_name.indexOf(column)
-    ];
+    dataset.columnTypes[dataset.columnFields.indexOf(column)];
 
   const [pagedJoins, { pageButtons }] = usePagination(
     overlaps
       ? overlaps
           .sort((a, b) => (a.matches.length < b.matches.length ? 1 : -1))
-          .map((o) => joins.find((j) => j.dataset.resource.id === o.id))
+          .map((o) => joins.find((j) => j.id === o.id))
       : joins,
     10,
   );
@@ -29,12 +27,12 @@ export default function ColumnSuggestions({ column, joins, dataset }) {
       if (joins.length > 0) {
         getUniqueEntries(dataset, column).then((parentUniques) => {
           joins.forEach((j) =>
-            getUniqueEntries(j.dataset, column)
+            getUniqueEntries(j, column)
               .then((res) =>
                 setOverlaps((perviousOverlaps) => [
                   ...perviousOverlaps,
                   {
-                    id: j.dataset.resource.id,
+                    id: j.id,
                     matches: parentUniques.filter((e) => res.includes(e)),
                     leftSize: parentUniques.length,
                   },
@@ -44,7 +42,7 @@ export default function ColumnSuggestions({ column, joins, dataset }) {
                 setOverlaps((perviousOverlaps) => [
                   ...perviousOverlaps,
                   {
-                    id: j.dataset.resource.id,
+                    id: j.id,
                     matches: 0,
                     error: 'failed to fetch',
                   },
@@ -82,14 +80,12 @@ export default function ColumnSuggestions({ column, joins, dataset }) {
           {joins && overlaps && (
             <ul>
               {pagedJoins.map((join) => (
-                <li key={join.dataset.resource.id}>
+                <li key={join.id}>
                   <JoinColumn
                     leftDataset={dataset}
-                    rightDataset={join.dataset}
+                    rightDataset={join}
                     joinCol={column}
-                    matches={overlaps.find(
-                      (o) => o.id === join.dataset.resource.id,
-                    )}
+                    matches={overlaps.find((o) => o.id === join.id)}
                   />
                 </li>
               ))}

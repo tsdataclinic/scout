@@ -40,12 +40,8 @@ export default function MultiSelector({
     onChange(newSelection);
   };
 
-  const itemNames = useMemo(() => items && Object.keys(items), [items]);
-
   const { result: filteredItems, search } = useFuse({
-    data: itemNames.map((item) => ({
-      name: item,
-    })),
+    data: items,
     options: {
       keys: ['name'],
       shouldSort: false,
@@ -57,15 +53,12 @@ export default function MultiSelector({
   useEffect(() => search(searchTerm), [search, searchTerm]);
 
   const sortedItems = useMemo(
-    () =>
-      filteredItems
-        ?.map((item) => item.name)
-        .sort((a, b) => (items[a] < items[b] ? 1 : -1)),
-    [filteredItems, items],
+    () => filteredItems?.sort((a, b) => b.count - a.count),
+    [filteredItems],
   );
 
   const [pagedItems, { pageButtons }] = usePagenation(sortedItems, 10);
-
+  console.log('Paged items are ', pagedItems);
   return (
     <div className="mutli-selector">
       <h2>
@@ -95,19 +88,19 @@ export default function MultiSelector({
               pagedItems.map((item) => (
                 // eslint-disable-next-line
                 <li
-                  key={item}
-                  onClick={() => toggleItem(item)}
+                  key={item.name}
+                  onClick={() => toggleItem(item.name)}
                   className={`multi-buttons ${
-                    selected && selected.includes(item) ? 'selected' : ''
+                    selected && selected.includes(item.name) ? 'selected' : ''
                   }`}
                 >
                   <input
                     type="checkbox"
-                    checked={selected && selected.includes(item)}
+                    checked={selected && selected.includes(item.name)}
                     className="checkbox"
                   />
-                  <span className="item-name">{item}</span>
-                  <span className="pill">{items[item]}</span>
+                  <span className="item-name">{item.name}</span>
+                  <span className="pill">{item.count}</span>
                 </li>
               ))
             )}

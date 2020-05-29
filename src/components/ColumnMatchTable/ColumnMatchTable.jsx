@@ -1,35 +1,23 @@
-import React, { useCallback, useMemo } from 'react';
+import React from 'react';
 import './ColumnMatchTable.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import ColumnSuggestions from '../ColumnSuggestions/ColumnSuggestions';
 
 export default function ColumnMatchTable({ dataset, joinColumns }) {
-  const columns = dataset?.resource?.columns_name || [];
+  const columns = dataset?.columnFields;
 
-  const suggestionsForColumn = useCallback(
-    (col, candidates) => {
-      return columns
-        ? candidates.filter((c) =>
-            c.joinableColumns.includes(col.toLowerCase()),
-          )
-        : [];
-    },
-    [columns],
-  );
+  const colJoins =
+    columns && joinColumns
+      ? columns.map((c) => ({
+          column: c,
+          joins: joinColumns.filter((d) => d.columnFields.includes(c)),
+        }))
+      : [];
 
-  const sortedColumns = useMemo(
-    () =>
-      joinColumns
-        ? columns.sort((a, b) =>
-            suggestionsForColumn(a, joinColumns).length <
-            suggestionsForColumn(b, joinColumns).length
-              ? 1
-              : -1,
-          )
-        : [],
-    [columns, joinColumns, suggestionsForColumn],
-  );
+  const sortedColumns = colJoins
+    ? colJoins.sort((a, b) => b.joins.length - a.joins.length)
+    : [];
 
   return (
     <div className="column-match-table">
@@ -40,12 +28,12 @@ export default function ColumnMatchTable({ dataset, joinColumns }) {
           <li># Potential joins</li>
         </ul>
       </div>
-      {dataset
+      {dataset && joinColumns
         ? sortedColumns.map((column) => (
             <ColumnSuggestions
               dataset={dataset}
-              column={column}
-              joins={suggestionsForColumn(column, joinColumns)}
+              column={column.column}
+              joins={column.joins}
             />
           ))
         : [...Array(6)].map((_, i) => (
