@@ -1,11 +1,10 @@
 import React from 'react';
 import './Dataset.scss';
-import { Link } from 'react-router-dom';
 import { hilightMatches, formatDate } from '../../utils/formatters';
 import { useGetSimilarDatasets, useGetJoinNumbers } from '../../hooks/datasets';
 import { ReactComponent as ThematicIcon } from '../../icons/joinable.svg';
 import { ReactComponent as JoinIcon } from '../../icons/thematicSimilarity.svg';
-
+import DatasetLink from '../DatasetLink/DatasetLink';
 // import RawHTML from '../RawHTML/RawHTML';
 import ViewOnOpenPortal from '../ViewOnOpenPortal/ViewOnOpenPortal';
 
@@ -19,8 +18,11 @@ export default function Dataset({
   query,
 }) {
   const formattedName = hilightMatches(dataset.resource.name, query);
-  const similarDatasets = useGetSimilarDatasets(dataset.resource.id);
-  const joinNumber = useGetJoinNumbers(dataset.resource.id);
+  const similarDatasets = useGetSimilarDatasets(
+    dataset.resource.id,
+    dataset.portal_id,
+  );
+  const joinNumber = useGetJoinNumbers(dataset.resource.id, dataset.portal_id);
   const formattedDescription = hilightMatches(
     dataset.resource.description,
     query,
@@ -29,9 +31,11 @@ export default function Dataset({
     <div className="dataset" key={dataset.resource.id}>
       <div className="dataset-title">
         <p>{dataset.resource.attribution}</p>
-        <Link className="title" to={`/dataset/${dataset.resource.id}`}>
+        <DatasetLink className="title" dataset={dataset}>
+          {/* <Link className="title" to={`/dataset/${dataset.resource.id}`}> */}
           <h2>{formattedName}</h2>
-        </Link>
+          {/* </Link> */}
+        </DatasetLink>
       </div>
 
       {onAddToCollection && (
