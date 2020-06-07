@@ -96,6 +96,16 @@ export function useGetSimilarDatasets(datasetID, portalID) {
   return similarDatasets;
 }
 
+export function useDatasetCount() {
+  const [noDatasets, setNoDatasets] = useState(0);
+  const [, , db] = useStateValue();
+
+  useEffect(() => {
+    db.Datasets.count().then((count) => setNoDatasets(count));
+  }, [db.Datasets]);
+  return noDatasets;
+}
+
 export function useDataset(datasetID) {
   const [dataset, setDataset] = useState(null);
   const [, , db] = useStateValue();
@@ -127,6 +137,37 @@ export function useSetPortal(portalID) {
     type: 'SET_PORTAL',
     payload: portalID,
   });
+}
+
+export function useDatasetsDB({
+  tags,
+  term,
+  categories,
+  columns,
+  depatments,
+  domain,
+  page,
+  sortBy,
+  ascending,
+  perPage,
+}) {
+  const [results, setResults] = useState([]);
+  const [{ portal }, , db] = useStateValue();
+  window.db = db;
+  const actualDomain = domain || portal.socrataDomain;
+  useEffect(() => {
+    console.log('SEARCH ', term);
+
+    console.log('offset ', page * perPage, page);
+    db.Datasets.where('tokens')
+      .startsWithIgnoreCase(term)
+      .offset(page * perPage)
+      .limit(perPage)
+      .toArray()
+      .then((results) => setResults(results));
+  }, [term, page, perPage, sortBy, db.Datasets]);
+
+  return results;
 }
 
 export function useDatasets({ tags, term, categories, columns, departments }) {
