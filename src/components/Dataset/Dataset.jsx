@@ -17,22 +17,16 @@ export default function Dataset({
   similarity,
   query,
 }) {
-  const formattedName = hilightMatches(dataset.resource.name, query);
-  const similarDatasets = useGetSimilarDatasets(
-    dataset.resource.id,
-    dataset.portal_id,
-  );
-  const joinNumber = useGetJoinNumbers(dataset.resource.id, dataset.portal_id);
-  const formattedDescription = hilightMatches(
-    dataset.resource.description,
-    query,
-  );
+  const formattedName = hilightMatches(dataset.name, query);
+  const similarDatasets = useGetSimilarDatasets(dataset.id, dataset.portal_id);
+  const joinNumber = useGetJoinNumbers(dataset.id, dataset.portal_id);
+  const formattedDescription = hilightMatches(dataset.description, query);
   return (
-    <div className="dataset" key={dataset.resource.id}>
+    <div className="dataset" key={dataset.id}>
       <div className="dataset-title">
-        <p>{dataset.resource.attribution}</p>
+        <p>{dataset.attribution}</p>
         <DatasetLink className="title" dataset={dataset}>
-          {/* <Link className="title" to={`/dataset/${dataset.resource.id}`}> */}
+          {/* <Link className="title" to={`/dataset/${dataset.id}`}> */}
           <h2>{formattedName}</h2>
           {/* </Link> */}
         </DatasetLink>
@@ -43,8 +37,8 @@ export default function Dataset({
           type="button"
           onClick={() =>
             inCollection
-              ? onRemoveFromCollection(dataset.resource.id)
-              : onAddToCollection(dataset.resource.id)
+              ? onRemoveFromCollection(dataset.id)
+              : onAddToCollection(dataset.id)
           }
         >
           {inCollection ? 'Remove from collection' : 'Add to collection'}
@@ -75,7 +69,7 @@ export default function Dataset({
         </div>
         <div className="dataset-last-updated">
           <span>Last Update at:</span>
-          {formatDate(dataset.resource.updatedAt)}
+          {formatDate(dataset.updatedAt)}
         </div>
       </div>
     </div>

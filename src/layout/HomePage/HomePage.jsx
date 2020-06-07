@@ -11,10 +11,11 @@ import {
   useCategories,
   useTags,
   useDepartments,
-  useDatasets,
+  useDatasetsDB,
   useColumns,
   useStateLoaded,
   useSortDatasetsBy,
+  useDatasetCount,
 } from '../../hooks/datasets';
 import { useCurrentCollection } from '../../hooks/collections';
 import Dataset from '../../components/Dataset/Dataset';
@@ -54,31 +55,39 @@ export default function HomePage() {
   const [searchTerm, setSearchTerm] = useSearchTerm();
   const [sortBy, setSortBy] = useSortVariable();
   const [sortDirection, setSortDirection] = useSortOrder();
+  const datasetCount = useDatasetCount();
 
   const [
     collection,
     { addToCollection, removeFromCollection },
   ] = useCurrentCollection();
 
-  const { datasets } = useDatasets({
+  const [page, { pageButtons }] = usePagination({
+    perPage: 10,
+    totalCount: datasetCount,
+  });
+
+  const datasets = useDatasetsDB({
     tags: selectedTags,
     categories: selectedCategories,
     columns: selectedColumns,
     term: searchTerm,
     departments: selectedDepartments,
+    sortBy: 'name',
+    ascending: false,
+    perPage: 10,
+    page,
   });
-
+  console.log('datasets are ', datasets);
   const [collapseFilterBar, setCollapseFilterBar] = useFilterBarState();
   const [filterStates, setFilterState] = useFilterUIStates();
 
-  const sortedDatasets = useSortDatasetsBy(
-    datasets,
-    sortBy,
-    sortDirection === 'asc',
-    searchTerm,
-  );
-
-  const [pagedDatasets, { pageButtons }] = usePagination(sortedDatasets, 5);
+  // const sortedDatasets = useSortDatasetsBy(
+  //   datasets,
+  //   sortBy,
+  //   sortDirection === 'asc',
+  //   searchTerm,
+  // );
 
   return (
     <div className="home-page">
@@ -196,11 +205,11 @@ export default function HomePage() {
 
         <ul className="dataset-list">
           {loaded ? (
-            pagedDatasets.map((dataset) => (
+            datasets.map((dataset) => (
               <Dataset
-                key={dataset?.resource?.id}
+                key={dataset?.id}
                 dataset={dataset}
-                inCollection={collection.datasets.includes(dataset.resource.id)}
+                inCollection={collection.datasets.includes(dataset.id)}
                 onAddToCollection={(datasetID) =>
                   addToCollection(collection.id, datasetID)
                 }

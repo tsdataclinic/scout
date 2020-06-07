@@ -1,16 +1,12 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 
-export default function usePagination(data, perPage = 20) {
-  const pages = useMemo(() => Math.ceil(data.length / perPage), [
-    data,
-    perPage,
-  ]);
+export default function usePagination({ perPage = 20, totalCount }) {
   const [currentPageNo, setCurrentPageNo] = useState(0);
-
+  const pages = Math.ceil(totalCount / perPage);
   useEffect(() => {
     setCurrentPageNo(0);
-  }, [pages]);
+  }, [perPage, totalCount]);
 
   const pageButtons = (
     <nav>
@@ -33,13 +29,8 @@ export default function usePagination(data, perPage = 20) {
     </nav>
   );
 
-  const content = data.slice(
-    currentPageNo * perPage,
-    (currentPageNo + 1) * perPage,
-  );
-
   return [
-    content,
+    currentPageNo,
     {
       pageButtons,
     },

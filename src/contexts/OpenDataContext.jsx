@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-
+import lunr from 'lunr';
 import Dexie from 'dexie';
 import {
   getManifest,
@@ -12,9 +12,13 @@ import {
 const db = new Dexie('SocrataCache');
 new Dexie('Datasets');
 
+const index = lunr(() => {});
+
+const getTokenStream = (text) => index.pipeline.run(lunr.tokenizer(text));
+
 db.version(1).stores({
   Datasets:
-    'id, portal, description, department, updatedAt, createdAt, *columns, *columnFields, *tags, classification, downloads, views, updateFrequency, updatedAutomation',
+    'id, name,portal, description, department, updatedAt, createdAt, *columns, *columnFields, *tags, classification, downloads, views, updateFrequency, updatedAutomation, *tokens',
 });
 
 new Dexie('Tags');
@@ -122,6 +126,7 @@ function loadDatasetsIntoDB(datasets) {
       parentDatasetID: resource.parent_fxf[0],
       updatedAutomation,
       owner: dataset.owner.display_name,
+      tokens: getTokenStream(resource.name + resource.description),
     };
   });
   db.Datasets.bulkPut(serializedDatasets);
@@ -197,6 +202,14 @@ export const OpenDataProvider = ({ children, portal }) => {
   useEffect(() => {
     console.log('state is ', state);
   }, [state]);
+
+  // useEffect(()=>{
+  //   db.Datasets.hook('creating',()=>{
+  //     dispatch({
+  //       type:'DATABASE_UPDATED'
+  //     })
+  //   })
+  // })
 
   useEffect(() => {
     db.SocrataCache.get(portal.storageID).then((result) => {

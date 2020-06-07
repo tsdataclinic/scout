@@ -7,12 +7,10 @@ export default function TagSelector({ tags, selected, onChange }) {
   };
 
   const toggleTag = (tag) => {
-    console.log('old tags ', selected);
     const newSelection = selected.includes(tag)
       ? selected.filter((t) => t !== tag)
       : [...selected, tag];
 
-    console.log('new tags ', newSelection);
     onChange(newSelection);
   };
 
