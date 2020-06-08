@@ -15,6 +15,10 @@ export default function ColumnSuggestions({ column, joins, dataset }) {
       dataset.resource.columns_name.indexOf(column)
     ];
 
+  const column_field =
+    dataset.resource.columns_field_name[
+      dataset.resource.columns_name.indexOf(column)
+    ];
   const [pagedJoins, { pageButtons }] = usePagination(
     overlaps
       ? overlaps
@@ -27,9 +31,9 @@ export default function ColumnSuggestions({ column, joins, dataset }) {
   useEffect(() => {
     if (collapsed === false && overlaps.length === 0) {
       if (joins.length > 0) {
-        getUniqueEntries(dataset, column).then((parentUniques) => {
+        getUniqueEntries(dataset, column_field).then((parentUniques) => {
           joins.forEach((j) =>
-            getUniqueEntries(j.dataset, column)
+            getUniqueEntries(j.dataset, column_field)
               .then((res) =>
                 setOverlaps((perviousOverlaps) => [
                   ...perviousOverlaps,

@@ -25,9 +25,9 @@ export default function AboutPage() {
           </div>
           <div>
             <p>
-              scout is a new way to browse New York&apos;s open data portal. It
-              focuses on data discoverability, joinability and creating curated
-              collections of datasets that deal with a specific subject.
+              scout is a new way to browse New Jersey&apos;s open data portal.
+              It focuses on data discoverability, joinability and creating
+              curated collections of datasets that deal with a specific subject.
             </p>
             <p>
               By focusing not on agencies, or departments, scout allows you to
