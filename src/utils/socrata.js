@@ -116,11 +116,7 @@ export function getCategories(datasets) {
  */
 export function getDepartments(datasets) {
   const departments = datasets
-    .map((dataset) =>
-      dataset.classification.domain_metadata.find(
-        (md) => md.key === 'Dataset-Information_Agency',
-      ),
-    )
+    .map((dataset) => dataset.resource.attribution)
     .filter((d) => d)
     .map((d) => d.value);
   const counts = departments.reduce(
