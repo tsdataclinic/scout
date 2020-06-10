@@ -29,5 +29,5 @@ def process_all():
 
 all_columns  = process_all()
 all_columns.to_csv('all_dataset_columns.csv.zip',compression='zip', index=False)
-NYC = all_columns[all_columns.portal == 'www.opendatanyc']
+NYC = all_columns[all_columns.portal == 'opendata.cityofnewyork.us']
 NYC.to_csv('nyc_columns.csv.zip', compression='zip', index=False)
