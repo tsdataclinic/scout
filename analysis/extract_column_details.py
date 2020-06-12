@@ -9,7 +9,7 @@ def extract_columns(dataset):
     field_name = resource['columns_field_name']
     field_type = resource['columns_datatype']
     descriptions = resource['columns_description']
-    return pd.DataFrame({'name':names, 'field_type': field_type, 'field_name': 'field_name', 'description':descriptions, 'dataset-id' : resource['id'], 'dataset_link':dataset['permalink']})
+    return pd.DataFrame({'name':names, 'field_type': field_type, 'field_name': field_name, 'description':descriptions, 'dataset-id' : resource['id'], 'dataset_link':dataset['permalink']})
 
 def process_poral_columns(portal_file):
     domain = portal_file.stem
@@ -29,5 +29,5 @@ def process_all():
 
 all_columns  = process_all()
 all_columns.to_csv('all_dataset_columns.csv.zip',compression='zip', index=False)
-NYC = all_columns[all_columns.portal == 'opendata.cityofnewyork.us']
+NYC = all_columns[all_columns.portal == 'data.cityofnewyork']
 NYC.to_csv('nyc_columns.csv.zip', compression='zip', index=False)
