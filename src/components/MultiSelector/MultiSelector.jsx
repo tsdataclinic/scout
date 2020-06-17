@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import useFuse from 'react-use-fuse';
-import usePagenation from '../../hooks/pagination';
+import usePagenation, { usePagenationWithItems } from '../../hooks/pagination';
 import { useStateLoaded } from '../../hooks/datasets';
 import FilterLoading from '../Loading/FilterLoading/FilterLoading';
 import './MultiSelector.scss';
@@ -56,9 +56,8 @@ export default function MultiSelector({
     () => filteredItems?.sort((a, b) => b.count - a.count),
     [filteredItems],
   );
+  const [pagedItems, { pageButtons }] = usePagenationWithItems(sortedItems, 10);
 
-  const [pagedItems, { pageButtons }] = usePagenation(sortedItems, 10);
-  console.log('Paged items are ', pagedItems);
   return (
     <div className="mutli-selector">
       <h2>
@@ -85,25 +84,25 @@ export default function MultiSelector({
             {!loaded ? (
               <FilterLoading />
             ) : (
-              pagedItems.map((item) => (
-                // eslint-disable-next-line
-                <li
-                  key={item.name}
-                  onClick={() => toggleItem(item.name)}
-                  className={`multi-buttons ${
-                    selected && selected.includes(item.name) ? 'selected' : ''
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={selected && selected.includes(item.name)}
-                    className="checkbox"
-                  />
-                  <span className="item-name">{item.name}</span>
-                  <span className="pill">{item.count}</span>
-                </li>
-              ))
-            )}
+                pagedItems.map((item) => (
+                  // eslint-disable-next-line
+                  <li
+                    key={item.name}
+                    onClick={() => toggleItem(item.name)}
+                    className={`multi-buttons ${
+                      selected && selected.includes(item.name) ? 'selected' : ''
+                      }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selected && selected.includes(item.name)}
+                      className="checkbox"
+                    />
+                    <span className="item-name">{item.name}</span>
+                    <span className="pill">{item.count}</span>
+                  </li>
+                ))
+              )}
           </ul>
           {pageButtons}
           {selected && selected.length > 0 && (

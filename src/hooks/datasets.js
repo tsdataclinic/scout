@@ -86,9 +86,9 @@ export function useGetSimilarDatasets(datasetID, portalID) {
     () =>
       similarityMetrics[datasetID] && datasets && datasets.length > 0
         ? similarityMetrics[datasetID].map((match) => ({
-            similarity: match.similarity,
-            dataset: datasets.find((d) => d.resource.id === match.dataset),
-          }))
+          similarity: match.similarity,
+          dataset: datasets.find((d) => d.resource.id === match.dataset),
+        }))
         : [],
 
     [similarityMetrics, datasetID, datasets],
@@ -156,16 +156,31 @@ export function useDatasetsDB({
   window.db = db;
   const actualDomain = domain || portal.socrataDomain;
   useEffect(() => {
-    console.log('SEARCH ', term);
-
-    console.log('offset ', page * perPage, page);
-    db.Datasets.where('tokens')
-      .startsWithIgnoreCase(term)
-      .offset(page * perPage)
-      .limit(perPage)
-      .toArray()
-      .then((results) => setResults(results));
-  }, [term, page, perPage, sortBy, db.Datasets]);
+    if (term) {
+      db.Datasets.where('tokens')
+        .startsWithIgnoreCase(term)
+        .filter(d => {
+          console.log("filtering with tags ", tags)
+          console.log('tags ', d.tags)
+          return (d.tags.filter(t => tags.includes(t).length > 0))
+        })
+        // .offset(page * perPage)
+        // .limit(perPage)
+        .toArray()
+        .then((results) => setResults(results));
+    }
+    else {
+      db.Datasets.filter(d => {
+        console.log("filtering with tags ", tags)
+        console.log('tags ', d.tags)
+        return (d.tags.filter(t => tags.includes(t).length > 0))
+      })
+        // .limit(perPage)
+        // .offset(page * perPage)
+        .toArray()
+        .then((results) => setResults(results));
+    }
+  }, [term, page, perPage, sortBy, db.Datasets, tags]);
 
   return results;
 }
@@ -198,9 +213,9 @@ export function useDatasets({ tags, term, categories, columns, departments }) {
       const matches =
         searchedDatasets && searchedDatasets[0] && searchedDatasets[0].item
           ? searchedDatasets.map((d) => ({
-              id: d.item.resource.id,
-              matches: d.matches,
-            }))
+            id: d.item.resource.id,
+            matches: d.matches,
+          }))
           : [];
 
       if (tags && tags.length > 0) {

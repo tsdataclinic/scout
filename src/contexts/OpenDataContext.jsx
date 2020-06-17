@@ -12,9 +12,9 @@ import {
 const db = new Dexie('SocrataCache');
 new Dexie('Datasets');
 
-const index = lunr(() => {});
+const index = lunr(() => { });
 
-const getTokenStream = (text) => index.pipeline.run(lunr.tokenizer(text));
+const getTokenStream = (text) => index.pipeline.run(lunr.tokenizer(text)).map(token => token.str);
 
 db.version(1).stores({
   Datasets:
