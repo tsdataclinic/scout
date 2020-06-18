@@ -68,14 +68,14 @@ export default function DatasetPage({ match }) {
       return (
         <p className="intro">
           This resource is actually just a link to a website resource. We
-          currently dont have the ability to provide information on such
-          resources
+          currently don't have the ability to provide information on such
+          resources.
         </p>
       );
     }
     return (
       <p className="intro">
-        We currently dont have the ability to analyse this dataset.
+        We currently don't have the ability to analyse this dataset.
       </p>
     );
   };
