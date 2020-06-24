@@ -7,7 +7,7 @@ import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
 import '../../components/Loading/Loading.scss';
 import usePageView from '../../hooks/analytics';
 import { useCurrentCollection } from '../../hooks/collections';
-
+import { Portals } from '..//../portals';
 import {
   useDataset,
   useJoinableDatasets,
@@ -33,6 +33,10 @@ export default function DatasetPage({ match }) {
   );
 
   const [activeTab, setActiveTab] = useState('joins');
+
+  const portal = dataset
+    ? Object.values(Portals).find((p) => p.socrataDomain === dataset.portal)
+    : null;
 
   useEffect(() => {
     const page = `${window.location.pathname}/${activeTab}`;
@@ -121,11 +125,12 @@ export default function DatasetPage({ match }) {
           </button>
         </section>
         <section className="external-link">
-          <p>Powered by</p>
-          <img
-            alt="NYC Open Data"
-            src="https://opendata.cityofnewyork.us/wp-content/themes/opendata-wp/assets/img/nyc-open-data-logo.svg"
-          />
+          {portal && (
+            <>
+              <p>Powered by</p>
+              <img alt={portal.name} src={portal.logo} />
+            </>
+          )}
           <ViewOnOpenPortal permalink={dataset ? dataset?.permaLink : '#'} />
         </section>
         <section className="metadata">

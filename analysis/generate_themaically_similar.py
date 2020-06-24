@@ -3,8 +3,7 @@ import pandas as pd
 import json
 import re
 import argparse
-
-
+from pathlib import Path
 
 def load_portal_defs():
     with open('../src/portal_configs.json', 'r') as f:
@@ -16,12 +15,10 @@ def read_corpus(datasets, tokens_only=False):
     rlookup={}
     corpus =[]
     for index,dataset in enumerate(datasets):
-        tokens = gensim.utils.simple_preprocess(dataset['resource']['name'] + " " + dataset['resource']['description'])    
-        # For training data, add tags
+        tokens = gensim.utils.simple_preprocess(dataset['resource']['name'] + " " + dataset['resource']['description'])
         lookup[dataset['resource']['id']] = index
         rlookup[index] = dataset['resource']['id']
         corpus.append(gensim.models.doc2vec.TaggedDocument(tokens, [index]))
-        
     return (corpus, lookup, rlookup)
 
 def generate_similarity(datasets):
@@ -64,9 +61,13 @@ if __name__ =='__main__':
         to_run = [{'socrata':portals[portal]['socrataDomain'], "key" : portal}]
         
     for p in to_run:
-        print('Running ')
+        key = p['key']
+
+        print(f'Running {key}')
+        base_path = Path(f'../public/metadata/{key}')
+        base_path.mkdir(exist_ok=True)
+        
         datasets = load_metadata(p['socrata'])
         results = generate_similarity(datasets)
-        key = p['key']
-        with open(f'../public/metadata/{key}/similarity_metrics.json', 'w') as f:
+        with open(base_path / 'similarity_metrics.json', 'w') as f:
             json.dump(results,f)

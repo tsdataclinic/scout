@@ -4,6 +4,7 @@ import { useStateValue } from '../contexts/OpenDataContext';
 import { getUniqueEntries } from '../utils/socrata';
 import { Portals } from '../portals';
 import { constructCollectionLink } from '../utils/formatters';
+
 export function useStateLoaded() {
   const [{ stateLoaded }] = useStateValue();
   return stateLoaded;
