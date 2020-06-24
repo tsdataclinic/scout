@@ -137,7 +137,7 @@ export const AppContext = createContext();
 
 const initalState = {
   stateLoaded: false,
-  lastUpdated: null,
+  lastUpdated: [],
 };
 
 const reducer = (state, action) => {
@@ -147,7 +147,16 @@ const reducer = (state, action) => {
       return { ...state, ...payload };
 
     case 'SET_LOADED':
-      return { ...state, stateLoaded: true, lastUpdated: new Date() };
+      return { ...state, stateLoaded: true };
+    case 'SET_PORTAL_UPDATED':
+      return {
+        ...state,
+        lastUpdated: state.lastUpdated.map((l) => l.portal).includes(payload)
+          ? state.lastUpdated.map((l) =>
+              l.portal === payload ? { ...l, updated_at: new Date() } : l,
+            )
+          : [...state.lastUpdated, { portal: payload, updated_at: new Date() }],
+      };
     default:
       return state;
   }
@@ -167,6 +176,10 @@ const updateManifestFromSocrata = (dispatch, portal) => {
 
     dispatch({
       type: 'SET_LOADED',
+    });
+    dispatch({
+      type: 'SET_PORTAL_UPDATED',
+      payload: portal.socrataDomain,
     });
   });
 };
@@ -204,7 +217,16 @@ export const OpenDataProvider = ({ children, portal }) => {
     db.SocrataCache.get(0).then((result) => {
       if (result) {
         const cachedState = JSON.parse(result.data);
-        if (shouldUpdateCache(new Date(cachedState.lastUpdated))) {
+        const lastUpdateForPortal = cachedState.lastUpdated.find(
+          (p) => p.portal === portal.socrataDomain,
+        );
+        if (
+          shouldUpdateCache(
+            lastUpdateForPortal
+              ? new Date(lastUpdateForPortal.updated_at)
+              : null,
+          )
+        ) {
           updateManifestFromSocrata(dispatch, portal);
         } else {
           dispatch({
