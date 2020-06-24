@@ -21,7 +21,7 @@ import { useCurrentCollection } from '../../hooks/collections';
 import Dataset from '../../components/Dataset/Dataset';
 import SortMenu from '../../components/SortMenu/SortMenu';
 import DatasetsLoading from '../../components/Loading/DatasetsLoading/DatasetsLoading';
-import usePagination from '../../hooks/pagination';
+import { usePagenationWithItems } from '../../hooks/pagination';
 import usePageView from '../../hooks/analytics';
 import MultiSelector from '../../components/MultiSelector/MultiSelector';
 import {
@@ -55,19 +55,13 @@ export default function HomePage() {
   const [searchTerm, setSearchTerm] = useSearchTerm();
   const [sortBy, setSortBy] = useSortVariable();
   const [sortDirection, setSortDirection] = useSortOrder();
-  const datasetCount = useDatasetCount();
 
   const [
     collection,
     { addToCollection, removeFromCollection },
   ] = useCurrentCollection();
 
-  const [page, { pageButtons }] = usePagination({
-    perPage: 10,
-    totalCount: datasetCount,
-  });
-
-  const datasets = useDatasetsDB({
+  const { datasets, datasetCount } = useDatasetsDB({
     tags: selectedTags,
     categories: selectedCategories,
     columns: selectedColumns,
@@ -75,10 +69,10 @@ export default function HomePage() {
     departments: selectedDepartments,
     sortBy: 'name',
     ascending: false,
-    perPage: 10,
-    page,
   });
-  console.log('datasets are ', datasets);
+
+  const [pagedDatasets, { pageButtons }] = usePagenationWithItems(datasets, 10);
+
   const [collapseFilterBar, setCollapseFilterBar] = useFilterBarState();
   const [filterStates, setFilterState] = useFilterUIStates();
 
@@ -182,7 +176,7 @@ export default function HomePage() {
         </div>
         <div className="count-and-sort">
           <p>
-            <span className="bold">{datasets.length}</span> datasets{' '}
+            <span className="bold">{datasetCount}</span> datasets{' '}
             {searchTerm ? 'sorted by relevance' : ''}
           </p>
 
@@ -205,7 +199,7 @@ export default function HomePage() {
 
         <ul className="dataset-list">
           {loaded ? (
-            datasets.map((dataset) => (
+            pagedDatasets.map((dataset) => (
               <Dataset
                 key={dataset?.id}
                 dataset={dataset}

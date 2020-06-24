@@ -12,9 +12,10 @@ import {
 const db = new Dexie('SocrataCache');
 new Dexie('Datasets');
 
-const index = lunr(() => { });
+const index = lunr(() => {});
 
-const getTokenStream = (text) => index.pipeline.run(lunr.tokenizer(text)).map(token => token.str);
+const getTokenStream = (text) =>
+  index.pipeline.run(lunr.tokenizer(text)).map((token) => token.str);
 
 db.version(1).stores({
   Datasets:
@@ -118,7 +119,7 @@ function loadDatasetsIntoDB(datasets) {
       views: resource.page_views.page_views_total,
       categories: classification.categories,
       domainCategory: classification.domainCategory,
-      tags: classification.tags,
+      tags: classification.domain_tags,
       type: resource.type,
       updateFrequency,
       department,

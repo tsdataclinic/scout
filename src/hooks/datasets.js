@@ -139,12 +139,37 @@ export function useSetPortal(portalID) {
   });
 }
 
+function filterDomain(d, domain) {
+  return d.portal === domain;
+}
+
+function filterTags(d, tags) {
+  return tags.length === 0 || d.tags.filter((t) => tags.includes(t)).length > 0;
+}
+
+function filterCategories(d, categories) {
+  return (
+    categories.length === 0 ||
+    d.categories.filter((cat) => categories.includes(cat)).length > 0
+  );
+}
+
+function filterColumns(d, columns) {
+  return (
+    columns.length === 0 ||
+    d.columns.filter((c) => columns.includes(c)).length > 0
+  );
+}
+
+function filterDepatment(d, departments) {
+  return departments.length === 0 || departments.includes(d.department);
+}
 export function useDatasetsDB({
   tags,
   term,
   categories,
   columns,
-  depatments,
+  departments,
   domain,
   page,
   sortBy,
@@ -152,37 +177,58 @@ export function useDatasetsDB({
   perPage,
 }) {
   const [results, setResults] = useState([]);
+  const [datasetCount, setDatasetCount] = useState(null);
+
   const [{ portal }, , db] = useStateValue();
   window.db = db;
   const actualDomain = domain || portal.socrataDomain;
   useEffect(() => {
-    if (term) {
-      db.Datasets.where('tokens')
-        .startsWithIgnoreCase(term)
-        .filter((d) => {
-          console.log('filtering with tags ', tags);
-          console.log('tags ', d.tags);
-          return d.tags.filter((t) => tags.includes(t).length > 0);
-        })
-        .offset(page * perPage)
-        .limit(perPage)
-
-        .toArray()
-        .then((results) => setResults(results));
+    let baseQuery = null;
+    if (!actualDomain) {
+      setResults([]);
+      setDatasetCount(0);
     } else {
-      db.Datasets.filter((d) => {
-        console.log('filtering with tags ', tags);
-        console.log('tags ', d.tags);
-        return d.tags.filter((t) => tags.includes(t).length > 0);
-      })
-        .limit(perPage)
-        .offset(page * perPage)
-        .toArray()
-        .then((results) => setResults(results));
+      if (term) {
+        baseQuery = db.Datasets.where('tokens')
+          .startsWithIgnoreCase(term)
+          .filter((d) => filterDomain(actualDomain))
+          .filter(
+            (d) =>
+              filterTags(d, tags) &&
+              filterColumns(d, columns) &&
+              filterCategories(d, categories) &&
+              filterDepatment(d, departments),
+          );
+      } else {
+        baseQuery = db.Datasets.where('portal')
+          .equals(actualDomain)
+          .filter(
+            (d) =>
+              filterTags(d, tags) &&
+              filterColumns(d, columns) &&
+              filterCategories(d, categories) &&
+              filterDepatment(d, departments),
+          );
+      }
+      baseQuery.toArray().then((results) => {
+        setDatasetCount(results.length);
+        setResults(results);
+      });
     }
-  }, [term, page, perPage, sortBy, db.Datasets, tags]);
+  }, [
+    term,
+    page,
+    perPage,
+    sortBy,
+    db.Datasets,
+    tags,
+    columns,
+    categories,
+    departments,
+    actualDomain,
+  ]);
 
-  return results;
+  return { datasets: results, datasetCount };
 }
 
 export function useDatasets({ tags, term, categories, columns, departments }) {

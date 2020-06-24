@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 
-
 export function usePagenationWithItems(data, perPage = 20) {
   const pages = useMemo(() => Math.ceil(data.length / perPage), [
     data,
