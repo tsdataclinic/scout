@@ -136,7 +136,6 @@ function loadDatasetsIntoDB(datasets) {
 export const AppContext = createContext();
 
 const initalState = {
-  datasets: [],
   stateLoaded: false,
   lastUpdated: null,
 };
@@ -144,13 +143,6 @@ const initalState = {
 const reducer = (state, action) => {
   const { type, payload } = action;
   switch (type) {
-    case 'UPDATE_OPEN_DATASET_MANIFEST':
-      return {
-        ...state,
-        datasets: payload.datasets,
-        lastUpdated: payload.lastUpdated,
-      };
-
     case 'HYDRATE_STATE':
       return { ...state, ...payload };
 
@@ -173,13 +165,6 @@ const updateManifestFromSocrata = (dispatch, portal) => {
     loadCategoriesIntoDB(categories, portal.socrataDomain);
     loadColumnsIntoDB(columns, portal.socrataDomain);
 
-    dispatch({
-      type: 'UPDATE_OPEN_DATASET_MANIFEST',
-      payload: {
-        datasets: manifest,
-        lastUpdated: new Date(),
-      },
-    });
     dispatch({
       type: 'SET_LOADED',
     });
@@ -213,7 +198,10 @@ export const OpenDataProvider = ({ children, portal }) => {
   // })
 
   useEffect(() => {
-    db.SocrataCache.get(portal.storageID).then((result) => {
+    if (!portal) {
+      return;
+    }
+    db.SocrataCache.get(0).then((result) => {
       if (result) {
         const cachedState = JSON.parse(result.data);
         if (shouldUpdateCache(new Date(cachedState.lastUpdated))) {
@@ -244,13 +232,12 @@ export const OpenDataProvider = ({ children, portal }) => {
     if (stateLoaded) {
       db.SocrataCache.put({
         data: JSON.stringify({
-          datasets,
           lastUpdated,
         }),
-        id: portal.storageID,
+        id: 0,
       });
     }
-  }, [datasets, stateLoaded, lastUpdated, portal]);
+  }, [stateLoaded, lastUpdated, portal]);
 
   return (
     <AppContext.Provider value={[{ ...state, portal }, dispatch, db]}>

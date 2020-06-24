@@ -25,12 +25,6 @@ export default function CollectionTab({ visible, onDismiss }) {
     setTab('add');
   };
 
-  const getAgency = (dataset) => {
-    return dataset?.classification.domain_metadata?.find(
-      ({ key }) => key === 'Dataset-Information_Agency',
-    )?.value;
-  };
-
   if (!visible) return '';
 
   return (
@@ -53,8 +47,8 @@ export default function CollectionTab({ visible, onDismiss }) {
                   {currentCollectionDatasets.map((c) => (
                     <li className="collection-tab-dataset">
                       <div>
-                        <p className="name">{c.resource.name}</p>
-                        <p className="agency"> {getAgency(c)}</p>
+                        <p className="name">{c.name}</p>
+                        <p className="agency"> {c.department}</p>
                       </div>
                     </li>
                   ))}
@@ -102,16 +96,14 @@ export default function CollectionTab({ visible, onDismiss }) {
             ) : (
               <ul>
                 {currentCollectionDatasets.map((d) => (
-                  <li key={d.resource.name} className="collection-tab-dataset">
+                  <li key={d.name} className="collection-tab-dataset">
                     <div>
-                      <p className="name">{d.resource.name}</p>
-                      <p className="agency">{getAgency(d)}</p>
+                      <p className="name">{d.name}</p>
+                      <p className="agency">{d.department}</p>
                     </div>
                     <button
                       type="button"
-                      onClick={() =>
-                        removeFromCollection(collection.id, d.resource.id)
-                      }
+                      onClick={() => removeFromCollection(collection.id, d.id)}
                     >
                       Remove
                     </button>

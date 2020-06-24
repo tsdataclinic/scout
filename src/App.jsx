@@ -34,7 +34,10 @@ function App() {
           path="/:portal"
           render={({ match }) => {
             const { portal } = match.params;
-            if (!Object.keys(PortalConfigs).includes(portal)) {
+            if (
+              !Object.keys(PortalConfigs).includes(portal) &&
+              match.path.includes('collection')
+            ) {
               return <Redirect to={`/${DEFAULT_PORTAL}`} />;
             }
             return (
@@ -46,7 +49,7 @@ function App() {
                       component={DatasetPage}
                     />
                     <Route
-                      path={`${match.path}/collection/:name/:datasetIDs`}
+                      path="/collection/:name/:datasetIDs"
                       component={CollectionPage}
                     />
 

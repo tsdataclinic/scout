@@ -119,11 +119,14 @@ export function useDataset(datasetID) {
 }
 
 export function useGetDatasetsByIds(ids) {
-  const [{ datasets }] = useStateValue();
-  return useMemo(() => datasets.filter((d) => ids.includes(d.resource.id)), [
-    datasets,
-    ids,
-  ]);
+  const [datasets, setDatasets] = useState([]);
+  const [, , db] = useStateValue();
+
+  useEffect(() => {
+    db.Datasets.bulkGet(ids).then((results) => setDatasets(results));
+  }, [db.Datasets, ids]);
+  console.log('FOR ids ', ids, datasets);
+  return datasets;
 }
 
 export function usePortal() {
