@@ -147,7 +147,7 @@ const reducer = (state, action) => {
       return { ...state, ...payload };
 
     case 'SET_LOADED':
-      return { ...state, stateLoaded: true };
+      return { ...state, stateLoaded: true, lastUpdated: new Date() };
     default:
       return state;
   }
