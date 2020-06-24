@@ -21,7 +21,7 @@ import { useCurrentCollection } from '../../hooks/collections';
 import Dataset from '../../components/Dataset/Dataset';
 import SortMenu from '../../components/SortMenu/SortMenu';
 import DatasetsLoading from '../../components/Loading/DatasetsLoading/DatasetsLoading';
-import { usePagenationWithItems } from '../../hooks/pagination';
+import { usePaginationWithItems } from '../../hooks/pagination';
 import usePageView from '../../hooks/analytics';
 import MultiSelector from '../../components/MultiSelector/MultiSelector';
 import {
@@ -71,7 +71,7 @@ export default function HomePage() {
     ascending: false,
   });
 
-  const [pagedDatasets, { pageButtons }] = usePagenationWithItems(datasets, 10);
+  const [pagedDatasets, { pageButtons }] = usePaginationWithItems(datasets, 10);
 
   const [collapseFilterBar, setCollapseFilterBar] = useFilterBarState();
   const [filterStates, setFilterState] = useFilterUIStates();

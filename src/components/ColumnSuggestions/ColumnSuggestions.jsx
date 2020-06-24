@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import JoinColumn from '../JoinColumn/JoinColumn';
 import './ColumnSuggestions.scss';
-import usePagination from '../../hooks/pagination';
+import { usePaginationWithItems } from '../../hooks/pagination';
 import { getUniqueEntries } from '../../utils/socrata';
 
 export default function ColumnSuggestions({ column, joins, dataset }) {
@@ -13,7 +13,7 @@ export default function ColumnSuggestions({ column, joins, dataset }) {
   const dataTypeForCol =
     dataset.columnTypes[dataset.columnFields.indexOf(column)];
 
-  const [pagedJoins, { pageButtons }] = usePagination(
+  const [pagedJoins, { pageButtons }] = usePaginationWithItems(
     overlaps
       ? overlaps
           .sort((a, b) => (a.matches.length < b.matches.length ? 1 : -1))

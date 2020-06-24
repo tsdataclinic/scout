@@ -124,7 +124,7 @@ export function getUniqueEntriesCount(
   column,
   portalID = DEFAULT_PORTAL,
 ) {
-  const domain = PortalConfigs[portalID].socrataDomain;
+  const domain = dataset.portal;
   return fetch(
     `https://${domain}/resource/${
       dataset.id
@@ -132,7 +132,7 @@ export function getUniqueEntriesCount(
   ).then((r) => r.json());
 }
 export function getUniqueEntries(dataset, column, portalID = DEFAULT_PORTAL) {
-  const domain = PortalConfigs[portalID].socrataDomain;
+  const domain = dataset.portal;
 
   return fetch(
     `https://${domain}/resource/${

@@ -227,8 +227,10 @@ export const OpenDataProvider = ({ children, portal }) => {
               : null,
           )
         ) {
+          console.log(' UPDATING CACHE');
           updateManifestFromSocrata(dispatch, portal);
         } else {
+          console.log('NOT UPDATING CACHE');
           dispatch({
             type: 'HYDRATE_STATE',
             payload: {
