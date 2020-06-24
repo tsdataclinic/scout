@@ -18,9 +18,10 @@ export default function Dataset({
   query,
 }) {
   const formattedName = hilightMatches(dataset.name, query);
-  const similarDatasets = useGetSimilarDatasets(dataset.id, dataset.portal_id);
+  const similarDatasets = useGetSimilarDatasets(dataset);
   const joinNumber = useGetJoinNumbers(dataset.id, dataset.portal_id);
   const formattedDescription = hilightMatches(dataset.description, query);
+
   return (
     <div className="dataset" key={dataset.id}>
       <div className="dataset-title">

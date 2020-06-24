@@ -9,7 +9,6 @@ export function uniqueWordList(entries, removeStopWords = true) {
       .tokenize(entry)
       .forEach((e) => unique.add(natural.PorterStemmer.stem(e))),
   );
-  debugger;
   //console.log(result);
   // return result;
 }

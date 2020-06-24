@@ -17,7 +17,7 @@ import CollectionsPage from './layout/CollectionsPage/CollectionsPage';
 import CreateCollectionModal from './components/CreateCollectionModal/CreateCollectionModal';
 import WelcomeModal from './components/WelcomeModal/WelcomeModal';
 import GHPagesRedirect from './components/GHPagesRedirect/GHPagesRedirect';
-import { PortalConfigs, DEFAULT_PORTAL } from './portal_configs';
+import { Portals, DEFAULT_PORTAL } from './portals';
 import { OpenDataProvider } from './contexts/OpenDataContext';
 
 import 'react-router-modal/css/react-router-modal.css';
@@ -35,13 +35,13 @@ function App() {
           render={({ match }) => {
             const { portal } = match.params;
             if (
-              !Object.keys(PortalConfigs).includes(portal) &&
+              !Object.keys(Portals).includes(portal) &&
               match.path.includes('collection')
             ) {
               return <Redirect to={`/${DEFAULT_PORTAL}`} />;
             }
             return (
-              <OpenDataProvider portal={PortalConfigs[portal]}>
+              <OpenDataProvider portal={Portals[portal]}>
                 <div className="content">
                   <Switch>
                     <Route

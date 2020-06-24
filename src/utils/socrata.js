@@ -1,4 +1,4 @@
-import { PortalConfigs, DEFAULT_PORTAL } from '../portal_configs';
+import { Portals, DEFAULT_PORTAL } from '../portals';
 
 const socrataEndpoint = (domain) => {
   return `https://api.us.socrata.com/api/catalog/v1?domains=${domain}&search_context=${domain}`;

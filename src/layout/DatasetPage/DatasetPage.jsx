@@ -12,6 +12,7 @@ import {
   useDataset,
   useJoinableDatasets,
   useGetSimilarDatasets,
+  useGetDatasetsByIds,
 } from '../../hooks/datasets';
 import './DatasetPage.scss';
 import ViewOnOpenPortal from '../../components/ViewOnOpenPortal/ViewOnOpenPortal';
@@ -25,7 +26,12 @@ export default function DatasetPage({ match }) {
   const parentId = dataset?.parentDatasetID;
   const parentDataset = useDataset(parentId);
   const joins = useJoinableDatasets(dataset);
-  const similarDatasets = useGetSimilarDatasets(dataset);
+  const similarDatasetSuggestions = useGetSimilarDatasets(dataset);
+
+  const similarDatasets = useGetDatasetsByIds(
+    similarDatasetSuggestions.map((d) => d.dataset),
+  );
+
   const [activeTab, setActiveTab] = useState('joins');
 
   useEffect(() => {
@@ -37,10 +43,13 @@ export default function DatasetPage({ match }) {
   }, []);
 
   const mostSimilarDatasets = similarDatasets
-    .filter(
-      (suggestion) =>
-        suggestion.dataset && suggestion.dataset.resource.id !== datasetID,
-    )
+    .filter((suggestion) => suggestion && suggestion.id !== datasetID)
+    .map((suggestion) => ({
+      dataset: suggestion,
+      similarity: similarDatasetSuggestions.find(
+        (s) => s.dataset === suggestion.id,
+      ).similarity,
+    }))
     .slice(0, 10);
   const renderNotFound = (currentDataset, parentData) => {
     if (parentData) {
@@ -190,13 +199,15 @@ export default function DatasetPage({ match }) {
             <div className="dataset-recomendataions-theme-list">
               {mostSimilarDatasets?.map((d) => (
                 <Dataset
-                  onAddToCollection={() => addToCollection(collection.id, d.id)}
+                  onAddToCollection={() =>
+                    addToCollection(collection.id, d.dataset.id)
+                  }
                   onRemoveFromCollection={() =>
-                    removeFromCollection(collection.id, d.id)
+                    removeFromCollection(collection.id, d.dataset.id)
                   }
                   dataset={d.dataset}
                   similarity={d.similarity}
-                  inCollection={collection.datasets.includes(d.id)}
+                  inCollection={collection.datasets.includes(d.dataset.id)}
                 />
               ))}
             </div>

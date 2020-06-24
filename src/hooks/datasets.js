@@ -2,7 +2,8 @@ import { useMemo, useState, useEffect } from 'react';
 import useLunr from './useLunr';
 import { useStateValue } from '../contexts/OpenDataContext';
 import { getUniqueEntries } from '../utils/socrata';
-
+import { Portals } from '../portals';
+import { constructCollectionLink } from '../utils/formatters';
 export function useStateLoaded() {
   const [{ stateLoaded }] = useStateValue();
   return stateLoaded;
@@ -70,30 +71,31 @@ export function useGetJoinNumbers(datasetID, portalID) {
   return datasetID in joinNumbers ? joinNumbers[datasetID] : 0;
 }
 
-export function useGetSimilarDatasets(datasetID, portalID) {
+export function useGetSimilarDatasets(dataset) {
+  const portal = dataset
+    ? Object.entries(Portals).find(
+        ([id, p]) => p.socrataDomain === dataset.portal,
+      )
+    : null;
+
+  const portalID = portal ? portal[0] : null;
+
   const [similarityMetrics, setSimilarityMetrics] = useState({});
-  const [{ datasets }] = useStateValue();
 
   useEffect(() => {
-    fetch(
-      `${process.env.PUBLIC_URL}/metadata/${portalID}//similarity_metrics.json`,
-    )
-      .then((r) => r.json())
-      .then((r) => setSimilarityMetrics(r));
+    if (portalID) {
+      fetch(
+        `${process.env.PUBLIC_URL}/metadata/${portalID}/similarity_metrics.json`,
+      )
+        .then((r) => r.json())
+        .then((r) => setSimilarityMetrics(r));
+    }
   }, [portalID]);
-
-  const similarDatasets = useMemo(
-    () =>
-      similarityMetrics[datasetID] && datasets && datasets.length > 0
-        ? similarityMetrics[datasetID].map((match) => ({
-            similarity: match.similarity,
-            dataset: datasets.find((d) => d.resource.id === match.dataset),
-          }))
-        : [],
-
-    [similarityMetrics, datasetID, datasets],
-  );
-  return similarDatasets;
+  const result =
+    dataset && similarityMetrics[dataset.id]
+      ? similarityMetrics[dataset.id]
+      : [];
+  return result;
 }
 
 export function useDatasetCount() {
@@ -125,7 +127,6 @@ export function useGetDatasetsByIds(ids) {
   useEffect(() => {
     db.Datasets.bulkGet(ids).then((results) => setDatasets(results));
   }, [db.Datasets, ids]);
-  console.log('FOR ids ', ids, datasets);
   return datasets;
 }
 
