@@ -19,7 +19,7 @@ export default function Dataset({
 }) {
   const formattedName = hilightMatches(dataset.name, query);
   const similarDatasets = useGetSimilarDatasets(dataset);
-  const joinNumber = useGetJoinNumbers(dataset.id, dataset.portal_id);
+  const joinNumber = useGetJoinNumbers(dataset);
   const formattedDescription = hilightMatches(dataset.description, query);
 
   return (

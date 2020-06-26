@@ -60,16 +60,23 @@ export function useJoinableDatasets(dataset) {
   return potentialJoins;
 }
 
-export function useGetJoinNumbers(datasetID, portalID) {
+export function useGetJoinNumbers(dataset) {
   const [joinNumbers, setJoinNumbers] = useState({});
   useEffect(() => {
+    const portal = dataset
+      ? Object.entries(Portals).find(
+          ([id, p]) => p.socrataDomain === dataset.portal,
+        )
+      : null;
+    const portalID = portal ? portal[0] : null;
+
     fetch(
       `${process.env.PUBLIC_URL}/metadata/${portalID}/potential_join_numbers.json`,
     )
       .then((r) => r.json())
       .then((r) => setJoinNumbers(r));
-  }, [portalID]);
-  return datasetID in joinNumbers ? joinNumbers[datasetID] : 0;
+  }, [dataset]);
+  return dataset.id in joinNumbers ? joinNumbers[dataset.id] : 0;
 }
 
 export function useGetSimilarDatasets(dataset) {
