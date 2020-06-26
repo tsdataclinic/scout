@@ -21,7 +21,7 @@ function useFilterType(collectionName, domain) {
         setCollection(result);
       });
     }
-  }, [actualDomain, collectionName, databaseRefreshedAt]);
+  }, [actualDomain, collectionName, databaseRefreshedAt, db]);
   return collection;
 }
 export function useTags() {
@@ -105,7 +105,7 @@ export function useDatasetCount() {
 
   useEffect(() => {
     db.Datasets.count().then((count) => setNoDatasets(count));
-  }, [databaseRefreshedAt]);
+  }, [databaseRefreshedAt, db.Datasets]);
   return noDatasets;
 }
 
@@ -117,7 +117,7 @@ export function useDataset(datasetID) {
     if (datasetID) {
       db.Datasets.get({ id: datasetID }).then((dataset) => setDataset(dataset));
     }
-  }, [datasetID, databaseRefreshedAt]);
+  }, [datasetID, databaseRefreshedAt, db.Datasets]);
   return dataset;
 }
 
@@ -127,7 +127,7 @@ export function useGetDatasetsByIds(ids) {
 
   useEffect(() => {
     db.Datasets.bulkGet(ids).then((results) => setDatasets(results));
-  }, [databaseRefreshedAt, ids]);
+  }, [databaseRefreshedAt, db.Datasets, ids]);
   return datasets;
 }
 

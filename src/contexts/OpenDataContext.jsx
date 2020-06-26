@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import { debounce } from '../utils/utils';
 import lunr from 'lunr';
 import Dexie from 'dexie';
+import { debounce } from '../utils/utils';
 import {
   getManifest,
   getCategories,

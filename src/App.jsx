@@ -24,7 +24,7 @@ import 'react-router-modal/css/react-router-modal.css';
 
 function App() {
   const baseName = process.env.PUBLIC_URL
-    ? '/' + process.env.PUBLIC_URL.split('/').slice(-1)[0]
+    ? `/${process.env.PUBLIC_URL.split('/').slice(-1)[0]}`
     : '';
   console.log('base name is ', baseName);
   return (
@@ -32,7 +32,7 @@ function App() {
       <Router basename={baseName}>
         <ModalContainer />
         <Route exact path="/">
-          <Redirect from="/" to="/NYC" />
+          {!sessionStorage.redirect && <Redirect from="/" to="/NYC" />}
         </Route>
         <Route
           path="/:portal"
