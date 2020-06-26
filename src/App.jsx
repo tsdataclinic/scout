@@ -23,9 +23,13 @@ import { OpenDataProvider } from './contexts/OpenDataContext';
 import 'react-router-modal/css/react-router-modal.css';
 
 function App() {
+  const baseName = process.env.PUBLIC_URL
+    ? '/' + process.env.PUBLIC_URL.split('/').slice(-1)[0]
+    : '';
+  console.log('base name is ', baseName);
   return (
     <div className="App">
-      <Router basename={process.env.PUBLIC_URL}>
+      <Router basename={baseName}>
         <ModalContainer />
         <Route exact path="/">
           <Redirect from="/" to="/NYC" />

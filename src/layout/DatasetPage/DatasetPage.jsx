@@ -7,7 +7,7 @@ import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
 import '../../components/Loading/Loading.scss';
 import usePageView from '../../hooks/analytics';
 import { useCurrentCollection } from '../../hooks/collections';
-import { Portals } from '..//../portals';
+import { Portals } from '../../portals';
 import {
   useDataset,
   useJoinableDatasets,

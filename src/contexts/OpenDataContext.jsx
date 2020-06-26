@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import { debounce } from '../utils/utils';
 import lunr from 'lunr';
 import Dexie from 'dexie';
 import {
@@ -138,6 +139,7 @@ export const AppContext = createContext();
 const initalState = {
   stateLoaded: false,
   lastUpdated: [],
+  databaseRefreshedAt: null,
 };
 
 const reducer = (state, action) => {
@@ -145,7 +147,8 @@ const reducer = (state, action) => {
   switch (type) {
     case 'HYDRATE_STATE':
       return { ...state, ...payload };
-
+    case 'DATABASE_UPDATED':
+      return { ...state, databaseRefreshedAt: new Date() };
     case 'SET_LOADED':
       return { ...state, stateLoaded: true };
     case 'SET_PORTAL_UPDATED':
@@ -174,6 +177,9 @@ const updateManifestFromSocrata = (dispatch, portal) => {
     loadCategoriesIntoDB(categories, portal.socrataDomain);
     loadColumnsIntoDB(columns, portal.socrataDomain);
 
+    dispatch({
+      type: 'DATABASE_UPDATED',
+    });
     dispatch({
       type: 'SET_LOADED',
     });
@@ -249,6 +255,23 @@ export const OpenDataProvider = ({ children, portal }) => {
       }
     });
   }, [portal]);
+
+  // useEffect(() => {
+  //   const refreshDB = () => {
+  //     // debounce(() => {
+  //     dispatch({
+  //       type: 'DATABASE_UPDATED',
+  //     });
+  //     // }, 1000);
+  //   };
+  //   db.Datasets.hook('updating', refreshDB);
+  //   db.Datasets.hook('creating', refreshDB);
+
+  //   return () => {
+  //     db.Datasets.hook('updating').unsubscribe(refreshDB);
+  //     db.Datasets.hook('creating').unsubscribe(refreshDB);
+  //   };
+  // }, []);
 
   // If our datasets change, update the cahced version
   const { datasets, stateLoaded, lastUpdated } = state;
