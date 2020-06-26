@@ -36,6 +36,20 @@ def generate_similarity(datasets):
         
     return results
 
+def generate_join_columns(datasets):
+    result = {}
+    for dataset in datasets:
+        dataset_id = dataset['resource']['id']
+        dataset_column_names = dataset['resource']['columns_field_name']
+        matches = set()
+        for comp in datasets:
+            for col in comp['resource']['columns_field_name']:
+                if col in dataset_column_names:
+                    matches.add(comp['resource']['id'])
+                    break
+        result[dataset_id] = max(len(matches) - 1, 0)
+    return result  
+
 def load_metadata(portal):
     portal_short = '.'.join(portal.split(".")[0:-1])
     with open(f'metadata/{portal_short}.json','r') as f:
@@ -68,6 +82,11 @@ if __name__ =='__main__':
         base_path.mkdir(exist_ok=True)
         
         datasets = load_metadata(p['socrata'])
-        results = generate_similarity(datasets)
+        similar = generate_similarity(datasets)
+        join_columns = generate_join_columns(datasets)
+        
+        with open(base_path / 'potential_join_numbers.json', 'w') as f:
+            json.dump(join_columns,f)
+        
         with open(base_path / 'similarity_metrics.json', 'w') as f:
-            json.dump(results,f)
+            json.dump(similar,f)
