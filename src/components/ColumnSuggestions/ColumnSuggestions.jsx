@@ -21,7 +21,6 @@ export default function ColumnSuggestions({ column, joins, dataset }) {
       : joins,
     10,
   );
-
   useEffect(() => {
     if (collapsed === false && overlaps.length === 0) {
       if (joins.length > 0) {
@@ -54,6 +53,16 @@ export default function ColumnSuggestions({ column, joins, dataset }) {
     }
   }, [column, dataset, joins, collapsed, overlaps]);
 
+  if (column === 'non_ell_principal') {
+    console.log(
+      'STATS ',
+      joins.length,
+      '  ',
+      overlaps.length,
+      ' ',
+      pagedJoins.length,
+    );
+  }
   return (
     <div className={`column-suggestions ${collapsed ? 'collapsed' : ''}`}>
       <div

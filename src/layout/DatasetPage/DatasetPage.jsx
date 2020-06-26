@@ -27,11 +27,13 @@ export default function DatasetPage({ match }) {
   const parentDataset = useDataset(parentId);
   const joins = useJoinableDatasets(dataset);
   const similarDatasetSuggestions = useGetSimilarDatasets(dataset);
+  // const similarDatasets = [];
 
   const similarDatasets = useGetDatasetsByIds(
     similarDatasetSuggestions.map((d) => d.dataset),
   );
 
+  console.log('redrawing dataset page');
   const [activeTab, setActiveTab] = useState('joins');
 
   const portal = dataset

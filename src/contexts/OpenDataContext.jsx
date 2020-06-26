@@ -204,9 +204,6 @@ export const OpenDataProvider = ({ children, portal }) => {
   // socrata API
   //
   //
-  useEffect(() => {
-    console.log('state is ', state);
-  }, [state]);
 
   // useEffect(()=>{
   //   db.Datasets.hook('creating',()=>{
@@ -233,10 +230,8 @@ export const OpenDataProvider = ({ children, portal }) => {
               : null,
           )
         ) {
-          console.log(' UPDATING CACHE');
           updateManifestFromSocrata(dispatch, portal);
         } else {
-          console.log('NOT UPDATING CACHE');
           dispatch({
             type: 'HYDRATE_STATE',
             payload: {

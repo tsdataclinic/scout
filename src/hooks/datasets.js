@@ -56,7 +56,7 @@ export function useJoinableDatasets(dataset) {
           setPotentialJoins(results);
         });
     }
-  }, [dataset, db.Datasets, databaseRefreshedAt]);
+  }, [dataset, databaseRefreshedAt]);
   return potentialJoins;
 }
 
@@ -92,6 +92,7 @@ export function useGetSimilarDatasets(dataset) {
         .then((r) => setSimilarityMetrics(r));
     }
   }, [portalID]);
+
   const result =
     dataset && similarityMetrics[dataset.id]
       ? similarityMetrics[dataset.id]
@@ -127,7 +128,7 @@ export function useGetDatasetsByIds(ids) {
 
   useEffect(() => {
     db.Datasets.bulkGet(ids).then((results) => setDatasets(results));
-  }, [databaseRefreshedAt, db.Datasets, ids]);
+  }, [databaseRefreshedAt, ids.join('_')]);
   return datasets;
 }
 

@@ -82,7 +82,6 @@ export default function HomePage() {
   //   sortDirection === 'asc',
   //   searchTerm,
   // );
-
   return (
     <div className="home-page">
       <div className={`filters ${collapseFilterBar ? 'collapsed' : ''}`}>
