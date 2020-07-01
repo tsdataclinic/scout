@@ -1,5 +1,3 @@
-import { Portals, DEFAULT_PORTAL } from '../portals';
-
 const socrataEndpoint = (domain) => {
   return `https://api.us.socrata.com/api/catalog/v1?domains=${domain}&search_context=${domain}`;
 };
@@ -39,13 +37,15 @@ export function getColumns(datasets) {
 
   datasets.forEach((dataset) => {
     if (dataset.resource.columns_name) {
-      dataset.resource.columns_name.forEach((col) => {
-        if (col in columnList) {
-          columnList[col] += 1;
-        } else {
-          columnList[col] = 1;
-        }
-      });
+      dataset.resource.columns_name
+        .map((c) => c.trim())
+        .forEach((col) => {
+          if (col in columnList) {
+            columnList[col] += 1;
+          } else {
+            columnList[col] = 1;
+          }
+        });
     }
   });
   return columnList;
@@ -119,11 +119,7 @@ export function getTagList(datasets) {
   return tagList;
 }
 
-export function getUniqueEntriesCount(
-  dataset,
-  column,
-  portalID = DEFAULT_PORTAL,
-) {
+export function getUniqueEntriesCount(dataset, column) {
   const domain = dataset.portal;
   return fetch(
     `https://${domain}/resource/${
@@ -131,7 +127,7 @@ export function getUniqueEntriesCount(
     }.json?$select=distinct|> select count(*) ${column.replace(/ /g, '_')}`,
   ).then((r) => r.json());
 }
-export function getUniqueEntries(dataset, column, portalID = DEFAULT_PORTAL) {
+export function getUniqueEntries(dataset, column) {
   const domain = dataset.portal;
 
   return fetch(

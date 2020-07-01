@@ -1,7 +1,12 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import lunr from 'lunr';
-import Dexie from 'dexie';
-import { debounce } from '../utils/utils';
+import {
+  db,
+  loadCategoriesIntoDB,
+  loadColumnsIntoDB,
+  loadDatasetsIntoDB,
+  loadTagsIntoDB,
+  loadDepartmentsIntoDB,
+} from '../database';
 import {
   getManifest,
   getCategories,
@@ -9,137 +14,6 @@ import {
   getTagList,
   getDepartments,
 } from '../utils/socrata';
-
-const db = new Dexie('SocrataCache');
-new Dexie('Datasets');
-
-const index = lunr(() => {});
-
-const getTokenStream = (text) =>
-  index.pipeline.run(lunr.tokenizer(text)).map((token) => token.str);
-
-db.version(1).stores({
-  Datasets:
-    'id, name,portal, description, department, updatedAt, createdAt, *columns, *columnFields, *tags, classification, downloads, views, updateFrequency, updatedAutomation, *tokens',
-});
-
-new Dexie('Tags');
-db.version(1).stores({
-  Tags: 'name, count, portal',
-});
-
-new Dexie('Categories');
-db.version(1).stores({
-  Categories: 'name, count, portal',
-});
-
-new Dexie('Departments');
-db.version(1).stores({
-  Departments: 'name, count, portal',
-});
-
-new Dexie('Columns');
-db.version(1).stores({
-  Columns: 'name, count, portal',
-});
-
-db.version(1).stores({
-  SocrataCache: '++id, portal',
-});
-
-function loadDepartmentsIntoDB(departments, portal) {
-  db.Departments.bulkPut(
-    Object.entries(departments).map(([department, count]) => ({
-      name: department,
-      count,
-      portal,
-    })),
-  );
-}
-
-function loadCategoriesIntoDB(categories, portal) {
-  db.Categories.bulkPut(
-    Object.entries(categories).map(([category, count]) => ({
-      name: category,
-      count,
-      portal,
-    })),
-  );
-}
-function loadTagsIntoDB(tags, portal) {
-  db.Tags.bulkPut(
-    Object.entries(tags).map(([tag, count]) => ({
-      name: tag,
-      count,
-      portal,
-    })),
-  );
-}
-
-function loadColumnsIntoDB(columns, portal) {
-  db.Columns.bulkPut(
-    Object.entries(columns).map(([column, count]) => ({
-      name: column,
-      count,
-      portal,
-    })),
-  );
-}
-
-function loadDatasetsIntoDB(datasets) {
-  let start = window.performance.now();
-  const serializedDatasets = datasets.map((dataset) => {
-    // if (dataset.resource.id === 'c5dk-m6ea') {
-    //   debugger;
-    // }
-    const { resource, metadata, classification } = dataset;
-    const { domain_metadata } = classification;
-
-    const updatedAutomation = domain_metadata?.find(
-      ({ key, value }) => key === 'Update_Automation' && value === 'No',
-    )?.value;
-
-    const updateFrequency = domain_metadata?.find(
-      ({ key }) => key === 'Update_Update-Frequency',
-    )?.value;
-
-    const department = domain_metadata?.find(
-      ({ key }) => key === 'Dataset-Information_Agency',
-    )?.value;
-
-    return {
-      id: resource.id,
-      name: resource.name,
-      portal: metadata.domain,
-      columns: resource.columns_name,
-      columnFields: resource.columns_field_name,
-      columnTypes: resource.columns_datatype,
-      metaDataUpdatedAt: resource.metadata_updated_at,
-      updatedAt: resource.data_updated_at,
-      createdAt: resource.createdAt,
-      description: resource.description,
-      views: resource.page_views.page_views_total,
-      categories: classification.categories,
-      domainCategory: classification.domainCategory,
-      tags: classification.domain_tags,
-      type: resource.type,
-      updateFrequency,
-      department,
-      permaLink: dataset.permalink,
-      parentDatasetID: resource.parent_fxf[0],
-      updatedAutomation,
-      owner: dataset.owner.display_name,
-      tokens: getTokenStream(resource.name + resource.description),
-    };
-  });
-  let end = window.performance.now();
-  console.log(`Serializing datasets for DB ${(end - start) / 1000.0} s`);
-
-  start = window.performance.now();
-  db.Datasets.bulkPut(serializedDatasets);
-  end = window.performance.now();
-  console.log(`Doing the bulk put ${(end - start) / 1000.0} s`);
-}
 
 export const AppContext = createContext();
 
@@ -185,6 +59,9 @@ const updateManifestFromSocrata = (dispatch, portal) => {
 
     start = window.performance.now();
     loadDatasetsIntoDB(manifest, portal.socrataDomain);
+    dispatch({
+      type: 'DATABASE_UPDATED',
+    });
     end = window.performance.now();
     console.log(`Loading datasets in to DB ${(end - start) / 1000.0} s`);
 
@@ -298,7 +175,7 @@ export const OpenDataProvider = ({ children, portal }) => {
   // }, []);
 
   // If our datasets change, update the cahced version
-  const { datasets, stateLoaded, lastUpdated } = state;
+  const { stateLoaded, lastUpdated } = state;
   useEffect(() => {
     if (stateLoaded) {
       db.SocrataCache.put({
