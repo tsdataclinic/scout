@@ -47,7 +47,9 @@
     "husky": "1.2.0",
     "lint-staged": "^9.2.1",
     "prettier": "^1.19.1",
-    "typescript": "^3.7.4"
+    "react-app-rewired": "^2.1.6",
+    "typescript": "^3.7.4",
+    "worker-loader": "^2.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
