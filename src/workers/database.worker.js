@@ -13,6 +13,7 @@ import {
   getDepartments,
 } from '../utils/socrata';
 
+// eslint-disable-next-line
 self.addEventListener('message', work);
 
 function work(event) {
@@ -23,19 +24,24 @@ function work(event) {
   const departments = getDepartments(manifest);
   const columns = getColumns(manifest);
   loadDatasetsIntoDB(manifest, portal.socrataDomain).then(() => {
-    this.postMessage('database_updated');
-    loadTagsIntoDB(tagList, portal.socrataDomain).then(() => {
-      this.postMessage('database_updated');
-      loadDepartmentsIntoDB(departments, portal.socrataDomain).then(() => {
-        this.postMessage('database_updated');
-        loadCategoriesIntoDB(categories, portal.socrataDomain).then(() => {
-          this.postMessage('database_updated');
-          loadColumnsIntoDB(columns, portal.socrataDomain).then(() => {
-            this.postMessage('database_updated');
-            this.postMessage('all_loaded');
+    this.postMessage({ event: 'database_updated', table: 'datasets' });
+    setTimeout(() => {
+      loadTagsIntoDB(tagList, portal.socrataDomain).then(() => {
+        this.postMessage({ event: 'database_updated', table: 'tags' });
+        loadDepartmentsIntoDB(departments, portal.socrataDomain).then(() => {
+          this.postMessage({ event: 'database_updated', table: 'departments' });
+          loadCategoriesIntoDB(categories, portal.socrataDomain).then(() => {
+            this.postMessage({
+              event: 'database_updated',
+              table: 'categories',
+            });
+            loadColumnsIntoDB(columns, portal.socrataDomain).then(() => {
+              this.postMessage({ event: 'database_updated', table: 'columns' });
+              this.postMessage('all_loaded');
+            });
           });
         });
       });
-    });
+    }, 4000);
   });
 }

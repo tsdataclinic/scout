@@ -41,7 +41,7 @@ const updateManifestFromSocrata = (dispatch, portal) => {
     worker.postMessage({ manifest, portal });
     worker.addEventListener('message', (message) => {
       console.log('worker message ', message);
-      if (message.data === 'database_updated') {
+      if (message.data.event === 'database_updated') {
         dispatch({
           type: 'DATABASE_UPDATED',
         });
@@ -49,7 +49,7 @@ const updateManifestFromSocrata = (dispatch, portal) => {
           type: 'SET_LOADED',
         });
       }
-      if (message.data === 'all_loaded') {
+      if (message.data.event === 'all_loaded') {
         dispatch({
           type: 'DATABASE_UPDATED',
         });
