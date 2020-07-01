@@ -3,7 +3,6 @@ import useLunr from './useLunr';
 import { useStateValue } from '../contexts/OpenDataContext';
 import { getUniqueEntries } from '../utils/socrata';
 import { Portals } from '../portals';
-import { constructCollectionLink } from '../utils/formatters';
 
 export function useStateLoaded() {
   const [{ stateLoaded }] = useStateValue();
@@ -56,7 +55,7 @@ export function useJoinableDatasets(dataset) {
           setPotentialJoins(results);
         });
     }
-  }, [dataset, databaseRefreshedAt]);
+  }, [dataset, databaseRefreshedAt, db.Datasets]);
   return potentialJoins;
 }
 
@@ -65,7 +64,7 @@ export function useGetJoinNumbers(dataset) {
   useEffect(() => {
     const portal = dataset
       ? Object.entries(Portals).find(
-          ([id, p]) => p.socrataDomain === dataset.portal,
+          ([, p]) => p.socrataDomain === dataset.portal,
         )
       : null;
     const portalID = portal ? portal[0] : null;
@@ -82,7 +81,7 @@ export function useGetJoinNumbers(dataset) {
 export function useGetSimilarDatasets(dataset) {
   const portal = dataset
     ? Object.entries(Portals).find(
-        ([id, p]) => p.socrataDomain === dataset.portal,
+        ([, p]) => p.socrataDomain === dataset.portal,
       )
     : null;
 
@@ -135,7 +134,7 @@ export function useGetDatasetsByIds(ids) {
 
   useEffect(() => {
     db.Datasets.bulkGet(ids).then((results) => setDatasets(results));
-  }, [databaseRefreshedAt, ids.join('_')]);
+  }, [databaseRefreshedAt, db.Datasets, ids]);
   return datasets;
 }
 
@@ -200,6 +199,7 @@ export function useDatasetsDB({
       setResults([]);
       setDatasetCount(0);
     } else {
+      const start = window.performance.now();
       if (term) {
         baseQuery = db.Datasets.where('tokens')
           .startsWithIgnoreCase(term)
@@ -223,6 +223,8 @@ export function useDatasetsDB({
           );
       }
       baseQuery.toArray().then((results) => {
+        const end = window.performance.now();
+        console.log(`Query time is ${(end - start) / 1000.0} s`);
         setDatasetCount(results.length);
         setResults(results);
       });

@@ -58,7 +58,6 @@ const getTokenStream = (text, index) =>
 export function loadDatasetsIntoDB(datasets) {
   const index = lunr(() => {});
 
-  let start = window.performance.now();
   const serializedDatasets = datasets.map((dataset) => {
     // if (dataset.resource.id === 'c5dk-m6ea') {
     //   debugger;
@@ -103,11 +102,6 @@ export function loadDatasetsIntoDB(datasets) {
       tokens: getTokenStream(resource.name + resource.description, index),
     };
   });
-  let end = window.performance.now();
-  console.log(`Serializing datasets for DB ${(end - start) / 1000.0} s`);
 
-  start = window.performance.now();
   db.Datasets.bulkPut(serializedDatasets);
-  end = window.performance.now();
-  console.log(`Doing the bulk put ${(end - start) / 1000.0} s`);
 }

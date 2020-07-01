@@ -1,19 +1,8 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import {
-  db,
-  loadCategoriesIntoDB,
-  loadColumnsIntoDB,
-  loadDatasetsIntoDB,
-  loadTagsIntoDB,
-  loadDepartmentsIntoDB,
-} from '../database';
-import {
-  getManifest,
-  getCategories,
-  getColumns,
-  getTagList,
-  getDepartments,
-} from '../utils/socrata';
+import { db } from '../database';
+import { getManifest } from '../utils/socrata';
+
+import DBWorker from '../workers/database.worker';
 
 export const AppContext = createContext();
 
@@ -47,51 +36,29 @@ const reducer = (state, action) => {
 };
 
 const updateManifestFromSocrata = (dispatch, portal) => {
+  const worker = new DBWorker();
   getManifest(portal.socrataDomain).then((manifest) => {
-    let start = window.performance.now();
-    const tagList = getTagList(manifest);
+    worker.postMessage({ manifest, portal });
+    worker.addEventListener('message', (message) => {
+      console.log('worker message ', message);
+      if (message.data === 'database_updated') {
+        dispatch({
+          type: 'DATABASE_UPDATED',
+        });
+        dispatch({
+          type: 'SET_LOADED',
+        });
+      }
+      if (message.data === 'all_loaded') {
+        dispatch({
+          type: 'DATABASE_UPDATED',
+        });
 
-    const categories = getCategories(manifest);
-    const departments = getDepartments(manifest);
-    const columns = getColumns(manifest);
-    let end = window.performance.now();
-    console.log(`Generating categories etc ${(end - start) / 1000.0} s`);
-
-    start = window.performance.now();
-    loadDatasetsIntoDB(manifest, portal.socrataDomain);
-    dispatch({
-      type: 'DATABASE_UPDATED',
-    });
-    end = window.performance.now();
-    console.log(`Loading datasets in to DB ${(end - start) / 1000.0} s`);
-
-    start = window.performance.now();
-
-    loadTagsIntoDB(tagList, portal.socrataDomain);
-    end = window.performance.now();
-    console.log(`Loading tags in to DB ${(end - start) / 1000.0} s`);
-    start = window.performance.now();
-    loadDepartmentsIntoDB(departments, portal.socrataDomain);
-    end = window.performance.now();
-    console.log(`Loading departments in to DB ${(end - start) / 1000.0} s`);
-    start = window.performance.now();
-    loadCategoriesIntoDB(categories, portal.socrataDomain);
-    end = window.performance.now();
-    console.log(`Loading Categories in to DB ${(end - start) / 1000.0} s`);
-    start = window.performance.now();
-    loadColumnsIntoDB(columns, portal.socrataDomain);
-    end = window.performance.now();
-    console.log(`Loading columns in to DB ${(end - start) / 1000.0} s`);
-
-    dispatch({
-      type: 'DATABASE_UPDATED',
-    });
-    dispatch({
-      type: 'SET_LOADED',
-    });
-    dispatch({
-      type: 'SET_PORTAL_UPDATED',
-      payload: portal.socrataDomain,
+        dispatch({
+          type: 'SET_PORTAL_UPDATED',
+          payload: portal.socrataDomain,
+        });
+      }
     });
   });
 };
