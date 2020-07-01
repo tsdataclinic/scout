@@ -14,7 +14,7 @@ db.version(1).stores({
 });
 
 export function loadDepartmentsIntoDB(departments, portal) {
-  db.Departments.bulkPut(
+  return db.Departments.bulkPut(
     Object.entries(departments).map(([department, count]) => ({
       name: department,
       count,
@@ -24,7 +24,7 @@ export function loadDepartmentsIntoDB(departments, portal) {
 }
 
 export function loadCategoriesIntoDB(categories, portal) {
-  db.Categories.bulkPut(
+  return db.Categories.bulkPut(
     Object.entries(categories).map(([category, count]) => ({
       name: category,
       count,
@@ -33,7 +33,7 @@ export function loadCategoriesIntoDB(categories, portal) {
   );
 }
 export function loadTagsIntoDB(tags, portal) {
-  db.Tags.bulkPut(
+  return db.Tags.bulkPut(
     Object.entries(tags).map(([tag, count]) => ({
       name: tag,
       count,
@@ -43,7 +43,7 @@ export function loadTagsIntoDB(tags, portal) {
 }
 
 export function loadColumnsIntoDB(columns, portal) {
-  db.Columns.bulkPut(
+  return db.Columns.bulkPut(
     Object.entries(columns).map(([column, count]) => ({
       name: column,
       count,
@@ -103,5 +103,5 @@ export function loadDatasetsIntoDB(datasets) {
     };
   });
 
-  db.Datasets.bulkPut(serializedDatasets);
+  return db.Datasets.bulkPut(serializedDatasets);
 }
