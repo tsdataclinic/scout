@@ -52,7 +52,7 @@ function work(event) {
                   event: 'database_updated',
                   table: 'columns',
                 });
-                this.postMessage('all_loaded');
+                this.postMessage({ event: 'all_loaded' });
               });
             });
           });
