@@ -87,6 +87,7 @@ function loadColumnsIntoDB(columns, portal) {
 }
 
 function loadDatasetsIntoDB(datasets) {
+  let start = window.performance.now();
   const serializedDatasets = datasets.map((dataset) => {
     // if (dataset.resource.id === 'c5dk-m6ea') {
     //   debugger;
@@ -131,7 +132,13 @@ function loadDatasetsIntoDB(datasets) {
       tokens: getTokenStream(resource.name + resource.description),
     };
   });
+  let end = window.performance.now();
+  console.log(`Serializing datasets for DB ${(end - start) / 1000.0} s`);
+
+  start = window.performance.now();
   db.Datasets.bulkPut(serializedDatasets);
+  end = window.performance.now();
+  console.log(`Doing the bulk put ${(end - start) / 1000.0} s`);
 }
 
 export const AppContext = createContext();
@@ -167,15 +174,37 @@ const reducer = (state, action) => {
 
 const updateManifestFromSocrata = (dispatch, portal) => {
   getManifest(portal.socrataDomain).then((manifest) => {
+    let start = window.performance.now();
     const tagList = getTagList(manifest);
+
     const categories = getCategories(manifest);
     const departments = getDepartments(manifest);
     const columns = getColumns(manifest);
+    let end = window.performance.now();
+    console.log(`Generating categories etc ${(end - start) / 1000.0} s`);
+
+    start = window.performance.now();
     loadDatasetsIntoDB(manifest, portal.socrataDomain);
+    end = window.performance.now();
+    console.log(`Loading datasets in to DB ${(end - start) / 1000.0} s`);
+
+    start = window.performance.now();
+
     loadTagsIntoDB(tagList, portal.socrataDomain);
+    end = window.performance.now();
+    console.log(`Loading tags in to DB ${(end - start) / 1000.0} s`);
+    start = window.performance.now();
     loadDepartmentsIntoDB(departments, portal.socrataDomain);
+    end = window.performance.now();
+    console.log(`Loading departments in to DB ${(end - start) / 1000.0} s`);
+    start = window.performance.now();
     loadCategoriesIntoDB(categories, portal.socrataDomain);
+    end = window.performance.now();
+    console.log(`Loading Categories in to DB ${(end - start) / 1000.0} s`);
+    start = window.performance.now();
     loadColumnsIntoDB(columns, portal.socrataDomain);
+    end = window.performance.now();
+    console.log(`Loading columns in to DB ${(end - start) / 1000.0} s`);
 
     dispatch({
       type: 'DATABASE_UPDATED',
