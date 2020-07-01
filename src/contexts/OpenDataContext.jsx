@@ -9,7 +9,11 @@ export const AppContext = createContext();
 const initalState = {
   stateLoaded: false,
   lastUpdated: [],
-  databaseRefreshedAt: null,
+  datasetsRefreshedAt: null,
+  tagsRefreshedAt: null,
+  columnsRefreshedAt: null,
+  departmentsRefreshedAt: null,
+  categoriesRefreshedAt: null,
 };
 
 const reducer = (state, action) => {
@@ -17,8 +21,16 @@ const reducer = (state, action) => {
   switch (type) {
     case 'HYDRATE_STATE':
       return { ...state, ...payload };
-    case 'DATABASE_UPDATED':
-      return { ...state, databaseRefreshedAt: new Date() };
+    case 'DATASETS_UPDATED':
+      return { ...state, datasetsRefreshedAt: new Date() };
+    case 'TAGS_UPDATED':
+      return { ...state, tagsRefreshedAt: new Date() };
+    case 'COLUMNS_UPDATED':
+      return { ...state, columnsRefreshedAt: new Date() };
+    case 'DEPARTMENTS_UPDATED':
+      return { ...state, departmentsRefreshedAt: new Date() };
+    case 'CATEGORIES_UPDATED':
+      return { ...state, categoriesRefreshedAt: new Date() };
     case 'SET_LOADED':
       return { ...state, stateLoaded: true };
     case 'SET_PORTAL_UPDATED':
@@ -42,12 +54,40 @@ const updateManifestFromSocrata = (dispatch, portal) => {
     worker.addEventListener('message', (message) => {
       console.log('worker message ', message);
       if (message.data.event === 'database_updated') {
-        dispatch({
-          type: 'DATABASE_UPDATED',
-        });
-        dispatch({
-          type: 'SET_LOADED',
-        });
+        switch (message.data.table) {
+          case 'datasets':
+            dispatch({
+              type: 'DATASETS_UPDATED',
+            });
+            dispatch({
+              type: 'SET_LOADED',
+            });
+            dispatch({
+              type: 'SET_PORTAL_UPDATED',
+              payload: portal.socrataDomain,
+            });
+            break;
+          case 'tags':
+            dispatch({
+              type: 'TAGS_UPDATED',
+            });
+            break;
+          case 'departments':
+            dispatch({
+              type: 'DEPARTMENTS_UPDATED',
+            });
+            break;
+          case 'columns':
+            dispatch({
+              type: 'COLUMNS_UPDATED',
+            });
+            break;
+          case 'categories':
+            dispatch({
+              type: 'CATEGORIES_UPDATED',
+            });
+            break;
+        }
       }
       if (message.data.event === 'all_loaded') {
         dispatch({

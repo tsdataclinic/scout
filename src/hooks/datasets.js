@@ -11,7 +11,7 @@ export function useStateLoaded() {
 
 function useFilterType(collectionName, domain) {
   const [collection, setCollection] = useState([]);
-  const [{ portal, databaseRefreshedAt }, , db] = useStateValue();
+  const [{ portal, columnsRefreshedAt }, , db] = useStateValue();
 
   const actualDomain = domain || portal.socrataDomain;
   useEffect(() => {
@@ -20,7 +20,7 @@ function useFilterType(collectionName, domain) {
         setCollection(result);
       });
     }
-  }, [actualDomain, collectionName, databaseRefreshedAt, db]);
+  }, [actualDomain, collectionName, columnsRefreshedAt]);
   return collection;
 }
 export function useTags() {
@@ -108,33 +108,33 @@ export function useGetSimilarDatasets(dataset) {
 
 export function useDatasetCount() {
   const [noDatasets, setNoDatasets] = useState(0);
-  const [{ databaseRefreshedAt }, , db] = useStateValue();
+  const [{ datasetsRefreshedAt }, , db] = useStateValue();
 
   useEffect(() => {
     db.Datasets.count().then((count) => setNoDatasets(count));
-  }, [databaseRefreshedAt, db.Datasets]);
+  }, [datasetsRefreshedAt, db.Datasets]);
   return noDatasets;
 }
 
 export function useDataset(datasetID) {
   const [dataset, setDataset] = useState(null);
-  const [{ databaseRefreshedAt }, , db] = useStateValue();
+  const [{ datasetsRefreshedAt }, , db] = useStateValue();
 
   useEffect(() => {
     if (datasetID) {
       db.Datasets.get({ id: datasetID }).then((dataset) => setDataset(dataset));
     }
-  }, [datasetID, databaseRefreshedAt, db.Datasets]);
+  }, [datasetID, datasetsRefreshedAt]);
   return dataset;
 }
 
 export function useGetDatasetsByIds(ids) {
   const [datasets, setDatasets] = useState([]);
-  const [{ databaseRefreshedAt }, , db] = useStateValue();
+  const [{ datasetsRefreshedAt }, , db] = useStateValue();
 
   useEffect(() => {
     db.Datasets.bulkGet(ids).then((results) => setDatasets(results));
-  }, [databaseRefreshedAt, db.Datasets, ids]);
+  }, [datasetsRefreshedAt, db.Datasets, ids]);
   return datasets;
 }
 
@@ -191,7 +191,7 @@ export function useDatasetsDB({
   const [results, setResults] = useState([]);
   const [datasetCount, setDatasetCount] = useState(null);
 
-  const [{ portal, databaseRefreshedAt }, , db] = useStateValue();
+  const [{ portal, datasetsRefreshedAt }, , db] = useStateValue();
   const actualDomain = domain || portal.socrataDomain;
   useEffect(() => {
     let baseQuery = null;
@@ -234,13 +234,12 @@ export function useDatasetsDB({
     page,
     perPage,
     sortBy,
-    db.Datasets,
     tags,
     columns,
     categories,
     departments,
     actualDomain,
-    databaseRefreshedAt,
+    datasetsRefreshedAt,
   ]);
 
   return { datasets: results, datasetCount };
