@@ -26,7 +26,7 @@ function App() {
   const baseName = process.env.PUBLIC_URL
     ? `/${process.env.PUBLIC_URL.split('/').slice(-1)[0]}`
     : '';
-  console.log('base name is ', baseName);
+
   return (
     <div className="App">
       <Router basename={baseName}>

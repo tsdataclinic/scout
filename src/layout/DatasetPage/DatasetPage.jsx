@@ -33,7 +33,6 @@ export default function DatasetPage({ match }) {
     similarDatasetSuggestions.map((d) => d.dataset),
   );
 
-  console.log('redrawing dataset page');
   const [activeTab, setActiveTab] = useState('joins');
 
   const portal = dataset
@@ -44,6 +43,7 @@ export default function DatasetPage({ match }) {
     const page = `${window.location.pathname}/${activeTab}`;
     window.fathom('trackPageview', { path: page });
   }, [activeTab]);
+
   useEffect(() => {
     window.fathom('trackPageview', { path: '/about' });
   }, []);
@@ -57,6 +57,7 @@ export default function DatasetPage({ match }) {
       ).similarity,
     }))
     .slice(0, 10);
+
   const renderNotFound = (currentDataset, parentData) => {
     if (parentData) {
       return (
