@@ -23,25 +23,41 @@ function work(event) {
   const categories = getCategories(manifest);
   const departments = getDepartments(manifest);
   const columns = getColumns(manifest);
-  loadDatasetsIntoDB(manifest, portal.socrataDomain).then(() => {
-    this.postMessage({ event: 'database_updated', table: 'datasets' });
-    setTimeout(() => {
-      loadTagsIntoDB(tagList, portal.socrataDomain).then(() => {
-        this.postMessage({ event: 'database_updated', table: 'tags' });
-        loadDepartmentsIntoDB(departments, portal.socrataDomain).then(() => {
-          this.postMessage({ event: 'database_updated', table: 'departments' });
-          loadCategoriesIntoDB(categories, portal.socrataDomain).then(() => {
+  loadDatasetsIntoDB(manifest.slice(0, 200), portal.socrataDomain).then(() => {
+    this.postMessage({
+      event: 'database_updated',
+      table: 'datasets',
+    });
+    loadDatasetsIntoDB(manifest.slice(200), portal.socrataDomain).then(() => {
+      this.postMessage({
+        event: 'database_updated',
+        table: 'datasets',
+      });
+
+      setTimeout(() => {
+        loadTagsIntoDB(tagList, portal.socrataDomain).then(() => {
+          this.postMessage({ event: 'database_updated', table: 'tags' });
+          loadDepartmentsIntoDB(departments, portal.socrataDomain).then(() => {
             this.postMessage({
               event: 'database_updated',
-              table: 'categories',
+              table: 'departments',
             });
-            loadColumnsIntoDB(columns, portal.socrataDomain).then(() => {
-              this.postMessage({ event: 'database_updated', table: 'columns' });
-              this.postMessage('all_loaded');
+            loadCategoriesIntoDB(categories, portal.socrataDomain).then(() => {
+              this.postMessage({
+                event: 'database_updated',
+                table: 'categories',
+              });
+              loadColumnsIntoDB(columns, portal.socrataDomain).then(() => {
+                this.postMessage({
+                  event: 'database_updated',
+                  table: 'columns',
+                });
+                this.postMessage('all_loaded');
+              });
             });
           });
         });
-      });
-    }, 4000);
+      }, 1000);
+    });
   });
 }

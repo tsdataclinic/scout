@@ -20,7 +20,7 @@ function useFilterType(collectionName, domain) {
         setCollection(result);
       });
     }
-  }, [actualDomain, collectionName, columnsRefreshedAt]);
+  }, [actualDomain, collectionName, columnsRefreshedAt, db]);
   return collection;
 }
 export function useTags() {
@@ -124,7 +124,7 @@ export function useDataset(datasetID) {
     if (datasetID) {
       db.Datasets.get({ id: datasetID }).then((dataset) => setDataset(dataset));
     }
-  }, [datasetID, datasetsRefreshedAt]);
+  }, [datasetID, datasetsRefreshedAt, db.Datasets]);
   return dataset;
 }
 
@@ -229,18 +229,7 @@ export function useDatasetsDB({
         setResults(results);
       });
     }
-  }, [
-    term,
-    page,
-    perPage,
-    sortBy,
-    tags,
-    columns,
-    categories,
-    departments,
-    actualDomain,
-    datasetsRefreshedAt,
-  ]);
+  }, [term, page, perPage, sortBy, tags, columns, categories, departments, actualDomain, datasetsRefreshedAt, db.Datasets]);
 
   return { datasets: results, datasetCount };
 }
