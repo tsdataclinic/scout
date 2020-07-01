@@ -23,12 +23,12 @@ function work(event) {
   const categories = getCategories(manifest);
   const departments = getDepartments(manifest);
   const columns = getColumns(manifest);
-  loadDatasetsIntoDB(manifest.slice(0, 200), portal.socrataDomain).then(() => {
+  loadDatasetsIntoDB(manifest.slice(0, 100), portal.socrataDomain).then(() => {
     this.postMessage({
       event: 'database_updated',
       table: 'datasets',
     });
-    loadDatasetsIntoDB(manifest.slice(200), portal.socrataDomain).then(() => {
+    loadDatasetsIntoDB(manifest.slice(100), portal.socrataDomain).then(() => {
       this.postMessage({
         event: 'database_updated',
         table: 'datasets',
