@@ -182,6 +182,8 @@ export const OpenDataProvider = ({ children, portal }) => {
   // }, []);
 
   // If our datasets change, update the cahced version
+
+  useEffect(() => {}, [portal]);
   const { stateLoaded, lastUpdated } = state;
   useEffect(() => {
     if (stateLoaded) {

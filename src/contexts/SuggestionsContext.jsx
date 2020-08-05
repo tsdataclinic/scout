@@ -1,0 +1,39 @@
+import React, { createContext, useState, useEffect } from 'react';
+import { Portals } from '../portals';
+
+const defaultState = {
+  thematicSuggestions: [],
+  joinNumbers: [],
+};
+
+export const SuggestionsContext = createContext(defaultState);
+
+export const SuggestionsProvider = ({ portal, children }) => {
+  const [thematicSuggestions, setThematicSuggestions] = useState(null);
+  const [joinNumbers, setJoinNumbers] = useState(null);
+
+  const portalID = portal.urlSuffix;
+
+  useEffect(() => {
+    if (portalID) {
+      fetch(
+        `${process.env.PUBLIC_URL}/metadata/${portalID}/similarity_metrics.json`,
+      )
+        .then((r) => r.json())
+        .then((r) => setThematicSuggestions(r));
+
+      fetch(
+        `${process.env.PUBLIC_URL}/metadata/${portalID}/potential_join_numbers.json`,
+      )
+        .then((r) => r.json())
+        .then((r) => setJoinNumbers(r));
+    }
+  }, [portalID]);
+
+  console.log('thematic ', thematicSuggestions, ' join numbers ', joinNumbers);
+  return (
+    <SuggestionsContext.Provider value={{ thematicSuggestions, joinNumbers }}>
+      {children}
+    </SuggestionsContext.Provider>
+  );
+};

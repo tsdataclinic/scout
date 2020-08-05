@@ -34,6 +34,7 @@ export default function ColumnMatchTable({ dataset, joinColumns }) {
               dataset={dataset}
               column={column.column}
               joins={column.joins}
+              key={column.column}
             />
           ))
         : [...Array(6)].map((_, i) => (

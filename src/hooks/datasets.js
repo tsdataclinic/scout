@@ -1,8 +1,8 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useContext } from 'react';
 import useLunr from './useLunr';
 import { useStateValue } from '../contexts/OpenDataContext';
 import { getUniqueEntries } from '../utils/socrata';
-import { Portals } from '../portals';
+import { SuggestionsContext } from '../contexts/SuggestionsContext';
 
 export function useStateLoaded() {
   const [{ stateLoaded }] = useStateValue();
@@ -60,48 +60,16 @@ export function useJoinableDatasets(dataset) {
 }
 
 export function useGetJoinNumbers(dataset) {
-  const [joinNumbers, setJoinNumbers] = useState({});
-  useEffect(() => {
-    const portal = dataset
-      ? Object.entries(Portals).find(
-          ([, p]) => p.socrataDomain === dataset.portal,
-        )
-      : null;
-    const portalID = portal ? portal[0] : null;
-
-    fetch(
-      `${process.env.PUBLIC_URL}/metadata/${portalID}/potential_join_numbers.json`,
-    )
-      .then((r) => r.json())
-      .then((r) => setJoinNumbers(r));
-  }, [dataset]);
-  return dataset.id in joinNumbers ? joinNumbers[dataset.id] : 0;
+  const { joinNumbers } = useContext(SuggestionsContext);
+  return joinNumbers && dataset.id in joinNumbers ? joinNumbers[dataset.id] : 0;
 }
 
 export function useGetSimilarDatasets(dataset) {
-  const portal = dataset
-    ? Object.entries(Portals).find(
-        ([, p]) => p.socrataDomain === dataset.portal,
-      )
-    : null;
-
-  const portalID = portal ? portal[0] : null;
-
-  const [similarityMetrics, setSimilarityMetrics] = useState({});
-
-  useEffect(() => {
-    if (portalID) {
-      fetch(
-        `${process.env.PUBLIC_URL}/metadata/${portalID}/similarity_metrics.json`,
-      )
-        .then((r) => r.json())
-        .then((r) => setSimilarityMetrics(r));
-    }
-  }, [portalID]);
+  const { thematicSuggestions } = useContext(SuggestionsContext);
 
   const result =
-    dataset && similarityMetrics[dataset.id]
-      ? similarityMetrics[dataset.id]
+    dataset && thematicSuggestions && thematicSuggestions[dataset.id]
+      ? thematicSuggestions[dataset.id]
       : [];
   return result;
 }
@@ -122,7 +90,9 @@ export function useDataset(datasetID) {
 
   useEffect(() => {
     if (datasetID) {
-      db.Datasets.get({ id: datasetID }).then((dataset) => setDataset(dataset));
+      db.Datasets.get({ id: datasetID }).then((foundDataset) =>
+        setDataset(foundDataset),
+      );
     }
   }, [datasetID, datasetsRefreshedAt, db.Datasets]);
   return dataset;
@@ -229,7 +199,19 @@ export function useDatasetsDB({
         setResults(results);
       });
     }
-  }, [term, page, perPage, sortBy, tags, columns, categories, departments, actualDomain, datasetsRefreshedAt, db.Datasets]);
+  }, [
+    term,
+    page,
+    perPage,
+    sortBy,
+    tags,
+    columns,
+    categories,
+    departments,
+    actualDomain,
+    datasetsRefreshedAt,
+    db.Datasets,
+  ]);
 
   return { datasets: results, datasetCount };
 }

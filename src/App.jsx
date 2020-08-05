@@ -21,6 +21,7 @@ import { Portals, DEFAULT_PORTAL } from './portals';
 import { OpenDataProvider } from './contexts/OpenDataContext';
 
 import 'react-router-modal/css/react-router-modal.css';
+import { SuggestionsProvider } from './contexts/SuggestionsContext';
 
 function App() {
   const baseName = process.env.PUBLIC_URL
@@ -45,32 +46,34 @@ function App() {
               return <Redirect to={`/${DEFAULT_PORTAL}`} />;
             }
             return (
-              <OpenDataProvider portal={Portals[portal]}>
-                <div className="content">
-                  <Switch>
-                    <Route
-                      path={`${match.path}/dataset/:datasetID`}
-                      component={DatasetPage}
-                    />
-                    <Route
-                      path="/collection/:name/:datasetIDs"
-                      component={CollectionPage}
-                    />
+              <SuggestionsProvider portal={Portals[portal]}>
+                <OpenDataProvider portal={Portals[portal]}>
+                  <div className="content">
+                    <Switch>
+                      <Route
+                        path={`${match.path}/dataset/:datasetID`}
+                        component={DatasetPage}
+                      />
+                      <Route
+                        path="/collection/:name/:datasetIDs"
+                        component={CollectionPage}
+                      />
 
-                    <Route path="/about" component={AboutPage} />
-                    <Route path="/collections" component={CollectionsPage} />
+                      <Route path="/about" component={AboutPage} />
+                      <Route path="/collections" component={CollectionsPage} />
 
-                    <ModalRoute
-                      path="collection/new"
-                      parentPath="/"
-                      component={CreateCollectionModal}
-                    />
-                    <Route path="" component={HomePage} />
-                    <Redirect from="/" to="/CHI" />
-                  </Switch>
-                </div>
-                <SideNav />
-              </OpenDataProvider>
+                      <ModalRoute
+                        path="collection/new"
+                        parentPath="/"
+                        component={CreateCollectionModal}
+                      />
+                      <Route path="" component={HomePage} />
+                      <Redirect from="/" to="/CHI" />
+                    </Switch>
+                  </div>
+                  <SideNav />
+                </OpenDataProvider>
+              </SuggestionsProvider>
             );
           }}
         />
