@@ -4,6 +4,7 @@ import requests
 import math
 from pathlib import Path
 from tqdm import tqdm
+import pprint
 
 def get_portal_list():
     return requests.get('http://api.us.socrata.com/api/catalog/v1/domains').json()['results']
@@ -34,5 +35,18 @@ def download_all_portals(output_path = "metadata"):
         except Exception as e:
             print("Issue with gettting ", domain)
             print(e)
-            
-download_all_portals()
+
+def get_department(metadata): 
+  depts = [ v['value'] for v in metadata['classification']['domain_metadata'] if v['key']=='Dataset-Information_Agency'] 
+  if(len(depts) > 0): 
+    return depts[0] 
+  else: 
+    return None      
+
+# d = download_all_portals
+d = get_portal_metadata('data.cityofnewyork.us') 
+dcp = [ meta for meta in d if get_department(meta) == 'Department of City Planning (DCP)']
+pp = pprint.PrettyPrinter(indent=4)
+pp.print(dcp)
+
+# download_all_portals()
