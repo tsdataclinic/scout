@@ -1,5 +1,6 @@
 import lunr from 'lunr';
 import Dexie from 'dexie';
+import { datasetToDB } from './utils/socrata';
 
 export const db = new Dexie('SocrataCache');
 
@@ -59,47 +60,13 @@ export function loadDatasetsIntoDB(datasets) {
   const index = lunr(() => {});
 
   const serializedDatasets = datasets.map((dataset) => {
-    // if (dataset.resource.id === 'c5dk-m6ea') {
-    //   debugger;
-    // }
-    const { resource, metadata, classification } = dataset;
-    const { domain_metadata } = classification;
-
-    const updatedAutomation = domain_metadata?.find(
-      ({ key, value }) => key === 'Update_Automation' && value === 'No',
-    )?.value;
-
-    const updateFrequency = domain_metadata?.find(
-      ({ key }) => key === 'Update_Update-Frequency',
-    )?.value;
-
-    const department = domain_metadata?.find(
-      ({ key }) => key === 'Dataset-Information_Agency',
-    )?.value;
-
+    const dbFormat = datasetToDB(dataset);
     return {
-      id: resource.id,
-      name: resource.name,
-      portal: metadata.domain,
-      columns: resource.columns_name.map((c) => c.trim()),
-      columnFields: resource.columns_field_name.map((c) => c.trim()),
-      columnTypes: resource.columns_datatype,
-      metaDataUpdatedAt: resource.metadata_updated_at,
-      updatedAt: resource.data_updated_at,
-      createdAt: resource.createdAt,
-      description: resource.description,
-      views: resource.page_views.page_views_total,
-      categories: classification.categories,
-      domainCategory: classification.domainCategory,
-      tags: classification.domain_tags,
-      type: resource.type,
-      updateFrequency,
-      department,
-      permaLink: dataset.permalink,
-      parentDatasetID: resource.parent_fxf[0],
-      updatedAutomation,
-      owner: dataset.owner.display_name,
-      tokens: getTokenStream(resource.name + resource.description, index),
+      ...dbFormat,
+      tokens: getTokenStream(
+        dataset.resource.name + dataset.resource.description,
+        index,
+      ),
     };
   });
 

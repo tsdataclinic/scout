@@ -7,12 +7,14 @@ import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
 import '../../components/Loading/Loading.scss';
 import usePageView from '../../hooks/analytics';
 import { useCurrentCollection } from '../../hooks/collections';
+import { datasetToDBLite } from '../../utils/socrata';
 import { Portals } from '../../portals';
 import {
   useDataset,
   useJoinableDatasets,
   useGetSimilarDatasets,
   useGetDatasetsByIds,
+  useGetDatasetsByIdsRemote,
 } from '../../hooks/datasets';
 import './DatasetPage.scss';
 import ViewOnOpenPortal from '../../components/ViewOnOpenPortal/ViewOnOpenPortal';
@@ -27,10 +29,13 @@ export default function DatasetPage({ match }) {
   const parentDataset = useDataset(parentId);
   const joins = useJoinableDatasets(dataset);
   const similarDatasetSuggestions = useGetSimilarDatasets(dataset);
-  // const similarDatasets = [];
+
+  const similarDatasetsAway = useGetDatasetsByIdsRemote(
+    similarDatasetSuggestions.away,
+  );
 
   const similarDatasets = useGetDatasetsByIds(
-    similarDatasetSuggestions.map((d) => d.dataset),
+    similarDatasetSuggestions.home.map((d) => d.dataset),
   );
 
   const [activeTab, setActiveTab] = useState('joins');
@@ -52,11 +57,20 @@ export default function DatasetPage({ match }) {
     .filter((suggestion) => suggestion && suggestion.id !== datasetID)
     .map((suggestion) => ({
       dataset: suggestion,
-      similarity: similarDatasetSuggestions.find(
+      similarity: similarDatasetSuggestions.home.find(
         (s) => s.dataset === suggestion.id,
-      ).similarity,
+      )?.similarity,
     }))
     .slice(0, 10);
+
+  const mostSimilarDatasetsAway = similarDatasetsAway.map((suggestion) => ({
+    dataset: datasetToDBLite(suggestion),
+    similarity: similarDatasetSuggestions.away.find(
+      (s) => s.dataset === suggestion.id,
+    )?.similarity,
+  }));
+
+  // const mostSimilarDatasetsAway = similarDatasetsAway.filter(suggetsion);
 
   const renderNotFound = (currentDataset, parentData) => {
     if (parentData) {
@@ -176,10 +190,17 @@ export default function DatasetPage({ match }) {
           </button>
           <button
             type="button"
-            className={activeTab === 'theme' ? 'active' : ''}
-            onClick={() => setActiveTab('theme')}
+            className={activeTab === 'theme_home' ? 'active' : ''}
+            onClick={() => setActiveTab('theme_home')}
           >
             Thematically Similar
+          </button>
+          <button
+            type="button"
+            className={activeTab === 'theme_away' ? 'active' : ''}
+            onClick={() => setActiveTab('theme_away')}
+          >
+            Similar elsewhere
           </button>
         </div>
         {activeTab === 'joins' &&
@@ -198,15 +219,41 @@ export default function DatasetPage({ match }) {
           ) : (
             renderNotFound(dataset, parentDataset)
           ))}
-        {activeTab === 'theme' && (
+        {activeTab === 'theme_home' && (
           <>
             <p>
-              Dataset that are thematically similar based on name and
-              description
+              Dataset that are thematically similar within this portal based on
+              name and description
             </p>
             <div className="dataset-recomendataions-theme-list">
               {mostSimilarDatasets?.map((d) => (
                 <Dataset
+                  onAddToCollection={() =>
+                    addToCollection(collection.id, d.dataset.id)
+                  }
+                  onRemoveFromCollection={() =>
+                    removeFromCollection(collection.id, d.dataset.id)
+                  }
+                  showStats={false}
+                  dataset={d.dataset}
+                  similarity={d.similarity}
+                  inCollection={collection.datasets.includes(d.dataset.id)}
+                />
+              ))}
+            </div>
+          </>
+        )}
+
+        {activeTab === 'theme_away' && (
+          <>
+            <p>
+              Dataset that are thematically similar in other portals based on
+              name and description
+            </p>
+            <div className="dataset-recomendataions-theme-list">
+              {mostSimilarDatasetsAway?.map((d) => (
+                <Dataset
+                  showStats={false}
                   onAddToCollection={() =>
                     addToCollection(collection.id, d.dataset.id)
                   }

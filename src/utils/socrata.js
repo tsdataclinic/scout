@@ -149,3 +149,72 @@ export function getUniqueEntries(dataset, column) {
       return r.map((entry) => Object.values(entry)[0]);
     });
 }
+
+// Used to get the results from the direct API request in to the same format as the bulk request
+export const datasetToDBLite = (dataset) => {
+  return {
+    id: dataset.id,
+    name: dataset.name,
+    portal: dataset.domain,
+    columns: [], // resource.columns_name.map((c) => c.trim()),
+    columnFields: [], // resource.columns_field_name.map((c) => c.trim()),
+    columnTypes: [], // resource.columns_datatype,
+    metaDataUpdatedAt: dataset.metadataUpdatedAt,
+    updatedAt: dataset.updatedAt,
+    createdAt: dataset.createdAt,
+    description: dataset.description,
+    views: 0, // resource.page_views.page_views_total,
+    categories: [], // classification.categories,
+    domainCategory: null, // classification.domainCategory,
+    tags: [], // classification.domain_tags,
+    type: null,
+    updateFrequency: null,
+    department: null,
+    permaLink: null,
+    parentDatasetID: null,
+    updatedAutomation: null,
+    owner: null,
+  };
+};
+export const datasetToDB = (dataset) => {
+  const { resource, metadata, classification } = dataset;
+  const domain_metadata = classification
+    ? classification.domain_metadata
+    : null;
+
+  const updatedAutomation = domain_metadata?.find(
+    ({ key, value }) => key === 'Update_Automation' && value === 'No',
+  )?.value;
+
+  const updateFrequency = domain_metadata?.find(
+    ({ key }) => key === 'Update_Update-Frequency',
+  )?.value;
+
+  const department = domain_metadata?.find(
+    ({ key }) => key === 'Dataset-Information_Agency',
+  )?.value;
+
+  return {
+    id: resource.id,
+    name: resource.name,
+    portal: metadata.domain,
+    columns: resource.columns_name.map((c) => c.trim()),
+    columnFields: resource.columns_field_name.map((c) => c.trim()),
+    columnTypes: resource.columns_datatype,
+    metaDataUpdatedAt: resource.metadata_updated_at,
+    updatedAt: resource.data_updated_at,
+    createdAt: resource.createdAt,
+    description: resource.description,
+    views: resource.page_views.page_views_total,
+    categories: classification.categories,
+    domainCategory: classification.domainCategory,
+    tags: classification.domain_tags,
+    type: resource.type,
+    updateFrequency,
+    department,
+    permaLink: dataset.permalink,
+    parentDatasetID: resource.parent_fxf[0],
+    updatedAutomation,
+    owner: dataset.owner.display_name,
+  };
+};

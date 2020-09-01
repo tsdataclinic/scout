@@ -65,12 +65,17 @@ export function useGetJoinNumbers(dataset) {
 }
 
 export function useGetSimilarDatasets(dataset) {
+  const [result, setResult] = useState({ home: [], away: [] });
   const { thematicSuggestions } = useContext(SuggestionsContext);
 
-  const result =
-    dataset && thematicSuggestions && thematicSuggestions[dataset.id]
-      ? thematicSuggestions[dataset.id]
-      : [];
+  useEffect(() => {
+    if (dataset && thematicSuggestions && thematicSuggestions[dataset.id]) {
+      setResult(thematicSuggestions[dataset.id]);
+    } else {
+      setResult({ home: [], away: [] });
+    }
+  }, [dataset, thematicSuggestions]);
+
   return result;
 }
 
@@ -98,11 +103,32 @@ export function useDataset(datasetID) {
   return dataset;
 }
 
+export function useGetDatasetsByIdsRemote(datasets) {
+  const [result, setResult] = useState([]);
+
+  useEffect(() => {
+    if (datasets.length > 0) {
+      console.log('FETCHING AWAY METADATA');
+      Promise.all(
+        datasets.map((d) =>
+          fetch(
+            `https://${d.portal}/api/views/metadata/v1/${d.dataset}`,
+          ).then((r) => r.json()),
+        ),
+      ).then((r) => {
+        setResult(r);
+      });
+    }
+  }, [datasets]);
+  return result;
+}
+
 export function useGetDatasetsByIds(ids) {
   const [datasets, setDatasets] = useState([]);
   const [{ datasetsRefreshedAt }, , db] = useStateValue();
 
   useEffect(() => {
+    console.log('DOING BULK GET ', datasetsRefreshedAt);
     db.Datasets.bulkGet(ids).then((results) => setDatasets(results));
   }, [datasetsRefreshedAt, db.Datasets, ids]);
   return datasets;
@@ -173,7 +199,7 @@ export function useDatasetsDB({
       if (term) {
         baseQuery = db.Datasets.where('tokens')
           .startsWithIgnoreCase(term)
-          .filter((d) => filterDomain(actualDomain))
+          .filter((d) => filterDomain(d, actualDomain))
           .filter(
             (d) =>
               filterTags(d, tags) &&
@@ -192,11 +218,11 @@ export function useDatasetsDB({
               filterDepatment(d, departments),
           );
       }
-      baseQuery.toArray().then((results) => {
+      baseQuery.toArray().then((queryResults) => {
         const end = window.performance.now();
         console.log(`Query time is ${(end - start) / 1000.0} s`);
-        setDatasetCount(results.length);
-        setResults(results);
+        setDatasetCount(queryResults.length);
+        setResults(queryResults);
       });
     }
   }, [

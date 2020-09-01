@@ -16,9 +16,10 @@ export default function Dataset({
   viewInOpenPortal = false,
   similarity,
   query,
+  showStats = true,
 }) {
   const formattedName = hilightMatches(dataset.name, query);
-  const similarDatasets = useGetSimilarDatasets(dataset);
+  const similarDatasets = useGetSimilarDatasets(dataset).home;
   const joinNumber = useGetJoinNumbers(dataset);
   const formattedDescription = hilightMatches(dataset.description, query);
 
@@ -52,16 +53,18 @@ export default function Dataset({
         </p>
       )}
       {viewInOpenPortal && <ViewOnOpenPortal permalink={dataset.permalink} />}
-      <div className="comparison-stats">
-        <div className="comparison-stat dataset-join-thematic">
-          <ThematicIcon />
-          <span>{Math.max(similarDatasets.length - 1, 0)}</span>
+      {showStats && (
+        <div className="comparison-stats">
+          <div className="comparison-stat dataset-join-thematic">
+            <ThematicIcon />
+            <span>{Math.max(similarDatasets.length - 1, 0)}</span>
+          </div>
+          <div className="comparison-stat dataset-join-join">
+            <JoinIcon />
+            <span>{joinNumber}</span>
+          </div>
         </div>
-        <div className="comparison-stat dataset-join-join">
-          <JoinIcon />
-          <span>{joinNumber}</span>
-        </div>
-      </div>
+      )}
       <div className="dataset-description">{formattedDescription}</div>
       <div className="dataset-meta">
         <div className="update-frequency">

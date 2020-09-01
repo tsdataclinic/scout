@@ -1,8 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { Portals } from '../portals';
 
 const defaultState = {
-  thematicSuggestions: [],
+  thematicSuggestions: { home: [], away: [] },
   joinNumbers: [],
 };
 
