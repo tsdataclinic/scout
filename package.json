@@ -33,7 +33,6 @@
     "react-use-fuse": "^0.5.2",
     "uuid": "^3.4.0"
   },
-  "homepage": "https://tsdataclinic.github.io/scout",
   "devDependencies": {
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.0.1",
@@ -53,7 +52,7 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
+    "build": "CI=\"\" react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "predeploy": "yarn build",
