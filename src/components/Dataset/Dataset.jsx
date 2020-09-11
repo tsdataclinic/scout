@@ -4,6 +4,9 @@ import { hilightMatches, formatDate } from '../../utils/formatters';
 import { useGetSimilarDatasets, useGetJoinNumbers } from '../../hooks/datasets';
 import { ReactComponent as ThematicIcon } from '../../icons/joinable.svg';
 import { ReactComponent as JoinIcon } from '../../icons/thematicSimilarity.svg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { portalForDomain, iconForAdminLevel } from '../../portals';
+
 import DatasetLink from '../DatasetLink/DatasetLink';
 // import RawHTML from '../RawHTML/RawHTML';
 import ViewOnOpenPortal from '../ViewOnOpenPortal/ViewOnOpenPortal';
@@ -23,10 +26,20 @@ export default function Dataset({
   const joinNumber = useGetJoinNumbers(dataset);
   const formattedDescription = hilightMatches(dataset.description, query);
 
+  const portal = dataset ? portalForDomain(dataset.portal) : null;
+  const scaleIcon = portal ? iconForAdminLevel(portal.adminLevel) : null;
+
   return (
     <div className="dataset" key={dataset.id}>
       <div className="dataset-title">
-        <p>{dataset.attribution}</p>
+        <div className="hierarchy">
+          <div className="portal-info">
+            <FontAwesomeIcon icon={scaleIcon} />
+            <p>{portal?.name}</p>
+          </div>
+          <p>{dataset.department}</p>
+        </div>
+
         <DatasetLink className="title" dataset={dataset}>
           {/* <Link className="title" to={`/dataset/${dataset.id}`}> */}
           <h2>{formattedName}</h2>
