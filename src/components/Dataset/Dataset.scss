@@ -61,25 +61,6 @@
     align-items: center;
     margin-bottom: 10px;
   }
-  .portal-info {
-    display: flex;
-    box-sizing: border-box;
-    padding: 4px;
-    border: 2px solid #e7eef7;
-    border-radius: 2px;
-    align-items: center;
-    justify-content: center;
-    margin-right: 10px;
-    p {
-      padding: 0px;
-      margin: 0px;
-      color: #152935;
-      margin: 0px;
-    }
-    svg {
-      margin-right: 5px;
-    }
-  }
 }
 .comparison-stats {
   display: flex;
