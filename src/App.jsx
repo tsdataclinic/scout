@@ -67,7 +67,10 @@ function App() {
                         parentPath="/"
                         component={CreateCollectionModal}
                       />
-                      <Route path="" component={HomePage} />
+                      <Route
+                        path=""
+                        render={() => <HomePage portal={Portals[portal]} />}
+                      />
                       <Redirect from="/" to="/CHI" />
                     </Switch>
                   </div>

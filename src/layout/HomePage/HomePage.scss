@@ -3,129 +3,133 @@ $PaleGrey: #f1f1f2;
 $LightGrey: #b2b2b2;
 
 .home-page {
-    display: grid;
-    flex: 1;
-    display: flex;
-    flex-direction: row;
+  display: grid;
+  flex: 1;
+  display: flex;
+  flex-direction: row;
 }
 
 .filters {
-    grid-area: Filters;
+  grid-area: Filters;
+  display: flex;
+  flex-direction: column;
+  background-color: #1c232c;
+  color: white;
+  padding: 16px;
+  width: 300px;
+  transition: width 0.5s;
+  -ms-overflow-style: none;
+  .filters-scroll-area {
     display: flex;
     flex-direction: column;
-    background-color: #1c232c;
-    color: white;
-    padding: 16px;
-    width: 300px;
-    transition: width 0.5s;
-    -ms-overflow-style: none;
-    .filters-scroll-area {
-        display: flex;
-        flex-direction: column;
-        overflow-y: auto;
-        flex: 1;
-        &::-webkit-scrollbar {
-            display: none;
-        }
+    overflow-y: auto;
+    flex: 1;
+    &::-webkit-scrollbar {
+      display: none;
+    }
 
-        scrollbar-width: 0px;
+    scrollbar-width: 0px;
+  }
+  svg {
+    padding-left: 0px;
+  }
+  &.collapsed {
+    width: 64px;
+    position: relative;
+    h2 {
+      text-orientation: upright;
+      transform-origin: 1 1;
+      transform: rotate(-90deg);
+      position: absolute;
+      top: 60px;
+      left: 0px;
+      cursor: pointer;
     }
-    svg {
-        padding-left: 0px;
+    button {
+      display: flex;
+      justify-content: center;
+      svg {
+        margin: 0px 12px;
+      }
     }
-    &.collapsed {
-        width: 64px;
-        position: relative;
-        h2 {
-            text-orientation: upright;
-            transform-origin: 1 1;
-            transform: rotate(-90deg);
-            position: absolute;
-            top: 60px;
-            left: 0px;
-            cursor: pointer;
-        }
-        button {
-            display: flex;
-            justify-content: center;
-            svg {
-                margin: 0px 12px;
-            }
-        }
-    }
-    h2.filter-header {
-        width: 100%;
-        cursor: pointer;
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 50px;
-    }
+  }
+  h2.filter-header {
+    width: 100%;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 50px;
+  }
 }
 
 .datasets .pagination {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px 0 0;
-    font-size: 1.4rem;
-    padding: 20px;
-    li {
-        padding: 5px;
-        cursor: pointer;
-        &.disabled {
-            cursor: not-allowed;
-            color: $LightGrey;
-        }
-        &.active {
-            font-weight: 600;
-        }
-        &:hover {
-            text-decoration: underline;
-            &.disabled {
-                text-decoration: none;
-            }
-        }
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0 0;
+  font-size: 1.4rem;
+  padding: 20px;
+  li {
+    padding: 5px;
+    cursor: pointer;
+    &.disabled {
+      cursor: not-allowed;
+      color: $LightGrey;
     }
+    &.active {
+      font-weight: 600;
+    }
+    &:hover {
+      text-decoration: underline;
+      &.disabled {
+        text-decoration: none;
+      }
+    }
+  }
 }
 
 .count-and-sort {
-    box-sizing: border-box;
-    padding: 0px 20px;
-    display: flex;
-    justify-content: space-between;
+  box-sizing: border-box;
+  padding: 0px 20px;
+  display: flex;
+  justify-content: space-between;
 }
 .datasets {
-    grid-area: Datasets;
-    height: 100%;
+  grid-area: Datasets;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background-color: #f7fafc;
+  flex: 1;
+  overflow-y: auto;
+  .selector-and-search {
     display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    background-color: #f7fafc;
-    flex: 1;
-    overflow-y: auto;
-
+    flex-direction: row;
+    margin-bottom: 20px;
     .search {
-        text-align: center;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-        align-items: center;
-        padding: 10px 20px;
-        background-color: white;
-        border: 1px solid #b9c8d1;
-        box-shadow: 1px 1px 2px rgba(90, 117, 152, 0.3);
-        margin-bottom: 20px;
-        input {
-            box-sizing: border-box;
-            border: none;
-        }
+      flex: 1;
+      text-align: center;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: white;
+      border: 1px solid #b9c8d1;
+      box-shadow: 1px 1px 2px rgba(90, 117, 152, 0.3);
+      input {
+        box-sizing: border-box;
+        border: none;
+      }
     }
+  }
 }
 
 .dataset-list {
-    overflow-y: auto;
-    flex: 1;
-    box-sizing: border-box;
-    padding: 10px 20px;
+  overflow-y: auto;
+  flex: 1;
+  box-sizing: border-box;
+  padding: 10px 20px;
 }

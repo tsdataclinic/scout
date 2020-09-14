@@ -24,6 +24,8 @@ import DatasetsLoading from '../../components/Loading/DatasetsLoading/DatasetsLo
 import { usePaginationWithItems } from '../../hooks/pagination';
 import usePageView from '../../hooks/analytics';
 import MultiSelector from '../../components/MultiSelector/MultiSelector';
+import PortalSelector from '../../components/PortalSelector/PortalSelector';
+
 import {
   useSelectedCategories,
   useSelectedTags,
@@ -36,7 +38,7 @@ import {
   useFilterUIStates,
 } from '../../hooks/search';
 
-export default function HomePage() {
+export default function HomePage({ portal }) {
   usePageView();
   const categories = useCategories();
   const tags = useTags();
@@ -163,15 +165,19 @@ export default function HomePage() {
         )}
       </div>
       <div className="datasets">
-        <div className="search">
-          <FontAwesomeIcon size="lg" icon={faSearch} />
-          <DebounceInput
-            type="text"
-            onChange={(e) => setSearchTerm(e.target.value)}
-            value={searchTerm}
-            debounceTimeout={1000}
-            placeholder="Search for dataset"
-          />
+        <div className="selector-and-search">
+          <PortalSelector selectedPortal={portal} />
+
+          <div className="search">
+            <FontAwesomeIcon size="lg" icon={faSearch} />
+            <DebounceInput
+              type="text"
+              onChange={(e) => setSearchTerm(e.target.value)}
+              value={searchTerm}
+              debounceTimeout={1000}
+              placeholder="Search for dataset"
+            />
+          </div>
         </div>
         <div className="count-and-sort">
           <p>
