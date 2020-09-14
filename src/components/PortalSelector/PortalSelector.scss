@@ -1,0 +1,55 @@
+.portal-selector {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  //   padding: 10px 0px;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 168px;
+  box-shadow: 1px 1px 2px rgba(90, 117, 152, 0.3);
+
+  .show-menu {
+    width: 100%;
+    height: 100%;
+    padding: 0px;
+    margin: 0px;
+    .portal-info {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  button {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    background-color: white;
+    color: black;
+  }
+  .portal-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    z-index: 100;
+    background-color: white;
+    width: 100%;
+    li {
+      background-color: white;
+    }
+    li:hover {
+      background-color: #eaf7f9;
+    }
+    .portal-info {
+      padding: 10px;
+      justify-content: flex-start;
+      border: none;
+      cursor: pointer;
+      height: 100%;
+    }
+
+    &.show-menu {
+      display: block;
+    }
+  }
+}
