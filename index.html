@@ -4,7 +4,12 @@
     </head>
     <body>
         <script type="text/javascript">
-            window.location = window.location.href.replace('tsdataclinic.github.io/scout','scout.tsdataclinic.com')
+            let redirectURL = sessionStorage.redirect;
+            delete sessionStorage.redirect;
+            if(!redirectURL){
+                redirectURL = window.location.href 
+            }
+            window.location = redirectURL.replace('tsdataclinic.github.io/scout','scout.tsdataclinic.com')
         </script>
     </body>
 </html>
