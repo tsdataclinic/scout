@@ -16,7 +16,6 @@ import AboutPage from './layout/AboutPage/AboutPage';
 import CollectionsPage from './layout/CollectionsPage/CollectionsPage';
 import CreateCollectionModal from './components/CreateCollectionModal/CreateCollectionModal';
 import WelcomeModal from './components/WelcomeModal/WelcomeModal';
-import GHPagesRedirect from './components/GHPagesRedirect/GHPagesRedirect';
 
 import 'react-router-modal/css/react-router-modal.css';
 
@@ -46,7 +45,6 @@ function App() {
             <Redirect from="/" to="/" />
           </Switch>
         </div>
-        <GHPagesRedirect />
         <WelcomeModal />
       </Router>
     </div>
