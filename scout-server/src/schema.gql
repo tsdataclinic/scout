@@ -1,0 +1,102 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Dataset {
+  classification: String
+  createdAt: DateTime
+  datasetColumns: [DatasetColumn!]!
+  department: String
+  description: String!
+  downloads: Float
+  id: String!
+  metadataUpdatedAt: DateTime
+  name: String!
+  permalink: String
+  portal: Portal!
+  thematicallySimilarDatasets: [Dataset!]!
+  thematicSuggestions: [ThematicSuggestion!]!
+  type: String
+  updatedAt: DateTime
+  updatedAutomation: Boolean
+  updateFrequency: String
+  views: Float
+}
+
+type DatasetColumn {
+  dataset: Dataset!
+  description: String!
+  field: String!
+  id: Float!
+  joinSuggestions(global: Boolean = false): [JoinSuggestion!]!
+  name: String!
+  portal: Portal!
+  type: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type FieldCount {
+  field: String!
+  occurrences: Float!
+}
+
+type JoinSuggestion {
+  column: DatasetColumn!
+  potentialOverlap: Float!
+}
+
+type PagedDatasets {
+  datasets: [Dataset!]!
+  total: Float!
+}
+
+type PagedFieldCount {
+  items: [FieldCount!]!
+  total: Float!
+}
+
+type Portal {
+  abbreviation: String!
+  adminLevel: String!
+  baseURL: String!
+  datasetColumns: [DatasetColumn!]!
+  datasetCount: Float!
+  datasets(limit: Float, offset: Float): [Dataset!]!
+  id: String!
+  logo: String
+  name: String!
+  searchDatasets(limit: Float, offset: Float, search: String): PagedDatasets!
+  uniqueColumnFields(limit: Float, offset: Float, search: String): PagedFieldCount!
+}
+
+type Query {
+  dataset(id: String!): Dataset!
+  datasetColumn(id: String!): Dataset!
+  datasetColumns: [Dataset!]!
+  datasets(limit: Float, offset: Float): [Dataset!]!
+  portal(id: String!): Portal!
+  portals: [Portal!]!
+  searchDatasets(limit: Float, offset: Float, portal: String, search: String): PagedDatasets!
+  tag(id: Float!): Tag!
+  tags: [Tag!]!
+  thematicSuggestion(datasetId: String!, limit: Float = 20, offset: Float = 0): ThematicSuggestion!
+  thematicSuggestions(limit: Float = 20, offset: Float = 0): [ThematicSuggestion!]!
+}
+
+type Tag {
+  datasets: [Dataset!]!
+  id: String!
+  name: String!
+  portal: Portal!
+}
+
+type ThematicSuggestion {
+  dataset: Dataset!
+  id: Float!
+  similarity: Float!
+  suggestion: Dataset!
+}
