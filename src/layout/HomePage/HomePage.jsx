@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './HomePage.scss';
 import { DebounceInput } from 'react-debounce-input';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faAngleLeft,
-  faAngleDown,
-  faSearch,
-} from '@fortawesome/free-solid-svg-icons';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { gql, useQuery } from '@apollo/client';
+import { useSearchDatasets } from '../../hooks/graphQLAPI';
+
 import {
   useCategories,
   useTags,
@@ -14,17 +13,16 @@ import {
   useDatasetsDB,
   useColumns,
   useStateLoaded,
-  useSortDatasetsBy,
-  useDatasetCount,
 } from '../../hooks/datasets';
+
 import { useCurrentCollection } from '../../hooks/collections';
 import Dataset from '../../components/Dataset/Dataset';
 import SortMenu from '../../components/SortMenu/SortMenu';
 import DatasetsLoading from '../../components/Loading/DatasetsLoading/DatasetsLoading';
-import { usePaginationWithItems } from '../../hooks/pagination';
+import { usePagination } from '../../hooks/pagination';
 import usePageView from '../../hooks/analytics';
-import MultiSelector from '../../components/MultiSelector/MultiSelector';
 import PortalSelector from '../../components/PortalSelector/PortalSelector';
+import Filters from '../../components/Filters/Filters';
 
 import {
   useSelectedCategories,
@@ -35,25 +33,24 @@ import {
   useSortVariable,
   useSortOrder,
   useFilterBarState,
-  useFilterUIStates,
 } from '../../hooks/search';
 
+const ALL_DATASETS_PAGED = gql`
+  query Query($limit: Int, $offset: Int) {
+    datasets(limit: $limit, offset: $offset) {
+      name
+      description
+    }
+  }
+`;
 export default function HomePage({ portal }) {
   usePageView();
-  const categories = useCategories();
-  const tags = useTags();
-  const departments = useDepartments();
-  const columns = useColumns();
-  const loaded = useStateLoaded();
-  //    const [colpaseFilters, setCollapseFilters] = useState(true);
 
-  const [selectedTags, setSelectedTags] = useSelectedTags();
-  const [selectedColumns, setSelectedColumns] = useSelectedColumns();
-  const [selectedCategories, setSelectedCategories] = useSelectedCategories();
-  const [
-    selectedDepartments,
-    setSelectedDepartments,
-  ] = useSelectedDepartments();
+  const [selectedTags] = useSelectedTags();
+  const [selectedColumns] = useSelectedColumns();
+  const [selectedCategories] = useSelectedCategories();
+  const [selectedDepartments] = useSelectedDepartments();
+
   const [searchTerm, setSearchTerm] = useSearchTerm();
   const [sortBy, setSortBy] = useSortVariable();
   const [sortDirection, setSortDirection] = useSortOrder();
@@ -63,107 +60,62 @@ export default function HomePage({ portal }) {
     { addToCollection, removeFromCollection },
   ] = useCurrentCollection();
 
-  const { datasets, datasetCount } = useDatasetsDB({
-    tags: selectedTags,
-    categories: selectedCategories,
-    columns: selectedColumns,
-    term: searchTerm,
-    departments: selectedDepartments,
-    sortBy: 'name',
-    ascending: false,
+  // const { datasets, datasetCount } = useDatasetsDB({
+  //   tags: selectedTags,
+  //   categories: selectedCategories,
+  //   columns: selectedColumns,
+  //   term: searchTerm,
+  //   departments: selectedDepartments,
+  //   sortBy: 'name',
+  //   ascending: false,
+  // });
+
+  const datasetsPerPage = 40;
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalDatasets, setTotalDatasets] = useState(0);
+
+  console.log(
+    'Running with ',
+    portal,
+    datasetsPerPage,
+    currentPage,
+    searchTerm,
+  );
+
+  const { loading, data, error } = useSearchDatasets(portal.socrataDomain, {
+    limit: datasetsPerPage,
+    offset: datasetsPerPage * currentPage,
+    search: searchTerm,
   });
 
-  const [pagedDatasets, { pageButtons }] = usePaginationWithItems(datasets, 10);
+  const datasets = loading || error ? [] : data.searchDatasets.datasets;
 
+  console.log('datasets ', datasets, ' total datasets ', totalDatasets);
+  const [pageNo, { pageButtons }] = usePagination({
+    totalCount: totalDatasets,
+    perPage: datasetsPerPage,
+    invaidators: [searchTerm, portal.socrataDomain],
+  });
+
+  useEffect(() => {
+    console.log('upading page number ', pageNo);
+    setCurrentPage(pageNo);
+  }, [pageNo]);
+
+  useEffect(() => {
+    if (!loading && data) {
+      setTotalDatasets(data.searchDatasets.total);
+    }
+  }, [loading, data]);
   const [collapseFilterBar, setCollapseFilterBar] = useFilterBarState();
-  const [filterStates, setFilterState] = useFilterUIStates();
 
-  // const sortedDatasets = useSortDatasetsBy(
-  //   datasets,
-  //   sortBy,
-  //   sortDirection === 'asc',
-  //   searchTerm,
-  // );
   return (
     <div className="home-page">
-      <div className={`filters ${collapseFilterBar ? 'collapsed' : ''}`}>
-        {!collapseFilterBar ? (
-          <>
-            <h2 className="filter-header">
-              <button
-                onKeyDown={() => setCollapseFilterBar(true)}
-                onClick={() => setCollapseFilterBar(true)}
-                className="header-button"
-                type="button"
-              >
-                Filters <FontAwesomeIcon icon={faAngleLeft} />
-              </button>
-            </h2>
-            <div className="filters-scroll-area">
-              <div className="categories">
-                <MultiSelector
-                  items={categories}
-                  onChange={setSelectedCategories}
-                  selected={selectedCategories}
-                  collapse={filterStates.categories}
-                  onCollapse={(collapsed) =>
-                    setFilterState('categories', collapsed)
-                  }
-                  title="Categories"
-                />
-              </div>
-              <div className="departments">
-                <MultiSelector
-                  items={departments}
-                  selected={selectedDepartments}
-                  onChange={setSelectedDepartments}
-                  collapse={filterStates.departments}
-                  onCollapse={(collapsed) =>
-                    setFilterState('departments', collapsed)
-                  }
-                  title="Departments"
-                />
-              </div>
-              <div className="columns">
-                <MultiSelector
-                  items={columns}
-                  selected={selectedColumns}
-                  onChange={setSelectedColumns}
-                  collapse={filterStates.columns}
-                  onCollapse={(collapsed) =>
-                    setFilterState('columns', collapsed)
-                  }
-                  title="Columns"
-                />
-              </div>
-              <div className="tags">
-                <MultiSelector
-                  items={tags}
-                  selected={selectedTags}
-                  onChange={setSelectedTags}
-                  collapse={filterStates.tags}
-                  onCollapse={(collapsed) => setFilterState('tags', collapsed)}
-                  title="Tags"
-                />
-              </div>
-            </div>
-          </>
-        ) : (
-          <>
-            <h2>
-              <button
-                onKeyDown={() => setCollapseFilterBar(false)}
-                onClick={() => setCollapseFilterBar(false)}
-                className="header-button"
-                type="button"
-              >
-                Filters
-                <FontAwesomeIcon icon={faAngleDown} />
-              </button>
-            </h2>
-          </>
-        )}
-      </div>
+      <Filters
+        onCollapseFilterBar={setCollapseFilterBar}
+        collapsed={collapseFilterBar}
+        portal={portal}
+      />
       <div className="datasets">
         <div className="selector-and-search">
           <PortalSelector selectedPortal={portal} />
@@ -181,7 +133,7 @@ export default function HomePage({ portal }) {
         </div>
         <div className="count-and-sort">
           <p>
-            <span className="bold">{datasetCount}</span> datasets{' '}
+            <span className="bold">{totalDatasets}</span> datasets{' '}
             {searchTerm ? 'sorted by relevance' : ''}
           </p>
 
@@ -203,8 +155,8 @@ export default function HomePage({ portal }) {
         </div>
 
         <ul className="dataset-list">
-          {loaded ? (
-            pagedDatasets.map((dataset) => (
+          {!loading ? (
+            datasets.map((dataset) => (
               <Dataset
                 key={dataset?.id}
                 dataset={dataset}

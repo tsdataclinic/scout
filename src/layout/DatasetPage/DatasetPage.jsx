@@ -18,6 +18,8 @@ import {
 } from '../../hooks/datasets';
 import './DatasetPage.scss';
 import ViewOnOpenPortal from '../../components/ViewOnOpenPortal/ViewOnOpenPortal';
+import { useDatasetGQL } from '../../hooks/graphQLAPI';
+import { ThematicSimilarityExplorer } from '../../components/ThematicSimilarityExplorer/ThematicSimilarityExplorer';
 
 const formatDate = (date) => moment(date).format('MMMM DD, YYYY');
 
@@ -25,18 +27,14 @@ export default function DatasetPage({ match }) {
   usePageView();
   const { datasetID } = match.params;
   const dataset = useDataset(datasetID);
+
+  const { loading, error, data } = useDatasetGQL(datasetID);
+  const newDataset = loading || error ? null : data.dataset;
+
   const parentId = dataset?.parentDatasetID;
   const parentDataset = useDataset(parentId);
-  const joins = useJoinableDatasets(dataset);
-  const similarDatasetSuggestions = useGetSimilarDatasets(dataset);
-
-  const similarDatasetsAway = useGetDatasetsByIdsRemote(
-    similarDatasetSuggestions.away,
-  );
-
-  const similarDatasets = useGetDatasetsByIds(
-    similarDatasetSuggestions.home.map((d) => d.dataset),
-  );
+  const joins = []; // useJoinableDatasets(dataset);
+  const similarDatasetSuggestions = []; //  useGetSimilarDatasets(dataset);
 
   const [activeTab, setActiveTab] = useState('joins');
 
@@ -52,23 +50,6 @@ export default function DatasetPage({ match }) {
   useEffect(() => {
     window.fathom('trackPageview', { path: '/about' });
   }, []);
-
-  const mostSimilarDatasets = similarDatasets
-    .filter((suggestion) => suggestion && suggestion.id !== datasetID)
-    .map((suggestion) => ({
-      dataset: suggestion,
-      similarity: similarDatasetSuggestions.home.find(
-        (s) => s.dataset === suggestion.id,
-      )?.similarity,
-    }))
-    .slice(0, 10);
-
-  const mostSimilarDatasetsAway = similarDatasetsAway.map((suggestion) => ({
-    dataset: datasetToDBLite(suggestion),
-    similarity: similarDatasetSuggestions.away.find(
-      (s) => s.dataset === suggestion.id,
-    )?.similarity,
-  }));
 
   // const mostSimilarDatasetsAway = similarDatasetsAway.filter(suggetsion);
 
@@ -112,19 +93,19 @@ export default function DatasetPage({ match }) {
   ] = useCurrentCollection();
 
   return (
-    <div className="dataset-page" key={dataset ? dataset.id : 'unknown'}>
+    <div className="dataset-page" key={newDataset ? newDataset.id : 'unknown'}>
       <div className="dataset-details">
         <section>
-          <Breadcrumb currentPage={dataset ? dataset.name : '...'} />
+          <Breadcrumb currentPage={newDataset ? newDataset.name : '...'} />
         </section>
         <section>
-          <h2 className={dataset ? '' : 'animate'}>{dataset?.name}</h2>
-          <p className={dataset ? '' : 'animate'}>
+          <h2 className={newDataset ? '' : 'animate'}>{newDataset?.name}</h2>
+          <p className={newDataset ? '' : 'animate'}>
             {dataset?.informationAgency}
           </p>
           <RawHTML
-            className={dataset ? '' : 'animate'}
-            html={dataset?.description}
+            className={newDataset ? '' : 'animate'}
+            html={newDataset?.description}
           />
           <button
             type="button"
@@ -142,29 +123,31 @@ export default function DatasetPage({ match }) {
           </button>
         </section>
         <section className="external-link">
-          {portal && (
+          {newDataset && (
             <>
               <p>Powered by</p>
-              <img alt={portal.name} src={portal.logo} />
+              <img alt={newDataset.portal.name} src={newDataset.portal.logo} />
             </>
           )}
-          <ViewOnOpenPortal permalink={dataset ? dataset?.permaLink : '#'} />
+          <ViewOnOpenPortal
+            permalink={newDataset ? newDataset?.permalink : '#'}
+          />
         </section>
         <section className="metadata">
           <h2>Metadata</h2>
           <h3>Update Automation</h3>
-          <p>{dataset?.updatedAutomation}</p>
+          <p>{newDataset?.updatedAutomation}</p>
           <h3>Update Frequency</h3>
-          <p>{dataset?.updateFrequency}</p>
+          <p>{newDataset?.updateFrequency}</p>
           <h3>Dataset Owner</h3>
-          <p>{dataset?.owner}</p>
-          {dataset?.informationAgency && (
+          <p>{newDataset?.owner}</p>
+          {newDataset?.informationAgency && (
             <>
               <h3>Agency</h3>
-              <p>{dataset?.informationAgency}</p>
+              <p>{newDataset?.informationAgency}</p>
             </>
           )}
-          {dataset?.domainCategory && (
+          {newDataset?.category && (
             <>
               <h3>Category</h3>
               <p>{dataset?.domain_category}</p>
@@ -190,17 +173,10 @@ export default function DatasetPage({ match }) {
           </button>
           <button
             type="button"
-            className={activeTab === 'theme_home' ? 'active' : ''}
-            onClick={() => setActiveTab('theme_home')}
+            className={activeTab === 'theme' ? 'active' : ''}
+            onClick={() => setActiveTab('theme')}
           >
             Thematically Similar
-          </button>
-          <button
-            type="button"
-            className={activeTab === 'theme_away' ? 'active' : ''}
-            onClick={() => setActiveTab('theme_away')}
-          >
-            Similar elsewhere
           </button>
         </div>
         {activeTab === 'joins' &&
@@ -219,54 +195,8 @@ export default function DatasetPage({ match }) {
           ) : (
             renderNotFound(dataset, parentDataset)
           ))}
-        {activeTab === 'theme_home' && (
-          <>
-            <p>
-              Dataset that are thematically similar within this portal based on
-              name and description
-            </p>
-            <div className="dataset-recomendataions-theme-list">
-              {mostSimilarDatasets?.map((d) => (
-                <Dataset
-                  onAddToCollection={() =>
-                    addToCollection(collection.id, d.dataset.id)
-                  }
-                  onRemoveFromCollection={() =>
-                    removeFromCollection(collection.id, d.dataset.id)
-                  }
-                  showStats={false}
-                  dataset={d.dataset}
-                  similarity={d.similarity}
-                  inCollection={collection.datasets.includes(d.dataset.id)}
-                />
-              ))}
-            </div>
-          </>
-        )}
-
-        {activeTab === 'theme_away' && (
-          <>
-            <p>
-              Dataset that are thematically similar in other portals based on
-              name and description
-            </p>
-            <div className="dataset-recomendataions-theme-list">
-              {mostSimilarDatasetsAway?.map((d) => (
-                <Dataset
-                  showStats={false}
-                  onAddToCollection={() =>
-                    addToCollection(collection.id, d.dataset.id)
-                  }
-                  onRemoveFromCollection={() =>
-                    removeFromCollection(collection.id, d.dataset.id)
-                  }
-                  dataset={d.dataset}
-                  similarity={d.similarity}
-                  inCollection={collection.datasets.includes(d.dataset.id)}
-                />
-              ))}
-            </div>
-          </>
+        {activeTab === 'theme' && (
+          <ThematicSimilarityExplorer dataset={dataset} />
         )}
       </div>
     </div>

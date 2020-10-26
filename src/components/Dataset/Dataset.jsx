@@ -26,7 +26,7 @@ export default function Dataset({
   const joinNumber = useGetJoinNumbers(dataset);
   const formattedDescription = hilightMatches(dataset.description, query);
 
-  const portal = dataset ? portalForDomain(dataset.portal) : null;
+  const {portal} = dataset; // dataset ? portalForDomain(dataset.portal) : null;
 
   return (
     <div className="dataset" key={dataset.id}>
@@ -41,6 +41,7 @@ export default function Dataset({
           <h2>{formattedName}</h2>
           {/* </Link> */}
         </DatasetLink>
+        {dataset.permalink}
       </div>
 
       {onAddToCollection && (

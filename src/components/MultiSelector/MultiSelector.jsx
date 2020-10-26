@@ -1,62 +1,58 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import useFuse from 'react-use-fuse';
-import usePagenation, { usePaginationWithItems } from '../../hooks/pagination';
-import { useStateLoaded } from '../../hooks/datasets';
+import { usePagination } from '../../hooks/pagination';
 import FilterLoading from '../Loading/FilterLoading/FilterLoading';
 import './MultiSelector.scss';
 
 export default function MultiSelector({
-  items,
-  selected,
-  onChange,
+  itemFetcher,
+  selectedHook,
   title,
-  collapse,
   onCollapse,
+  noItems = 20,
 }) {
   const [collapsed, setCollapsed] = useState(true);
+  const [totalCount, setTotalCount] = useState(0);
 
-  const collapsedActual = collapse === null ? collapsed : collapse;
+  const [searchTerm, setSearchTerm] = useState('');
+  const [pageNumber, { pageButtons }] = usePagination({
+    perPage: noItems,
+    totalCount,
+  });
+
+  const { loading, error, data } = itemFetcher('data.ny.gov', {
+    limit: noItems,
+    page: pageNumber,
+    search: searchTerm,
+  });
+
+  console.log('loading :', loading, ' error ', error, ' data ', data);
+
+  // Update the total items when we have them
+  const totalFromAPI = data ? data.portal.uniqueColumnFields.total : null;
+  const pagedItems = data ? data.portal.uniqueColumnFields.items : null;
+
+  useEffect(() => {
+    if (totalFromAPI) {
+      setTotalCount(totalFromAPI);
+    }
+  }, [totalFromAPI]);
+
+  const [selected, setSelected] = selectedHook();
 
   const toggleCollapsed = () => {
-    if (onCollapse) {
-      onCollapse(!collapsedActual);
-    } else {
-      setCollapsed(!collapsedActual);
-    }
+    setCollapsed(!collapsed);
   };
 
   const clearItems = () => {
-    onChange([]);
+    setSelected([]);
   };
-
-  const loaded = useStateLoaded();
-
-  const [searchTerm, setSearchTerm] = useState('');
 
   const toggleItem = (item) => {
     const newSelection = selected.includes(item)
       ? selected.filter((i) => i !== item)
       : [...selected, item];
-    onChange(newSelection);
+    setSelected(newSelection);
   };
-
-  const { result: filteredItems, search } = useFuse({
-    data: items,
-    options: {
-      keys: ['name'],
-      shouldSort: false,
-      findAllMatches: true,
-      caseSensitive: false,
-    },
-  });
-
-  useEffect(() => search(searchTerm), [search, searchTerm]);
-
-  const sortedItems = useMemo(
-    () => filteredItems?.sort((a, b) => b.count - a.count),
-    [filteredItems],
-  );
-  const [pagedItems, { pageButtons }] = usePaginationWithItems(sortedItems, 10);
 
   return (
     <div className="mutli-selector">
@@ -66,40 +62,41 @@ export default function MultiSelector({
           type="button"
           onClick={() => toggleCollapsed()}
         >
-          {title} <span> {collapsedActual ? '+' : '-'}</span>{' '}
+          {title} <span> {collapsed ? '+' : '-'}</span>{' '}
         </button>
       </h2>
 
-      {!collapsedActual && (
+      {!collapsed && (
         <>
           <div className="search">
             <input
-              disabled={!loaded}
+              disabled={loading}
               placeholder="filter"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              key="search"
             />
           </div>
           <ul className="multi-list">
-            {!loaded ? (
+            {loading ? (
               <FilterLoading />
             ) : (
               pagedItems.map((item) => (
                 // eslint-disable-next-line
                 <li
-                  key={item.name}
-                  onClick={() => toggleItem(item.name)}
+                  key={item.field}
+                  onClick={() => toggleItem(item.field)}
                   className={`multi-buttons ${
-                    selected && selected.includes(item.name) ? 'selected' : ''
+                    selected && selected.includes(item.field) ? 'selected' : ''
                   }`}
                 >
                   <input
                     type="checkbox"
-                    checked={selected && selected.includes(item.name)}
+                    checked={selected && selected.includes(item.field)}
                     className="checkbox"
                   />
-                  <span className="item-name">{item.name}</span>
-                  <span className="pill">{item.count}</span>
+                  <span className="item-name">{item.field}</span>
+                  <span className="pill">{item.occurrences}</span>
                 </li>
               ))
             )}

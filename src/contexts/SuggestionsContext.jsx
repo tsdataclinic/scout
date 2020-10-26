@@ -11,7 +11,8 @@ export const SuggestionsProvider = ({ portal, children }) => {
   const [thematicSuggestions, setThematicSuggestions] = useState(null);
   const [joinNumbers, setJoinNumbers] = useState(null);
 
-  const portalID = portal.urlSuffix;
+  console.log('PORTAL OBJECT IS ', portal);
+  const portalID = portal.abbreviation;
 
   useEffect(() => {
     if (portalID) {

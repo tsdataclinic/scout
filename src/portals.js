@@ -10,7 +10,7 @@ export const portalForDomain = (domain) => {
 };
 
 export const iconForAdminLevel = (adminLevel) => {
-  switch (adminLevel) {
+  switch (adminLevel ? adminLevel.toLocaleLowerCase() : '') {
     case 'city':
       return faCity;
     case 'state':
