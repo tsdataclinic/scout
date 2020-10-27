@@ -4,3 +4,4 @@ node_modules/
 yarn-error.log
 build
 .ipynb_checkpoints
+packages/server/model
