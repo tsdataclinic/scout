@@ -10,6 +10,7 @@ export function ThematicSimilarityExplorer({ dataset }) {
   const similarDatasets =
     loading || error ? [] : data.dataset.thematicallySimilarDatasets;
 
+  console.log(data);
   const [
     collection,
     { addToCollection, removeFromCollection },
@@ -25,13 +26,15 @@ export function ThematicSimilarityExplorer({ dataset }) {
         {similarDatasets?.map((d) => (
           <Dataset
             showStats={false}
-            onAddToCollection={() => addToCollection(collection.id, d.id)}
-            onRemoveFromCollection={() =>
-              removeFromCollection(collection.id, d.id)
+            onAddToCollection={() =>
+              addToCollection(collection.id, d.dataset.id)
             }
-            dataset={d}
-            similarity={10}
-            inCollection={collection.datasets.includes(d.id)}
+            onRemoveFromCollection={() =>
+              removeFromCollection(collection.id, d.dataset.id)
+            }
+            dataset={d.dataset}
+            similarity={d.score}
+            inCollection={collection.datasets.includes(d.dataset.id)}
           />
         ))}
       </div>
