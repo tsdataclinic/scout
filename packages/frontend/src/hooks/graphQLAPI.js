@@ -124,6 +124,7 @@ export const useSimilarDatasets = (datasetId) => {
             name
             id
             adminLevel
+            abbreviation
           }
           description
           id

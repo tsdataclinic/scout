@@ -11,7 +11,6 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { PortalSyncModule } from './portal-sync/portal-sync.module';
 import { ScheduleModule } from '@nestjs/schedule';
-import { ThematicSuggestionsModule } from './thematic-suggestions/thematic-suggestions.module';
 
 @Module({
   imports: [
@@ -26,7 +25,6 @@ import { ThematicSuggestionsModule } from './thematic-suggestions/thematic-sugge
     DatasetColumnsModule,
     PortalsModule,
     PortalSyncModule,
-    ThematicSuggestionsModule,
     SearchModule,
   ],
   controllers: [AppController],

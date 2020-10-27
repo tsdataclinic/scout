@@ -3,6 +3,7 @@ import { Dataset, PagedDatasets } from './dataset.entity';
 import { Portal } from '../portals/portal.entity';
 import { Resolver, Parent, ResolveField, Query, Args } from '@nestjs/graphql';
 import { SearchService } from '../search/search.service';
+import { ScoredDataset } from '../search/types/ScoredDataset';
 
 @Resolver(of => Dataset)
 export class DatasetResolver {
@@ -41,25 +42,12 @@ export class DatasetResolver {
 
   @ResolveField()
   async portal(@Parent() dataset: Dataset) {
-    console.log('dataset name ', dataset.name);
     const portal = await dataset.portal;
-    console.log(portal);
     return Promise.resolve(portal);
   }
 
-  @ResolveField(returns => [Dataset])
+  @ResolveField(returns => [ScoredDataset])
   async thematicallySimilarDatasets(@Parent() dataset: Dataset) {
     return this.searchService.thematicallySimilarForDataset(dataset);
   }
-  /*
-  @ResolveField()
-  async thematicSuggestionCount(@Parent() dataset: Dataset) {
-    return dataset.thematicSuggestions;
-  }
-
-  @ResolveField(type => [ThematicSuggestion])
-  async thematic_suggestions(@Parent() dataset: Dataset) {
-    return dataset.thematicSuggestions;
-  }
-  */
 }
