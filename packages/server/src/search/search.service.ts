@@ -29,7 +29,7 @@ export class SearchService {
       });
     }
 
-    if (!indexExists) {
+    if (!indexExists || recreate) {
       this.esService.indices.create(
         {
           index: this.configService.get('ELASTICSEARCH_INDEX'),
