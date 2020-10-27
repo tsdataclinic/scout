@@ -23,7 +23,7 @@ const OVERRIDE_LIST = [
   'data.nashville.gov',
 ];
 
-const SHOULD_UPDATE = false;
+const SHOULD_UPDATE = true;
 @Injectable()
 export class PortalSyncService {
   constructor(
