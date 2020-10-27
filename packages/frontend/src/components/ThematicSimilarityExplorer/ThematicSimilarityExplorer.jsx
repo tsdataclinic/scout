@@ -7,8 +7,10 @@ import { useCurrentCollection } from '../../hooks/collections';
 export function ThematicSimilarityExplorer({ dataset }) {
   const { loading, data, error } = useSimilarDatasets(dataset.id);
   console.log('similar: loading data error ', loading, data, error);
-  const similarDatasets = loading || error ? [] : data.dataset.similarDatasets;
+  const similarDatasets =
+    loading || error ? [] : data.dataset.thematicallySimilarDatasets;
 
+  console.log(data);
   const [
     collection,
     { addToCollection, removeFromCollection },
@@ -31,7 +33,7 @@ export function ThematicSimilarityExplorer({ dataset }) {
               removeFromCollection(collection.id, d.dataset.id)
             }
             dataset={d.dataset}
-            similarity={d.similarity}
+            similarity={d.score}
             inCollection={collection.datasets.includes(d.dataset.id)}
           />
         ))}

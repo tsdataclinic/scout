@@ -119,14 +119,18 @@ export const useSimilarDatasets = (datasetId) => {
     query SimilarDatasets($datasetId: String!) {
       dataset(id: $datasetId) {
         thematicallySimilarDatasets {
-          name
-          portal {
+          dataset {
             name
+            portal {
+              name
+              id
+              adminLevel
+              abbreviation
+            }
+            description
             id
-            adminLevel
           }
-          description
-          id
+          score
         }
       }
     }

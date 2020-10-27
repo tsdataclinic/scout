@@ -14,8 +14,7 @@ type Dataset {
   name: String!
   permalink: String
   portal: Portal!
-  thematicallySimilarDatasets: [Dataset!]!
-  thematicSuggestions: [ThematicSuggestion!]!
+  thematicallySimilarDatasets: [ScoredDataset!]!
   type: String
   updatedAt: DateTime
   updatedAutomation: Boolean
@@ -83,8 +82,11 @@ type Query {
   searchDatasets(limit: Float, offset: Float, portal: String, search: String): PagedDatasets!
   tag(id: Float!): Tag!
   tags: [Tag!]!
-  thematicSuggestion(datasetId: String!, limit: Float = 20, offset: Float = 0): ThematicSuggestion!
-  thematicSuggestions(limit: Float = 20, offset: Float = 0): [ThematicSuggestion!]!
+}
+
+type ScoredDataset {
+  dataset: Dataset!
+  score: Float!
 }
 
 type Tag {
@@ -92,11 +94,4 @@ type Tag {
   id: String!
   name: String!
   portal: Portal!
-}
-
-type ThematicSuggestion {
-  dataset: Dataset!
-  id: Float!
-  similarity: Float!
-  suggestion: Dataset!
 }

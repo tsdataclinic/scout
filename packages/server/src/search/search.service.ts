@@ -3,9 +3,11 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { ConfigService } from '../config/config.service';
 import { DatasetService } from '../dataset/dataset.service';
 import { Dataset } from '../dataset/dataset.entity';
+import { ScoredDataset } from './types/ScoredDataset';
 
 import '@tensorflow/tfjs-node';
 import * as use from '@tensorflow-models/universal-sentence-encoder';
+import { isTemplateExpression } from 'typescript';
 
 @Injectable()
 export class SearchService {
@@ -101,18 +103,21 @@ export class SearchService {
     }
   }
 
-  async thematicallySimilarForDataset(dataset: Dataset): Promise<Dataset[]> {
+  async thematicallySimilarForDataset(
+    dataset: Dataset,
+  ): Promise<ScoredDataset[]> {
     const text = dataset.name + '. ' + dataset.description;
     console.log('finding similar with text ', text);
     return this.findSimilar(text);
   }
 
-  async findSimilar(description: string): Promise<Dataset[]> {
+  async findSimilar(description: string): Promise<ScoredDataset[]> {
     const model = await use.load();
     const embedding = await (await model.embed([description])).data();
     console.log('embedding is ', Array.from(embedding));
 
     try {
+      // Run the elastic search query
       const { body } = await this.esService.search({
         index: this.configService.get('ELASTICSEARCH_INDEX'),
         body: {
@@ -123,19 +128,28 @@ export class SearchService {
                 match_all: {},
               },
               script: {
-                source: "cosineSimilarity(params.query_vector, 'vector') + 1.0",
+                source:
+                  "(cosineSimilarity(params.query_vector, 'vector') + 1.0)/2.0",
                 params: { query_vector: Array.from(embedding) },
               },
             },
           },
         },
       });
-      const hits = body.hits.hits;
 
-      console.log('items ', hits[0]);
+      // Extract ids and scores
+      const hits = body.hits.hits;
       const ids = hits.map(item => item._id);
-      console.log('ids ', ids);
-      return this.datasetService.findByIds(ids);
+      const scores = hits.map(item => item._score);
+      console.log('ids are ', ids);
+      console.log('scores are ', scores);
+      //Find the datasets in the full database
+      const datasets = await this.datasetService.findByIds(ids);
+
+      //Return as Scored Datasets
+      const result = datasets.map((d, i) => ({ dataset: d, score: scores[i] }));
+      console.log(result);
+      return result;
     } catch (err) {
       console.log(err);
       console.log(err.body.error.failed_shards[0].reason);

@@ -5,7 +5,7 @@ import {
   DatasetColumn,
   FieldCount,
 } from '../dataset-columns/dataset-column.entity';
-import { ThematicSuggestion } from '../thematic-suggestions/thematic-suggestions.entity';
+import { ScoredDataset } from '../search/types/ScoredDataset';
 
 @ObjectType()
 @Entity()
@@ -83,14 +83,7 @@ export class Dataset {
   )
   datasetColumns: Promise<DatasetColumn[]>;
 
-  @Field(type => [ThematicSuggestion])
-  @OneToMany(
-    type => ThematicSuggestion,
-    thematicSuggestion => thematicSuggestion.dataset,
-  )
-  thematicSuggestions: Promise<ThematicSuggestion[]>;
-
-  @Field(type => [Dataset])
+  @Field(type => [ScoredDataset])
   thematicallySimilarDatasets: Promise<Dataset[]>;
 }
 

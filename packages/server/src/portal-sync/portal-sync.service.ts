@@ -3,7 +3,6 @@ import { Cron, Timeout } from '@nestjs/schedule';
 import fetch from 'node-fetch';
 import { PortalService } from 'src/portals/portal.service';
 import { DatasetService } from 'src/dataset/dataset.service';
-import { ThematicSuggestionsService } from 'src/thematic-suggestions/thematic-suggestions.service';
 import { DatasetColumnsService } from 'src/dataset-columns/dataset-columns.service';
 import { TagsService } from 'src/tags/tags.service';
 import { Portal } from '../portals/portal.entity';
@@ -23,14 +22,13 @@ const OVERRIDE_LIST = [
   'data.nashville.gov',
 ];
 
-const SHOULD_UPDATE = true;
+const SHOULD_UPDATE = false;
 @Injectable()
 export class PortalSyncService {
   constructor(
     private readonly portalService: PortalService,
     private readonly datasetService: DatasetService,
     private readonly datasetColumnsService: DatasetColumnsService,
-    private readonly thematicSuggestionService: ThematicSuggestionsService,
     private readonly tagsService: TagsService,
     private readonly searchService: SearchService,
   ) {}
@@ -56,26 +54,6 @@ export class PortalSyncService {
         resolve(JSON.parse(data));
       });
     });
-  }
-
-  async updateThematicSimilarities() {
-    const similarities = await this.readSimilarityFile(
-      './data/similarity_metrics.json',
-    );
-    const result = Object.keys(similarities).map(key => {
-      const all_recomendations = [
-        ...similarities[key].home,
-        ...similarities[key].away,
-      ];
-
-      const forInsert = all_recomendations.map(rec => ({
-        datasetId: key,
-        suggestionId: rec.dataset,
-        similarity: rec.similarity,
-      }));
-      return this.thematicSuggestionService.createBulk(forInsert as any);
-    });
-    return Promise.all(result);
   }
 
   mapSocrataDataset(datasetData: any, portal: Portal): Dataset {
