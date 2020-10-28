@@ -15,8 +15,6 @@ import { AuthModule } from './auth/auth.module';
 import { UsersService } from './users/users.service';
 import { UsersModule } from './users/users.module';
 import { PassportModule } from '@nestjs/passport';
-import { AuthService } from './auth/auth.service';
-import { LocalStategy } from './auth/local.strategy';
 
 @Module({
   imports: [
@@ -37,6 +35,6 @@ import { LocalStategy } from './auth/local.strategy';
     PassportModule,
   ],
   controllers: [AppController],
-  providers: [AppService, UsersService, AuthService, LocalStategy],
+  providers: [AppService, UsersService],
 })
 export class AppModule {}
