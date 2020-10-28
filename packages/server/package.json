@@ -79,5 +79,11 @@
     },
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "workspaces": {
+    "nohoist": [
+      "typeorm/**",
+      "typeorm"
+    ]
   }
 }
