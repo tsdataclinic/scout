@@ -35,6 +35,7 @@
     "@tensorflow/tfjs-node": "^2.4.0",
     "apollo-server-express": "^2.17.0",
     "batch-promises": "^0.0.3",
+    "bcrypt": "^5.0.0",
     "graphql": "^15.3.0",
     "graphql-tools": "^6.2.3",
     "node-fetch": "^2.6.1",

@@ -35,6 +35,6 @@ import { PassportModule } from '@nestjs/passport';
     PassportModule,
   ],
   controllers: [AppController],
-  providers: [AppService, UsersService],
+  providers: [AppService],
 })
 export class AppModule {}

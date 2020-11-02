@@ -48,6 +48,16 @@ type JoinSuggestion {
   potentialOverlap: Float!
 }
 
+type LoginResult {
+  error: String
+  token: String
+}
+
+type Mutation {
+  signIn(email: String!, password: String!): LoginResult
+  signUp(email: String!, password: String!, username: String!): SignupResult!
+}
+
 type PagedDatasets {
   datasets: [Dataset!]!
   total: Float!
@@ -79,9 +89,11 @@ type Query {
   datasets(limit: Float, offset: Float): [Dataset!]!
   portal(id: String!): Portal!
   portals: [Portal!]!
+  profile: User!
   searchDatasets(limit: Float, offset: Float, portal: String, search: String): PagedDatasets!
   tag(id: Float!): Tag!
   tags: [Tag!]!
+  user(id: String!): User!
 }
 
 type ScoredDataset {
@@ -89,9 +101,21 @@ type ScoredDataset {
   score: Float!
 }
 
+type SignupResult {
+  error: String
+  success: Boolean
+}
+
 type Tag {
   datasets: [Dataset!]!
   id: String!
   name: String!
   portal: Portal!
+}
+
+type User {
+  email: String!
+  id: String!
+  password: String!
+  username: String!
 }
