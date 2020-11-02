@@ -11,6 +11,10 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { PortalSyncModule } from './portal-sync/portal-sync.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { AuthModule } from './auth/auth.module';
+import { UsersService } from './users/users.service';
+import { UsersModule } from './users/users.module';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
@@ -26,6 +30,9 @@ import { ScheduleModule } from '@nestjs/schedule';
     PortalsModule,
     PortalSyncModule,
     SearchModule,
+    AuthModule,
+    UsersModule,
+    PassportModule,
   ],
   controllers: [AppController],
   providers: [AppService],

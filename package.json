@@ -5,10 +5,9 @@
   "repository": "git@github.com:tsdataclinic/scout.git",
   "author": "Stuart Lynn <stuart.lynn@gmail.com>",
   "license": "Apache-2.0",
-  "private": true,
+  "private": "true",
   "workspaces": [
-    "frontend",
-    "server"
+    "packages/*"
   ],
   "devDependencies": {
     "husky": "^4.3.0",
