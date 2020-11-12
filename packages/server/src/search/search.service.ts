@@ -7,7 +7,6 @@ import { ScoredDataset } from './types/ScoredDataset';
 
 import '@tensorflow/tfjs-node';
 import * as use from '@tensorflow-models/universal-sentence-encoder';
-import { isTemplateExpression } from 'typescript';
 
 @Injectable()
 export class SearchService {

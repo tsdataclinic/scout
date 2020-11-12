@@ -1,11 +1,18 @@
 import { UsersService } from './users.service';
 import { AuthService } from '../auth/auth.service';
 import { User } from './users.entity';
-import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Args,
+  Mutation,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { LoginResult, SignupResult } from './signin.types';
 import { GqlAuthGuard, CurrentUser } from '../auth/gql-auth-guard';
-import { QueryTypeFactory } from '@nestjs/graphql/dist/schema-builder/factories/query-type.factory';
 import { UseGuards } from '@nestjs/common';
+import { Collection } from 'src/collections/collections.entity';
 
 @Resolver(of => User)
 export class UserResolver {
@@ -37,7 +44,9 @@ export class UserResolver {
         userename,
         password,
       );
-      return { success: true };
+
+      const token = await this.authService.login(result);
+      return { success: true, token: token.access_token };
     } catch (err) {
       if (err.code === 'SQLITE_CONSTRAINT') {
         const errString = err.toString();
@@ -64,5 +73,10 @@ export class UserResolver {
     } else {
       return { error: 'Username or password incorrect' };
     }
+  }
+
+  @ResolveField(returns => [Collection])
+  async collections(@Parent() user: User): Promise<Collection[]> {
+    return Promise.resolve(this.userService.collectionsForUser(user));
   }
 }

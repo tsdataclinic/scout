@@ -21,12 +21,22 @@ export default function PortalSelector({ selectedPortal }) {
   const history = useHistory();
   const { loading, error, data } = useQuery(AVAILABLE_PORTALS);
   const portals = data ? data.portals : [];
+  const [search, setSearch] = useState('');
+
+  console.log(portals);
 
   const selectPortal = (portal) => {
     console.log('portal is ', portal);
     setShowMenu(false);
     history.push(`/${portal.abbreviation}`);
   };
+
+  const filteredPortals =
+    search.length > 0
+      ? portals.filter((p) =>
+          p.name.toLowerCase().includes(search.toLowerCase()),
+        )
+      : portals;
 
   return (
     <div className="portal-selector">
@@ -41,13 +51,21 @@ export default function PortalSelector({ selectedPortal }) {
           >
             <PortalInfo portal={selectedPortal} />
           </button>
-          <ul className={`portal-menu ${showMenu ? 'show-menu' : ''}`}>
-            {Object.values(portals).map((portal) => (
-              <li onClick={() => selectPortal(portal)} key={portal.name}>
-                <PortalInfo portal={portal} />
-              </li>
-            ))}
-          </ul>
+          <div className={`portal-menu ${showMenu ? 'show-menu' : ''}`}>
+            <input
+              type="text"
+              placeholder="Filter portals"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <ul>
+              {Object.values(filteredPortals).map((portal) => (
+                <li onClick={() => selectPortal(portal)} key={portal.name}>
+                  <PortalInfo portal={portal} />
+                </li>
+              ))}
+            </ul>
+          </div>
         </>
       )}
     </div>

@@ -12,7 +12,7 @@ Try it out [here](http://twosigma.com/scout)
 
 We love all contributions, be it a bug report or feature request via a GitHub issue, or feedback over email
 
-## Roadmap 
+## Roadmap
 
 We will maintain a 6 month roadmap which you can read here: [roadmap](https://github.com/tsdataclinic/scout/blob/master/Roadmap.md). If you want clarification on the roadmap or have suggestions or other comments, please open an [issue](https://github.com/tsdataclinic/scout/issues).
 
@@ -24,6 +24,18 @@ To get started install yarn and then run the following in a terminal:
 
 ```bash
 yarn
+```
+
+We use elastic search for some features. To run it locally, the easiest way to do it is with docker-compose
+
+```
+docker-compose up
+```
+
+Note if you see an error about max_map_count you need to increase that number with a command like
+
+```
+ sudo sysctl -w vm.max_map_count=262144
 ```
 
 Once that is done simply run the folowing to start the development server:

@@ -1,10 +1,15 @@
-import { Entity, Column, PrimaryColumn, ManyToOne, OneToMany } from 'typeorm';
-import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Portal } from '../portals/portal.entity';
 import {
-  DatasetColumn,
-  FieldCount,
-} from '../dataset-columns/dataset-column.entity';
+  Entity,
+  Column,
+  PrimaryColumn,
+  ManyToOne,
+  OneToMany,
+  ManyToMany,
+} from 'typeorm';
+import { ObjectType, Field } from '@nestjs/graphql';
+import { Portal } from '../portals/portal.entity';
+import { Collection } from '../collections/collections.entity';
+import { DatasetColumn } from '../dataset-columns/dataset-column.entity';
 import { ScoredDataset } from '../search/types/ScoredDataset';
 
 @ObjectType()
@@ -75,6 +80,13 @@ export class Dataset {
     portal => portal.id,
   )
   portal: Promise<Portal>;
+
+  @Field(type => [Collection])
+  @ManyToMany(
+    () => Collection,
+    collection => collection.datasets,
+  )
+  collections: Promise<Collection>;
 
   @Field(type => [DatasetColumn])
   @OneToMany(

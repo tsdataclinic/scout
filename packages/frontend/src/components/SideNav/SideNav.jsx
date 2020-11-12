@@ -6,11 +6,16 @@ import { ReactComponent as CollectionsSVG } from '../../icons/collection.svg';
 import { ReactComponent as DataClinicSVG } from '../../icons/dataClinicWhite.svg';
 
 import CollectionTab from '../CollectionTab/CollectionTab';
-import { useCurrentCollection } from '../../hooks/collections';
+// import { useCurrentCollection } from '../../hooks/collections';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { useCurrentUser } from '../../hooks/graphQLAPI';
 
 export default function SideNav() {
   const [showCollectionTab, setShowCollectionTab] = useState(false);
-  const [collection] = useCurrentCollection();
+  // const [collection] = useCurrentCollection();
+  const collection = { datasets: [] };
+  const { data: userData, loading, error } = useCurrentUser();
 
   return (
     <nav className="side-nav">
@@ -55,6 +60,17 @@ export default function SideNav() {
       >
         <DataClinicSVG />
         <h1>About</h1>
+      </NavLink>
+
+      <NavLink
+        exact
+        activeClassName="active-nav"
+        alt="login/sign-up"
+        className="login"
+        to="/login"
+      >
+        <FontAwesomeIcon size={'2x'} icon={faUser} />
+        <h1>{userData ? userData.profile.username : 'account'}</h1>
       </NavLink>
     </nav>
   );

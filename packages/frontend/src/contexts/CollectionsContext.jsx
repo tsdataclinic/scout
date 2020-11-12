@@ -10,7 +10,7 @@ export const CollectionsContext = createContext();
 // description : short 255 character description of the collection
 //
 const initalState = {
-  collections: [{ id: 'pending', datasets: [], name: 'pending' }],
+  pendingCollection: [],
   activeCollectionID: 'pending',
 };
 
@@ -28,7 +28,7 @@ const reducer = (state, action) => {
         activeCollectionID: payload,
       };
 
-    case 'CREATE_COLLECTION_FROM_PENDING':
+    case 'CLEAR_PENDING_COLLECTION':
       return {
         ...state,
         collections: [
@@ -45,55 +45,17 @@ const reducer = (state, action) => {
             : c,
         ),
       };
-    case 'ADD_TO_COLLECTION':
+    case 'ADD_TO_PENDING_COLLECTION':
       return {
         ...state,
-        collections: state.collections.map((col) =>
-          col.id === payload.id
-            ? {
-                ...col,
-                datasets: [...col.datasets, payload.datasetID],
-              }
-            : col,
+        pendingCollection: [...state.pendingCollection, payload],
+      };
+    case 'REMOVE_FROM_PENDING_COLLECTION':
+      return {
+        ...state,
+        pendingCollection: state.pendingCollection.filter(
+          (dID) => dID !== payload,
         ),
-      };
-    case 'REMOVE_FROM_COLLECTION':
-      return {
-        ...state,
-        collections: state.collections.map((col) =>
-          col.id === payload.id
-            ? {
-                ...col,
-                datasets: col.datasets.filter((d) => d !== payload.datasetID),
-              }
-            : col,
-        ),
-      };
-    case 'SET_NAME':
-      return {
-        ...state,
-        collections: [
-          ...state,
-          state.collections.map((col) =>
-            col.id === payload.id ? { ...col, name: payload.name } : col,
-          ),
-        ],
-      };
-    case 'CLEAR_COLLECTION':
-      return {
-        ...state,
-        collections: [
-          ...state,
-          state.collections.map((col) =>
-            col.id === payload.id ? { ...col, datasets: [] } : col,
-          ),
-        ],
-      };
-
-    case 'DELETE_COLLECTION':
-      return {
-        ...state,
-        collections: state.collections.filter((col) => col.id !== payload.id),
       };
 
     case 'HYDRATE_STATE':

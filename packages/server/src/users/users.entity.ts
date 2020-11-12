@@ -5,9 +5,11 @@ import {
   PrimaryGeneratedColumn,
   PrimaryColumn,
   Unique,
+  OneToMany,
 } from 'typeorm';
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import * as bcrypt from 'bcrypt';
+import { Collection } from 'src/collections/collections.entity';
 
 @ObjectType()
 @Entity()
@@ -23,12 +25,19 @@ export class User {
   username: string;
 
   @Field()
-  @PrimaryColumn({ unique: true })
+  @Column()
   email: string;
 
   @Field()
   @Column()
   password: string;
+
+  @Field(type => [Collection])
+  @OneToMany(
+    () => Collection,
+    collection => collection.user,
+  )
+  collections: Promise<Collection[]>;
 
   @BeforeInsert()
   async hashPassword() {

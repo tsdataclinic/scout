@@ -4,7 +4,7 @@ import { hilightMatches, formatDate } from '../../utils/formatters';
 import { useGetSimilarDatasets, useGetJoinNumbers } from '../../hooks/datasets';
 import { ReactComponent as ThematicIcon } from '../../icons/joinable.svg';
 import { ReactComponent as JoinIcon } from '../../icons/thematicSimilarity.svg';
-import { portalForDomain } from '../../portals';
+import { useUserCollections } from '../../hooks/collections';
 
 import DatasetLink from '../DatasetLink/DatasetLink';
 // import RawHTML from '../RawHTML/RawHTML';
@@ -13,20 +13,29 @@ import PortalInfo from '../PortalInfo/PortalInfo';
 
 export default function Dataset({
   dataset,
-  onAddToCollection,
-  onRemoveFromCollection,
-  inCollection,
   viewInOpenPortal = false,
   similarity,
   query,
   showStats = true,
+  showCollectionButtons = true,
 }) {
   const formattedName = hilightMatches(dataset.name, query);
   const similarDatasets = useGetSimilarDatasets(dataset).home;
   const joinNumber = useGetJoinNumbers(dataset);
   const formattedDescription = hilightMatches(dataset.description, query);
 
-  const {portal} = dataset; // dataset ? portalForDomain(dataset.portal) : null;
+  const { portal } = dataset; // dataset ? portalForDomain(dataset.portal) : null;
+
+  const [
+    { activeCollectionId },
+    {
+      addToCurrentCollection,
+      removeFromCurrentCollection,
+      inCurrentCollection,
+    },
+  ] = useUserCollections();
+
+  const inCollection = inCurrentCollection(dataset.id);
 
   return (
     <div className="dataset" key={dataset.id}>
@@ -43,14 +52,13 @@ export default function Dataset({
         </DatasetLink>
         {dataset.permalink}
       </div>
-
-      {onAddToCollection && (
+      {showCollectionButtons && (
         <button
           type="button"
           onClick={() =>
             inCollection
-              ? onRemoveFromCollection(dataset.id)
-              : onAddToCollection(dataset.id)
+              ? removeFromCurrentCollection(dataset.id)
+              : addToCurrentCollection(dataset.id)
           }
         >
           {inCollection ? 'Remove from collection' : 'Add to collection'}

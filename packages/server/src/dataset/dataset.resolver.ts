@@ -12,6 +12,11 @@ export class DatasetResolver {
     private searchService: SearchService,
   ) {}
 
+  @Query(returns => [Dataset])
+  async datasetsByIds(@Args('ids', { type: () => [String] }) ids: string[]) {
+    return this.datasetService.findByIds(ids);
+  }
+
   @Query(returns => Dataset)
   async dataset(@Args('id') id: string) {
     return this.datasetService.findById(id);

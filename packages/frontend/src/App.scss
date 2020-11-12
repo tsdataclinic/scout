@@ -3,200 +3,223 @@ $PaleGrey: #f1f1f2;
 $LightGrey: #b2b2b2;
 
 body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
-        'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
-        'Helvetica Neue', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 html,
 body {
-    width: 100vw;
-    height: 100vh;
-    margin: 0px;
-    padding: 0px;
-    font-family: 'Lato', sans-serif;
-    font-size: 11px;
+  width: 100vw;
+  height: 100vh;
+  margin: 0px;
+  padding: 0px;
+  font-family: 'Lato', sans-serif;
+  font-size: 11px;
 }
 ul {
-    list-style: None;
-    padding: 0px;
-    margin: 0px;
+  list-style: None;
+  padding: 0px;
+  margin: 0px;
 }
 
 h1 {
-    width: 100%;
-    font-size: 18px;
-    font-weight: normal;
-    line-height: 22px;
-    margin: 0;
-    padding: 2px 0;
+  width: 100%;
+  font-size: 18px;
+  font-weight: normal;
+  line-height: 22px;
+  margin: 0;
+  padding: 2px 0;
 }
 
 h2 {
-    width: 100%;
-    font-size: 18px;
-    font-weight: 700;
-    line-height: 17px;
-    text-align: left;
+  width: 100%;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 17px;
+  text-align: left;
 }
 
 a.title {
-    color: black;
-    text-align: left;
+  color: black;
+  text-align: left;
 }
 
 h3 {
-    font-size: 11px;
-    font-weight: bold;
-    line-height: 13px;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 13px;
 }
 
 p {
-    font-weight: normal;
-    font-size: 11px;
-    line-height: 13px;
+  font-weight: normal;
+  font-size: 11px;
+  line-height: 13px;
 }
 
 #root {
-    width: 100vw;
-    height: 100vh;
+  width: 100vw;
+  height: 100vh;
 }
 
 .App {
-    width: 100vw;
-    height: 100%;
-    display: grid;
-    grid-template-rows: 1fr 88px;
-    grid-template-columns: 1fr;
-    grid-template-areas:
-        'content'
-        'side-nav';
-    @media (min-width: 859px) {
-        grid-template-rows: 1fr;
-        grid-template-columns: 88px 1fr;
-        grid-template-areas: 'side-nav content';
-    }
+  width: 100vw;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr 88px;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    'content'
+    'side-nav';
+  @media (min-width: 859px) {
+    grid-template-rows: 1fr;
+    grid-template-columns: 88px 1fr;
+    grid-template-areas: 'side-nav content';
+  }
 }
 .content {
-    flex: 1;
-    display: flex;
-    overflow-x: auto;
-    grid-area: content;
-    overflow-y: hidden;
+  flex: 1;
+  display: flex;
+  overflow-x: auto;
+  grid-area: content;
+  overflow-y: hidden;
 }
 
 .collection-button {
-    border: none;
-    background: none;
-    color: white;
-    background-color: #1c4d5e;
-    height: 24px;
-    width: fit-content;
+  border: none;
+  background: none;
+  color: white;
+  background-color: #1c4d5e;
+  height: 24px;
+  width: fit-content;
 }
 .dataset-joins {
-    height: 100%;
+  height: 100%;
 
-    ul {
-        overflow-y: auto;
-        height: 500px;
-    }
+  ul {
+    overflow-y: auto;
+    height: 500px;
+  }
 }
 
 .tag-selector {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    text-align: left;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
 }
 .selected {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 button {
-    font-weight: bold;
-    color: white;
-    border: none;
-    background: none;
-    background-color: #1c4d5e;
-    //    background-color: #e7f2ff;
-    height: 24px;
-    width: 131px;
-    outline: none;
+  font-weight: bold;
+  color: white;
+  border: none;
+  background: none;
+  background-color: #1c4d5e;
+  //    background-color: #e7f2ff;
+  height: 24px;
+  width: 131px;
+  outline: none;
 }
 button::-moz-focus-inner {
-    border: 0;
+  border: 0;
 }
 input[type='button'] {
-    outline: none;
+  outline: none;
 }
 input[type='button']::-moz-focus-inner {
-    border: 0;
+  border: 0;
 }
 
 button.header-button {
-    color: white;
-    width: 100%;
-    background-color: transparent;
-    color: white;
-    border: none;
-    display: flex;
-    justify-content: space-between;
-    &:active {
-        outline: none;
-    }
+  color: white;
+  width: 100%;
+  background-color: transparent;
+  color: white;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  &:active {
+    outline: none;
+  }
 }
 
 button.header-button {
-    color: white;
-    width: 100%;
-    background-color: transparent;
-    color: white;
-    border: none;
-    display: flex;
-    justify-content: space-between;
-    &:active {
-        outline: none;
-    }
+  color: white;
+  width: 100%;
+  background-color: transparent;
+  color: white;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  &:active {
+    outline: none;
+  }
 }
 
 .bold {
-    font-weight: 700;
+  font-weight: 700;
 }
 .pagination {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0px;
-    li {
-        padding: 5px;
-        cursor: pointer;
-        &.disabled {
-            cursor: not-allowed;
-            color: $LightGrey;
-        }
-        &.active {
-            font-weight: 600;
-        }
-        &:hover {
-            text-decoration: underline;
-            &.disabled {
-                text-decoration: none;
-            }
-        }
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px;
+  li {
+    padding: 5px;
+    cursor: pointer;
+    &.disabled {
+      cursor: not-allowed;
+      color: $LightGrey;
     }
+    &.active {
+      font-weight: 600;
+    }
+    &:hover {
+      text-decoration: underline;
+      &.disabled {
+        text-decoration: none;
+      }
+    }
+  }
 }
 .search {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0px 0px 20px 0px;
+
+  input {
     width: 100%;
     box-sizing: border-box;
-    padding: 0px 0px 20px 0px;
+    padding: 10px;
+  }
+}
 
-    input {
-        width: 100%;
-        box-sizing: border-box;
-        padding: 10px;
-    }
+.tabs {
+  display: flex;
+  border-bottom: 3px solid #edf2f5;
+  box-sizing: border-box;
+  padding: 20px 0px 5px 0px;
+  margin-bottom: 15px;
+
+  button {
+    width: fit-content;
+    font-size: 14px;
+    margin-right: 20px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: black;
+    white-space: nowrap;
+  }
+  button.active {
+    color: #009aa6;
+    border-bottom: 2px solid #009aa6;
+  }
 }

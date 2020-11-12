@@ -14,7 +14,7 @@ import * as fs from 'fs';
 import { SearchService } from '../search/search.service';
 import { PortalExternalInfo } from './portal-details-lookup';
 
-const OVERRIDE_PORTAL_LIST = true;
+const OVERRIDE_PORTAL_LIST = false;
 const OVERRIDE_LIST = [
   'data.cityofnewyork.us',
   'data.ny.gov',
@@ -93,8 +93,8 @@ export class PortalSyncService {
 
   async getPageOfDatasets(portal: Portal, page: number, perPage: number) {
     const url = `https://api.us.socrata.com/api/catalog/v1?domains=${
-      portal.name
-    }&search_context=${portal.name}&limit=${perPage}&offset=${perPage * page}`;
+      portal.id
+    }&search_context=${portal.id}&limit=${perPage}&offset=${perPage * page}`;
 
     try {
       const pageRequest = await fetch(url);
@@ -186,6 +186,7 @@ export class PortalSyncService {
     portal.logo = externalDetails ? externalDetails.logo : null;
 
     portal = await this.portalService.createOrUpdatePortal(portal);
+
     await this.refreshDatasetsForPortal(portal);
     console.log('created ', portal.name);
   }
@@ -199,7 +200,9 @@ export class PortalSyncService {
     // Overwrite the portal list with the ones specified
     const portalList = OVERRIDE_PORTAL_LIST
       ? portalListRemote.results.filter(p => OVERRIDE_LIST.includes(p.domain))
-      : portalListRemote.results;
+      : portalListRemote.results.filter(p =>
+          Object.keys(PortalExternalInfo).includes(p.domain),
+        );
 
     const starterPromise = Promise.resolve(null);
     await portalList

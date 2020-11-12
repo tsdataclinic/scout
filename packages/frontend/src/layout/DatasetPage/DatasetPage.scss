@@ -1,104 +1,88 @@
 .dataset-page {
-    display: flex;
+  display: flex;
+  @media (min-width: 875px) {
+    flex-direction: row;
+    overflow-y: hidden;
+  }
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+  background-color: white;
+  h1 {
+    text-align: center;
+  }
+  .dataset-details {
     @media (min-width: 875px) {
-        flex-direction: row;
-        overflow-y: hidden;
+      width: 360px;
+      height: 100%;
     }
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
+
+    height: 400px;
+    padding: 20px 32px;
     overflow-y: auto;
-    background-color: white;
-    h1 {
-        text-align: center;
+  }
+  .dataset-recomendataions {
+    height: 60%;
+    @media (min-width: 874px) {
+      height: auto;
+      flex: 1;
     }
-    .dataset-details {
-        @media (min-width: 875px) {
-            width: 360px;
-            height: 100%;
-        }
-
-        height: 400px;
-        padding: 20px 32px;
-        overflow-y: auto;
+    background-color: #f7fafc;
+    padding: 20px 32px;
+    display: flex;
+    flex-direction: column;
+    .bar-and-toggle {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    .dataset-recomendataions {
-        height: 60%;
-        @media (min-width: 874px) {
-            height: auto;
-            flex: 1;
-        }
-        background-color: #f7fafc;
-        padding: 20px 32px;
-        display: flex;
-        flex-direction: column;
+  }
+  .intro {
+    font-weight: 700;
+  }
+  > p {
+    line-height: 17px;
+  }
+  .dataset-recomendataions-theme-list {
+    flex: 1;
+    overflow-y: auto;
+  }
+  section {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    .collection-button {
+      margin-top: 20px;
     }
-    .intro {
-        font-weight: 700;
+    button {
+      box-sizing: border-box;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-align: center;
     }
-    > p {
-        line-height: 17px;
+  }
+  .external-link {
+    p {
+      font-weight: 700;
     }
-    .tabs {
-        display: flex;
-        border-bottom: 3px solid #edf2f5;
-        box-sizing: border-box;
-        padding: 20px 0px 5px 0px;
-        margin-bottom: 15px;
-
-        button {
-            width: fit-content;
-            font-size: 14px;
-            margin-right: 20px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            color: black;
-            white-space: nowrap;
-        }
-        button.active {
-            color: #009aa6;
-            border-bottom: 2px solid #009aa6;
-        }
+  }
+  img {
+    width: 120px;
+    margin-bottom: 10px;
+  }
+  .metadata {
+    overflow-y: auto;
+    h2 {
+      margin-bottom: 20px;
     }
-    .dataset-recomendataions-theme-list {
-        flex: 1;
-        overflow-y: auto;
+    p {
+      margin-bottom: 20px;
     }
-    section {
-        margin-bottom: 20px;
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 20px;
-        .collection-button {
-            margin-top: 20px;
-        }
-        button {
-            box-sizing: border-box;
-            padding: 5px 10px;
-            border-radius: 6px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-    }
-    .external-link {
-        p {
-            font-weight: 700;
-        }
-    }
-    img {
-        width: 120px;
-        margin-bottom: 10px;
-    }
-    .metadata {
-        overflow-y: auto;
-        h2 {
-            margin-bottom: 20px;
-        }
-        p {
-            margin-bottom: 20px;
-        }
-    }
+  }
 }

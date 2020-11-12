@@ -16,4 +16,7 @@ export class SignupResult {
 
   @Field({ nullable: true })
   error: string;
+
+  @Field({ nullable: true })
+  token: string;
 }

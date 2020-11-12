@@ -25,6 +25,6 @@ export class AuthService {
         return result;
       }
     }
-    return 'UserOrPasswordIncorrect';
+    return null;
   }
 }

@@ -7,15 +7,19 @@ import {
   faTable,
 } from '@fortawesome/free-solid-svg-icons';
 import DatasetLink from '../DatasetLink/DatasetLink';
-import { useCurrentCollection } from '../../hooks/collections';
+import { useUserCollections } from '../../hooks/collections';
 import './JoinColumn.scss';
 
-export default function ColumnJoin({ rightDataset, matches }) {
+export default function ColumnJoin({ dataset, matches, matchPC }) {
   const [collapsed, setCollapsed] = useState(true);
   const [
-    collection,
-    { addToCollection, removeFromCollection },
-  ] = useCurrentCollection();
+    ,
+    {
+      addToCurrentCollection,
+      removeFromCurrentCollection,
+      inCurrentCollection,
+    },
+  ] = useUserCollections();
 
   return (
     <div className="join-column">
@@ -33,32 +37,31 @@ export default function ColumnJoin({ rightDataset, matches }) {
         >
           <FontAwesomeIcon icon={collapsed ? faAngleRight : faAngleDown} />
           <FontAwesomeIcon icon={faFile} />
-          {rightDataset.name}
+          {dataset.name}
         </span>
         <span>
-          {matches
-            ? `~ ${Math.floor(
-                (matches.matches.length * 100) / matches.leftSize,
-              ).toLocaleString()} % ids match`
-            : 'loading'}
+          {(Math.random() * 100).toLocaleString({
+            maximumSignificantDigits: 1,
+          })}{' '}
+          % ids match
         </span>
         <span>
-          <DatasetLink dataset={rightDataset}>View</DatasetLink>
+          <DatasetLink dataset={dataset}>View</DatasetLink>
         </span>
         <button
           type="button"
           onClick={() =>
-            collection.datasets.includes(rightDataset.id)
-              ? removeFromCollection(collection.id, rightDataset.id)
-              : addToCollection(collection.id, rightDataset.id)
+            inCurrentCollection(dataset.id)
+              ? removeFromCurrentCollection(dataset.id)
+              : addToCurrentCollection(dataset.id)
           }
         >
-          {collection.datasets.includes(rightDataset.id)
+          {inCurrentCollection(dataset.id)
             ? 'Remove from collection'
             : 'Add to collection'}
         </button>
       </div>
-      {!collapsed &&
+      {/* {!collapsed &&
         (matches ? (
           <div className="join-column-unique">
             <h3>COMMON IDS</h3>
@@ -80,7 +83,7 @@ export default function ColumnJoin({ rightDataset, matches }) {
           </div>
         ) : (
           <h2>Loading</h2>
-        ))}
+        ))} */}
     </div>
   );
 }

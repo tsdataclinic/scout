@@ -1,0 +1,10 @@
+.profile-page {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .profile-page-inner {
+    display: flex;
+    flex-direction: column;
+  }
+}

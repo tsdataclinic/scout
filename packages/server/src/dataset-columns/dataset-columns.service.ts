@@ -16,7 +16,7 @@ export class DatasetColumnsService {
     private readonly datasetColumnsRepo: Repository<DatasetColumn>,
   ) {}
 
-  findById(id: string): Promise<DatasetColumn> {
+  findById(id: number): Promise<DatasetColumn> {
     return this.datasetColumnsRepo.findOne(id);
   }
 
@@ -64,17 +64,50 @@ export class DatasetColumnsService {
     return Promise.resolve(pagedResult as PagedFieldCount);
   }
 
+  async countJoinableColumns(
+    column: DatasetColumn,
+    global: boolean = false,
+  ): Promise<number> {
+    const portal = await column.portal;
+
+    const query = global
+      ? { name: column.name, id: Not(column.id) }
+      : {
+          name: column.name,
+          id: Not(column.id),
+          portal: { id: portal.id },
+        };
+
+    console.log('Query is ', query, column);
+    const result = await this.datasetColumnsRepo.count({
+      where: query,
+    });
+
+    return Promise.resolve(result);
+  }
+
   async findJoinableColumns(
     column: DatasetColumn,
     global: boolean = false,
+    limit?: number,
+    offset?: number,
   ): Promise<JoinSuggestion[]> {
+    const portal = await column.portal;
     const query = global
       ? { name: column.name, id: Not(column.id) }
-      : { name: column.name, id: Not(column.id), portal: column.portal };
+      : {
+          name: column.name,
+          id: Not(column.id),
+          portal: { id: portal.id },
+        };
 
     const result = await this.datasetColumnsRepo.find({
       where: query,
+      take: limit,
+      skip: offset,
     });
+
+    console.log('result is ', result);
 
     return Promise.resolve(
       result.map(r => ({ column: r, potentialOverlap: 10 })),

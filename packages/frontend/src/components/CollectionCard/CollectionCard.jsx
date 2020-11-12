@@ -11,7 +11,9 @@ export default function CollectionCard({ collection }) {
       </p>
       <h3>{collection.name}</h3>
       <div className="collection-stats">
-        <span>Datasets: {collection.datasets.length}</span>
+        <span>
+          Datasets: {collection.datasets ? collection.datasets.length : 0}
+        </span>
       </div>
     </div>
   );

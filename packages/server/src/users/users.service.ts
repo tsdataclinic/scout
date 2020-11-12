@@ -21,4 +21,12 @@ export class UsersService {
     const user = this.userRepo.create({ email, username, password });
     return this.userRepo.save(user);
   }
+
+  async collectionsForUser(user: User) {
+    const { collections } = await this.userRepo.findOne(
+      { id: user.id },
+      { relations: ['collections'] },
+    );
+    return collections;
+  }
 }

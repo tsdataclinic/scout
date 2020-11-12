@@ -2,19 +2,22 @@ import React from 'react';
 import './ThematicSimilariryExplorer.scss';
 import Dataset from '../Dataset/Dataset';
 import { useSimilarDatasets } from '../../hooks/graphQLAPI';
-import { useCurrentCollection } from '../../hooks/collections';
+import { useUserCollections } from '../../hooks/collections';
 
-export function ThematicSimilarityExplorer({ dataset }) {
-  const { loading, data, error } = useSimilarDatasets(dataset.id);
+export function ThematicSimilarityExplorer({ datasetID, global }) {
+  const { loading, data, error } = useSimilarDatasets(datasetID, global);
   console.log('similar: loading data error ', loading, data, error);
   const similarDatasets =
     loading || error ? [] : data.dataset.thematicallySimilarDatasets;
 
-  console.log(data);
   const [
-    collection,
-    { addToCollection, removeFromCollection },
-  ] = useCurrentCollection();
+    ,
+    {
+      inCurrentCollection,
+      addToCurrentCollection,
+      removeFromCurrentCollection,
+    },
+  ] = useUserCollections();
 
   return (
     <div className="thematic-similarity-explorer">
@@ -26,15 +29,13 @@ export function ThematicSimilarityExplorer({ dataset }) {
         {similarDatasets?.map((d) => (
           <Dataset
             showStats={false}
-            onAddToCollection={() =>
-              addToCollection(collection.id, d.dataset.id)
-            }
+            onAddToCollection={() => addToCurrentCollection(d.dataset.id)}
             onRemoveFromCollection={() =>
-              removeFromCollection(collection.id, d.dataset.id)
+              removeFromCurrentCollection(d.dataset.id)
             }
             dataset={d.dataset}
             similarity={d.score}
-            inCollection={collection.datasets.includes(d.dataset.id)}
+            inCollection={inCurrentCollection(d.id)}
           />
         ))}
       </div>

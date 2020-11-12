@@ -14,5 +14,6 @@
     "skipLibCheck": true
   },
   "include": ["src"],
-  "exclude": ["db"]
+  "exclude": ["db"],
+  "experimentalDecorators": true
 }

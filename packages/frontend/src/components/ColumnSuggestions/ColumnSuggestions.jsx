@@ -5,64 +5,60 @@ import JoinColumn from '../JoinColumn/JoinColumn';
 import './ColumnSuggestions.scss';
 import { usePaginationWithItems } from '../../hooks/pagination';
 import { getUniqueEntries } from '../../utils/socrata';
+import { useDatasetColumnsWithSuggestionCounts } from '../../hooks/graphQLAPI';
+import { JoinableDatasets } from '../JoinableDatasets/JoinableDatasets';
 
-export default function ColumnSuggestions({ column, joins, dataset }) {
+export default function ColumnSuggestions({ global, columnID, dataset }) {
   const [collapsed, setCollapsed] = useState(true);
   const [overlaps, setOverlaps] = useState([]);
 
-  const dataTypeForCol =
-    dataset.columnTypes[dataset.columnFields.indexOf(column)];
-
-  const [pagedJoins, { pageButtons }] = usePaginationWithItems(
-    overlaps
-      ? overlaps
-          .sort((a, b) => (a.matches.length < b.matches.length ? 1 : -1))
-          .map((o) => joins.find((j) => j.id === o.id))
-      : joins,
-    10,
+  const { loading, data, error } = useDatasetColumnsWithSuggestionCounts(
+    columnID,
+    global,
   );
-  useEffect(() => {
-    if (collapsed === false && overlaps.length === 0) {
-      if (joins.length > 0) {
-        getUniqueEntries(dataset, column).then((parentUniques) => {
-          joins.forEach((j) =>
-            getUniqueEntries(j, column)
-              .then((res) =>
-                setOverlaps((perviousOverlaps) => [
-                  ...perviousOverlaps,
-                  {
-                    id: j.id,
-                    matches: parentUniques.filter((e) => res.includes(e)),
-                    leftSize: parentUniques.length,
-                  },
-                ]),
-              )
-              .catch(() => {
-                setOverlaps((perviousOverlaps) => [
-                  ...perviousOverlaps,
-                  {
-                    id: j.id,
-                    matches: 0,
-                    error: 'failed to fetch',
-                  },
-                ]);
-              }),
-          );
-        });
-      }
-    }
-  }, [column, dataset, joins, collapsed, overlaps]);
 
-  if (column === 'non_ell_principal') {
-    console.log(
-      'STATS ',
-      joins.length,
-      '  ',
-      overlaps.length,
-      ' ',
-      pagedJoins.length,
-    );
+  // useEffect(() => {
+  //   if (collapsed === false && overlaps.length === 0) {
+  //     if (joins.length > 0) {
+  //       getUniqueEntries(dataset, column).then((parentUniques) => {
+  //         joins.forEach((j) =>
+  //           getUniqueEntries(j, column)
+  //             .then((res) =>
+  //               setOverlaps((perviousOverlaps) => [
+  //                 ...perviousOverlaps,
+  //                 {
+  //                   id: j.id,
+  //                   matches: parentUniques.filter((e) => res.includes(e)),
+  //                   leftSize: parentUniques.length,
+  //                 },
+  //               ]),
+  //             )
+  //             .catch(() => {
+  //               setOverlaps((perviousOverlaps) => [
+  //                 ...perviousOverlaps,
+  //                 {
+  //                   id: j.id,
+  //                   matches: 0,
+  //                   error: 'failed to fetch',
+  //                 },
+  //               ]);
+  //             }),
+  //         );
+  //       });
+  //     }
+  //   }
+  // }, [column, dataset, joins, collapsed, overlaps]);
+
+  if (loading) {
+    return <p>Loading...</p>;
   }
+
+  if (error) {
+    debugger;
+    return <p>Something went wrong</p>;
+  }
+  const column = data ? data.datasetColumn : null;
+
   return (
     <div className={`column-suggestions ${collapsed ? 'collapsed' : ''}`}>
       <div
@@ -78,30 +74,14 @@ export default function ColumnSuggestions({ column, joins, dataset }) {
       >
         <span className="column-collapse">
           <FontAwesomeIcon icon={collapsed ? faAngleRight : faAngleDown} />{' '}
-          {column}
+          {column.name}
         </span>
-        <span>{dataTypeForCol}</span>
-        <span>{joins.length} datasets</span>
+        <span>{column.type}</span>
+        <span>{column.joinSuggestionCount} datasets</span>
       </div>
-      {!collapsed && pagedJoins && (
-        <div className="columns-suggestions-matches">
-          <h3>MATCHING DATASETS</h3>
-          {joins && overlaps && (
-            <ul>
-              {pagedJoins.map((join) => (
-                <li key={join.id}>
-                  <JoinColumn
-                    leftDataset={dataset}
-                    rightDataset={join}
-                    joinCol={column}
-                    matches={overlaps.find((o) => o.id === join.id)}
-                  />
-                </li>
-              ))}
-            </ul>
-          )}
-          {pageButtons}
-        </div>
+
+      {!collapsed && (
+        <JoinableDatasets column={column} global={global} dataset={dataset} />
       )}
     </div>
   );

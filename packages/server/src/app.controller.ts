@@ -11,18 +11,6 @@ export class AppController {
     private authService: AuthService,
   ) {}
 
-  @UseGuards(LocalAuthGuard)
-  @Post('auth/login')
-  async login(@Request() req) {
-    return this.authService.login(req.user);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('/profile')
-  async profile(@Request() req) {
-    return `${req.user.username} : Profile`;
-  }
-
   @Get()
   getHello(): string {
     return this.appService.getHello();

@@ -2,8 +2,17 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Collection {
+  datasets: [Dataset!]!
+  description: String!
+  id: String!
+  name: String!
+  user: User!
+}
+
 type Dataset {
   classification: String
+  collections: [Collection!]!
   createdAt: DateTime
   datasetColumns: [DatasetColumn!]!
   department: String
@@ -27,7 +36,8 @@ type DatasetColumn {
   description: String!
   field: String!
   id: Float!
-  joinSuggestions(global: Boolean = false): [JoinSuggestion!]!
+  joinSuggestionCount(global: Boolean = false): Float!
+  joinSuggestions(global: Boolean = false, limit: Int, offset: Int): [JoinSuggestion!]!
   name: String!
   portal: Portal!
   type: String!
@@ -54,6 +64,9 @@ type LoginResult {
 }
 
 type Mutation {
+  addToCollection(datasetIds: [String!]!, id: String!): Collection!
+  createCollection(datasetIds: [String!]!, description: String!, name: String!): Collection!
+  deleteCollection(id: String!): Collection!
   signIn(email: String!, password: String!): LoginResult
   signUp(email: String!, password: String!, username: String!): SignupResult!
 }
@@ -69,7 +82,7 @@ type PagedFieldCount {
 }
 
 type Portal {
-  abbreviation: String!
+  abbreviation: String
   adminLevel: String!
   baseURL: String!
   datasetColumns: [DatasetColumn!]!
@@ -83,10 +96,13 @@ type Portal {
 }
 
 type Query {
+  collection(id: String!): Collection!
+  collections: [Collection!]!
   dataset(id: String!): Dataset!
-  datasetColumn(id: String!): Dataset!
-  datasetColumns: [Dataset!]!
+  datasetColumn(id: Int!): DatasetColumn!
+  datasetColumns: [DatasetColumn!]!
   datasets(limit: Float, offset: Float): [Dataset!]!
+  datasetsByIds(ids: [String!]!): [Dataset!]!
   portal(id: String!): Portal!
   portals: [Portal!]!
   profile: User!
@@ -104,6 +120,7 @@ type ScoredDataset {
 type SignupResult {
   error: String
   success: Boolean
+  token: String
 }
 
 type Tag {
@@ -114,6 +131,7 @@ type Tag {
 }
 
 type User {
+  collections: [Collection!]!
   email: String!
   id: String!
   password: String!

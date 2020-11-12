@@ -33,7 +33,7 @@ export class Portal {
   @Column()
   datasetCount: number;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ nullable: true })
   abbreviation: string;
 

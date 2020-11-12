@@ -1,73 +1,96 @@
+import { useEffect } from 'react';
 import uuidv4 from 'uuid/v4';
 import { useCollectionsValue } from '../contexts/CollectionsContext';
+import {
+  useAddToCollection,
+  useCurrentUserCollections,
+  useDatasetsFromIds,
+} from './graphQLAPI';
 
-export function useCurrentCollection() {
+export function useUserCollections() {
   const [state, dispatch] = useCollectionsValue();
-  const { activeCollectionID, pendingCollection } = state;
 
-  const collection = activeCollectionID
-    ? state.collections.find((c) => c.id === state.activeCollectionID)
-    : pendingCollection;
+  const { loading, data, error } = useCurrentUserCollections();
 
-  const addToCollection = (collectionID, datasetID) => {
-    dispatch({
-      type: 'ADD_TO_COLLECTION',
-      payload: { id: collectionID, datasetID },
-    });
-  };
+  const { data: pendingDatasets } = useDatasetsFromIds(state.pendingCollection);
 
-  const createCollectionFromPending = (name) => {
-    const id = uuidv4();
-    dispatch({
-      type: 'CREATE_COLLECTION_FROM_PENDING',
-      payload: { name, id },
-    });
+  const serverCollections = data ? data.profile.collections : [];
+
+  const [addTo] = useAddToCollection();
+
+  const setActiveCollection = (collectionID) => {
+    console.log('setting active collection ', collectionID);
     dispatch({
       type: 'SET_ACTIVE_COLLECTION',
-      payload: id,
+      payload: collectionID,
     });
   };
 
-  const removeFromCollection = (collectionID, datasetID) =>
-    dispatch({
-      type: 'REMOVE_FROM_COLLECTION',
-      payload: { id: collectionID, datasetID },
-    });
-
-  const setName = (name, collectionID) =>
-    dispatch({
-      type: 'SET_NAME',
-      payload: { id: collectionID, name },
-    });
-
-  const clearCollection = (collectionID) => {
-    dispatch({ type: 'CLEAR_COLLECTION', payload: { id: collectionID } });
+  console.log('collection state is ', state);
+  const combinedState = {
+    activeCollectionID: state.activeCollectionID,
+    collections: [state.pendingCollection, ...serverCollections],
+    activeCollection:
+      state.activeCollectionID === 'pending'
+        ? {
+            name: 'Pending Collection',
+            description: 'placeholder',
+            datasets: pendingDatasets ? pendingDatasets.datasetsByIds : [],
+          }
+        : serverCollections.find((c) => c.id === state.activeCollectionID),
   };
+
+  const inCurrentCollection = (id) => {
+    if (state.activeCollectionID === 'pending') {
+      return state.pendingCollection.includes(id);
+    } else if (serverCollections) {
+      const collection = serverCollections.find(
+        (c) => c.id === state.activeCollectionID,
+      );
+      if (collection) {
+        return collection.datasets.find((d) => d.id === id);
+      } else {
+        return false;
+      }
+    }
+    return false;
+  };
+
+  const addToCurrentCollection = async (datasetID) => {
+    if (state.activeCollectionID === 'pending') {
+      dispatch({
+        type: 'ADD_TO_PENDING_COLLECTION',
+        payload: datasetID,
+      });
+    } else {
+      addTo({
+        variables: { id: state.activeCollectionID, datasetIds: [datasetID] },
+      });
+    }
+  };
+
+  const removeFromCurrentCollection = (datasetID) => {
+    if (state.activeCollectionID === 'pending') {
+      dispatch({
+        type: 'REMOVE_FROM_PENDING_COLLECTION',
+        payload: datasetID,
+      });
+    }
+  };
+
+  const createFromPending = () => {
+    console.log('creating from pending');
+  };
+
+  // console.log('combined state is ', combinedState);
   return [
-    collection,
+    combinedState,
     {
-      clearCollection,
-      addToCollection,
-      removeFromCollection,
-      setName,
-      createCollectionFromPending,
+      addToCurrentCollection,
+      removeFromCurrentCollection,
+      inCurrentCollection,
+      createFromPending,
+      setActiveCollection,
     },
   ];
-}
-
-export function useCollections() {
-  const [state, dispatch] = useCollectionsValue();
-  const deleteCollection = (collectionID) => {
-    dispatch({
-      type: 'DELETE_COLLECTION',
-      payload: collectionID,
-    });
-  };
-  const setActiveCollection = (collectionID) => {
-    dispatch({
-      type: 'SET_ACTIVE_COLLECTION',
-      payload: collectionID,
-    });
-  };
-  return [state, { deleteCollection, setActiveCollection }];
 }

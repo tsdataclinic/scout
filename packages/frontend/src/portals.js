@@ -1,4 +1,9 @@
-import { faCity, faSquare } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCity,
+  faFlag,
+  faSquare,
+  faUniversity,
+} from '@fortawesome/free-solid-svg-icons';
 import { default as PortalConfigs } from './portal_configs.json';
 
 export const Portals = PortalConfigs;
@@ -15,6 +20,12 @@ export const iconForAdminLevel = (adminLevel) => {
       return faCity;
     case 'state':
       return faSquare;
+    case 'county':
+      return faFlag;
+    case 'institution':
+      return faUniversity;
+    case 'insitution':
+      return faUniversity;
     default:
       return null;
   }

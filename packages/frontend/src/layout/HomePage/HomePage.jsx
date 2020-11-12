@@ -15,7 +15,6 @@ import {
   useStateLoaded,
 } from '../../hooks/datasets';
 
-import { useCurrentCollection } from '../../hooks/collections';
 import Dataset from '../../components/Dataset/Dataset';
 import SortMenu from '../../components/SortMenu/SortMenu';
 import DatasetsLoading from '../../components/Loading/DatasetsLoading/DatasetsLoading';
@@ -54,35 +53,11 @@ export default function HomePage({ portal }) {
   const [searchTerm, setSearchTerm] = useSearchTerm();
   const [sortBy, setSortBy] = useSortVariable();
   const [sortDirection, setSortDirection] = useSortOrder();
-
-  const [
-    collection,
-    { addToCollection, removeFromCollection },
-  ] = useCurrentCollection();
-
-  // const { datasets, datasetCount } = useDatasetsDB({
-  //   tags: selectedTags,
-  //   categories: selectedCategories,
-  //   columns: selectedColumns,
-  //   term: searchTerm,
-  //   departments: selectedDepartments,
-  //   sortBy: 'name',
-  //   ascending: false,
-  // });
-
   const datasetsPerPage = 40;
   const [currentPage, setCurrentPage] = useState(0);
   const [totalDatasets, setTotalDatasets] = useState(0);
 
-  console.log(
-    'Running with ',
-    portal,
-    datasetsPerPage,
-    currentPage,
-    searchTerm,
-  );
-
-  const { loading, data, error } = useSearchDatasets(portal.socrataDomain, {
+  const { loading, data, error } = useSearchDatasets(portal.id, {
     limit: datasetsPerPage,
     offset: datasetsPerPage * currentPage,
     search: searchTerm,
@@ -90,7 +65,6 @@ export default function HomePage({ portal }) {
 
   const datasets = loading || error ? [] : data.searchDatasets.datasets;
 
-  console.log('datasets ', datasets, ' total datasets ', totalDatasets);
   const [pageNo, { pageButtons }] = usePagination({
     totalCount: totalDatasets,
     perPage: datasetsPerPage,
@@ -157,18 +131,7 @@ export default function HomePage({ portal }) {
         <ul className="dataset-list">
           {!loading ? (
             datasets.map((dataset) => (
-              <Dataset
-                key={dataset?.id}
-                dataset={dataset}
-                inCollection={collection.datasets.includes(dataset.id)}
-                onAddToCollection={(datasetID) =>
-                  addToCollection(collection.id, datasetID)
-                }
-                onRemoveFromCollection={(datasetID) =>
-                  removeFromCollection(collection.id, datasetID)
-                }
-                query={searchTerm}
-              />
+              <Dataset key={dataset?.id} dataset={dataset} query={searchTerm} />
             ))
           ) : (
             <DatasetsLoading />

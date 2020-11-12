@@ -12,7 +12,7 @@ export const SuggestionsProvider = ({ portal, children }) => {
   const [joinNumbers, setJoinNumbers] = useState(null);
 
   console.log('PORTAL OBJECT IS ', portal);
-  const portalID = portal.abbreviation;
+  const portalID = portal ? portal.abbreviation : null;
 
   useEffect(() => {
     if (portalID) {
@@ -30,7 +30,6 @@ export const SuggestionsProvider = ({ portal, children }) => {
     }
   }, [portalID]);
 
-  console.log('thematic ', thematicSuggestions, ' join numbers ', joinNumbers);
   return (
     <SuggestionsContext.Provider value={{ thematicSuggestions, joinNumbers }}>
       {children}

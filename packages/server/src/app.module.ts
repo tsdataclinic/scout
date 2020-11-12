@@ -12,9 +12,9 @@ import { join } from 'path';
 import { PortalSyncModule } from './portal-sync/portal-sync.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AuthModule } from './auth/auth.module';
-import { UsersService } from './users/users.service';
 import { UsersModule } from './users/users.module';
 import { PassportModule } from '@nestjs/passport';
+import { CollectionsModule } from './collections/collections.module';
 
 @Module({
   imports: [
@@ -33,6 +33,7 @@ import { PassportModule } from '@nestjs/passport';
     AuthModule,
     UsersModule,
     PassportModule,
+    CollectionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -37,6 +37,9 @@ export class DatasetColumn {
   @Field(type => [JoinSuggestion])
   joinSuggestions: JoinSuggestion[];
 
+  @Field()
+  joinSuggestionCount: number;
+
   @Index()
   @Field(type => Portal)
   @ManyToOne(

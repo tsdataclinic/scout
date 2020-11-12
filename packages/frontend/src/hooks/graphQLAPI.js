@@ -1,6 +1,4 @@
-import { useQuery, gql } from '@apollo/client';
-import { useEffect } from 'react';
-import usePagination from './pagination';
+import { useQuery, gql, useMutation } from '@apollo/client';
 
 export const useCategoriesGQL = (portal, limit, page) => {
   return [];
@@ -8,6 +6,45 @@ export const useCategoriesGQL = (portal, limit, page) => {
 
 export const useDepartmentsGQL = (portal, limit, page) => {
   return [];
+};
+
+export const useDatasetsFromIds = (ids) => {
+  const DatasetsFromIdsQuery = gql`
+    query GetDatasetsByIds($ids: [String!]!) {
+      datasetsByIds(ids: $ids) {
+        name
+        description
+        department
+        id
+      }
+    }
+  `;
+
+  return useQuery(DatasetsFromIdsQuery, { variables: { ids } });
+};
+
+export const useCollection = (id) => {
+  const CollectionQuery = gql`
+    query getCollection($id: String!) {
+      collection(id: $id) {
+        name
+        description
+        id
+        datasets {
+          name
+          description
+          department
+          id
+          portal {
+            name
+            id
+            adminLevel
+          }
+        }
+      }
+    }
+  `;
+  return useQuery(CollectionQuery, { variables: { id: id ? id : '' } });
 };
 
 export const useSearchDatasets = (
@@ -60,10 +97,143 @@ export const useSearchDatasets = (
   });
 };
 
+export const usePortals = () => {
+  const PortalListQuery = gql`
+    query PortalList {
+      portals {
+        name
+        abbreviation
+        id
+        adminLevel
+      }
+    }
+  `;
+  return useQuery(PortalListQuery);
+};
+export const useAttemptLogin = (email, password) => {
+  const LoginAttempt = gql`
+    mutation SignIn($email: String!, $password: String!) {
+      signIn(email: $email, password: $password) {
+        token
+        error
+      }
+    }
+  `;
+
+  const variables = { email, password };
+  return useMutation(LoginAttempt);
+};
+
+export const useAttemptSignUp = (email, password, username) => {
+  const SignUpAttempt = gql`
+    mutation SignUp($email: String!, $password: String!, $username: String!) {
+      signUp(email: $email, password: $password, username: $username) {
+        success
+        error
+        token
+      }
+    }
+  `;
+
+  const variables = { email, password, username };
+  return useMutation(SignUpAttempt);
+};
+
+export const useCurrentUser = () => {
+  const CurrentUser = gql`
+    query Profile {
+      profile {
+        email
+        id
+        username
+      }
+    }
+  `;
+  return useQuery(CurrentUser);
+};
+
+export const useCurrentUserCollections = () => {
+  const CurrentUserAndCollections = gql`
+    query Profile {
+      profile {
+        email
+        id
+        username
+        collections {
+          id
+          name
+          description
+          datasets {
+            id
+            name
+            description
+            department
+          }
+        }
+      }
+    }
+  `;
+  return useQuery(CurrentUserAndCollections);
+};
+
+export const useCreateCollection = () => {
+  const CreateCollection = gql`
+    mutation CreateCollection(
+      $name: String!
+      $description: String!
+      $datasetIds: [String!]!
+    ) {
+      createCollection(
+        name: $name
+        description: $description
+        datasetIds: $datasetIds
+      ) {
+        name
+        description
+        id
+      }
+    }
+  `;
+  return useMutation(CreateCollection);
+};
+
+export const useDatasetColumnsWithSuggestionCounts = (id, global) => {
+  const Query = gql`
+    query DatasetColumnWithSuggestions($id: Int!, $global: Boolean!) {
+      datasetColumn(id: $id) {
+        name
+        type
+        id
+        joinSuggestionCount(global: $global)
+      }
+    }
+  `;
+  return useQuery(Query, { variables: { id, global } });
+};
+
+export const useAddToCollection = () => {
+  const mut = gql`
+    mutation addToCollection($id: String!, $datasetIds: [String!]!) {
+      addToCollection(id: $id, datasetIds: $datasetIds) {
+        id
+        datasets {
+          id
+          name
+          description
+        }
+        name
+        description
+      }
+    }
+  `;
+  return useMutation(mut);
+};
+
 export const useDatasetGQL = (datasetId) => {
   const DatasetQuery = gql`
     query Dataset($datasetId: String!) {
       dataset(id: $datasetId) {
+        id
         name
         department
         description
@@ -71,10 +241,16 @@ export const useDatasetGQL = (datasetId) => {
         updatedAt
         createdAt
         permalink
+        datasetColumns {
+          name
+          type
+          id
+        }
         portal {
           name
           baseURL
           logo
+          abbreviation
         }
       }
     }
@@ -111,6 +287,34 @@ export const useColumnsGQL = (portal, { limit, page, search }) => {
 
   return useQuery(getColumnsQuery, {
     variables,
+  });
+};
+
+export const useJoinableDatasetsPaged = (columnID, global, limit, offset) => {
+  const query = gql`
+    query ColumnJoins($id: Int!, $global: Boolean!, $limit: Int, $offset: Int) {
+      datasetColumn(id: $id) {
+        joinSuggestions(global: $global, limit: $limit, offset: $offset) {
+          potentialOverlap
+          column {
+            dataset {
+              name
+              id
+              portal {
+                id
+                name
+                abbreviation
+                adminLevel
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+  console.log({ id: columnID, global, limit, offset });
+  return useQuery(query, {
+    variables: { id: columnID, global, limit, offset },
   });
 };
 

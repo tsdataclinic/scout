@@ -33,23 +33,30 @@
     top: 100%;
     z-index: 100;
     background-color: white;
-    width: 100%;
-    li {
-      background-color: white;
-    }
-    li:hover {
-      background-color: #eaf7f9;
-    }
-    .portal-info {
-      padding: 10px;
-      justify-content: flex-start;
-      border: none;
-      cursor: pointer;
-      height: 100%;
-    }
-
+    height: 50vh;
+    // overflow-y: auto;
     &.show-menu {
       display: block;
+    }
+    input {
+      padding: 10px;
+    }
+    ul {
+      height: 50vh;
+      overflow-y: scroll;
+      li {
+        background-color: white;
+      }
+      li:hover {
+        background-color: #eaf7f9;
+      }
+      .portal-info {
+        padding: 10px;
+        justify-content: flex-start;
+        border: none;
+        cursor: pointer;
+        height: 100%;
+      }
     }
   }
 }

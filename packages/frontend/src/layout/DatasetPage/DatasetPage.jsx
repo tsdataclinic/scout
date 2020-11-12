@@ -6,41 +6,34 @@ import Dataset from '../../components/Dataset/Dataset';
 import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
 import '../../components/Loading/Loading.scss';
 import usePageView from '../../hooks/analytics';
-import { useCurrentCollection } from '../../hooks/collections';
-import { datasetToDBLite } from '../../utils/socrata';
-import { Portals } from '../../portals';
-import {
-  useDataset,
-  useJoinableDatasets,
-  useGetSimilarDatasets,
-  useGetDatasetsByIds,
-  useGetDatasetsByIdsRemote,
-} from '../../hooks/datasets';
+import { useUserCollections } from '../../hooks/collections';
+
 import './DatasetPage.scss';
 import ViewOnOpenPortal from '../../components/ViewOnOpenPortal/ViewOnOpenPortal';
 import { useDatasetGQL } from '../../hooks/graphQLAPI';
 import { ThematicSimilarityExplorer } from '../../components/ThematicSimilarityExplorer/ThematicSimilarityExplorer';
+import { Switch } from 'antd';
 
 const formatDate = (date) => moment(date).format('MMMM DD, YYYY');
 
 export default function DatasetPage({ match }) {
+  // debugger;
   usePageView();
   const { datasetID } = match.params;
-  const dataset = useDataset(datasetID);
 
   const { loading, error, data } = useDatasetGQL(datasetID);
-  const newDataset = loading || error ? null : data.dataset;
+  const dataset = loading || error ? null : data.dataset;
 
-  const parentId = dataset?.parentDatasetID;
-  const parentDataset = useDataset(parentId);
+  //const parentId = dataset?.parentDatasetID;
+  const parentDataset = null; //useDataset(parentId);
   const joins = []; // useJoinableDatasets(dataset);
   const similarDatasetSuggestions = []; //  useGetSimilarDatasets(dataset);
 
   const [activeTab, setActiveTab] = useState('joins');
 
-  const portal = dataset
-    ? Object.values(Portals).find((p) => p.socrataDomain === dataset.portal)
-    : null;
+  const portal = dataset ? dataset.portal : null;
+
+  const [globalSearch, setGlobalSearch] = useState(false);
 
   useEffect(() => {
     const page = `${window.location.pathname}/${activeTab}`;
@@ -87,67 +80,70 @@ export default function DatasetPage({ match }) {
       </p>
     );
   };
+
   const [
-    collection,
-    { addToCollection, removeFromCollection },
-  ] = useCurrentCollection();
+    ,
+    {
+      addToCurrentCollection,
+      removeFromCurrentCollection,
+      inCurrentCollection,
+    },
+  ] = useUserCollections();
 
   return (
-    <div className="dataset-page" key={newDataset ? newDataset.id : 'unknown'}>
+    <div className="dataset-page" key={dataset ? dataset.id : 'unknown'}>
       <div className="dataset-details">
         <section>
-          <Breadcrumb currentPage={newDataset ? newDataset.name : '...'} />
+          <Breadcrumb currentPage={dataset ? dataset.name : '...'} />
         </section>
         <section>
-          <h2 className={newDataset ? '' : 'animate'}>{newDataset?.name}</h2>
-          <p className={newDataset ? '' : 'animate'}>
+          <h2 className={dataset ? '' : 'animate'}>{dataset?.name}</h2>
+          <p className={dataset ? '' : 'animate'}>
             {dataset?.informationAgency}
           </p>
           <RawHTML
-            className={newDataset ? '' : 'animate'}
-            html={newDataset?.description}
+            className={dataset ? '' : 'animate'}
+            html={dataset?.description}
           />
           <button
             type="button"
             className="collection-button"
             disabled={!dataset}
             onClick={() =>
-              collection.datasets.includes(datasetID)
-                ? removeFromCollection(collection.id, datasetID)
-                : addToCollection(collection.id, datasetID)
+              inCurrentCollection(datasetID)
+                ? removeFromCurrentCollection(datasetID)
+                : addToCurrentCollection(datasetID)
             }
           >
-            {collection.datasets.includes(datasetID)
+            {inCurrentCollection(datasetID)
               ? 'Remove From Collection'
               : 'Add to Collection'}{' '}
           </button>
         </section>
         <section className="external-link">
-          {newDataset && (
+          {dataset && (
             <>
               <p>Powered by</p>
-              <img alt={newDataset.portal.name} src={newDataset.portal.logo} />
+              <img alt={dataset.portal.name} src={dataset.portal.logo} />
             </>
           )}
-          <ViewOnOpenPortal
-            permalink={newDataset ? newDataset?.permalink : '#'}
-          />
+          <ViewOnOpenPortal permalink={dataset ? dataset?.permalink : '#'} />
         </section>
         <section className="metadata">
           <h2>Metadata</h2>
           <h3>Update Automation</h3>
-          <p>{newDataset?.updatedAutomation}</p>
+          <p>{dataset?.updatedAutomation}</p>
           <h3>Update Frequency</h3>
-          <p>{newDataset?.updateFrequency}</p>
+          <p>{dataset?.updateFrequency}</p>
           <h3>Dataset Owner</h3>
-          <p>{newDataset?.owner}</p>
-          {newDataset?.informationAgency && (
+          <p>{dataset?.owner}</p>
+          {dataset?.informationAgency && (
             <>
               <h3>Agency</h3>
-              <p>{newDataset?.informationAgency}</p>
+              <p>{dataset?.informationAgency}</p>
             </>
           )}
-          {newDataset?.category && (
+          {dataset?.category && (
             <>
               <h3>Category</h3>
               <p>{dataset?.domain_category}</p>
@@ -162,7 +158,16 @@ export default function DatasetPage({ match }) {
         </section>
       </div>
       <div className="dataset-recomendataions">
-        <h2>Other datasets to consider</h2>
+        <div className="bar-and-toggle">
+          <h2>Other datasets to consider</h2>
+          <Switch
+            checked={globalSearch}
+            onChange={setGlobalSearch}
+            checkedChildren="All portals"
+            unCheckedChildren="Just this portal"
+            style={{ background: '#009aa6' }}
+          />
+        </div>
         <div className="tabs">
           <button
             type="button"
@@ -180,7 +185,7 @@ export default function DatasetPage({ match }) {
           </button>
         </div>
         {activeTab === 'joins' &&
-          (!dataset || dataset.columnFields.length > 0 ? (
+          (!dataset || dataset.datasetColumns.length > 0 ? (
             <>
               <p className="intro">
                 Find datasets that share a column with the current dataset.
@@ -190,13 +195,16 @@ export default function DatasetPage({ match }) {
                 These columns might be interesting datasets to join with the
                 current dataset to add additional details or bring in context
               </p>
-              <ColumnMatchTable dataset={dataset} joinColumns={joins} />
+              <ColumnMatchTable global={globalSearch} dataset={dataset} />
             </>
           ) : (
             renderNotFound(dataset, parentDataset)
           ))}
         {activeTab === 'theme' && (
-          <ThematicSimilarityExplorer dataset={dataset} />
+          <ThematicSimilarityExplorer
+            global={globalSearch}
+            datasetID={datasetID}
+          />
         )}
       </div>
     </div>
