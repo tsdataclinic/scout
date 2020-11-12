@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { gql, useQuery } from '@apollo/client';
 import { useSearchDatasets } from '../../hooks/graphQLAPI';
+import { Switch } from 'antd';
 
 import {
   useCategories,
@@ -57,11 +58,16 @@ export default function HomePage({ portal }) {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalDatasets, setTotalDatasets] = useState(0);
 
-  const { loading, data, error } = useSearchDatasets(portal.id, {
-    limit: datasetsPerPage,
-    offset: datasetsPerPage * currentPage,
-    search: searchTerm,
-  });
+  const [globalSearch, setGlobalSearch] = useState(false);
+
+  const { loading, data, error } = useSearchDatasets(
+    globalSearch ? null : portal.id,
+    {
+      limit: datasetsPerPage,
+      offset: datasetsPerPage * currentPage,
+      search: searchTerm,
+    },
+  );
 
   const datasets = loading || error ? [] : data.searchDatasets.datasets;
 
@@ -92,7 +98,7 @@ export default function HomePage({ portal }) {
       />
       <div className="datasets">
         <div className="selector-and-search">
-          <PortalSelector selectedPortal={portal} />
+          {!globalSearch && <PortalSelector selectedPortal={portal} />}
 
           <div className="search">
             <FontAwesomeIcon size="lg" icon={faSearch} />
@@ -104,6 +110,14 @@ export default function HomePage({ portal }) {
               placeholder="Search for dataset"
             />
           </div>
+
+          <Switch
+            checked={globalSearch}
+            onChange={setGlobalSearch}
+            checkedChildren="All portals"
+            unCheckedChildren="Specific portal"
+            style={{ margin: '0px 10px', background: '#009aa6' }}
+          />
         </div>
         <div className="count-and-sort">
           <p>
