@@ -18,7 +18,7 @@ function getAllPackages(pageLimit = null) {
             console.log('Requesting packages ', offset + 1, '-', offset + INTERVAL_SIZE)
             client.action(
                 'current_package_list_with_resources',
-                {"offset": offset, "limit": INTERVAL_SIZE},
+                {'offset': offset, 'limit': INTERVAL_SIZE},
                 (err, res) => {
                     if (err) console.log(err);
                     if (err || !res.success || res.result.length === 0) {
@@ -71,7 +71,7 @@ function extractHumdataPackageMetadata(raw) {
 // returns a map of (field_name -> count) to get a sense of
 // what kinds of fields are in the package metadata
 function countPackageMetadataFieldFreq(packages) {
-    let freq = {}
+    const freq = {}
     packages.forEach(r => {
         Object.keys(r).forEach(prop => {
             // console.log(prop)
@@ -85,7 +85,7 @@ function countPackageMetadataFieldFreq(packages) {
 }
 
 function countResourceMetadataFieldFreq(packages) {
-    let freq = {}
+    const freq = {}
     packages.forEach(p => {
         p.resources.forEach(r => {
             console.log(p.name)
@@ -102,7 +102,7 @@ function countResourceMetadataFieldFreq(packages) {
 
 // Extract resource fields
 getAllPackages(1).then(packages => {
-    fields = countPackageMetadataFieldFreq(packages)
+    let fields = countPackageMetadataFieldFreq(packages)
     // fields = countPackageMetadataFieldFreq(packages)
     console.log(fields)
 })
