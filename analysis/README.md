@@ -30,6 +30,10 @@ Finally a smaller version of that file just for the NYC open data portal can be 
 
 - [spaCy](https://spacy.io/) - A NLP package for python
 
+- [spaCy](https://spacy.io/) - A NLP package for python
+
+- [dedupe.ip](https://github.com/dedupeio/dedupe) - Dedupe a python package to do deduplication of records in a dataset
+
 ## Environment
 
 The basic requirements are defined in the requirements.txt file or the Pipfile.
