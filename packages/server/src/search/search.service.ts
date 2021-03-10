@@ -104,16 +104,28 @@ export class SearchService {
 
   async thematicallySimilarForDataset(
     dataset: Dataset,
+    portalId?: string,
   ): Promise<ScoredDataset[]> {
     const text = dataset.name + '. ' + dataset.description;
     console.log('finding similar with text ', text);
-    return this.findSimilar(text);
+    return this.findSimilar(text, portalId);
   }
 
-  async findSimilar(description: string): Promise<ScoredDataset[]> {
+  async findSimilar(
+    description: string,
+    portalId?: string,
+  ): Promise<ScoredDataset[]> {
     const model = await use.load();
     const embedding = await (await model.embed([description])).data();
     console.log('embedding is ', Array.from(embedding));
+
+    const emptyQuery = {
+      match_all: {},
+    };
+    const portalQuery = {
+      match: { portal: portalId },
+    };
+    const query = portalId ? portalQuery : emptyQuery;
 
     try {
       // Run the elastic search query
@@ -123,9 +135,7 @@ export class SearchService {
           size: 50,
           query: {
             script_score: {
-              query: {
-                match_all: {},
-              },
+              query: query,
               script: {
                 source:
                   "(cosineSimilarity(params.query_vector, 'vector') + 1.0)/2.0",

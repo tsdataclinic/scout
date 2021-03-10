@@ -52,7 +52,10 @@ export class DatasetResolver {
   }
 
   @ResolveField(returns => [ScoredDataset])
-  async thematicallySimilarDatasets(@Parent() dataset: Dataset) {
-    return this.searchService.thematicallySimilarForDataset(dataset);
+  async thematicallySimilarDatasets(
+    @Parent() dataset: Dataset,
+    @Args('portalId', { nullable: true }) portalId: string,
+  ) {
+    return this.searchService.thematicallySimilarForDataset(dataset, portalId);
   }
 }

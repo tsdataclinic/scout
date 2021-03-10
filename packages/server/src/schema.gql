@@ -23,7 +23,7 @@ type Dataset {
   name: String!
   permalink: String
   portal: Portal!
-  thematicallySimilarDatasets: [ScoredDataset!]!
+  thematicallySimilarDatasets(portalId: String): [ScoredDataset!]!
   type: String
   updatedAt: DateTime
   updatedAutomation: Boolean

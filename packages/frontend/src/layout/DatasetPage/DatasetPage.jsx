@@ -34,6 +34,7 @@ export default function DatasetPage({ match }) {
   const portal = dataset ? dataset.portal : null;
 
   const [globalSearch, setGlobalSearch] = useState(false);
+  console.log('DATASET ', dataset);
 
   useEffect(() => {
     const page = `${window.location.pathname}/${activeTab}`;
@@ -204,6 +205,8 @@ export default function DatasetPage({ match }) {
           <ThematicSimilarityExplorer
             global={globalSearch}
             datasetID={datasetID}
+            portal={dataset.portal.id}
+            dataset={dataset}
           />
         )}
       </div>

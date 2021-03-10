@@ -247,6 +247,7 @@ export const useDatasetGQL = (datasetId) => {
           id
         }
         portal {
+          id
           name
           baseURL
           logo
@@ -318,11 +319,11 @@ export const useJoinableDatasetsPaged = (columnID, global, limit, offset) => {
   });
 };
 
-export const useSimilarDatasets = (datasetId) => {
+export const useSimilarDatasets = (datasetId, portal) => {
   const getSimilarQuery = gql`
-    query SimilarDatasets($datasetId: String!) {
+    query SimilarDatasets($datasetId: String!, $portalId: String) {
       dataset(id: $datasetId) {
-        thematicallySimilarDatasets {
+        thematicallySimilarDatasets(portalId: $portalId) {
           dataset {
             name
             portal {
@@ -339,7 +340,9 @@ export const useSimilarDatasets = (datasetId) => {
       }
     }
   `;
-  return useQuery(getSimilarQuery, { variables: { datasetId } });
+  return useQuery(getSimilarQuery, {
+    variables: { datasetId, portalId: portal },
+  });
 };
 
 export const useTagsGQL = (portal) => {

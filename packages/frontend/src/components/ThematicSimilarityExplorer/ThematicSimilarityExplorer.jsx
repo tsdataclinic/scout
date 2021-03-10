@@ -4,9 +4,18 @@ import Dataset from '../Dataset/Dataset';
 import { useSimilarDatasets } from '../../hooks/graphQLAPI';
 import { useUserCollections } from '../../hooks/collections';
 
-export function ThematicSimilarityExplorer({ datasetID, global }) {
-  const { loading, data, error } = useSimilarDatasets(datasetID, global);
-  console.log('similar: loading data error ', loading, data, error);
+export function ThematicSimilarityExplorer({
+  dataset,
+  datasetID,
+  global,
+  portal,
+}) {
+  const { loading, data, error } = useSimilarDatasets(
+    datasetID,
+    global ? null : portal,
+  );
+
+  console.log('portal and global ', portal, global, dataset);
   const similarDatasets =
     loading || error ? [] : data.dataset.thematicallySimilarDatasets;
 
@@ -25,6 +34,7 @@ export function ThematicSimilarityExplorer({ datasetID, global }) {
         Dataset that are thematically similar in other portals based on name and
         description
       </p>
+      {loading && <p>Loading ...</p>}
       <div className="dataset-recomendataions-theme-list">
         {similarDatasets?.map((d) => (
           <Dataset
