@@ -4,6 +4,7 @@ import { PortalsModule } from '../portals/portals.module';
 import { DatasetModule } from '../dataset/dataset.module';
 import { DatasetColumnsModule } from '../dataset-columns/dataset-columns.module';
 import { TagsModule } from '../tags/tags.module';
+import { ConfigModule} from '../config/config.module';
 import { SearchModule } from '../search/search.module';
 
 @Module({
@@ -13,6 +14,7 @@ import { SearchModule } from '../search/search.module';
     DatasetColumnsModule,
     TagsModule,
     SearchModule,
+    ConfigModule
   ],
   providers: [PortalSyncService],
 })

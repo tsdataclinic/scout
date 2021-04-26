@@ -3,6 +3,7 @@ import { Cron, Timeout } from '@nestjs/schedule';
 import fetch from 'node-fetch';
 import { PortalService } from 'src/portals/portal.service';
 import { DatasetService } from 'src/dataset/dataset.service';
+import { ConfigService} from 'src/config/config.service';
 import { DatasetColumnsService } from 'src/dataset-columns/dataset-columns.service';
 import { TagsService } from 'src/tags/tags.service';
 import { Portal } from '../portals/portal.entity';
@@ -22,7 +23,6 @@ const OVERRIDE_LIST = [
   'data.nashville.gov',
 ];
 
-const SHOULD_UPDATE = false;
 @Injectable()
 export class PortalSyncService {
   constructor(
@@ -31,12 +31,13 @@ export class PortalSyncService {
     private readonly datasetColumnsService: DatasetColumnsService,
     private readonly tagsService: TagsService,
     private readonly searchService: SearchService,
+    private readonly configService: ConfigService,
   ) {}
 
   @Timeout(0)
   async onceAtStartup() {
-    if (SHOULD_UPDATE) {
-      // await this.refreshPortalList();
+    if (this.configService.get("UPDATE_ON_BOOT")) {
+      await this.refreshPortalList();
       await this.searchService.createIndex(true);
       await this.searchService.populateIndex();
 
