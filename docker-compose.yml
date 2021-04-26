@@ -1,5 +1,15 @@
 version: '2.2'
 services:
+  api:
+    build: ./packages/server/
+    networks:
+      - elastic
+    ports:
+        - 5000:5000
+    volumes: 
+        - db:/usr/share/app/db
+    env_file: 
+        - ./packages/server/.env_prod
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.9.2
     container_name: es01
@@ -14,6 +24,9 @@ services:
       memlock:
         soft: -1
         hard: -1
+      nofile:
+        soft: 262144
+        hard: 262144
     volumes:
       - data01:/usr/share/elasticsearch/data
     ports:
@@ -21,18 +34,10 @@ services:
       - 9300:9300
     networks:
       - elastic
-  # kibana:
-  #   image: docker.elastic.co/kibana/kibana:7.9.2
-  #   container_name: kib01
-  #   ports:
-  #     - 5601:5601
-  #   environment:
-  #     ELASTICSEARCH_URL: http://es01:9200
-  #     ELASTICSEARCH_HOSTS: http://es01:9200
-  #   networks:
-  #     - elastic
 volumes:
   data01:
+    driver: local
+  db:
     driver: local
 networks:
   elastic:
