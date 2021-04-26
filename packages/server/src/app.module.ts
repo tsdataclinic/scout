@@ -21,6 +21,10 @@ import { CollectionsModule } from './collections/collections.module';
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
+      introspection: true,
+      playground: {
+        endpoint: 'graphql',
+      },
     }),
     ScheduleModule.forRoot(),
     TypeOrmModule.forRoot(),
