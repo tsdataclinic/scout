@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
+import Select from 'react-select'
+import {faGithub, faMedium} from '@fortawesome/free-brands-svg-icons'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import RepoCard from 'react-repo-card';
+import { faDownload } from '@fortawesome/free-solid-svg-icons';
 import RawHTML from '../../components/RawHTML/RawHTML';
 import ColumnMatchTable from '../../components/ColumnMatchTable/ColumnMatchTable';
 import Dataset from '../../components/Dataset/Dataset';
 import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
 import '../../components/Loading/Loading.scss';
 import usePageView from '../../hooks/analytics';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faGithub, faMedium} from '@fortawesome/free-brands-svg-icons'
 import { useCurrentCollection } from '../../hooks/collections';
 import {walks} from './CrossWalkData'
-import Select from 'react-select'
 
-import RepoCard from "react-repo-card";
 import {
   useDataset,
   useJoinableDatasets,
   useGetSimilarDatasets,
 } from '../../hooks/datasets';
+
 import './DatasetPage.scss';
 import ViewOnOpenPortal from '../../components/ViewOnOpenPortal/ViewOnOpenPortal';
-import { faDownload } from '@fortawesome/free-solid-svg-icons';
 
 const formatDate = (date) => moment(date).format('MMMM DD, YYYY');
 
@@ -298,9 +299,9 @@ export default function DatasetPage({ match }) {
                   <li style={d.con==='unknown' ? {color:'red'} : {color:'green'}}>{d.con}</li>
                   <li>
                     {d.con==='unknown' ?
-                      <div style={{display:'flex', alignItems:"center",flexDirection:"row"}}>
-                        <Select width={"170px"} styles={{width:'170px'}} options={walkOptions}/>
-                        <button style={{width:"30px", marginLeft:'10px'}}>✓</button>
+                      <div style={{display:'flex', alignItems:'center',flexDirection:'row'}}>
+                        <Select width="170px" styles={{width:'170px'}} options={walkOptions}/>
+                        <button style={{width:'30px', marginLeft:'10px'}}>✓</button>
                       </div>
                     :
                     <button style={{flex:1}}>Dispute mapping</button>
