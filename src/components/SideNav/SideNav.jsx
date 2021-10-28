@@ -56,6 +56,25 @@ export default function SideNav() {
         <DataClinicSVG />
         <h1>About</h1>
       </NavLink>
+      <div className="sep" />
+      <NavLink
+        exact
+        activeClassName="active-nav"
+        alt="legal"
+        className="legal"
+        to="/terms"
+      >
+        <h1>Legal</h1>
+      </NavLink>
+      <NavLink
+        exact
+        activeClassName="active-nav"
+        alt="privacy"
+        className="privacy"
+        to="/privacy"
+      >
+        <h1>Privacy</h1>
+      </NavLink>
     </nav>
   );
 }

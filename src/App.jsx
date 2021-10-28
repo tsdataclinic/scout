@@ -7,6 +7,7 @@ import {
   Switch,
 } from 'react-router-dom';
 import { ModalContainer, ModalRoute } from 'react-router-modal';
+import { Privacy, TermsOfService } from '@dataclinic/dataclinic';
 
 import SideNav from './components/SideNav/SideNav';
 import HomePage from './layout/HomePage/HomePage';
@@ -35,6 +36,8 @@ function App() {
 
             <Route path="/about" component={AboutPage} />
             <Route path="/collections" component={CollectionsPage} />
+            <Route path="/privacy" component={Privacy} />
+            <Route path="/terms" component={TermsOfService} />
 
             <ModalRoute
               path="/collection/new"
@@ -42,6 +45,7 @@ function App() {
               component={CreateCollectionModal}
             />
             <Route path="/" component={HomePage} />
+            <Route path="/privacy" exact component={Privacy} />
             <Redirect from="/" to="/" />
           </Switch>
         </div>

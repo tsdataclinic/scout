@@ -10,13 +10,29 @@ nav.side-nav {
         align-items: center;
         justify-content: start;
     }
+    .legal, .privacy{
+      min-height:unset;
+      padding:0px;
+      margin:0px;
+      display:none;
+      @media (min-width: 859px) {
+        display:block;
+      }
+    }
     background-color: #0b0e12;
     color: white;
     box-sizing: border-box;
     grid-area: side-nav;
+    .sep{
+      flex:1
+    }
     svg {
         fill: white;
         stroke: white;
+        display:none;
+      @media (min-width: 859px) {
+        display:block;
+      }
     }
     .active-nav {
         border-right: none;
