@@ -36,8 +36,16 @@ function App() {
 
             <Route path="/about" component={AboutPage} />
             <Route path="/collections" component={CollectionsPage} />
-            <Route path="/privacy" component={Privacy} />
-            <Route path="/terms" component={TermsOfService} />
+            <Route path="/privacy">
+              <div style={{ flex: 1, overflowY: 'auto' }}>
+                <Privacy />
+              </div>
+            </Route>
+            <Route path="/terms">
+              <div style={{ flex: 1, overflowY: 'auto' }}>
+                <TermsOfService />
+              </div>
+            </Route>
 
             <ModalRoute
               path="/collection/new"

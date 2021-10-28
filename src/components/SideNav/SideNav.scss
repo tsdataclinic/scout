@@ -24,15 +24,16 @@ nav.side-nav {
     box-sizing: border-box;
     grid-area: side-nav;
     .sep{
-      flex:1
+      flex:1;
+      display:none;
+      @media (min-width: 859px) {
+        display:block;
+      }
     }
     svg {
         fill: white;
         stroke: white;
-        display:none;
-      @media (min-width: 859px) {
-        display:block;
-      }
+        margin:auto;
     }
     .active-nav {
         border-right: none;
