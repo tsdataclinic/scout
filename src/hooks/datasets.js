@@ -40,8 +40,8 @@ export function useGetJoinNumbers(datasetID) {
   const [joinNumbers, setJoinNumbers] = useState({});
   useEffect(() => {
     fetch(`${process.env.PUBLIC_URL}/potential_join_numbers.json`)
-      .then((r) => r.json())
-      .then((r) => setJoinNumbers(r));
+      .then(r => r.json())
+      .then(r => setJoinNumbers(r));
   }, []);
   return datasetID in joinNumbers ? joinNumbers[datasetID] : 0;
 }
@@ -51,16 +51,16 @@ export function useGetSimilarDatasets(datasetID) {
 
   useEffect(() => {
     fetch(`${process.env.PUBLIC_URL}/similarity_metrics.json`)
-      .then((r) => r.json())
-      .then((r) => setSimilarityMetrics(r));
+      .then(r => r.json())
+      .then(r => setSimilarityMetrics(r));
   }, []);
 
   const similarDatasets = useMemo(
     () =>
       similarityMetrics[datasetID] && datasets && datasets.length > 0
-        ? similarityMetrics[datasetID].map((match) => ({
+        ? similarityMetrics[datasetID].map(match => ({
             similarity: match.similarity,
-            dataset: datasets.find((d) => d.resource.id === match.dataset),
+            dataset: datasets.find(d => d.resource.id === match.dataset),
           }))
         : [],
 
@@ -71,12 +71,12 @@ export function useGetSimilarDatasets(datasetID) {
 
 export function useDataset(datasetID) {
   const [{ datasets }] = useStateValue();
-  return datasets.find((d) => d.resource.id === datasetID);
+  return datasets.find(d => d.resource.id === datasetID);
 }
 
 export function useGetDatasetsByIds(ids) {
   const [{ datasets }] = useStateValue();
-  return useMemo(() => datasets.filter((d) => ids.includes(d.resource.id)), [
+  return useMemo(() => datasets.filter(d => ids.includes(d.resource.id)), [
     datasets,
     ids,
   ]);
@@ -86,7 +86,7 @@ export function useDatasets({ tags, term, categories, columns, departments }) {
   const [{ datasets }] = useStateValue();
   const results = useLunr({
     query: term,
-    documents: datasets.map((d) => ({
+    documents: datasets.map(d => ({
       id: d.resource.id,
       name: d.resource.name,
       description: d.resource.description,
@@ -95,22 +95,21 @@ export function useDatasets({ tags, term, categories, columns, departments }) {
       fields: ['name', 'description'],
     },
   });
-  console.log('search results', results);
 
-  const searchedDatasets = results.map((r) =>
-    datasets.find((d) => d.resource.id === r.ref),
+  const searchedDatasets = results.map(r =>
+    datasets.find(d => d.resource.id === r.ref),
   );
 
   return useMemo(() => {
     if (searchedDatasets) {
       let resultDatasets =
         searchedDatasets[0] && searchedDatasets[0].item
-          ? searchedDatasets.map((match) => match.item)
+          ? searchedDatasets.map(match => match.item)
           : [...searchedDatasets];
 
       const matches =
         searchedDatasets && searchedDatasets[0] && searchedDatasets[0].item
-          ? searchedDatasets.map((d) => ({
+          ? searchedDatasets.map(d => ({
               id: d.item.resource.id,
               matches: d.matches,
             }))
@@ -118,17 +117,16 @@ export function useDatasets({ tags, term, categories, columns, departments }) {
 
       if (tags && tags.length > 0) {
         resultDatasets = resultDatasets.filter(
-          (dataset) =>
-            dataset.classification.domain_tags.filter((tag) =>
-              tags.includes(tag),
-            ).length > 0,
+          dataset =>
+            dataset.classification.domain_tags.filter(tag => tags.includes(tag))
+              .length > 0,
         );
       }
 
       if (categories && categories.length > 0) {
         resultDatasets = resultDatasets.filter(
-          (dataset) =>
-            dataset.classification.categories.filter((cat) =>
+          dataset =>
+            dataset.classification.categories.filter(cat =>
               categories.includes(cat),
             ).length > 0,
         );
@@ -136,18 +134,18 @@ export function useDatasets({ tags, term, categories, columns, departments }) {
 
       if (columns && columns.length > 0) {
         resultDatasets = resultDatasets.filter(
-          (dataset) =>
+          dataset =>
             dataset.resource.columns_name &&
-            dataset.resource.columns_name.filter((col) => columns.includes(col))
+            dataset.resource.columns_name.filter(col => columns.includes(col))
               .length > 0,
         );
       }
 
       if (departments && departments.length > 0) {
-        resultDatasets = resultDatasets.filter((dataset) =>
+        resultDatasets = resultDatasets.filter(dataset =>
           departments.includes(
             dataset.classification.domain_metadata.find(
-              (d) => d.key === 'Dataset-Information_Agency',
+              d => d.key === 'Dataset-Information_Agency',
             )?.value,
           ),
         );
@@ -155,8 +153,8 @@ export function useDatasets({ tags, term, categories, columns, departments }) {
 
       return {
         datasets: resultDatasets,
-        matches: matches.filter((match) =>
-          resultDatasets.find((r) => r.resource.id === match.id),
+        matches: matches.filter(match =>
+          resultDatasets.find(r => r.resource.id === match.id),
         ),
       };
     }
@@ -210,7 +208,7 @@ export function useSortDatasetsBy(
 export function useUniqueColumnEntries(dataset, column) {
   const [uniqueEntries, setUniqueEntries] = useState(null);
   useEffect(() => {
-    getUniqueEntries(dataset, column).then((res) => {
+    getUniqueEntries(dataset, column).then(res => {
       setUniqueEntries({
         dataset: dataset.resource.id,
         column,

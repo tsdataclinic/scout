@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  useMemo,
+} from 'react';
 import Dexie from 'dexie';
 
 export const CollectionsContext = createContext();
@@ -34,12 +40,12 @@ const reducer = (state, action) => {
         collections: [
           ...state.collections,
           {
-            ...state.collections.find((c) => c.id === 'pending'),
+            ...state.collections.find(c => c.id === 'pending'),
             id: payload.id,
             createdAt: new Date(),
             name: payload.name,
           },
-        ].map((c) =>
+        ].map(c =>
           c.id === 'pending'
             ? { id: 'pending', datasets: [], name: 'pending' }
             : c,
@@ -48,7 +54,7 @@ const reducer = (state, action) => {
     case 'ADD_TO_COLLECTION':
       return {
         ...state,
-        collections: state.collections.map((col) =>
+        collections: state.collections.map(col =>
           col.id === payload.id
             ? {
                 ...col,
@@ -60,11 +66,11 @@ const reducer = (state, action) => {
     case 'REMOVE_FROM_COLLECTION':
       return {
         ...state,
-        collections: state.collections.map((col) =>
+        collections: state.collections.map(col =>
           col.id === payload.id
             ? {
                 ...col,
-                datasets: col.datasets.filter((d) => d !== payload.datasetID),
+                datasets: col.datasets.filter(d => d !== payload.datasetID),
               }
             : col,
         ),
@@ -74,7 +80,7 @@ const reducer = (state, action) => {
         ...state,
         collections: [
           ...state,
-          state.collections.map((col) =>
+          state.collections.map(col =>
             col.id === payload.id ? { ...col, name: payload.name } : col,
           ),
         ],
@@ -84,7 +90,7 @@ const reducer = (state, action) => {
         ...state,
         collections: [
           ...state,
-          state.collections.map((col) =>
+          state.collections.map(col =>
             col.id === payload.id ? { ...col, datasets: [] } : col,
           ),
         ],
@@ -93,7 +99,7 @@ const reducer = (state, action) => {
     case 'DELETE_COLLECTION':
       return {
         ...state,
-        collections: state.collections.filter((col) => col.id !== payload.id),
+        collections: state.collections.filter(col => col.id !== payload.id),
       };
 
     case 'HYDRATE_STATE':
@@ -106,13 +112,13 @@ const reducer = (state, action) => {
   }
 };
 
-export const CollectionsProvider = ({ children }) => {
+export function CollectionsProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initalState);
   const { cacheLoaded, collections, activeCollectionID } = state;
 
   // Restore state
   useEffect(() => {
-    db.CollectionCache.get(1).then((result) => {
+    db.CollectionCache.get(1).then(result => {
       if (result) {
         const cachedState = JSON.parse(result.data);
         dispatch({
@@ -145,11 +151,13 @@ export const CollectionsProvider = ({ children }) => {
     }
   }, [cacheLoaded, collections, activeCollectionID]);
 
+  const context = useMemo(() => [state, dispatch], [state, dispatch]);
+
   return (
-    <CollectionsContext.Provider value={[state, dispatch]}>
+    <CollectionsContext.Provider value={context}>
       {children}
     </CollectionsContext.Provider>
   );
-};
+}
 
 export const useCollectionsValue = () => useContext(CollectionsContext);

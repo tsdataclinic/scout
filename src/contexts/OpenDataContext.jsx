@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  useMemo,
+} from 'react';
 
 import Dexie from 'dexie';
 import {
@@ -52,8 +58,8 @@ const reducer = (state, action) => {
   }
 };
 
-const updateManifestFromSocrata = (dispatch) => {
-  getManifest().then((manifest) => {
+const updateManifestFromSocrata = dispatch => {
+  getManifest().then(manifest => {
     const tagList = getTagList(manifest);
     const categories = getCategories(manifest);
     const departments = getDepartments(manifest);
@@ -88,25 +94,19 @@ const updateManifestFromSocrata = (dispatch) => {
 };
 
 // Checks to see if the cache is older than 1 daym if so update it
-const shouldUpdateCache = (lastUpdated) => {
+const shouldUpdateCache = lastUpdated => {
   if (lastUpdated == null) return true;
   if ((new Date() - lastUpdated) / 1000 > 24 * 60 * 60) return true;
   return false;
 };
 
-export const StateProvider = ({ children }) => {
+export function StateProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initalState);
 
   // Try to get the state locally from indexed db... if we can't find it there, request it from the
   // socrata API
-  //
-  //
   useEffect(() => {
-    console.log('state is ', state);
-  }, [state]);
-
-  useEffect(() => {
-    db.SocrataCache.get(1).then((result) => {
+    db.SocrataCache.get(1).then(result => {
       if (result) {
         const cachedState = JSON.parse(result.data);
 
@@ -166,11 +166,8 @@ export const StateProvider = ({ children }) => {
     lastUpdated,
   ]);
 
-  return (
-    <AppContext.Provider value={[state, dispatch]}>
-      {children}
-    </AppContext.Provider>
-  );
-};
+  const context = useMemo(() => [state, dispatch], [state, dispatch]);
+  return <AppContext.Provider value={context}>{children}</AppContext.Provider>;
+}
 
 export const useStateValue = () => useContext(AppContext);

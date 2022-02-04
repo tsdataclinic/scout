@@ -4,13 +4,13 @@ const SOCRATA_NY_OPENDATA_ENDPOINT =
 async function getMaifestPage(pageNo, limit = 100) {
   return fetch(
     `${SOCRATA_NY_OPENDATA_ENDPOINT}&offset=${pageNo * limit}&limit=${limit}`,
-  ).then((r) => r.json());
+  ).then(r => r.json());
 }
 
 function matachableColumnsForDataset(dataset) {
   return new Set([
-    ...dataset.resource.columns_name.map((s) => s.toLocaleLowerCase()),
-    ...dataset.resource.columns_field_name.map((s) => s.toLocaleLowerCase()),
+    ...dataset.resource.columns_name.map(s => s.toLocaleLowerCase()),
+    ...dataset.resource.columns_field_name.map(s => s.toLocaleLowerCase()),
   ]);
 }
 
@@ -18,7 +18,7 @@ function hasJoinableMatch(columns, candidate) {
   const candidateCols = matachableColumnsForDataset(candidate);
   const intersection = new Set(
     [...columns].filter(
-      (x) => candidateCols.has(x), // && ALLOWED_JOIN_COLUMNS.includes(x),
+      x => candidateCols.has(x), // && ALLOWED_JOIN_COLUMNS.includes(x),
     ),
   );
   return Array.from(intersection);
@@ -27,12 +27,12 @@ function hasJoinableMatch(columns, candidate) {
 export function findJoinable(dataset, datasets) {
   const cols = matachableColumnsForDataset(dataset);
   const matches = datasets
-    .map((candidate) => ({
+    .map(candidate => ({
       dataset: candidate,
       joinableColumns: hasJoinableMatch(cols, candidate),
     }))
     .filter(
-      (match) =>
+      match =>
         match.joinableColumns.length > 0 &&
         match.dataset.resource.id !== dataset.resource.id,
     );
@@ -50,14 +50,14 @@ export async function getManifest() {
   const pages = Math.ceil(totalEntries / 100);
   return Promise.all(
     [...Array(pages)].map((_, i) =>
-      getMaifestPage(i).then((resp) => resp.results),
+      getMaifestPage(i).then(resp => resp.results),
     ),
-  ).then((list) => {
-    return list.reduce(
+  ).then(list =>
+    list.reduce(
       (datasetPage, allDatasets) => [...allDatasets, ...datasetPage],
       [],
-    );
-  });
+    ),
+  );
 }
 
 /**
@@ -67,9 +67,9 @@ export async function getManifest() {
 export function getColumns(datasets) {
   const columnList = {};
 
-  datasets.forEach((dataset) => {
+  datasets.forEach(dataset => {
     if (dataset.resource.columns_name) {
-      dataset.resource.columns_name.forEach((col) => {
+      dataset.resource.columns_name.forEach(col => {
         if (col in columnList) {
           columnList[col] += 1;
         } else {
@@ -112,13 +112,13 @@ export function getCategories(datasets) {
  */
 export function getDepartments(datasets) {
   const departments = datasets
-    .map((dataset) =>
+    .map(dataset =>
       dataset.classification.domain_metadata.find(
-        (md) => md.key === 'Dataset-Information_Agency',
+        md => md.key === 'Dataset-Information_Agency',
       ),
     )
-    .filter((d) => d)
-    .map((d) => d.value);
+    .filter(d => d)
+    .map(d => d.value);
   const counts = departments.reduce(
     (totals, department) =>
       department in totals
@@ -135,9 +135,9 @@ export function getDepartments(datasets) {
 export function getTagList(datasets) {
   const tagList = {};
 
-  datasets.forEach((dataset) => {
+  datasets.forEach(dataset => {
     if (dataset.classification.domain_tags) {
-      dataset.classification.domain_tags.forEach((tag) => {
+      dataset.classification.domain_tags.forEach(tag => {
         if (tag in tagList) {
           tagList[tag] += 1;
         } else {
@@ -154,18 +154,19 @@ export function getUniqueEntriesCount(dataset, column) {
     `https://data.cityofnewyork.us/resource/${
       dataset.resource.id
     }.json?$select=distinct|> select count(*) ${column.replace(/ /g, '_')}`,
-  ).then((r) => r.json());
+  ).then(r => r.json());
 }
+
 export function getUniqueEntries(dataset, column) {
   return fetch(
     `https://data.cityofnewyork.us/resource/${
       dataset.resource.id
     }.json?$select=distinct ${column.replace(/ /g, '_')}`,
   )
-    .then((r) => r.json())
-    .then((r) => {
+    .then(r => r.json())
+    .then(r => {
       if (r.errorCode || r.error) {
-        console.warn(
+        console.error(
           'Failed to load unique entries for dataset ',
           dataset,
           ' column ',
@@ -173,6 +174,6 @@ export function getUniqueEntries(dataset, column) {
         );
         return [];
       }
-      return r.map((entry) => Object.values(entry)[0]);
+      return r.map(entry => Object.values(entry)[0]);
     });
 }
