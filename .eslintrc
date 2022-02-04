@@ -10,6 +10,7 @@
   "rules": {
     "no-use-before-define": "warn",
     "react/no-unescaped-entities": "warn",
+    "no-console": ["warn", { "allow": ["error"] }],
     "no-unused-vars": [
       "error",
       {

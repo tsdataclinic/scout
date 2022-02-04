@@ -20,16 +20,15 @@ export default function CollectionTab({ visible, onDismiss }) {
     setTab('add');
   };
 
-  const selectCollection = (collectionID) => {
+  const selectCollection = collectionID => {
     setActiveCollection(collectionID);
     setTab('add');
   };
 
-  const getAgency = (dataset) => {
-    return dataset?.classification.domain_metadata?.find(
+  const getAgency = dataset =>
+    dataset?.classification.domain_metadata?.find(
       ({ key }) => key === 'Dataset-Information_Agency',
     )?.value;
-  };
 
   if (!visible) return '';
 
@@ -44,13 +43,13 @@ export default function CollectionTab({ visible, onDismiss }) {
               placeholder="name"
               type="text"
               value={newCollectionName}
-              onChange={(e) => setNewCollectionName(e.target.value)}
+              onChange={e => setNewCollectionName(e.target.value)}
             />
             {collection.id === 'pending' && (
               <>
                 <p>With datasets:</p>
                 <ul>
-                  {currentCollectionDatasets.map((c) => (
+                  {currentCollectionDatasets.map(c => (
                     <li className="collection-tab-dataset">
                       <div>
                         <p className="name">{c.resource.name}</p>
@@ -74,9 +73,7 @@ export default function CollectionTab({ visible, onDismiss }) {
                 <p className="collection-name">{collection.name}</p>
               </>
             ) : (
-              <>
-                <h3>Create a new dataset form selection</h3>
-              </>
+              <h3>Create a new dataset form selection</h3>
             )}
             {collections.length > 2 && (
               <button type="button" onClick={() => setTab('switch')}>
@@ -101,7 +98,7 @@ export default function CollectionTab({ visible, onDismiss }) {
               </div>
             ) : (
               <ul>
-                {currentCollectionDatasets.map((d) => (
+                {currentCollectionDatasets.map(d => (
                   <li key={d.resource.name} className="collection-tab-dataset">
                     <div>
                       <p className="name">{d.resource.name}</p>
@@ -134,8 +131,8 @@ export default function CollectionTab({ visible, onDismiss }) {
           ) : (
             <ul className="existing-collections-list">
               {collections
-                .filter((c) => c.id !== 'pending')
-                .map((c) => (
+                .filter(c => c.id !== 'pending')
+                .map(c => (
                   <li className="existing-collection">
                     <div className="exisiting-colections-deets">
                       <button

@@ -18,8 +18,8 @@ export default function SortMenu({
         <ul>
           <li onClick={() => setExpanded(!expanded)}>{selected}</li>
           {options
-            .filter((o) => o !== selected)
-            .map((option) => (
+            .filter(o => o !== selected)
+            .map(option => (
               <li
                 onClick={() => {
                   onSelected(option);

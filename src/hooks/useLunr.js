@@ -1,16 +1,17 @@
 import { useState, useRef, useEffect } from 'react';
 import lunr from 'lunr';
 
-const parameterisedPlugin = function(builder, fields) {
-  fields.forEach(function(field) {
+const parameterisedPlugin = function setupFields(builder, fields) {
+  fields.forEach(field => {
     builder.field(field);
   });
 };
+
 function generateIndex(options, documents) {
-  return lunr(function() {
+  return lunr(function lunrCallback() {
     this.use(parameterisedPlugin, options.fields);
 
-    documents.forEach(function(doc) {
+    documents.forEach(function docCallback(doc) {
       this.add(doc);
     }, this);
   });
@@ -41,16 +42,20 @@ export default function useLunr({ query, documents, options }) {
       index.current = generateIndex(options, documents);
       storeIndex(index.current, documents.length);
     }
-  }, [documents.map((d) => d.id).join('_')]);
+    // TODO(jps327): find safe way to remove this eslint-disable
+    // eslint-disable-next-line
+  }, [documents.map(d => d.id).join('_')]);
 
   useEffect(() => {
     if (index.current) {
       try {
         setResults(index.current.search(query));
       } catch {
-        console.log('ignoring bad query format');
+        console.error('ignoring bad query format');
       }
     }
-  }, [query,index.current]);
+    // TODO(jps327): find safe way to remove this eslint-disable
+    // eslint-disable-next-line
+  }, [query, index.current]);
   return results;
 }

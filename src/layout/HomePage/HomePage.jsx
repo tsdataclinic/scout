@@ -102,7 +102,7 @@ export default function HomePage() {
                   onChange={setSelectedCategories}
                   selected={selectedCategories}
                   collapse={filterStates.categories}
-                  onCollapse={(collapsed) =>
+                  onCollapse={collapsed =>
                     setFilterState('categories', collapsed)
                   }
                   title="Categories"
@@ -114,7 +114,7 @@ export default function HomePage() {
                   selected={selectedDepartments}
                   onChange={setSelectedDepartments}
                   collapse={filterStates.departments}
-                  onCollapse={(collapsed) =>
+                  onCollapse={collapsed =>
                     setFilterState('departments', collapsed)
                   }
                   title="Departments"
@@ -126,9 +126,7 @@ export default function HomePage() {
                   selected={selectedColumns}
                   onChange={setSelectedColumns}
                   collapse={filterStates.columns}
-                  onCollapse={(collapsed) =>
-                    setFilterState('columns', collapsed)
-                  }
+                  onCollapse={collapsed => setFilterState('columns', collapsed)}
                   title="Columns"
                 />
               </div>
@@ -138,26 +136,24 @@ export default function HomePage() {
                   selected={selectedTags}
                   onChange={setSelectedTags}
                   collapse={filterStates.tags}
-                  onCollapse={(collapsed) => setFilterState('tags', collapsed)}
+                  onCollapse={collapsed => setFilterState('tags', collapsed)}
                   title="Tags"
                 />
               </div>
             </div>
           </>
         ) : (
-          <>
-            <h2>
-              <button
-                onKeyDown={() => setCollapseFilterBar(false)}
-                onClick={() => setCollapseFilterBar(false)}
-                className="header-button"
-                type="button"
-              >
-                Filters
-                <FontAwesomeIcon icon={faAngleDown} />
-              </button>
-            </h2>
-          </>
+          <h2>
+            <button
+              onKeyDown={() => setCollapseFilterBar(false)}
+              onClick={() => setCollapseFilterBar(false)}
+              className="header-button"
+              type="button"
+            >
+              Filters
+              <FontAwesomeIcon icon={faAngleDown} />
+            </button>
+          </h2>
         )}
       </div>
       <div className="datasets">
@@ -165,7 +161,7 @@ export default function HomePage() {
           <FontAwesomeIcon size="lg" icon={faSearch} />
           <DebounceInput
             type="text"
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={e => setSearchTerm(e.target.value)}
             value={searchTerm}
             debounceTimeout={1000}
             placeholder="Search for dataset"
@@ -186,25 +182,25 @@ export default function HomePage() {
                 'Downloads',
                 'Views',
               ]}
-              onDirection={(direction) => setSortDirection(direction)}
+              onDirection={direction => setSortDirection(direction)}
               selected={sortBy}
               direction={sortDirection}
-              onSelected={(selected) => setSortBy(selected)}
+              onSelected={selected => setSortBy(selected)}
             />
           )}
         </div>
 
         <ul className="dataset-list">
           {loaded ? (
-            pagedDatasets.map((dataset) => (
+            pagedDatasets.map(dataset => (
               <Dataset
                 key={dataset?.resource?.id}
                 dataset={dataset}
                 inCollection={collection.datasets.includes(dataset.resource.id)}
-                onAddToCollection={(datasetID) =>
+                onAddToCollection={datasetID =>
                   addToCollection(collection.id, datasetID)
                 }
-                onRemoveFromCollection={(datasetID) =>
+                onRemoveFromCollection={datasetID =>
                   removeFromCollection(collection.id, datasetID)
                 }
                 query={searchTerm}

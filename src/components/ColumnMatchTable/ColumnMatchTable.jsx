@@ -5,16 +5,15 @@ import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import ColumnSuggestions from '../ColumnSuggestions/ColumnSuggestions';
 
 export default function ColumnMatchTable({ dataset, joinColumns }) {
-  const columns = dataset?.resource?.columns_name || [];
+  const columns = useMemo(() => dataset?.resource?.columns_name || [], [
+    dataset,
+  ]);
 
   const suggestionsForColumn = useCallback(
-    (col, candidates) => {
-      return columns
-        ? candidates.filter((c) =>
-            c.joinableColumns.includes(col.toLowerCase()),
-          )
-        : [];
-    },
+    (col, candidates) =>
+      columns
+        ? candidates.filter(c => c.joinableColumns.includes(col.toLowerCase()))
+        : [],
     [columns],
   );
 
@@ -41,7 +40,7 @@ export default function ColumnMatchTable({ dataset, joinColumns }) {
         </ul>
       </div>
       {dataset
-        ? sortedColumns.map((column) => (
+        ? sortedColumns.map(column => (
             <ColumnSuggestions
               dataset={dataset}
               column={column}
