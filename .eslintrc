@@ -1,12 +1,12 @@
 {
   "extends": [
     "react-app",
+    "plugin:react/recommended",
     "airbnb",
     "plugin:jsx-a11y/recommended",
-    "prettier",
-    "prettier/react"
+    "prettier"
   ],
-  "plugins": ["jsx-a11y", "react-hooks", "prettier"],
+  "plugins": ["react", "jsx-a11y"],
   "rules": {
     "no-use-before-define": "warn",
     "react/no-unescaped-entities": "warn",
@@ -24,11 +24,14 @@
     "react-hooks/exhaustive-deps": "warn",
     "react-hooks/rules-of-hooks": "warn",
     "camelcase": "warn",
-    "jsx-a11y/click-events-have-key-events":"warn",
+    "jsx-a11y/click-events-have-key-events": "warn",
     "jsx-a11y/no-noninteractive-element-interactions": "warn",
- "jsx-a11y/anchor-is-valid": [ "error", {
-      "components": [ "Link" ],
-      "specialLink": [ "to" ]
-    }]
+    "jsx-a11y/anchor-is-valid": [
+      "error",
+      {
+        "components": ["Link"],
+        "specialLink": ["to"]
+      }
+    ]
   }
 }
