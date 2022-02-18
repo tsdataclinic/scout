@@ -167,12 +167,7 @@ export class SearchService {
     }
   }
 
-  async search(
-    search: string = 'car',
-    portal?: string,
-    offset = 0,
-    limit = 20,
-  ) {
+  async search(search = 'car', portal?: string, offset = 0, limit = 20) {
     console.log('RUNNING QUERY', search);
 
     const matchQuery = {
@@ -186,7 +181,7 @@ export class SearchService {
 
     const query = search && search.length > 0 ? matchQuery : matchAll;
     const portalMatch = { match: { portal } };
-    let fullQuery: any[] = [query];
+    const fullQuery: any[] = [query];
 
     if (portal) {
       fullQuery.push(portalMatch);
@@ -225,7 +220,7 @@ export class SearchService {
             // console.error(JSON.stringify(err));
             reject(err);
           }
-          resolve();
+          resolve(undefined);
         },
       );
     });
@@ -237,7 +232,7 @@ export class SearchService {
     const body = await this.parseAndPrepareData();
     const batchSize = 100;
 
-    let batches = [];
+    const batches = [];
     body.forEach((inst, index) => {
       const batchIndex = Math.floor(index / (batchSize * 2));
       batches[batchIndex]
@@ -245,7 +240,7 @@ export class SearchService {
         : (batches[batchIndex] = [inst]);
     });
 
-    let done = 0;
+    const done = 0;
 
     await batches.reduce(async (previousPromise, nextBatch, index) => {
       await previousPromise;
@@ -267,7 +262,7 @@ export class SearchService {
     return datasetsWithVector;
   }
   async parseAndPrepareData() {
-    let body = [];
+    const body = [];
     console.log('getting datasets');
 
     const totalDatasets = await this.datasetService.count();

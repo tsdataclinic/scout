@@ -5,3 +5,4 @@ yarn-error.log
 build
 .ipynb_checkpoints
 packages/server/model
+*.swp

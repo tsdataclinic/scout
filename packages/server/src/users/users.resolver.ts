@@ -12,7 +12,7 @@ import {
 import { LoginResult, SignupResult } from './signin.types';
 import { GqlAuthGuard, CurrentUser } from '../auth/gql-auth-guard';
 import { UseGuards } from '@nestjs/common';
-import { Collection } from 'src/collections/collections.entity';
+import { Collection } from '../collections/collections.entity';
 
 @Resolver(of => User)
 export class UserResolver {

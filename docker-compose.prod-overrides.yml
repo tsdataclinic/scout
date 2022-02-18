@@ -1,0 +1,17 @@
+# This file contains docker overrides to run on prod.
+# In prod it is recommended to run server, frontend, and elasticsearch all
+# through docker-compose.
+# In local dev, it is recommended to run only elasticsearch using docker and
+# run the frontend & backend as a separate process using `yarn start` at
+# the root level.
+services:
+  # API server
+  api:
+    build: ./packages/server/
+    networks:
+      - elastic
+    ports:
+      - 5000:5000
+    # mount the db directory and src directory into the container
+    env_file: 
+      - ./packages/server/.env

@@ -4,8 +4,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Query, Args, Mutation, Resolver } from '@nestjs/graphql';
-import { CurrentUser, GqlAuthGuard } from 'src/auth/gql-auth-guard';
-import { UsersService } from 'src/users/users.service';
+import { CurrentUser, GqlAuthGuard } from '../auth/gql-auth-guard';
+import { UsersService } from '../users/users.service';
 import { Collection } from './collections.entity';
 import { CollectionsService } from './collections.service';
 import { DatasetService } from '../dataset/dataset.service';

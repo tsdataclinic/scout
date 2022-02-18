@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import * as bcrypt from 'bcrypt';
-import { Collection } from 'src/collections/collections.entity';
+import { Collection } from '../collections/collections.entity';
 
 @ObjectType()
 @Entity()

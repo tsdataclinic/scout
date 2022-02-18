@@ -4,7 +4,7 @@ import { Dataset, PagedDatasets } from '../dataset/dataset.entity';
 import {
   DatasetColumn,
   PagedFieldCount,
-} from 'src/dataset-columns/dataset-column.entity';
+} from '../dataset-columns/dataset-column.entity';
 
 @ObjectType()
 @Entity()

@@ -7,7 +7,7 @@ import {
   Redirect,
   Switch,
 } from 'react-router-dom';
-import { ModalContainer, ModalRoute } from 'react-router-modal';
+import { ModalContainer } from 'react-router-modal';
 
 import SideNav from './components/SideNav/SideNav';
 import HomePage from './layout/HomePage/HomePage';
@@ -25,11 +25,13 @@ import { ProfilePage } from './layout/ProfilePage/ProfilePage';
 import { usePortals } from './hooks/graphQLAPI';
 
 function App() {
+  console.log('Process Env', process.env);
+
   const baseName = process.env.PUBLIC_URL
     ? `/${process.env.PUBLIC_URL.split('/').slice(-1)[0]}`
     : '';
 
-  const { loading, error, data: portalData } = usePortals();
+  const { data: portalData } = usePortals();
   const Portals = portalData ? portalData.portals : null;
   console.log('Portal here ', portalData, Portals);
 
@@ -65,7 +67,7 @@ function App() {
                   'collections',
                 ].includes(portal)
               ) {
-                return <></>;
+                return null;
               }
               const portalDetails = Portals
                 ? Portals.find((p) => p.abbreviation === portal)
@@ -83,19 +85,17 @@ function App() {
 
                   <Route
                     path=""
-                    render={() => (
-                      <>
-                        {Portals ? (
-                          <HomePage
-                            portal={Portals.find(
-                              (p) => p.abbreviation === portal,
-                            )}
-                          />
-                        ) : (
-                          'Loading ...'
-                        )}
-                      </>
-                    )}
+                    render={() =>
+                      Portals ? (
+                        <HomePage
+                          portal={Portals.find(
+                            (p) => p.abbreviation === portal,
+                          )}
+                        />
+                      ) : (
+                        'Loading ...'
+                      )
+                    }
                   />
                   <Redirect from="/" to="/CHI" />
                 </Switch>

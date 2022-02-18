@@ -16,7 +16,7 @@ import {
 // eslint-disable-next-line
 self.addEventListener('message', work);
 
-function work(event) {
+export default function work(event) {
   const { manifest, portal } = event.data;
 
   const tagList = getTagList(manifest);

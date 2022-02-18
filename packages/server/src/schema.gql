@@ -25,9 +25,9 @@ type Dataset {
   portal: Portal!
   thematicallySimilarDatasets(portalId: String): [ScoredDataset!]!
   type: String
+  updateFrequency: String
   updatedAt: DateTime
   updatedAutomation: Boolean
-  updateFrequency: String
   views: Float
 }
 

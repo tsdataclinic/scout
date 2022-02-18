@@ -7,6 +7,8 @@ import { TagsModule } from './tags/tags.module';
 import { DatasetColumnsModule } from './dataset-columns/dataset-columns.module';
 import { PortalsModule } from './portals/portals.module';
 import { SearchModule } from './search/search.module';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { PortalSyncModule } from './portal-sync/portal-sync.module';
@@ -18,7 +20,8 @@ import { CollectionsModule } from './collections/collections.module';
 
 @Module({
   imports: [
-    GraphQLModule.forRoot({
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
       introspection: true,

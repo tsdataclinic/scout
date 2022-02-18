@@ -3,7 +3,7 @@ import { Cron, Timeout } from '@nestjs/schedule';
 import fetch from 'node-fetch';
 import { PortalService } from 'src/portals/portal.service';
 import { DatasetService } from 'src/dataset/dataset.service';
-import { ConfigService} from 'src/config/config.service';
+import { ConfigService } from 'src/config/config.service';
 import { DatasetColumnsService } from 'src/dataset-columns/dataset-columns.service';
 import { TagsService } from 'src/tags/tags.service';
 import { Portal } from '../portals/portal.entity';
@@ -36,7 +36,7 @@ export class PortalSyncService {
 
   @Timeout(0)
   async onceAtStartup() {
-    if (this.configService.get("UPDATE_ON_BOOT")) {
+    if (this.configService.get('UPDATE_ON_BOOT')) {
       await this.refreshPortalList();
       await this.searchService.createIndex(true);
       await this.searchService.populateIndex();
@@ -132,6 +132,7 @@ export class PortalSyncService {
   }
 
   async refreshDatasetsForPortal(portal: Portal) {
+    console.log('Beginning dataset refresh');
     const perPage = 100;
     const pages = Math.ceil(portal.datasetCount / perPage);
     const allDatasets = await Promise.all(
@@ -167,6 +168,8 @@ export class PortalSyncService {
         }
       }),
     );
+
+    console.log('Completed dataset refresh');
   }
 
   async createAndUpdatePortal(portalDetails) {
@@ -187,6 +190,7 @@ export class PortalSyncService {
     portal.logo = externalDetails ? externalDetails.logo : null;
 
     portal = await this.portalService.createOrUpdatePortal(portal);
+    console.log('Finished saving portal');
 
     await this.refreshDatasetsForPortal(portal);
     console.log('created ', portal.name);

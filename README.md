@@ -20,13 +20,13 @@ We will maintain a 6 month roadmap which you can read here: [roadmap](https://gi
 
 If you want to help with the development of scout, you will need to be able to run the code locally. Scout is built using [React](https://reactjs.org/) and for development we use [yarn](https://classic.yarnpkg.com/en/).
 
-To get started install yarn and then run the following in a terminal:
+To get started install yarn and then run the following in a terminal from the repo root:
 
 ```bash
-yarn
+yarn install
 ```
 
-We use elastic search for some features. To run it locally, the easiest way to do it is with docker-compose
+We use elastic search for some features. To run it locally, the easiest way to do it is with docker-compose:
 
 ```
 docker-compose up
@@ -38,14 +38,16 @@ Note if you see an error about max_map_count you need to increase that number wi
  sudo sysctl -w vm.max_map_count=262144
 ```
 
-Once that is done simply run the folowing to start the development server:
+Once that is done, run the following from the repo root:
 
 ```
 yarn start
 ```
 
+If you wanted to run the backend and frontend separately, you will need to go to `packages/frontend` and `packages/server` and run `yarn start` inside each.
+
 ## Socrata Data Discovery API
 
 Main data source for the project is the Socrata Data Discovery API. API docs live here:
 
-https://socratadiscovery.docs.apiary.io/#
+https://socratadiscovery.docs.apiary.io/

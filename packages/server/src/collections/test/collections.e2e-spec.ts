@@ -4,6 +4,7 @@ import { CollectionsModule } from '../collections.module';
 import { DatasetModule } from '../../dataset/dataset.module';
 import { UsersModule } from '../../users/users.module';
 import { join } from 'path';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 
 describe('CollectionsController (e2e)', () => {
@@ -15,7 +16,8 @@ describe('CollectionsController (e2e)', () => {
         CollectionsModule,
         DatasetModule,
         UsersModule,
-        GraphQLModule.forRoot({
+        GraphQLModule.forRoot<ApolloDriverConfig>({
+          driver: ApolloDriver,
           autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
           sortSchema: true,
         }),
