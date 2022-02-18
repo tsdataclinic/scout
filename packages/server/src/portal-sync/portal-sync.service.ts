@@ -217,6 +217,6 @@ export class PortalSyncService {
           p.then(() => this.createAndUpdatePortal(portalDetails)),
         starterPromise,
       );
-    console.log('import done ');
+    console.log('IMPORT COMPLETE: All data portals have been updated');
   }
 }

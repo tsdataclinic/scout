@@ -19,7 +19,6 @@ export class PortalService {
   }
 
   createOrUpdatePortal(portal: Portal) {
-    console.log('Making a call to save portal!');
     return this.portalRepo.save(portal);
   }
 }

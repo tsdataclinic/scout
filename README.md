@@ -46,8 +46,32 @@ yarn start
 
 If you wanted to run the backend and frontend separately, you will need to go to `packages/frontend` and `packages/server` and run `yarn start` inside each.
 
+### Local database setup
+
+To develop locally we recommend using sqlite. The `ormconfig.json` in `packages/server/` is configured to point to a sqlite3 database in `packages/server/db/`. To set up the tables you should run:
+
+```bash
+yarn sync-schema
+```
+
+To populate it with data you need to start up the server with the `UPDATE_ON_BOOT` environment variable set. RUn the following:
+
+```
+UPDATE_ON_BOOT=true yarn start
+```
+
+The portal refresh takes a little bit of time. When you see the following message:
+
+> IMPORT COMPLETE: All data portals have been updated
+
+Then it means the data refresh is done. Next time you start the server you can just use `yarn start` as normal, without the `UPDATE_ON_BOOT` environment variable.
+
 ## Socrata Data Discovery API
 
 Main data source for the project is the Socrata Data Discovery API. API docs live here:
 
 https://socratadiscovery.docs.apiary.io/
+
+```
+
+```
