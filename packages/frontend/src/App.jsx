@@ -8,7 +8,6 @@ import {
   Switch,
 } from 'react-router-dom';
 import { ModalContainer } from 'react-router-modal';
-
 import SideNav from './components/SideNav/SideNav';
 import HomePage from './layout/HomePage/HomePage';
 import DatasetPage from './layout/DatasetPage/DatasetPage';
@@ -18,6 +17,7 @@ import CollectionsPage from './layout/CollectionsPage/CollectionsPage';
 import WelcomeModal from './components/WelcomeModal/WelcomeModal';
 import GHPagesRedirect from './components/GHPagesRedirect/GHPagesRedirect';
 import { DEFAULT_PORTAL } from './portals';
+import { USE_SINGLE_CITY } from './flags';
 
 import 'react-router-modal/css/react-router-modal.css';
 import UserAccountModal from './components/UserAccountModal/UserAccountModal';
@@ -56,6 +56,12 @@ function App() {
             path="/:portal"
             render={({ match }) => {
               const { portal } = match.params;
+
+              // TODO: remove this when multi-city is ready to launch
+              if (USE_SINGLE_CITY && portal !== 'NYC') {
+                return <Redirect to="/NYC" />;
+              }
+
               if (
                 [
                   'login',
@@ -95,7 +101,7 @@ function App() {
                       )
                     }
                   />
-                  <Redirect from="/" to="/CHI" />
+                  <Redirect from="/" to={`/${DEFAULT_PORTAL}`} />
                 </Switch>
               );
             }}
