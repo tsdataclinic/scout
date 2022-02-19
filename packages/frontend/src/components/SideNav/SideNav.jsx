@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import './SideNav.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { ReactComponent as ExploreSVG } from '../../icons/explore.svg';
 import { ReactComponent as CollectionsSVG } from '../../icons/collection.svg';
 import { ReactComponent as DataClinicSVG } from '../../icons/dataClinicWhite.svg';
-
 import CollectionTab from '../CollectionTab/CollectionTab';
 // import { useCurrentCollection } from '../../hooks/collections';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { useCurrentUser } from '../../hooks/graphQLAPI';
+import { USE_SINGLE_CITY } from '../../flags';
 
 export default function SideNav() {
   const [showCollectionTab, setShowCollectionTab] = useState(false);
   // const [collection] = useCurrentCollection();
   const collection = { datasets: [] };
-  const { data: userData, loading, error } = useCurrentUser();
+  const { data: userData } = useCurrentUser();
 
   return (
     <nav className="side-nav">
@@ -62,16 +62,18 @@ export default function SideNav() {
         <h1>About</h1>
       </NavLink>
 
-      <NavLink
-        exact
-        activeClassName="active-nav"
-        alt="login/sign-up"
-        className="login"
-        to="/login"
-      >
-        <FontAwesomeIcon size={'2x'} icon={faUser} />
-        <h1>{userData ? userData.profile.username : 'account'}</h1>
-      </NavLink>
+      {!USE_SINGLE_CITY && (
+        <NavLink
+          exact
+          activeClassName="active-nav"
+          alt="login/sign-up"
+          className="login"
+          to="/login"
+        >
+          <FontAwesomeIcon size="2x" icon={faUser} />
+          <h1>{userData ? userData.profile.username : 'account'}</h1>
+        </NavLink>
+      )}
     </nav>
   );
 }

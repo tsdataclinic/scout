@@ -42,7 +42,9 @@ function App() {
         </Route>
 
         <div className="content">
-          <Route exact path="/login" component={UserAccountModal} />
+          {!USE_SINGLE_CITY && (
+            <Route exact path="/login" component={UserAccountModal} />
+          )}
           <Route exact path="/about" component={AboutPage} />
           <Route exact path="/profile" component={ProfilePage} />
 
@@ -56,11 +58,6 @@ function App() {
             path="/:portal"
             render={({ match }) => {
               const { portal } = match.params;
-
-              // TODO: remove this when multi-city is ready to launch
-              if (USE_SINGLE_CITY && portal !== 'NYC') {
-                return <Redirect to="/NYC" />;
-              }
 
               if (
                 [
@@ -77,6 +74,15 @@ function App() {
                 ? Portals.find((p) => p.abbreviation === portal)
                 : null;
               if (Portals && !portalDetails) {
+                return <Redirect to={`/${DEFAULT_PORTAL}`} />;
+              }
+
+              // TODO: remove this when multi-city is ready to go
+              if (
+                portalDetails &&
+                portal !== DEFAULT_PORTAL &&
+                USE_SINGLE_CITY
+              ) {
                 return <Redirect to={`/${DEFAULT_PORTAL}`} />;
               }
 

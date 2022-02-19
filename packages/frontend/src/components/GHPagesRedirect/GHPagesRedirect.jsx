@@ -11,10 +11,7 @@ export default function GHPagesRedirect() {
     if (target && target !== window.location.href) {
       let to = target;
       if (process.env.PUBLIC_URL) {
-        to = `/${to
-          .split('/')
-          .slice(4)
-          .join('/')}`;
+        to = `/${to.split('/').slice(4).join('/')}`;
       }
       setRedirect(to);
     }
@@ -23,5 +20,5 @@ export default function GHPagesRedirect() {
   if (redirect) {
     return <Redirect to={redirect} />;
   }
-  return <></>;
+  return null;
 }
