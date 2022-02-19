@@ -37,8 +37,8 @@ export class PortalSyncService {
   @Timeout(0)
   async onceAtStartup() {
     if (this.configService.get('UPDATE_ON_BOOT')) {
-      await this.refreshPortalList();
-      await this.searchService.createIndex(true);
+      // await this.refreshPortalList();
+      await this.searchService.createIndex({ recreate: true });
       await this.searchService.populateIndex();
 
       // await this.searchService.findSimilar('test datasets');
@@ -132,7 +132,7 @@ export class PortalSyncService {
   }
 
   async refreshDatasetsForPortal(portal: Portal) {
-    console.log('Beginning dataset refresh');
+    console.log(`Beginning dataset refresh for ${portal.name}`);
     const perPage = 100;
     const pages = Math.ceil(portal.datasetCount / perPage);
     const allDatasets = await Promise.all(

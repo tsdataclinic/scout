@@ -25,15 +25,13 @@ import { ProfilePage } from './layout/ProfilePage/ProfilePage';
 import { usePortals } from './hooks/graphQLAPI';
 
 function App() {
-  console.log('Process Env', process.env);
-
   const baseName = process.env.PUBLIC_URL
     ? `/${process.env.PUBLIC_URL.split('/').slice(-1)[0]}`
     : '';
 
   const { data: portalData } = usePortals();
   const Portals = portalData ? portalData.portals : null;
-  console.log('Portal here ', portalData, Portals);
+  console.log('Portals retrieved:', Portals);
 
   return (
     <div className="App">

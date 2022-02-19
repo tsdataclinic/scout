@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-import uuidv4 from 'uuid/v4';
 import { useCollectionsValue } from '../contexts/CollectionsContext';
 import {
   useAddToCollection,
@@ -10,7 +8,11 @@ import {
 export function useUserCollections() {
   const [state, dispatch] = useCollectionsValue();
 
-  const { loading, data, error } = useCurrentUserCollections();
+  const { data } = useCurrentUserCollections();
+
+  // TODO: fix  - this gets triggered 40+ times on each refresh.
+  // This does not seem very performant.
+  console.log('CURRENT USER COLLECTIONS', data);
 
   const { data: pendingDatasets } = useDatasetsFromIds(state.pendingCollection);
 
@@ -19,14 +21,12 @@ export function useUserCollections() {
   const [addTo] = useAddToCollection();
 
   const setActiveCollection = (collectionID) => {
-    console.log('setting active collection ', collectionID);
     dispatch({
       type: 'SET_ACTIVE_COLLECTION',
       payload: collectionID,
     });
   };
 
-  console.log('collection state is ', state);
   const combinedState = {
     activeCollectionID: state.activeCollectionID,
     collections: [state.pendingCollection, ...serverCollections],
@@ -43,15 +43,15 @@ export function useUserCollections() {
   const inCurrentCollection = (id) => {
     if (state.activeCollectionID === 'pending') {
       return state.pendingCollection.includes(id);
-    } else if (serverCollections) {
+    }
+    if (serverCollections) {
       const collection = serverCollections.find(
         (c) => c.id === state.activeCollectionID,
       );
       if (collection) {
         return collection.datasets.find((d) => d.id === id);
-      } else {
-        return false;
       }
+      return false;
     }
     return false;
   };

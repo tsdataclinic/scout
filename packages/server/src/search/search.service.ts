@@ -17,7 +17,12 @@ export class SearchService {
     private readonly datasetService: DatasetService,
   ) {}
 
-  async createIndex(recreate: boolean) {
+  async createIndex({ recreate }: { recreate: boolean }) {
+    console.log('Creating elasticsearch index', {
+      index: this.configService.get('ELASTICSEARCH_INDEX'),
+      node: this.configService.get('ELASTICSEARCH_NODE'),
+    });
+    console.log('First checking if index already exists...');
     const checkIndex = await this.esService.indices.exists({
       index: this.configService.get('ELASTICSEARCH_INDEX'),
     });
@@ -25,12 +30,15 @@ export class SearchService {
     const indexExists = checkIndex.statusCode === 200;
 
     if (recreate && indexExists) {
+      console.log('Deleting index so we can recreate it');
       await this.esService.indices.delete({
         index: this.configService.get('ELASTICSEARCH_INDEX'),
       });
+      console.log('Index deleted!');
     }
 
     if (!indexExists || recreate) {
+      console.log('Creating index');
       this.esService.indices.create(
         {
           index: this.configService.get('ELASTICSEARCH_INDEX'),
@@ -86,9 +94,6 @@ export class SearchService {
                   type: 'dense_vector',
                   dims: 512,
                 },
-                // year: { type: 'integer' },
-                // genres: { type: 'nested' },
-                // actors: { type: 'nested' },
               },
             },
           },
@@ -168,7 +173,12 @@ export class SearchService {
   }
 
   async search(search = 'car', portal?: string, offset = 0, limit = 20) {
-    console.log('RUNNING QUERY', search);
+    console.log('RUNNING QUERY', {
+      search,
+      portal,
+      offset,
+      limit,
+    });
 
     const matchQuery = {
       multi_match: {
@@ -187,6 +197,11 @@ export class SearchService {
       fullQuery.push(portalMatch);
     }
 
+    console.log('Running elasticsearch query', {
+      index: this.configService.get('ELASTICSEARCH_INDEX'),
+      query: fullQuery,
+    });
+
     const { body } = await this.esService.search({
       index: this.configService.get('ELASTICSEARCH_INDEX'),
       body: {
@@ -203,6 +218,8 @@ export class SearchService {
     const hits = body.hits.hits;
 
     const ids = hits.map(item => item._id);
+
+    console.log('Got a result!', body);
 
     return { ids, total: body.hits.total.value };
   }
@@ -226,29 +243,33 @@ export class SearchService {
     });
   }
 
-  //** Populate the entire elastic search database */
+  /**
+   * Populate the entire elastic search database
+   */
   async populateIndex() {
-    console.log('PARSING DATA');
+    console.log('Populating Elasticsearch index');
     const body = await this.parseAndPrepareData();
     const batchSize = 100;
 
+    // split all prepared data into batches
     const batches = [];
     body.forEach((inst, index) => {
       const batchIndex = Math.floor(index / (batchSize * 2));
-      batches[batchIndex]
-        ? batches[batchIndex].push(inst)
-        : (batches[batchIndex] = [inst]);
+      if (batches[batchIndex]) {
+        batches[batchIndex].push(inst);
+      } else {
+        batches[batchIndex] = [inst];
+      }
     });
 
-    const done = 0;
-
+    console.log('Beginning loading batches into Elasticsearch...');
     await batches.reduce(async (previousPromise, nextBatch, index) => {
       await previousPromise;
-      console.log('loading in batch ', index, ' of ', batches.length);
+      console.log('Loading in batch ', index, ' of ', batches.length);
       return this.populateIndexBatch(nextBatch);
     }, Promise.resolve());
 
-    console.log('done creating index');
+    console.log('Done creating Elasticsearch index');
   }
 
   async generateEmbeddingVectors(datasets: Dataset[], model) {
@@ -261,9 +282,10 @@ export class SearchService {
     }));
     return datasetsWithVector;
   }
+
   async parseAndPrepareData() {
     const body = [];
-    console.log('getting datasets');
+    console.log('Getting all datasets from db');
 
     const totalDatasets = await this.datasetService.count();
     const batchSize = 1000;
@@ -279,6 +301,9 @@ export class SearchService {
     );
     let datasetsWithVector = [];
 
+    console.log(
+      'Beginning processing dataset batches with the magic of ML (this might take a while)...',
+    );
     const model = await use.load();
     await [...Array(noBatches)].reduce(async (previousPromise, _, index) => {
       await previousPromise;
@@ -286,7 +311,7 @@ export class SearchService {
         batchSize,
         index * batchSize,
       );
-      console.log(' getting and processing batch ', index, datasets[0].id);
+      console.log('Processing batch', index, datasets[0].id);
       const datasetsWithVectorBatch = await this.generateEmbeddingVectors(
         datasets,
         model,
@@ -309,12 +334,8 @@ export class SearchService {
           {
             title: item.name,
             description: item.description,
-            // vector: Array.from(item.embedding),
             vector: Array.from(item.vector),
             portal: item.portalId,
-            //   year: item.year,
-            //   genres: item.genres.map(genre => ({ genre })),
-            //   actors: actorsData,
           },
         );
       } catch (err) {

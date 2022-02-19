@@ -12,10 +12,12 @@ import { SearchController } from './search.controller';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         node: configService.get('ELASTICSEARCH_NODE'),
+        /*
         maxRetries: 10,
-        requestTimeout: 60000,
-        pingTimeout: 60000,
+        requestTimeout: 60,
+        pingTimeout: 1,
         sniffOnStart: true,
+        */
       }),
       inject: [ConfigService],
     }),

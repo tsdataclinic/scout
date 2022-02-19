@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
-import { Portals } from '../../portals';
 import PortalInfo from '../PortalInfo/PortalInfo';
 
 import './PortalSelector.scss';
@@ -9,6 +8,7 @@ import './PortalSelector.scss';
 const AVAILABLE_PORTALS = gql`
   query {
     portals {
+      id
       name
       adminLevel
       abbreviation
@@ -19,14 +19,11 @@ const AVAILABLE_PORTALS = gql`
 export default function PortalSelector({ selectedPortal }) {
   const [showMenu, setShowMenu] = useState(false);
   const history = useHistory();
-  const { loading, error, data } = useQuery(AVAILABLE_PORTALS);
+  const { loading, data } = useQuery(AVAILABLE_PORTALS);
   const portals = data ? data.portals : [];
   const [search, setSearch] = useState('');
 
-  console.log(portals);
-
   const selectPortal = (portal) => {
-    console.log('portal is ', portal);
     setShowMenu(false);
     history.push(`/${portal.abbreviation}`);
   };
@@ -60,8 +57,15 @@ export default function PortalSelector({ selectedPortal }) {
             />
             <ul>
               {Object.values(filteredPortals).map((portal) => (
-                <li onClick={() => selectPortal(portal)} key={portal.name}>
-                  <PortalInfo portal={portal} />
+                <li key={portal.id}>
+                  <div
+                    tabIndex="0"
+                    role="button"
+                    onClick={() => selectPortal(portal)}
+                    onKeyPress={() => selectPortal(portal)}
+                  >
+                    <PortalInfo portal={portal} />
+                  </div>
                 </li>
               ))}
             </ul>

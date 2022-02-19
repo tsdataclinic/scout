@@ -3,10 +3,11 @@ import './HomePage.scss';
 import { DebounceInput } from 'react-debounce-input';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { gql, useQuery } from '@apollo/client';
-import { useSearchDatasets } from '../../hooks/graphQLAPI';
+// import { gql, useQuery } from '@apollo/client';
 import { Switch } from 'antd';
+import { useSearchDatasets } from '../../hooks/graphQLAPI';
 
+/*
 import {
   useCategories,
   useTags,
@@ -15,6 +16,7 @@ import {
   useColumns,
   useStateLoaded,
 } from '../../hooks/datasets';
+*/
 
 import Dataset from '../../components/Dataset/Dataset';
 import SortMenu from '../../components/SortMenu/SortMenu';
@@ -25,16 +27,19 @@ import PortalSelector from '../../components/PortalSelector/PortalSelector';
 import Filters from '../../components/Filters/Filters';
 
 import {
+  /*
   useSelectedCategories,
   useSelectedTags,
   useSelectedDepartments,
   useSelectedColumns,
+  */
   useSearchTerm,
   useSortVariable,
   useSortOrder,
   useFilterBarState,
 } from '../../hooks/search';
 
+/*
 const ALL_DATASETS_PAGED = gql`
   query Query($limit: Int, $offset: Int) {
     datasets(limit: $limit, offset: $offset) {
@@ -43,13 +48,17 @@ const ALL_DATASETS_PAGED = gql`
     }
   }
 `;
+*/
+
 export default function HomePage({ portal }) {
   usePageView();
 
+  /*
   const [selectedTags] = useSelectedTags();
   const [selectedColumns] = useSelectedColumns();
   const [selectedCategories] = useSelectedCategories();
   const [selectedDepartments] = useSelectedDepartments();
+  */
 
   const [searchTerm, setSearchTerm] = useSearchTerm();
   const [sortBy, setSortBy] = useSortVariable();
@@ -69,6 +78,12 @@ export default function HomePage({ portal }) {
     },
   );
 
+  console.log('Searching for datasets?', {
+    loading,
+    data,
+    error,
+  });
+
   const datasets = loading || error ? [] : data.searchDatasets.datasets;
 
   const [pageNo, { pageButtons }] = usePagination({
@@ -78,7 +93,6 @@ export default function HomePage({ portal }) {
   });
 
   useEffect(() => {
-    console.log('upading page number ', pageNo);
     setCurrentPage(pageNo);
   }, [pageNo]);
 
@@ -143,12 +157,12 @@ export default function HomePage({ portal }) {
         </div>
 
         <ul className="dataset-list">
-          {!loading ? (
+          {loading ? (
+            <DatasetsLoading />
+          ) : (
             datasets.map((dataset) => (
               <Dataset key={dataset?.id} dataset={dataset} query={searchTerm} />
             ))
-          ) : (
-            <DatasetsLoading />
           )}
         </ul>
         <div>{pageButtons}</div>

@@ -68,7 +68,7 @@ const reducer = (state, action) => {
   }
 };
 
-export const CollectionsProvider = ({ children }) => {
+export function CollectionsProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initalState);
   const { cacheLoaded, collections, activeCollectionID } = state;
 
@@ -107,11 +107,13 @@ export const CollectionsProvider = ({ children }) => {
     }
   }, [cacheLoaded, collections, activeCollectionID]);
 
+  const context = React.useMemo(() => [state, dispatch], [state, dispatch]);
+
   return (
-    <CollectionsContext.Provider value={[state, dispatch]}>
+    <CollectionsContext.Provider value={context}>
       {children}
     </CollectionsContext.Provider>
   );
-};
+}
 
 export const useCollectionsValue = () => useContext(CollectionsContext);

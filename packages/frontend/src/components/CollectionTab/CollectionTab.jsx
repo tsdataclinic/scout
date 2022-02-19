@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { useUserCollections } from '../../hooks/collections';
 import { CollectionTabCreate } from './CollectionTabCreate';
 import { CollectionTabSwitch } from './CollectionTabSwitch';
-
-import './CollectionTab.scss';
 import { CollectionTabAdd } from './CollectionTabAdd';
+import './CollectionTab.scss';
 
 export default function CollectionTab({ visible, onDismiss }) {
   const [
     { collections, activeCollection, activeCollectionID },
     { setActiveCollection },
   ] = useUserCollections();
+  /*
   const [
     { activeCollection: collection },
     { removeFromCurrentCollection, createCollectionFromPending },
@@ -20,6 +20,7 @@ export default function CollectionTab({ visible, onDismiss }) {
     activeCollection && activeCollection.datasets
       ? activeCollection.datasets
       : [];
+  */
 
   const [tab, setTab] = useState('add');
 
@@ -31,19 +32,20 @@ export default function CollectionTab({ visible, onDismiss }) {
     setActiveCollection(collectionID);
     setTab('add');
   };
-  console.log(
-    'active collection id ',
+
+  console.log('Rendering CollectionTab', {
     activeCollectionID,
     collections,
     activeCollection,
-  );
+  });
+
   if (!visible) return '';
 
   return (
     <div className="collection-tab">
       {tab === 'create' && (
         <CollectionTabCreate
-          isPending={true}
+          isPending
           datasetIds={activeCollection.datasets.map((d) => d.id)}
           onDone={onCollectionCreated}
         />

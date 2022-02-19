@@ -1,6 +1,5 @@
-const socrataEndpoint = (domain) => {
-  return `https://api.us.socrata.com/api/catalog/v1?domains=${domain}&search_context=${domain}`;
-};
+const socrataEndpoint = (domain) =>
+  `https://api.us.socrata.com/api/catalog/v1?domains=${domain}&search_context=${domain}`;
 async function getMaifestPage(domain, pageNo, limit = 100) {
   return fetch(
     `${socrataEndpoint(domain)}&offset=${pageNo * limit}&limit=${limit}`,
@@ -20,12 +19,12 @@ export async function getManifest(domain) {
     [...Array(pages)].map((_, i) =>
       getMaifestPage(domain, i).then((resp) => resp.results),
     ),
-  ).then((list) => {
-    return list.reduce(
+  ).then((list) =>
+    list.reduce(
       (datasetPage, allDatasets) => [...allDatasets, ...datasetPage],
       [],
-    );
-  });
+    ),
+  );
 }
 
 /**
@@ -151,31 +150,29 @@ export function getUniqueEntries(dataset, column) {
 }
 
 // Used to get the results from the direct API request in to the same format as the bulk request
-export const datasetToDBLite = (dataset) => {
-  return {
-    id: dataset.id,
-    name: dataset.name,
-    portal: dataset.domain,
-    columns: [], // resource.columns_name.map((c) => c.trim()),
-    columnFields: [], // resource.columns_field_name.map((c) => c.trim()),
-    columnTypes: [], // resource.columns_datatype,
-    metaDataUpdatedAt: dataset.metadataUpdatedAt,
-    updatedAt: dataset.updatedAt,
-    createdAt: dataset.createdAt,
-    description: dataset.description,
-    views: 0, // resource.page_views.page_views_total,
-    categories: [], // classification.categories,
-    domainCategory: null, // classification.domainCategory,
-    tags: [], // classification.domain_tags,
-    type: null,
-    updateFrequency: null,
-    department: null,
-    permaLink: null,
-    parentDatasetID: null,
-    updatedAutomation: null,
-    owner: null,
-  };
-};
+export const datasetToDBLite = (dataset) => ({
+  id: dataset.id,
+  name: dataset.name,
+  portal: dataset.domain,
+  columns: [], // resource.columns_name.map((c) => c.trim()),
+  columnFields: [], // resource.columns_field_name.map((c) => c.trim()),
+  columnTypes: [], // resource.columns_datatype,
+  metaDataUpdatedAt: dataset.metadataUpdatedAt,
+  updatedAt: dataset.updatedAt,
+  createdAt: dataset.createdAt,
+  description: dataset.description,
+  views: 0, // resource.page_views.page_views_total,
+  categories: [], // classification.categories,
+  domainCategory: null, // classification.domainCategory,
+  tags: [], // classification.domain_tags,
+  type: null,
+  updateFrequency: null,
+  department: null,
+  permaLink: null,
+  parentDatasetID: null,
+  updatedAutomation: null,
+  owner: null,
+});
 export const datasetToDB = (dataset) => {
   const { resource, metadata, classification } = dataset;
   const domain_metadata = classification

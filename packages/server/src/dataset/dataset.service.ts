@@ -27,13 +27,13 @@ export class DatasetService {
     offset?: number,
     search?: string,
   ): Promise<PagedDatasets> {
-    console.log('HERE');
     const searchResults = await this.searchService.search(
       search,
       portal,
       offset,
       limit,
     );
+    console.log('Returned search results', { searchResults });
 
     const results = await this.datasetRepo.findByIds(searchResults.ids);
 

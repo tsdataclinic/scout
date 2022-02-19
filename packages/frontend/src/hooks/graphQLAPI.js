@@ -1,12 +1,8 @@
 import { useQuery, gql, useMutation } from '@apollo/client';
 
-export const useCategoriesGQL = (portal, limit, page) => {
-  return [];
-};
+export const useCategoriesGQL = () => [];
 
-export const useDepartmentsGQL = (portal, limit, page) => {
-  return [];
-};
+export const useDepartmentsGQL = () => [];
 
 export const useDatasetsFromIds = (ids) => {
   const DatasetsFromIdsQuery = gql`
@@ -44,23 +40,16 @@ export const useCollection = (id) => {
       }
     }
   `;
-  return useQuery(CollectionQuery, { variables: { id: id ? id : '' } });
+  return useQuery(CollectionQuery, { variables: { id: id || '' } });
 };
 
-export const useSearchDatasets = (
-  portal,
-  {
+export const useSearchDatasets = (portal, { search, limit, offset }) => {
+  console.log('Fetching portal datasets', {
+    portal,
     search,
-    columns,
-    departments,
-    categories,
-    tags,
     limit,
     offset,
-    sortCol,
-    sortDir,
-  },
-) => {
+  });
   const SearchPortalQuery = gql`
     query SearchPortalDatasets(
       $portal: String
@@ -98,6 +87,7 @@ export const useSearchDatasets = (
 };
 
 export const usePortals = () => {
+  console.log('Loading all portals');
   const PortalListQuery = gql`
     query PortalList {
       portals {
@@ -110,7 +100,10 @@ export const usePortals = () => {
   `;
   return useQuery(PortalListQuery);
 };
+
 export const useAttemptLogin = (email, password) => {
+  console.log('Attemping login');
+
   const LoginAttempt = gql`
     mutation SignIn($email: String!, $password: String!) {
       signIn(email: $email, password: $password) {
@@ -120,8 +113,7 @@ export const useAttemptLogin = (email, password) => {
     }
   `;
 
-  const variables = { email, password };
-  return useMutation(LoginAttempt);
+  return useMutation(LoginAttempt, { email, password });
 };
 
 export const useAttemptSignUp = (email, password, username) => {
@@ -135,8 +127,7 @@ export const useAttemptSignUp = (email, password, username) => {
     }
   `;
 
-  const variables = { email, password, username };
-  return useMutation(SignUpAttempt);
+  return useMutation(SignUpAttempt, { email, password, username });
 };
 
 export const useCurrentUser = () => {
@@ -345,6 +336,4 @@ export const useSimilarDatasets = (datasetId, portal) => {
   });
 };
 
-export const useTagsGQL = (portal) => {
-  return [];
-};
+export const useTagsGQL = () => [];
