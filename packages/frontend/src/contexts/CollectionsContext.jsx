@@ -36,11 +36,38 @@ const reducer = (state, action) => {
       };
     }
 
+    case 'ADD_TO_CURRENT_COLLECTION': {
+      return {
+        ...state,
+        collections: (state.collections || []).map(c =>
+          c.id === state.activeCollectionID
+            ? {
+                ...c,
+                datasetIds: c.datasetIds.concat(payload),
+              }
+            : c,
+        ),
+      };
+    }
+
     case 'REMOVE_FROM_PENDING_COLLECTION':
       return {
         ...state,
         pendingCollection: state.pendingCollection.filter(
           dID => dID !== payload,
+        ),
+      };
+
+    case 'REMOVE_FROM_CURRENT_COLLECTION':
+      return {
+        ...state,
+        collections: (state.collections || []).map(c =>
+          c.id === state.activeCollectionID
+            ? {
+                ...c,
+                datasetIds: c.datasetIds.filter(id => id !== payload),
+              }
+            : c,
         ),
       };
 

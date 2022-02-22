@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
+import { Switch } from 'antd';
 import RawHTML from '../../components/RawHTML/RawHTML';
 import ColumnMatchTable from '../../components/ColumnMatchTable/ColumnMatchTable';
-import Dataset from '../../components/Dataset/Dataset';
 import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
 import '../../components/Loading/Loading.scss';
 import usePageView from '../../hooks/analytics';
 import { useUserCollections } from '../../hooks/collections';
-
 import './DatasetPage.scss';
 import ViewOnOpenPortal from '../../components/ViewOnOpenPortal/ViewOnOpenPortal';
 import { useDatasetGQL } from '../../hooks/graphQLAPI';
 import { ThematicSimilarityExplorer } from '../../components/ThematicSimilarityExplorer/ThematicSimilarityExplorer';
-import { Switch } from 'antd';
+import { USE_SINGLE_CITY } from '../../flags';
 
-const formatDate = (date) => moment(date).format('MMMM DD, YYYY');
+const formatDate = date => moment(date).format('MMMM DD, YYYY');
 
 export default function DatasetPage({ match }) {
   // debugger;
@@ -24,17 +23,11 @@ export default function DatasetPage({ match }) {
   const { loading, error, data } = useDatasetGQL(datasetID);
   const dataset = loading || error ? null : data.dataset;
 
-  //const parentId = dataset?.parentDatasetID;
-  const parentDataset = null; //useDataset(parentId);
-  const joins = []; // useJoinableDatasets(dataset);
-  const similarDatasetSuggestions = []; //  useGetSimilarDatasets(dataset);
-
+  // const parentId = dataset?.parentDatasetID;
+  const parentDataset = null; // useDataset(parentId);
   const [activeTab, setActiveTab] = useState('joins');
 
-  const portal = dataset ? dataset.portal : null;
-
   const [globalSearch, setGlobalSearch] = useState(false);
-  console.log('DATASET ', dataset);
 
   useEffect(() => {
     const page = `${window.location.pathname}/${activeTab}`;
@@ -161,13 +154,15 @@ export default function DatasetPage({ match }) {
       <div className="dataset-recomendataions">
         <div className="bar-and-toggle">
           <h2>Other datasets to consider</h2>
-          <Switch
-            checked={globalSearch}
-            onChange={setGlobalSearch}
-            checkedChildren="All portals"
-            unCheckedChildren="Just this portal"
-            style={{ background: '#009aa6' }}
-          />
+          {USE_SINGLE_CITY ? null : (
+            <Switch
+              checked={globalSearch}
+              onChange={setGlobalSearch}
+              checkedChildren="All portals"
+              unCheckedChildren="Just this portal"
+              style={{ background: '#009aa6' }}
+            />
+          )}
         </div>
         <div className="tabs">
           <button

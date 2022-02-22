@@ -4,6 +4,7 @@ import {
   useCurrentUserCollections,
   useDatasetsFromIds,
 } from './graphQLAPI';
+import { USE_SINGLE_CITY } from '../flags';
 
 export function useUserCollections() {
   // TODO: This function gets triggered 40+ times on each refresh. This does
@@ -35,11 +36,13 @@ export function useUserCollections() {
             id: 'pending',
             name: 'Pending Collection',
             description: 'placeholder',
+            datasetIds: state.pendingCollection,
             datasets: pendingDatasets ? pendingDatasets.datasetsByIds : [],
             createdAt: new Date(),
           }
         : {
             ...activeNonPendingCollection,
+            datasetIds: activeNonPendingCollection?.datasetIds || [],
             datasets: collectionDatasets
               ? collectionDatasets.datasetsByIds
               : [],
@@ -54,9 +57,17 @@ export function useUserCollections() {
   };
 
   const inCurrentCollection = id => {
-    // TODO: this isn't handling local collections
     if (state.activeCollectionID === 'pending') {
       return state.pendingCollection.includes(id);
+    }
+
+    if (state.collections) {
+      const currentCollection = state.collections.find(
+        c => c.id === state.activeCollectionID,
+      );
+      return currentCollection
+        ? currentCollection.datasetIds.includes(id)
+        : false;
     }
 
     if (serverCollections) {
@@ -72,12 +83,16 @@ export function useUserCollections() {
   };
 
   const addToCurrentCollection = async datasetID => {
-    console.log('Adding to collection');
     if (state.activeCollectionID === 'pending') {
       // the collection doesn't exist in the backend yet, so we just have
       // to add to the collection in-browser.
       dispatch({
         type: 'ADD_TO_PENDING_COLLECTION',
+        payload: datasetID,
+      });
+    } else if (USE_SINGLE_CITY) {
+      dispatch({
+        type: 'ADD_TO_CURRENT_COLLECTION',
         payload: datasetID,
       });
     } else {
@@ -92,6 +107,13 @@ export function useUserCollections() {
     if (state.activeCollectionID === 'pending') {
       dispatch({
         type: 'REMOVE_FROM_PENDING_COLLECTION',
+        payload: datasetID,
+      });
+    } else if (USE_SINGLE_CITY) {
+      // TODO: this should remove dataset from the backend once multi-city
+      // db is ready
+      dispatch({
+        type: 'REMOVE_FROM_CURRENT_COLLECTION',
         payload: datasetID,
       });
     }

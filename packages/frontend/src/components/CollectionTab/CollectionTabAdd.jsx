@@ -7,6 +7,10 @@ export function CollectionTabAdd({ onSwitch, onCreate, onDismiss }) {
     useUserCollections();
   console.log('Active collection', activeCollection);
 
+  const isReloadingDatasets =
+    activeCollection.datasetIds.length > 0 &&
+    activeCollection.datasets.length === 0;
+
   return (
     <>
       <div className="add-to-collection">
@@ -30,16 +34,21 @@ export function CollectionTabAdd({ onSwitch, onCreate, onDismiss }) {
         <div className="collection-tab-current-collection">
           {activeCollection.datasets.length === 0 ? (
             <div className="datasets-placeholder">
-              <h3>
-                {activeCollection.id === 'pending'
-                  ? 'No datasets selected'
-                  : 'This collection is empty'}
-              </h3>
-
-              <p>
-                Select &quot;Add to Collection&quot; to begin creating local
-                collections.
-              </p>
+              {isReloadingDatasets ? (
+                <h3>Loading...</h3>
+              ) : (
+                <>
+                  <h3>
+                    {activeCollection.id === 'pending'
+                      ? 'No datasets selected'
+                      : 'This collection is empty'}
+                  </h3>
+                  <p>
+                    Select &quot;Add to Collection&quot; to begin creating local
+                    collections.
+                  </p>
+                </>
+              )}
             </div>
           ) : (
             <ul>
