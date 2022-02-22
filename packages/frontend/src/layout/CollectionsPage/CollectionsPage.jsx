@@ -10,9 +10,9 @@ import usePageView from '../../hooks/analytics';
 export default function CollectionsPage() {
   usePageView();
   const [{ collections }] = useUserCollections();
-  const nonPendingCollections = collections.filter((c) => c.id !== 'pending');
+  const nonPendingCollections = collections.filter(c => c.id !== 'pending');
 
-  console.log('user page collections ', collections);
+  console.log('User page collections ', collections);
   return (
     <div className="collections-page">
       <div className="collections-header">
@@ -20,15 +20,15 @@ export default function CollectionsPage() {
         <p>{nonPendingCollections.length} Collections</p>
       </div>
 
-      {nonPendingCollections.length == 0 && (
+      {nonPendingCollections.length === 0 && (
         <div className="no-collections">
           <div className="collection-icon">
             <FontAwesomeIcon icon={faLayerGroup} />
           </div>
           <h3>No Collections found</h3>
           <p>
-            Select 'Add to Collection' on datasets to begin creating local
-            connections
+            Select &apos;Add to Collection&apos; on datasets to begin creating
+            local connections
           </p>
           <div className="what-are-collections">
             <h3>What are Collections?</h3>
@@ -44,8 +44,8 @@ export default function CollectionsPage() {
       {nonPendingCollections.length > 0 && (
         <div className="collections-list">
           <ul>
-            {nonPendingCollections.map((collection) => (
-              <li>
+            {nonPendingCollections.map(collection => (
+              <li key={collection.id}>
                 <Link to={`/collection/${collection.id}`}>
                   <CollectionCard collection={collection} />
                 </Link>

@@ -27,7 +27,7 @@ export default function Dataset({
   const { portal } = dataset; // dataset ? portalForDomain(dataset.portal) : null;
 
   const [
-    { activeCollectionId },
+    ,
     {
       addToCurrentCollection,
       removeFromCurrentCollection,

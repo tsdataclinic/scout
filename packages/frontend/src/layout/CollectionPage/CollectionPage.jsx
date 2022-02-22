@@ -10,29 +10,45 @@ import {
 } from 'react-share';
 import usePageView from '../../hooks/analytics';
 import useClipboard from '../../hooks/useClipboard';
-import { useGetDatasetsByIds } from '../../hooks/datasets';
 import Dataset from '../../components/Dataset/Dataset';
 import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
-import { useCollection } from '../../hooks/graphQLAPI';
+import { useCollection, useDatasetsFromIds } from '../../hooks/graphQLAPI';
+import { useUserCollections } from '../../hooks/collections';
+import { USE_SINGLE_CITY } from '../../flags';
 
 export default function CollectionPage({ match }) {
   usePageView();
-  const { name, datasetIDs, id } = match.params;
+  const { name, datasetIDs: datasetIdsFromURL, id } = match.params;
+  const [{ collections }] = useUserCollections();
   const { loading, data, error } = useCollection(id);
 
   const url = window.location.href;
   const [isCopied, setCopied] = useClipboard(url);
-  if (loading) {
+
+  const collection = (USE_SINGLE_CITY
+    ? collections.find(col => col.id === id)
+    : data.collection) || {
+    datasetIds: [],
+    description: '',
+    name: '',
+  };
+
+  const { datasetIds, description } = collection;
+  const datasets =
+    useDatasetsFromIds(datasetIdsFromURL || datasetIds).data?.datasetsByIds ||
+    [];
+
+  if (loading || collections.length === 0) {
     return <p>Loading...</p>;
   }
-  if (error) {
+
+  if (
+    (error && !USE_SINGLE_CITY) ||
+    (USE_SINGLE_CITY && collections.length >= 1 && collection === undefined)
+  ) {
     return <p>Something went wrong</p>;
   }
 
-  const collection = data.collection;
-  const { datasets, description } = collection;
-  // const datasets = useGetDatasetsByIds(datasetIDs.split(','));
-  console.log('datasets are ', datasets);
   return (
     <div className="collection-page">
       <div className="collection-details">
@@ -40,7 +56,7 @@ export default function CollectionPage({ match }) {
           <Breadcrumb currentPage="Collections" />
         </section>
         <section>
-          <h2>{name ? name : collection.name}</h2>
+          <h2>{name || collection.name}</h2>
           {description && <h3>{description}</h3>}
           <p>
             {datasets.length} dataset
@@ -69,7 +85,7 @@ export default function CollectionPage({ match }) {
         </div>
       </div>
       <div className="collection-content">
-        {datasets.map((dataset) => (
+        {datasets.map(dataset => (
           <Dataset
             showCollectionButtons={false}
             viewInOpenPortal

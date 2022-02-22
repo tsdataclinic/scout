@@ -2,13 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'normalize.css'; // Ensure consistent layout across browsers
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import { createHttpLink } from '@apollo/client/core';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { CollectionsProvider } from './contexts/CollectionsContext';
 import { SearchProvider } from './contexts/SearchContext';
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
-import { createHttpLink } from '@apollo/client/core';
 
 const httpLink = createHttpLink({
   uri: process.env.REACT_APP_API_URL

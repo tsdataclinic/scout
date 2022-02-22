@@ -4,14 +4,24 @@ export const useCategoriesGQL = () => [];
 
 export const useDepartmentsGQL = () => [];
 
-export const useDatasetsFromIds = (ids) => {
+export const useDatasetsFromIds = ids => {
   const DatasetsFromIdsQuery = gql`
     query GetDatasetsByIds($ids: [String!]!) {
       datasetsByIds(ids: $ids) {
-        name
-        description
-        department
         id
+        name
+        department
+        description
+        views
+        updatedAt
+        createdAt
+        permalink
+        portal {
+          id
+          name
+          adminLevel
+          abbreviation
+        }
       }
     }
   `;
@@ -19,7 +29,7 @@ export const useDatasetsFromIds = (ids) => {
   return useQuery(DatasetsFromIdsQuery, { variables: { ids } });
 };
 
-export const useCollection = (id) => {
+export const useCollection = id => {
   const CollectionQuery = gql`
     query getCollection($id: String!) {
       collection(id: $id) {
@@ -220,7 +230,7 @@ export const useAddToCollection = () => {
   return useMutation(mut);
 };
 
-export const useDatasetGQL = (datasetId) => {
+export const useDatasetGQL = datasetId => {
   const DatasetQuery = gql`
     query Dataset($datasetId: String!) {
       dataset(id: $datasetId) {

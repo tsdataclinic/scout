@@ -6,21 +6,8 @@ import { CollectionTabAdd } from './CollectionTabAdd';
 import './CollectionTab.scss';
 
 export default function CollectionTab({ visible, onDismiss }) {
-  const [
-    { collections, activeCollection, activeCollectionID },
-    { setActiveCollection },
-  ] = useUserCollections();
-  /*
-  const [
-    { activeCollection: collection },
-    { removeFromCurrentCollection, createCollectionFromPending },
-  ] = useUserCollections();
-
-  const currentCollectionDatasets =
-    activeCollection && activeCollection.datasets
-      ? activeCollection.datasets
-      : [];
-  */
+  const [{ activeCollection, activeCollectionID }, { setActiveCollection }] =
+    useUserCollections();
 
   const [tab, setTab] = useState('add');
 
@@ -28,16 +15,12 @@ export default function CollectionTab({ visible, onDismiss }) {
     setTab('create');
   };
 
-  const onCollectionCreated = (collectionID) => {
-    setActiveCollection(collectionID);
+  const onCollectionCreated = collectionID => {
+    if (collectionID) {
+      setActiveCollection(collectionID);
+    }
     setTab('add');
   };
-
-  console.log('Rendering CollectionTab', {
-    activeCollectionID,
-    collections,
-    activeCollection,
-  });
 
   if (!visible) return '';
 
@@ -45,8 +28,8 @@ export default function CollectionTab({ visible, onDismiss }) {
     <div className="collection-tab">
       {tab === 'create' && (
         <CollectionTabCreate
-          isPending
-          datasetIds={activeCollection.datasets.map((d) => d.id)}
+          isPending={activeCollection.id === 'pending'}
+          datasetIds={activeCollection.datasets.map(d => d.id)}
           onDone={onCollectionCreated}
         />
       )}

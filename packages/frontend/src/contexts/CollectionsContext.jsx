@@ -4,12 +4,13 @@ import Dexie from 'dexie';
 export const CollectionsContext = createContext();
 
 // A collection has the form
-// datasets : array of dataset ids
+// datasetIds: array of dataset ids
 // name : the name of the collection
 // id : a random id for the collection
 // description : short 255 character description of the collection
 //
 const initalState = {
+  // array of datasets to add to the pending collection
   pendingCollection: [],
   activeCollectionID: 'pending',
 };
@@ -28,34 +29,28 @@ const reducer = (state, action) => {
         activeCollectionID: payload,
       };
 
-    case 'CLEAR_PENDING_COLLECTION':
-      return {
-        ...state,
-        collections: [
-          ...state.collections,
-          {
-            ...state.collections.find((c) => c.id === 'pending'),
-            id: payload.id,
-            createdAt: new Date(),
-            name: payload.name,
-          },
-        ].map((c) =>
-          c.id === 'pending'
-            ? { id: 'pending', datasets: [], name: 'pending' }
-            : c,
-        ),
-      };
-    case 'ADD_TO_PENDING_COLLECTION':
+    case 'ADD_TO_PENDING_COLLECTION': {
       return {
         ...state,
         pendingCollection: [...state.pendingCollection, payload],
       };
+    }
+
     case 'REMOVE_FROM_PENDING_COLLECTION':
       return {
         ...state,
         pendingCollection: state.pendingCollection.filter(
-          (dID) => dID !== payload,
+          dID => dID !== payload,
         ),
+      };
+
+    case 'CREATE_FROM_PENDING_COLLECTION':
+    case 'CREATE_EMPTY_COLLECTION':
+      return {
+        ...state,
+        pendingCollection: [],
+        activeCollectionID: payload.id,
+        collections: [...(state.collections || []), payload],
       };
 
     case 'HYDRATE_STATE':
@@ -74,7 +69,7 @@ export function CollectionsProvider({ children }) {
 
   // Restore state
   useEffect(() => {
-    db.CollectionCache.get(1).then((result) => {
+    db.CollectionCache.get(1).then(result => {
       if (result) {
         const cachedState = JSON.parse(result.data);
         dispatch({
