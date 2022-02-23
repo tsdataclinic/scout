@@ -30,7 +30,6 @@ function getShareableURL(collectionName, datasetIds) {
 
 export default function CollectionPage({ match }) {
   usePageView();
-  console.log('Loading with', match);
   const { name, datasetIDs: datasetIdsFromURL, id } = match.params;
   const loadingCollectionFromURL = !!datasetIdsFromURL;
 

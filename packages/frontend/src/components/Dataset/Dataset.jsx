@@ -87,7 +87,7 @@ export default function Dataset({
       <div className="dataset-meta">
         <div className="update-frequency">
           <span>Update frequency:</span>
-          weekly
+          {dataset.updateFrequency}
         </div>
         <div className="dataset-last-updated">
           <span>Last Update at:</span>

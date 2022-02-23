@@ -54,12 +54,6 @@ export const useCollection = id => {
 };
 
 export const useSearchDatasets = (portal, { search, limit, offset }) => {
-  console.log('Fetching portal datasets', {
-    portal,
-    search,
-    limit,
-    offset,
-  });
   const SearchPortalQuery = gql`
     query SearchPortalDatasets(
       $portal: String
@@ -83,6 +77,7 @@ export const useSearchDatasets = (portal, { search, limit, offset }) => {
           name
           description
           updateFrequency
+          updatedAt
           permalink
           department
         }
