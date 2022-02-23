@@ -16,27 +16,59 @@ import { useCollection, useDatasetsFromIds } from '../../hooks/graphQLAPI';
 import { useUserCollections } from '../../hooks/collections';
 import { USE_SINGLE_CITY } from '../../flags';
 
+const EMPTY_COLLECTION = {
+  datasetIds: [],
+  description: '',
+  name: '',
+};
+
+function getShareableURL(collectionName, datasetIds) {
+  const urlOrigin = window.location.origin;
+  const datasetIdsStr = datasetIds.join(',');
+  return `${urlOrigin}/collection/${collectionName}/${datasetIdsStr}`;
+}
+
 export default function CollectionPage({ match }) {
   usePageView();
+  console.log('Loading with', match);
   const { name, datasetIDs: datasetIdsFromURL, id } = match.params;
+  const loadingCollectionFromURL = !!datasetIdsFromURL;
+
   const [{ collections }] = useUserCollections();
   const { loading, data, error } = useCollection(id);
 
-  const url = window.location.href;
-  const [isCopied, setCopied] = useClipboard(url);
-
-  const collection = (USE_SINGLE_CITY
+  // first try to load a collection to get the dataset ids to load
+  let collection = USE_SINGLE_CITY
     ? collections.find(col => col.id === id)
-    : data.collection) || {
-    datasetIds: [],
-    description: '',
-    name: '',
-  };
+    : data.collection;
 
-  const { datasetIds, description } = collection;
+  let datasetIdsToLoad;
+  if (datasetIdsFromURL === undefined) {
+    datasetIdsToLoad = collection ? collection.datasetIds : [];
+  } else {
+    datasetIdsToLoad = datasetIdsFromURL.split(',');
+  }
+
   const datasets =
-    useDatasetsFromIds(datasetIdsFromURL || datasetIds).data?.datasetsByIds ||
-    [];
+    useDatasetsFromIds(datasetIdsToLoad).data?.datasetsByIds || [];
+
+  if (collection === undefined && !loadingCollectionFromURL) {
+    // load something empty by default until we've retrieved the collection
+    collection = EMPTY_COLLECTION;
+  }
+
+  if (loadingCollectionFromURL) {
+    collection = {
+      name,
+      datasetIds: datasetIdsToLoad,
+      description: 'Shared collection',
+    };
+  }
+
+  const { description, name: collectionName } = collection;
+
+  const shareableURL = getShareableURL(collection.name, datasetIdsToLoad);
+  const [isCopied, setCopied] = useClipboard(shareableURL);
 
   if (loading || collections.length === 0) {
     return <p>Loading...</p>;
@@ -56,29 +88,28 @@ export default function CollectionPage({ match }) {
           <Breadcrumb currentPage="Collections" />
         </section>
         <section>
-          <h2>{name || collection.name}</h2>
+          <h2>{collectionName}</h2>
           {description && <h3>{description}</h3>}
           <p>
             {datasets.length} dataset
             {datasets.length > 1 ? 's' : ''}
           </p>
         </section>
-
         <div>
           <h3>Share this collection:</h3>
-          <p className="dataset-url">{url} </p>
+          <p className="dataset-url">{shareableURL} </p>
           <button type="button" onClick={setCopied}>
             Copy link
           </button>
           <span>{isCopied ? 'Copied!' : ' '} </span>
           <p className="share-icons">
-            <FacebookShareButton url={url}>
+            <FacebookShareButton url={shareableURL}>
               <FacebookIcon size={36} />
             </FacebookShareButton>{' '}
-            <TwitterShareButton url={url}>
+            <TwitterShareButton url={shareableURL}>
               <TwitterIcon size={36} />
             </TwitterShareButton>
-            <EmailShareButton url={url}>
+            <EmailShareButton url={shareableURL}>
               <EmailIcon size={36} />
             </EmailShareButton>
           </p>

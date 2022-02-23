@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
-import {
-  faAngleRight,
-  faAngleDown,
-  faTable,
-} from '@fortawesome/free-solid-svg-icons';
+import { faAngleRight, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import DatasetLink from '../DatasetLink/DatasetLink';
 import { useUserCollections } from '../../hooks/collections';
 import './JoinColumn.scss';
 
-export default function ColumnJoin({ dataset, matches, matchPC }) {
+export default function ColumnJoin({ dataset }) {
   const [collapsed, setCollapsed] = useState(true);
   const [
     ,
@@ -26,7 +22,7 @@ export default function ColumnJoin({ dataset, matches, matchPC }) {
       <div className="join-column-row">
         <span
           onClick={() => setCollapsed(!collapsed)}
-          onKeyDown={(e) => {
+          onKeyDown={e => {
             if (e.keycode === 32) {
               setCollapsed(!collapsed);
             }

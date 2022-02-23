@@ -16,7 +16,6 @@ import { USE_SINGLE_CITY } from '../../flags';
 const formatDate = date => moment(date).format('MMMM DD, YYYY');
 
 export default function DatasetPage({ match }) {
-  // debugger;
   usePageView();
   const { datasetID } = match.params;
 
@@ -126,21 +125,15 @@ export default function DatasetPage({ match }) {
         <section className="metadata">
           <h2>Metadata</h2>
           <h3>Update Automation</h3>
-          <p>{dataset?.updatedAutomation}</p>
+          {/* TODO: fix this. Right now a `null` value represents Yes,
+            and `false` is No. This is weird. */}
+          <p>{dataset?.updatedAutomation === null ? 'Yes' : 'No'}</p>
           <h3>Update Frequency</h3>
           <p>{dataset?.updateFrequency}</p>
-          <h3>Dataset Owner</h3>
-          <p>{dataset?.owner}</p>
-          {dataset?.informationAgency && (
+          {dataset?.department && (
             <>
               <h3>Agency</h3>
-              <p>{dataset?.informationAgency}</p>
-            </>
-          )}
-          {dataset?.category && (
-            <>
-              <h3>Category</h3>
-              <p>{dataset?.domain_category}</p>
+              <p>{dataset?.department}</p>
             </>
           )}
           <h3>Updated</h3>

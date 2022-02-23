@@ -42,76 +42,78 @@ function App() {
         </Route>
 
         <div className="content">
-          {!USE_SINGLE_CITY && (
-            <Route exact path="/login" component={UserAccountModal} />
-          )}
-          <Route exact path="/about" component={AboutPage} />
-          <Route exact path="/profile" component={ProfilePage} />
+          <Switch>
+            {!USE_SINGLE_CITY && (
+              <Route exact path="/login" component={UserAccountModal} />
+            )}
+            <Route exact path="/about" component={AboutPage} />
+            <Route exact path="/profile" component={ProfilePage} />
 
-          <Route path="/collections" component={CollectionsPage} />
-          <Route
-            path="/collection/:name/:datasetIDs"
-            component={CollectionPage}
-          />
-          <Route path="/collection/:id" component={CollectionPage} />
-          <Route
-            path="/:portal"
-            render={({ match }) => {
-              const { portal } = match.params;
+            <Route path="/collections" component={CollectionsPage} />
+            <Route
+              path="/collection/:name/:datasetIDs"
+              component={CollectionPage}
+            />
+            <Route path="/collection/:id" component={CollectionPage} />
+            <Route
+              path="/:portal"
+              render={({ match }) => {
+                const { portal } = match.params;
 
-              if (
-                [
-                  'login',
-                  'about',
-                  'profile',
-                  'collection',
-                  'collections',
-                ].includes(portal)
-              ) {
-                return null;
-              }
-              const portalDetails = Portals
-                ? Portals.find((p) => p.abbreviation === portal)
-                : null;
-              if (Portals && !portalDetails) {
-                return <Redirect to={`/${DEFAULT_PORTAL}`} />;
-              }
+                if (
+                  [
+                    'login',
+                    'about',
+                    'profile',
+                    'collection',
+                    'collections',
+                  ].includes(portal)
+                ) {
+                  return null;
+                }
+                const portalDetails = Portals
+                  ? Portals.find(p => p.abbreviation === portal)
+                  : null;
+                if (Portals && !portalDetails) {
+                  return <Redirect to={`/${DEFAULT_PORTAL}`} />;
+                }
 
-              // TODO: remove this when multi-city is ready to go
-              if (
-                portalDetails &&
-                portal !== DEFAULT_PORTAL &&
-                USE_SINGLE_CITY
-              ) {
-                return <Redirect to={`/${DEFAULT_PORTAL}`} />;
-              }
+                // TODO: remove this when multi-city is ready to go
+                if (
+                  portalDetails &&
+                  portal !== DEFAULT_PORTAL &&
+                  USE_SINGLE_CITY
+                ) {
+                  return <Redirect to={`/${DEFAULT_PORTAL}`} />;
+                }
 
-              return (
-                <Switch>
-                  <Route
-                    path={`${match.path}/dataset/:datasetID`}
-                    component={DatasetPage}
-                  />
+                return (
+                  <Switch>
+                    <Route
+                      path={`${match.path}/dataset/:datasetID`}
+                      component={DatasetPage}
+                    />
 
-                  <Route
-                    path=""
-                    render={() =>
-                      Portals ? (
-                        <HomePage
-                          portal={Portals.find(
-                            (p) => p.abbreviation === portal,
-                          )}
-                        />
-                      ) : (
-                        'Loading ...'
-                      )
-                    }
-                  />
-                  <Redirect from="/" to={`/${DEFAULT_PORTAL}`} />
-                </Switch>
-              );
-            }}
-          />
+                    <Route
+                      path=""
+                      render={() =>
+                        Portals ? (
+                          <HomePage
+                            portal={Portals.find(
+                              p => p.abbreviation === portal,
+                            )}
+                          />
+                        ) : (
+                          'Loading ...'
+                        )
+                      }
+                    />
+                    <Redirect from="/" to={`/${DEFAULT_PORTAL}`} />
+                  </Switch>
+                );
+              }}
+            />
+          </Switch>
         </div>
         <SideNav />
         <GHPagesRedirect />

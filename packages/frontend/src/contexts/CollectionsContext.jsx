@@ -92,7 +92,8 @@ const reducer = (state, action) => {
 
 export function CollectionsProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initalState);
-  const { cacheLoaded, collections, activeCollectionID } = state;
+  const { cacheLoaded, collections, activeCollectionID, pendingCollection } =
+    state;
 
   // Restore state
   useEffect(() => {
@@ -123,11 +124,12 @@ export function CollectionsProvider({ children }) {
         data: JSON.stringify({
           collections,
           activeCollectionID,
+          pendingCollection,
         }),
         id: 1,
       });
     }
-  }, [cacheLoaded, collections, activeCollectionID]);
+  }, [cacheLoaded, collections, activeCollectionID, pendingCollection]);
 
   const context = React.useMemo(() => [state, dispatch], [state, dispatch]);
 

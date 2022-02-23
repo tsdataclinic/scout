@@ -242,6 +242,8 @@ export const useDatasetGQL = datasetId => {
         updatedAt
         createdAt
         permalink
+        updateFrequency
+        updatedAutomation
         datasetColumns {
           name
           type
@@ -259,6 +261,7 @@ export const useDatasetGQL = datasetId => {
   `;
   return useQuery(DatasetQuery, { variables: { datasetId } });
 };
+
 export const useColumnsGQL = (portal, { limit, page, search }) => {
   // TODO - Figure out why Float works here but Int does not
   const getColumnsQuery = gql`
