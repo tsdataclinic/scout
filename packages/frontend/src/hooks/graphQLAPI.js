@@ -16,6 +16,7 @@ export const useDatasetsFromIds = ids => {
         updatedAt
         createdAt
         permalink
+        updateFrequency
         portal {
           id
           name
