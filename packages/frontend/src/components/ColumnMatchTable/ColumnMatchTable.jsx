@@ -19,8 +19,6 @@ export default function ColumnMatchTable({ dataset, global }) {
   //   ? colJoins.sort((a, b) => b.joins.length - a.joins.length)
   //   : [];
 
-  const sortedColumns = [];
-
   return (
     <div className="column-match-table">
       <div className="table-header">
@@ -31,7 +29,7 @@ export default function ColumnMatchTable({ dataset, global }) {
         </ul>
       </div>
       {dataset
-        ? columns.map((column) => (
+        ? columns.map(column => (
             <ColumnSuggestions
               dataset={dataset}
               columnID={column.id}

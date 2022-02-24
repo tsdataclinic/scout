@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { usePagination } from '../../hooks/pagination';
 import FilterLoading from '../Loading/FilterLoading/FilterLoading';
 import './MultiSelector.scss';
@@ -7,7 +7,6 @@ export default function MultiSelector({
   itemFetcher,
   selectedHook,
   title,
-  onCollapse,
   noItems = 20,
 }) {
   const [collapsed, setCollapsed] = useState(true);
@@ -47,9 +46,9 @@ export default function MultiSelector({
     setSelected([]);
   };
 
-  const toggleItem = (item) => {
+  const toggleItem = item => {
     const newSelection = selected.includes(item)
-      ? selected.filter((i) => i !== item)
+      ? selected.filter(i => i !== item)
       : [...selected, item];
     setSelected(newSelection);
   };
@@ -73,7 +72,7 @@ export default function MultiSelector({
               disabled={loading}
               placeholder="filter"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={e => setSearchTerm(e.target.value)}
               key="search"
             />
           </div>
@@ -81,7 +80,7 @@ export default function MultiSelector({
             {loading ? (
               <FilterLoading />
             ) : (
-              pagedItems.map((item) => (
+              pagedItems.map(item => (
                 // eslint-disable-next-line
                 <li
                   key={item.field}

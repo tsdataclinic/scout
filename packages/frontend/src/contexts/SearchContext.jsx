@@ -25,27 +25,27 @@ const reducer = (state, action) => {
     case 'ADD_TAG':
       return { ...state, tags: [...state.tags, payload] };
     case 'REMOVE_TAG':
-      return { ...state, tags: state.tags.filter((t) => t !== payload) };
+      return { ...state, tags: state.tags.filter(t => t !== payload) };
     case 'ADD_CATEGORY':
       return { ...state, categories: [...state.categories, payload] };
     case 'REMOVE_CATEGORY':
       return {
         ...state,
-        category: state.category.filter((t) => t !== payload),
+        category: state.category.filter(t => t !== payload),
       };
     case 'ADD_COLUMN':
       return { ...state, columns: [...state.columns, payload] };
     case 'REMOVE_COLUMN':
       return {
         ...state,
-        columns: state.columns.filter((t) => t !== payload),
+        columns: state.columns.filter(t => t !== payload),
       };
     case 'ADD_DEPARTMNET':
       return { ...state, departments: [...state.departments, payload] };
     case 'REMOVE_DEPARTMENT':
       return {
         ...state,
-        departments: state.departments.filter((t) => t !== payload),
+        departments: state.departments.filter(t => t !== payload),
       };
     case 'CLEAR':
       return initalState;
@@ -78,14 +78,14 @@ const reducer = (state, action) => {
   }
 };
 
-export const SearchProvider = ({ children }) => {
+export function SearchProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initalState);
 
+  const context = React.useMemo(() => [state, dispatch], [state, dispatch]);
+
   return (
-    <SearchContext.Provider value={[state, dispatch]}>
-      {children}
-    </SearchContext.Provider>
+    <SearchContext.Provider value={context}>{children}</SearchContext.Provider>
   );
-};
+}
 
 export const useSearchState = () => useContext(SearchContext);

@@ -2,9 +2,9 @@ import React from 'react';
 import { useJoinableDatasetsPaged } from '../../hooks/graphQLAPI';
 import './JoinableDatasets.scss';
 import { usePagination } from '../../hooks/pagination';
-import JoinColumn from '../../components/JoinColumn/JoinColumn';
+import JoinColumn from '../JoinColumn/JoinColumn';
 
-export function JoinableDatasets({ column, dataset, global }) {
+export function JoinableDatasets({ column, global }) {
   const [pageNo, { pageButtons }] = usePagination({
     totalCount: column.joinSuggestionsCount,
     perPage: 10,
@@ -31,7 +31,7 @@ export function JoinableDatasets({ column, dataset, global }) {
       <h3>MATCHING DATASETS</h3>
       {pagedJoins && (
         <ul>
-          {pagedJoins.map((join) => (
+          {pagedJoins.map(join => (
             <li key={join.column.dataset.id}>
               <JoinColumn
                 dataset={join.column.dataset}

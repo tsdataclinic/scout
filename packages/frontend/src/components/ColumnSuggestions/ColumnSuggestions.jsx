@@ -1,16 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight, faAngleDown } from '@fortawesome/free-solid-svg-icons';
-import JoinColumn from '../JoinColumn/JoinColumn';
 import './ColumnSuggestions.scss';
-import { usePaginationWithItems } from '../../hooks/pagination';
-import { getUniqueEntries } from '../../utils/socrata';
 import { useDatasetColumnsWithSuggestionCounts } from '../../hooks/graphQLAPI';
 import { JoinableDatasets } from '../JoinableDatasets/JoinableDatasets';
 
 export default function ColumnSuggestions({ global, columnID, dataset }) {
   const [collapsed, setCollapsed] = useState(true);
-  const [overlaps, setOverlaps] = useState([]);
 
   const { loading, data, error } = useDatasetColumnsWithSuggestionCounts(
     columnID,
@@ -54,7 +50,6 @@ export default function ColumnSuggestions({ global, columnID, dataset }) {
   }
 
   if (error) {
-    debugger;
     return <p>Something went wrong</p>;
   }
   const column = data ? data.datasetColumn : null;
@@ -64,10 +59,8 @@ export default function ColumnSuggestions({ global, columnID, dataset }) {
       <div
         className="table-row"
         role="button"
-        onKeyDown={(e) => {
-          if (e.keyCode === 36) {
-            setCollapsed(!collapsed);
-          }
+        onKeyDown={() => {
+          setCollapsed(!collapsed);
         }}
         onClick={() => setCollapsed(!collapsed)}
         tabIndex="0"

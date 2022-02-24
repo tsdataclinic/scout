@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faAngleDown } from '@fortawesome/free-solid-svg-icons';
@@ -26,10 +27,8 @@ export default function Filters({ collapsed, onCollapseFilterBar, portal }) {
   const [selectedColumns, setSelectedColumns] = useSelectedColumns(
     'data.cityofnewyork.us',
   );
-  const [
-    selectedDepartments,
-    setSelectedDepartments,
-  ] = useSelectedDepartments();
+  const [selectedDepartments, setSelectedDepartments] =
+    useSelectedDepartments();
 
   return (
     <div className={`filters ${collapsed ? 'collapsed' : ''}`}>
@@ -73,7 +72,7 @@ export default function Filters({ collapsed, onCollapseFilterBar, portal }) {
                 itemFetcher={useColumnsGQL}
                 selectedHook={useSelectedColumns}
                 collapse={filterStates.columns}
-                onCollapse={(collapsed) => setFilterState('columns', collapsed)}
+                onCollapse={_collapsed => setFilterState('columns', _collapsed)}
                 title="Columns"
                 key="Columns"
               />
@@ -90,19 +89,17 @@ export default function Filters({ collapsed, onCollapseFilterBar, portal }) {
           </div>
         </>
       ) : (
-        <>
-          <h2>
-            <button
-              onKeyDown={() => onCollapseFilterBar(false)}
-              onClick={() => onCollapseFilterBar(false)}
-              className="header-button"
-              type="button"
-            >
-              Filters
-              <FontAwesomeIcon icon={faAngleDown} />
-            </button>
-          </h2>
-        </>
+        <h2>
+          <button
+            onKeyDown={() => onCollapseFilterBar(false)}
+            onClick={() => onCollapseFilterBar(false)}
+            className="header-button"
+            type="button"
+          >
+            Filters
+            <FontAwesomeIcon icon={faAngleDown} />
+          </button>
+        </h2>
       )}
     </div>
   );

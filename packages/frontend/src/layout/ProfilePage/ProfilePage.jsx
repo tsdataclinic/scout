@@ -29,7 +29,10 @@ export function ProfilePage() {
     <div className="profile-page">
       <div className="profile-page-inner">
         <h2>
-          Welcome {profile.username} <button onClick={signout}>signout</button>
+          Welcome {profile.username}{' '}
+          <button type="button" onClick={signout}>
+            signout
+          </button>
         </h2>
       </div>
     </div>

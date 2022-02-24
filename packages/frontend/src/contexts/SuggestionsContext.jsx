@@ -7,11 +7,9 @@ const defaultState = {
 
 export const SuggestionsContext = createContext(defaultState);
 
-export const SuggestionsProvider = ({ portal, children }) => {
+export function SuggestionsProvider({ portal, children }) {
   const [thematicSuggestions, setThematicSuggestions] = useState(null);
   const [joinNumbers, setJoinNumbers] = useState(null);
-
-  console.log('PORTAL OBJECT IS ', portal);
   const portalID = portal ? portal.abbreviation : null;
 
   useEffect(() => {
@@ -19,20 +17,25 @@ export const SuggestionsProvider = ({ portal, children }) => {
       fetch(
         `${process.env.PUBLIC_URL}/metadata/${portalID}/similarity_metrics.json`,
       )
-        .then((r) => r.json())
-        .then((r) => setThematicSuggestions(r));
+        .then(r => r.json())
+        .then(r => setThematicSuggestions(r));
 
       fetch(
         `${process.env.PUBLIC_URL}/metadata/${portalID}/potential_join_numbers.json`,
       )
-        .then((r) => r.json())
-        .then((r) => setJoinNumbers(r));
+        .then(r => r.json())
+        .then(r => setJoinNumbers(r));
     }
   }, [portalID]);
 
+  const context = React.useMemo(
+    () => ({ thematicSuggestions, joinNumbers }),
+    [thematicSuggestions, joinNumbers],
+  );
+
   return (
-    <SuggestionsContext.Provider value={{ thematicSuggestions, joinNumbers }}>
+    <SuggestionsContext.Provider value={context}>
       {children}
     </SuggestionsContext.Provider>
   );
-};
+}

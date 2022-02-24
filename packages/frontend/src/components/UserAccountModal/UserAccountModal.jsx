@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import {
   useAttemptLogin,
   useAttemptSignUp,
   useCurrentUser,
 } from '../../hooks/graphQLAPI';
-import { Redirect } from 'react-router-dom';
 
 import './UserAccountModal.scss';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [attemptLogin, { data, client }] = useAttemptLogin();
+  const [attemptLogin, { client }] = useAttemptLogin();
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
 
   //   const { loading, data, error } = useAttemptLogin(email, password);
-  const onSubmit = async (e) => {
+  const onSubmit = async e => {
     e.preventDefault();
     setErrorMessage(null);
     setLoading(true);
@@ -40,22 +40,24 @@ function Login() {
   return (
     <div className="login-container">
       <form onSubmit={onSubmit}>
-        <label>
+        <label htmlFor="login-email">
           Email
           <input
+            id="login-email"
             type="text"
             placeholder="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={e => setEmail(e.target.value)}
           />
         </label>
 
-        <label>
+        <label htmlFor="login-password">
           Password
           <input
+            id="login-password"
             type="password"
             placeholder="password"
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={e => setPassword(e.target.value)}
             value={password}
           />
         </label>
@@ -78,9 +80,9 @@ function SignUp() {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
 
-  const [attemptSignUp, { data, client }] = useAttemptSignUp();
+  const [attemptSignUp, { client }] = useAttemptSignUp();
 
-  const onSubmit = async (e) => {
+  const onSubmit = async e => {
     e.preventDefault();
     if (password !== confirmPassword) {
       setErrorMessage("Passwords don't match");
@@ -90,14 +92,14 @@ function SignUp() {
     setLoading(true);
 
     try {
-      const { data } = await attemptSignUp({
+      const { data: signupData } = await attemptSignUp({
         variables: { email, password, username },
       });
-      if (data.signUp.success) {
-        localStorage.setItem('token', data.signUp.token);
+      if (signupData.signUp.success) {
+        localStorage.setItem('token', signupData.signUp.token);
         client.resetStore();
       } else {
-        setErrorMessage(data.signUp.error);
+        setErrorMessage(signupData.signUp.error);
       }
     } catch (err) {
       setErrorMessage('Server error');
@@ -109,41 +111,45 @@ function SignUp() {
   return (
     <div className="login-container">
       <form onSubmit={onSubmit}>
-        <label>
+        <label htmlFor="signup-email">
           Email:
           <input
+            id="signup-email"
             type="text"
             placeholder="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={e => setEmail(e.target.value)}
           />
         </label>
 
-        <label>
+        <label htmlFor="signup-username">
           Username:
           <input
+            id="signup-username"
             type="text"
             placeholder="username"
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={e => setUsername(e.target.value)}
             value={username}
           />
         </label>
 
-        <label>
+        <label htmlFor="signup-password">
           Password:
           <input
+            id="signup-password"
             type="password"
             placeholder="password"
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={e => setPassword(e.target.value)}
             value={password}
           />
         </label>
-        <label>
+        <label htmlFor="signup-password-confirm">
           Confirm Password:
           <input
+            id="signup-password-confirm"
             type="password"
             placeholder="Confirm password"
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={e => setConfirmPassword(e.target.value)}
             value={confirmPassword}
           />
         </label>
@@ -154,7 +160,7 @@ function SignUp() {
   );
 }
 
-export default function UserAccountModal({}) {
+export default function UserAccountModal() {
   const [activeTab, setActiveTab] = useState('login');
   const { data: currentUser } = useCurrentUser();
   console.log('current user ', currentUser);

@@ -11,23 +11,39 @@ export default function SortMenu({
   onDirection,
 }) {
   const [expanded, setExpanded] = useState(false);
+  const onMenuToggle = () => setExpanded(!expanded);
+  const onOptionSelection = option => {
+    onSelected(option);
+    setExpanded(false);
+  };
+
   return (
     <div className={`sort-menu ${expanded ? 'expanded' : ''}`}>
       <div className="wrapper">
         <span>Sort By:</span>
         <ul>
-          <li onClick={() => setExpanded(!expanded)}>{selected}</li>
+          <li>
+            <div
+              tabIndex="0"
+              role="button"
+              onClick={onMenuToggle}
+              onKeyPress={onMenuToggle}
+            >
+              {selected}
+            </div>
+          </li>
           {options
-            .filter((o) => o !== selected)
-            .map((option) => (
-              <li
-                onClick={() => {
-                  onSelected(option);
-                  setExpanded(false);
-                }}
-                key={option}
-              >
-                {option}{' '}
+            .filter(o => o !== selected)
+            .map(option => (
+              <li key={option}>
+                <div
+                  tabIndex="0"
+                  role="button"
+                  onKeyPress={() => onOptionSelection(option)}
+                  onClick={() => onOptionSelection(option)}
+                >
+                  {option}{' '}
+                </div>
               </li>
             ))}
         </ul>

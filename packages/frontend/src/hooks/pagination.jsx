@@ -1,12 +1,11 @@
-import { useQuery } from '@apollo/client';
 import React, { useState, useMemo, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 
 export function usePaginationWithItems(data, perPage = 20) {
-  const pages = useMemo(() => Math.ceil(data.length / perPage), [
-    data,
-    perPage,
-  ]);
+  const pages = useMemo(
+    () => Math.ceil(data.length / perPage),
+    [data, perPage],
+  );
   const [currentPageNo, setCurrentPageNo] = useState(0);
 
   useEffect(() => {
@@ -50,10 +49,14 @@ export function usePagination({ perPage = 20, totalCount, invaidators }) {
   const [currentPageNo, setCurrentPageNo] = useState(0);
   const pages = Math.ceil(totalCount / perPage);
 
-  const shouldInvalidate = invaidators || [perPage, totalCount];
+  const shouldInvalidate = React.useMemo(
+    () => invaidators || [perPage, totalCount],
+    [invaidators, perPage, totalCount],
+  );
+
   useEffect(() => {
     setCurrentPageNo(0);
-  }, shouldInvalidate);
+  }, [shouldInvalidate]);
 
   const pageButtons = (
     <nav>

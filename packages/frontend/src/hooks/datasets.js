@@ -16,7 +16,7 @@ function useFilterType(collectionName, domain) {
   const actualDomain = domain || portal.socrataDomain;
   useEffect(() => {
     if (actualDomain) {
-      db[collectionName].where({ portal: actualDomain }).toArray((result) => {
+      db[collectionName].where({ portal: actualDomain }).toArray(result => {
         setCollection(result);
       });
     }
@@ -51,7 +51,7 @@ export function useJoinableDatasets(dataset) {
         .anyOf(dataset.columnFields)
         .distinct()
         .toArray()
-        .then((results) => {
+        .then(results => {
           setPotentialJoins(results);
         });
     }
@@ -84,7 +84,7 @@ export function useDatasetCount() {
   const [{ datasetsRefreshedAt }, , db] = useStateValue();
 
   useEffect(() => {
-    db.Datasets.count().then((count) => setNoDatasets(count));
+    db.Datasets.count().then(count => setNoDatasets(count));
   }, [datasetsRefreshedAt, db.Datasets]);
   return noDatasets;
 }
@@ -95,7 +95,7 @@ export function useDataset(datasetID) {
 
   useEffect(() => {
     if (datasetID) {
-      db.Datasets.get({ id: datasetID }).then((foundDataset) =>
+      db.Datasets.get({ id: datasetID }).then(foundDataset =>
         setDataset(foundDataset),
       );
     }
@@ -110,12 +110,12 @@ export function useGetDatasetsByIdsRemote(datasets) {
     if (datasets.length > 0) {
       console.log('FETCHING AWAY METADATA');
       Promise.all(
-        datasets.map((d) =>
-          fetch(
-            `https://${d.portal}/api/views/metadata/v1/${d.dataset}`,
-          ).then((r) => r.json()),
+        datasets.map(d =>
+          fetch(`https://${d.portal}/api/views/metadata/v1/${d.dataset}`).then(
+            r => r.json(),
+          ),
         ),
-      ).then((r) => {
+      ).then(r => {
         setResult(r);
       });
     }
@@ -129,7 +129,7 @@ export function useGetDatasetsByIds(ids) {
 
   useEffect(() => {
     console.log('DOING BULK GET ', datasetsRefreshedAt);
-    db.Datasets.bulkGet(ids).then((results) => setDatasets(results));
+    db.Datasets.bulkGet(ids).then(results => setDatasets(results));
   }, [datasetsRefreshedAt, db.Datasets, ids]);
   return datasets;
 }
@@ -152,20 +152,20 @@ function filterDomain(d, domain) {
 }
 
 function filterTags(d, tags) {
-  return tags.length === 0 || d.tags.filter((t) => tags.includes(t)).length > 0;
+  return tags.length === 0 || d.tags.filter(t => tags.includes(t)).length > 0;
 }
 
 function filterCategories(d, categories) {
   return (
     categories.length === 0 ||
-    d.categories.filter((cat) => categories.includes(cat)).length > 0
+    d.categories.filter(cat => categories.includes(cat)).length > 0
   );
 }
 
 function filterColumns(d, columns) {
   return (
     columns.length === 0 ||
-    d.columns.filter((c) => columns.includes(c)).length > 0
+    d.columns.filter(c => columns.includes(c)).length > 0
   );
 }
 
@@ -181,7 +181,6 @@ export function useDatasetsDB({
   domain,
   page,
   sortBy,
-  ascending,
   perPage,
 }) {
   const [results, setResults] = useState([]);
@@ -199,9 +198,9 @@ export function useDatasetsDB({
       if (term) {
         baseQuery = db.Datasets.where('tokens')
           .startsWithIgnoreCase(term)
-          .filter((d) => filterDomain(d, actualDomain))
+          .filter(d => filterDomain(d, actualDomain))
           .filter(
-            (d) =>
+            d =>
               filterTags(d, tags) &&
               filterColumns(d, columns) &&
               filterCategories(d, categories) &&
@@ -211,14 +210,14 @@ export function useDatasetsDB({
         baseQuery = db.Datasets.where('portal')
           .equals(actualDomain)
           .filter(
-            (d) =>
+            d =>
               filterTags(d, tags) &&
               filterColumns(d, columns) &&
               filterCategories(d, categories) &&
               filterDepatment(d, departments),
           );
       }
-      baseQuery.toArray().then((queryResults) => {
+      baseQuery.toArray().then(queryResults => {
         const end = window.performance.now();
         console.log(`Query time is ${(end - start) / 1000.0} s`);
         setDatasetCount(queryResults.length);
@@ -246,7 +245,7 @@ export function useDatasets({ tags, term, categories, columns, departments }) {
   const [{ datasets }] = useStateValue();
   const results = useLunr({
     query: term,
-    documents: datasets.map((d) => ({
+    documents: datasets.map(d => ({
       id: d.resource.id,
       name: d.resource.name,
       description: d.resource.description,
@@ -256,20 +255,20 @@ export function useDatasets({ tags, term, categories, columns, departments }) {
     },
   });
 
-  const searchedDatasets = results.map((r) =>
-    datasets.find((d) => d.resource.id === r.ref),
+  const searchedDatasets = results.map(r =>
+    datasets.find(d => d.resource.id === r.ref),
   );
 
   return useMemo(() => {
     if (searchedDatasets) {
       let resultDatasets =
         searchedDatasets[0] && searchedDatasets[0].item
-          ? searchedDatasets.map((match) => match.item)
+          ? searchedDatasets.map(match => match.item)
           : [...searchedDatasets];
 
       const matches =
         searchedDatasets && searchedDatasets[0] && searchedDatasets[0].item
-          ? searchedDatasets.map((d) => ({
+          ? searchedDatasets.map(d => ({
               id: d.item.resource.id,
               matches: d.matches,
             }))
@@ -277,17 +276,16 @@ export function useDatasets({ tags, term, categories, columns, departments }) {
 
       if (tags && tags.length > 0) {
         resultDatasets = resultDatasets.filter(
-          (dataset) =>
-            dataset.classification.domain_tags.filter((tag) =>
-              tags.includes(tag),
-            ).length > 0,
+          dataset =>
+            dataset.classification.domain_tags.filter(tag => tags.includes(tag))
+              .length > 0,
         );
       }
 
       if (categories && categories.length > 0) {
         resultDatasets = resultDatasets.filter(
-          (dataset) =>
-            dataset.classification.categories.filter((cat) =>
+          dataset =>
+            dataset.classification.categories.filter(cat =>
               categories.includes(cat),
             ).length > 0,
         );
@@ -295,18 +293,18 @@ export function useDatasets({ tags, term, categories, columns, departments }) {
 
       if (columns && columns.length > 0) {
         resultDatasets = resultDatasets.filter(
-          (dataset) =>
+          dataset =>
             dataset.resource.columns_name &&
-            dataset.resource.columns_name.filter((col) => columns.includes(col))
+            dataset.resource.columns_name.filter(col => columns.includes(col))
               .length > 0,
         );
       }
 
       if (departments && departments.length > 0) {
-        resultDatasets = resultDatasets.filter((dataset) =>
+        resultDatasets = resultDatasets.filter(dataset =>
           departments.includes(
             dataset.classification.domain_metadata.find(
-              (d) => d.key === 'Dataset-Information_Agency',
+              d => d.key === 'Dataset-Information_Agency',
             )?.value,
           ),
         );
@@ -314,8 +312,8 @@ export function useDatasets({ tags, term, categories, columns, departments }) {
 
       return {
         datasets: resultDatasets,
-        matches: matches.filter((match) =>
-          resultDatasets.find((r) => r.resource.id === match.id),
+        matches: matches.filter(match =>
+          resultDatasets.find(r => r.resource.id === match.id),
         ),
       };
     }
@@ -369,7 +367,7 @@ export function useSortDatasetsBy(
 export function useUniqueColumnEntries(dataset, column) {
   const [uniqueEntries, setUniqueEntries] = useState(null);
   useEffect(() => {
-    getUniqueEntries(dataset, column).then((res) => {
+    getUniqueEntries(dataset, column).then(res => {
       setUniqueEntries({
         dataset: dataset.resource.id,
         column,

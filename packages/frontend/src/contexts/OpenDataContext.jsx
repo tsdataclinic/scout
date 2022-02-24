@@ -36,8 +36,8 @@ const reducer = (state, action) => {
     case 'SET_PORTAL_UPDATED':
       return {
         ...state,
-        lastUpdated: state.lastUpdated.map((l) => l.portal).includes(payload)
-          ? state.lastUpdated.map((l) =>
+        lastUpdated: state.lastUpdated.map(l => l.portal).includes(payload)
+          ? state.lastUpdated.map(l =>
               l.portal === payload ? { ...l, updated_at: new Date() } : l,
             )
           : [...state.lastUpdated, { portal: payload, updated_at: new Date() }],
@@ -49,9 +49,9 @@ const reducer = (state, action) => {
 
 const updateManifestFromSocrata = (dispatch, portal) => {
   const worker = new DBWorker();
-  getManifest(portal.socrataDomain).then((manifest) => {
+  getManifest(portal.socrataDomain).then(manifest => {
     worker.postMessage({ manifest, portal });
-    worker.addEventListener('message', (message) => {
+    worker.addEventListener('message', message => {
       console.log('worker message ', message);
       if (message.data.event === 'database_updated') {
         switch (message.data.table) {
@@ -87,6 +87,10 @@ const updateManifestFromSocrata = (dispatch, portal) => {
               type: 'CATEGORIES_UPDATED',
             });
             break;
+          default:
+            throw new Error(
+              `Failed to match against any type. Received: ${message.data.table}`,
+            );
         }
       }
       if (message.data.event === 'all_loaded') {
@@ -104,13 +108,13 @@ const updateManifestFromSocrata = (dispatch, portal) => {
 };
 
 // Checks to see if the cache is older than 1 daym if so update it
-const shouldUpdateCache = (lastUpdated) => {
+const shouldUpdateCache = lastUpdated => {
   if (lastUpdated == null) return true;
   if ((new Date() - lastUpdated) / 1000 > 24 * 60 * 60) return true;
   return false;
 };
 
-export const OpenDataProvider = ({ children, portal }) => {
+export function OpenDataProvider({ children, portal }) {
   const [state, dispatch] = useReducer(reducer, initalState);
 
   // Try to get the state locally from indexed db... if we can't find it there, request it from the
@@ -130,11 +134,11 @@ export const OpenDataProvider = ({ children, portal }) => {
     if (!portal) {
       return;
     }
-    db.SocrataCache.get(0).then((result) => {
+    db.SocrataCache.get(0).then(result => {
       if (result) {
         const cachedState = JSON.parse(result.data);
         const lastUpdateForPortal = cachedState.lastUpdated.find(
-          (p) => p.portal === portal.socrataDomain,
+          p => p.portal === portal.socrataDomain,
         );
         if (
           shouldUpdateCache(
@@ -196,11 +200,12 @@ export const OpenDataProvider = ({ children, portal }) => {
     }
   }, [stateLoaded, lastUpdated, portal]);
 
-  return (
-    <AppContext.Provider value={[{ ...state, portal }, dispatch, db]}>
-      {children}
-    </AppContext.Provider>
+  const context = React.useMemo(
+    () => [{ ...state, portal }, dispatch, db],
+    [state, portal, dispatch],
   );
-};
+
+  return <AppContext.Provider value={context}>{children}</AppContext.Provider>;
+}
 
 export const useStateValue = () => useContext(AppContext);

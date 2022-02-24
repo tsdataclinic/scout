@@ -1,16 +1,17 @@
 import { useState, useRef, useEffect } from 'react';
 import lunr from 'lunr';
 
-const parameterisedPlugin = function(builder, fields) {
-  fields.forEach(function(field) {
+const parameterisedPlugin = (builder, fields) => {
+  fields.forEach(field => {
     builder.field(field);
   });
 };
+
 function generateIndex(options, documents) {
-  return lunr(function() {
+  return lunr(function generate() {
     this.use(parameterisedPlugin, options.fields);
 
-    documents.forEach(function(doc) {
+    documents.forEach(function adder(doc) {
       this.add(doc);
     }, this);
   });
