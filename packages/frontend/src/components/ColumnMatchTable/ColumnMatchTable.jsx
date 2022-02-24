@@ -38,6 +38,7 @@ export default function ColumnMatchTable({ dataset, global }) {
             />
           ))
         : [...Array(6)].map((_, i) => (
+            // eslint-disable-next-line react/no-array-index-key
             <div key={i} className="column-suggestions collapsed">
               <div className="table-row" role="button" tabIndex="0">
                 <span className="column-collapse">
