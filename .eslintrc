@@ -1,14 +1,22 @@
 {
+  "root": true,
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 13,
+    "sourceType": "module"
+  },
   "extends": [
-    "react-app",
+    "eslint:recommended",
     "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
     "airbnb",
     "plugin:jsx-a11y/recommended",
     "prettier"
   ],
-  "plugins": ["jsx-a11y", "prettier"],
+  "plugins": ["react", "react-hooks", "jsx-a11y"],
   "rules": {
-    "no-use-before-define": "warn",
     "no-unused-vars": [
       "error",
       {
@@ -16,10 +24,24 @@
         "ignoreRestSiblings": true
       }
     ],
+    "react/jsx-filename-extension": [
+      "warn",
+      { "extensions": [".tsx", ".jsx"] }
+    ],
     "react/prop-types": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/require-default-props": "off",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
     "import/prefer-default-export": "off",
-    "quotes": ["error", "single", "avoid-escape"],
-    "react/no-array-index-key": "off",
     "react-hooks/exhaustive-deps": "error",
     "react-hooks/rules-of-hooks": "error",
     "camelcase": "warn",
@@ -30,5 +52,87 @@
         "specialLink": ["to"]
       }
     ]
-  }
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  },
+
+  "overrides": [
+    {
+      "files": ["**/*.tsx"],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "ecmaFeatures": {
+          "jsx": true
+        },
+        "ecmaVersion": 13,
+        "sourceType": "module"
+      },
+      "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:react-hooks/recommended",
+        "airbnb",
+        "plugin:jsx-a11y/recommended",
+        "plugin:@typescript-eslint/recommended",
+        "prettier"
+      ],
+      "plugins": ["react", "jsx-a11y", "react-hooks", "@typescript-eslint"],
+      "rules": {
+        "@typescript-eslint/array-type": [
+          "error",
+          { "default": "array-simple" }
+        ],
+        "@typescript-eslint/explicit-function-return-type": [
+          "error",
+          {
+            "allowExpressions": true
+          }
+        ],
+
+        "no-unused-vars": [
+          "error",
+          {
+            "argsIgnorePattern": "^_",
+            "ignoreRestSiblings": true
+          }
+        ],
+        "react/jsx-filename-extension": [
+          "warn",
+          { "extensions": [".tsx", ".jsx"] }
+        ],
+        "react/prop-types": "off",
+        "react/react-in-jsx-scope": "off",
+        "react/require-default-props": "off",
+        "import/extensions": [
+          "error",
+          "ignorePackages",
+          {
+            "js": "never",
+            "jsx": "never",
+            "ts": "never",
+            "tsx": "never"
+          }
+        ],
+        "import/prefer-default-export": "off",
+        "react-hooks/exhaustive-deps": "error",
+        "react-hooks/rules-of-hooks": "error",
+        "camelcase": "warn",
+        "jsx-a11y/anchor-is-valid": [
+          "error",
+          {
+            "components": ["Link"],
+            "specialLink": ["to"]
+          }
+        ]
+      },
+      "settings": {
+        "import/resolver": {
+          "typescript": {}
+        }
+      }
+    }
+  ]
 }

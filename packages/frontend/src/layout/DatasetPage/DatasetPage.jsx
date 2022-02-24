@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import moment from 'moment';
 import { Switch } from 'antd';
 import RawHTML from '../../components/RawHTML/RawHTML';
@@ -12,6 +12,7 @@ import ViewOnOpenPortal from '../../components/ViewOnOpenPortal/ViewOnOpenPortal
 import { useDatasetGQL } from '../../hooks/graphQLAPI';
 import { ThematicSimilarityExplorer } from '../../components/ThematicSimilarityExplorer/ThematicSimilarityExplorer';
 import { USE_SINGLE_CITY } from '../../flags';
+import ExamplesExplorer from './ExamplesExplorer';
 
 const formatDate = date => moment(date).format('MMMM DD, YYYY');
 
@@ -171,6 +172,13 @@ export default function DatasetPage({ match }) {
             onClick={() => setActiveTab('theme')}
           >
             Thematically Similar
+          </button>
+          <button
+            type="button"
+            className={activeTab === 'examples' ? 'active' : ''}
+            onClick={() => setActiveTab('examples')}
+          >
+            <ExamplesExplorer />
           </button>
         </div>
         {activeTab === 'joins' &&
