@@ -20,16 +20,33 @@ const formatDate = date => moment(date).format('MMMM DD, YYYY');
 export default function DatasetPage() {
   usePageView();
   const navigate = useNavigate();
-  const { datasetID } = useParams();
+  const { datasetId, tab } = useParams();
 
-  const { loading, error, data } = useDatasetGQL(datasetID);
+  const { loading, error, data } = useDatasetGQL(datasetId);
   const dataset = loading || error ? null : data.dataset;
 
   // const parentId = dataset?.parentDatasetID;
   const parentDataset = null; // useDataset(parentId);
-  const [activeTab, setActiveTab] = useState('joins');
+  const [activeTab, setActiveTab] = useState(tab || 'joins');
 
   const [globalSearch, setGlobalSearch] = useState(false);
+
+  const onChangeTab = newTab => {
+    // only switch if it's going to be a new tab
+    if (newTab !== activeTab) {
+      const currURL = window.location.pathname;
+      // drop the last part of the path
+      const urlParts = currURL.split('/').slice(0, -1).join('/');
+      navigate(`${urlParts}/${newTab}`);
+      setActiveTab(newTab);
+    }
+  };
+
+  useEffect(() => {
+    if (tab === undefined) {
+      navigate('joins');
+    }
+  }, [tab, navigate]);
 
   useEffect(() => {
     const page = `${window.location.pathname}/${activeTab}`;
@@ -105,12 +122,12 @@ export default function DatasetPage() {
             className="collection-button"
             disabled={!dataset}
             onClick={() =>
-              inCurrentCollection(datasetID)
-                ? removeFromCurrentCollection(datasetID)
-                : addToCurrentCollection(datasetID)
+              inCurrentCollection(datasetId)
+                ? removeFromCurrentCollection(datasetId)
+                : addToCurrentCollection(datasetId)
             }
           >
-            {inCurrentCollection(datasetID)
+            {inCurrentCollection(datasetId)
               ? 'Remove From Collection'
               : 'Add to Collection'}{' '}
           </button>
@@ -163,28 +180,21 @@ export default function DatasetPage() {
           <button
             type="button"
             className={activeTab === 'joins' ? 'active' : ''}
-            onClick={() => {
-              setActiveTab('joins');
-            }}
+            onClick={() => onChangeTab('joins')}
           >
             Potential Join Columns
           </button>
           <button
             type="button"
             className={activeTab === 'theme' ? 'active' : ''}
-            onClick={() => {
-              navigate('theme');
-              setActiveTab('theme');
-            }}
+            onClick={() => onChangeTab('theme')}
           >
             Thematically Similar
           </button>
           <button
             type="button"
             className={activeTab === 'examples' ? 'active' : ''}
-            onClick={() => {
-              setActiveTab('examples');
-            }}
+            onClick={() => onChangeTab('examples')}
           >
             Examples
           </button>
@@ -208,12 +218,12 @@ export default function DatasetPage() {
         {activeTab === 'theme' && (
           <ThematicSimilarityExplorer
             global={globalSearch}
-            datasetID={datasetID}
+            datasetId={datasetId}
             portal={dataset.portal.id}
             dataset={dataset}
           />
         )}
-        {activeTab === 'examples' && <ExamplesExplorer datasetId={datasetID} />}
+        {activeTab === 'examples' && <ExamplesExplorer datasetId={datasetId} />}
       </div>
     </div>
   );

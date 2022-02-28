@@ -88,11 +88,11 @@ function App() {
                 element={<CollectionPage />}
               />
               <Route path="/collection/:id" element={<CollectionPage />} />
-              <Route
-                path="explore/:portal/dataset/:datasetID"
-                element={<DatasetPage />}
-              />
               <Route path="/explore/:portal" element={<PortalRoute />} />
+              <Route path="/explore/:portal/dataset/:datasetId">
+                <Route path=":tab" element={<DatasetPage />} />
+                <Route path="" element={<DatasetPage />} />
+              </Route>
               <Route
                 path="*"
                 element={
