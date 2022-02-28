@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import axios from 'axios';
+import { Headers, Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { GithubService } from './github.service';
 import { ConfigService } from 'src/config/config.service';
 import { CommitResult, CodeResult } from './types';
-import axios from 'axios';
 
 interface GithubAuthDTO {
   authCode: string;
@@ -32,27 +32,39 @@ export class GithubController {
         headers: { Accept: 'application/json' },
       },
     );
+
     if (response.status === 200) {
-      console.log(response.data);
       if (response.data.error) {
-        console.log('Error', response.data);
+        console.log('Error in github authentication', response.data);
         return { token: null };
       }
-      const token = response.data.access_token;
-      console.log('SUCCESS', response.data);
-      console.log('SUCCESS', response.data.access_token);
-      console.log(`Successfully generated github token: ${token}`);
-      return { token };
+      return { token: response.data.access_token };
     }
 
-    console.log('Request failed');
-    return { token: null };
+    throw new Error(
+      `ERROR: Github authentication returned status ${response.status}`,
+    );
   }
 
-  @Get('search/:searchType')
+  @Get('search/code/:datasetId')
+  async getGithubCodeSearchResults(
+    @Headers('Authorization') githubAuthToken: string,
+    @Param('datasetId') datasetId: string,
+  ): Promise<CodeResult[]> {
+    return this.githubService.getGithubCodeSearchResults(
+      datasetId,
+      githubAuthToken,
+    );
+  }
+
+  @Get('search/commits/:datasetId')
   async getGithubCommitSearchResults(
-    @Param('searchType') searchType: 'commits' | 'code',
-  ): Promise<CommitResult | CodeResult | string> {
-    return this.githubService.getGithubSearchResults(searchType);
+    @Headers('Authorization') githubAuthToken: string,
+    @Param('datasetId') datasetId: string,
+  ): Promise<CommitResult[]> {
+    return this.githubService.getGithubCommitSearchResults(
+      datasetId,
+      githubAuthToken,
+    );
   }
 }

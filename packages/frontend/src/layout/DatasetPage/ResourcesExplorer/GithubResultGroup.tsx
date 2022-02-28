@@ -37,7 +37,17 @@ export default function GithubResultGroup({
     />
   ));
 
-  console.log(process.env);
+  function renderRows(): JSX.Element {
+    if (results.length === 0) {
+      const pluralTypeLabel =
+        resultType === 'COMMIT' ? 'commits' : 'code results';
+      return (
+        <div>Could not find any {pluralTypeLabel} matching this dataset</div>
+      );
+    }
+
+    return <div>{rows}</div>;
+  }
 
   return (
     <div className="github-result-group">
@@ -54,7 +64,7 @@ export default function GithubResultGroup({
           />
         </>
       ) : (
-        <div>{rows}</div>
+        renderRows()
       )}
     </div>
   );

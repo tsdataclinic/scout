@@ -204,9 +204,8 @@ export default function DatasetPage() {
             <>
               <p className="intro">
                 Find datasets that share a column with the current dataset.
-              </p>{' '}
+              </p>
               <p>
-                {' '}
                 These columns might be interesting datasets to join with the
                 current dataset to add additional details or bring in context
               </p>

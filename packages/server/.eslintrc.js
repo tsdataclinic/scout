@@ -13,7 +13,7 @@ module.exports = {
         'plugin:@typescript-eslint/eslint-recommended',
         'plugin:@typescript-eslint/recommended',
         'plugin:@typescript-eslint/recommended-requiring-type-checking',
-        'prettier/@typescript-eslint',
+        'prettier',
       ],
       parserOptions: {
         project: ['./tsconfig.json'], // Specify it only for TypeScript files

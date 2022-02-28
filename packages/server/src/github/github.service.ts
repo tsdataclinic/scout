@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { Injectable } from '@nestjs/common';
 import scrapeIt from 'scrape-it';
 import { CommitResult, CodeResult } from './types';
@@ -41,50 +42,81 @@ const COMMIT_RESULT_SCRAPER_CONFIG = {
 
 @Injectable()
 export class GithubService {
-  async _getGithubCommitSearchResults(): Promise<{
-    data: CommitResult;
-    response: { statusCode: number };
-  }> {
-    // Scrape for results straight from github
-    return scrapeIt(
-      'https://github.com/search?q=43nn-pn8j&type=commits',
+  async getGithubCommitSearchResults(
+    datasetId: string,
+    githubAuthToken: string,
+  ): Promise<CommitResult[]> {
+    if (githubAuthToken) {
+      const response = await axios.get(
+        `https://api.github.com/search/commits?q=${datasetId}`,
+        {
+          headers: {
+            Accept: 'application/json',
+            Authorization: githubAuthToken,
+          },
+        },
+      );
+      if (response.status === 200) {
+        // transform the data returned by GitHub API to what we need
+        return response.data.items.map(
+          (result: {
+            html_url: string;
+            repository: { html_url: string; full_name: string };
+            commit: { message: string; committer: { date: string } };
+          }) => {
+            const { repository, commit, html_url } = result;
+            const commitMsgParts = commit.message.split('\n');
+            const commitMessage = commitMsgParts[0];
+            const commitDescription = commitMsgParts.slice(1).join('\n');
+            return {
+              repoLabel: repository.full_name,
+              repoURL: repository.html_url,
+              commitLabel: commitMessage,
+              commitURL: html_url,
+
+              // TODO: format date?
+              commitDate: commit.committer.date,
+              commitDescription: commitDescription,
+            };
+          },
+        );
+      } else {
+        throw new Error(
+          `ERROR: github commit search failed (using API). Response status ${response.status}`,
+        );
+      }
+    }
+
+    // If we have no auth token then scrape for results straight from github
+    const { data, response } = await scrapeIt<{
+      commitResults: CommitResult[];
+    }>(
+      `https://github.com/search?q=${datasetId}&type=commits`,
       COMMIT_RESULT_SCRAPER_CONFIG,
+    );
+
+    if (response.statusCode === 200) {
+      return data.commitResults;
+    }
+
+    throw new Error(
+      `ERROR: github commit search failed (using web scraper). Response status ${response.status}`,
     );
   }
 
   // TODO: this one requires authentication
-  _getGithubCodeSearchResults(): {
-    data: CodeResult;
-    response: { statusCode: number };
-  } {
-    return {
-      data: {
+  getGithubCodeSearchResults(
+    datasetId: string,
+    githubAuthToken: string,
+  ): CodeResult[] {
+    console.log(githubAuthToken);
+    return [
+      {
         repoURL: 'test',
-        repoLabel: 'test',
+        repoLabel: datasetId,
         codeFileLabel: 'test',
         codeFileURL: 'test',
       },
-      response: {
-        statusCode: 200,
-      },
-    };
-  }
-
-  async getGithubSearchResults(
-    searchType: 'commits' | 'code',
-  ): Promise<CodeResult | CommitResult | string> {
-    const { data, response } =
-      searchType === 'commits'
-        ? await this._getGithubCommitSearchResults()
-        : this._getGithubCodeSearchResults();
-
-    if (response && response.statusCode === 200) {
-      // success!
-      return data;
-    } else {
-      // failure!! :'(
-      console.log('Failure');
-      return 'Failure!';
-    }
+    ];
   }
 }

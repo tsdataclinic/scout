@@ -14,7 +14,6 @@ export type GithubResultMetadata =
     };
 
 export interface GithubResult {
-  datasetId: string;
   repoURL: string;
   repoLabel: string;
   metadata: GithubResultMetadata;
