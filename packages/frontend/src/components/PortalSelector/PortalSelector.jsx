@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
 import PortalInfo from '../PortalInfo/PortalInfo';
 
@@ -18,21 +18,19 @@ const AVAILABLE_PORTALS = gql`
 
 export default function PortalSelector({ selectedPortal }) {
   const [showMenu, setShowMenu] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
   const { loading, data } = useQuery(AVAILABLE_PORTALS);
   const portals = data ? data.portals : [];
   const [search, setSearch] = useState('');
 
-  const selectPortal = (portal) => {
+  const selectPortal = portal => {
     setShowMenu(false);
-    history.push(`/${portal.abbreviation}`);
+    navigate(`/${portal.abbreviation}`);
   };
 
   const filteredPortals =
     search.length > 0
-      ? portals.filter((p) =>
-          p.name.toLowerCase().includes(search.toLowerCase()),
-        )
+      ? portals.filter(p => p.name.toLowerCase().includes(search.toLowerCase()))
       : portals;
 
   return (
@@ -53,10 +51,10 @@ export default function PortalSelector({ selectedPortal }) {
               type="text"
               placeholder="Filter portals"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={e => setSearch(e.target.value)}
             />
             <ul>
-              {Object.values(filteredPortals).map((portal) => (
+              {Object.values(filteredPortals).map(portal => (
                 <li key={portal.id}>
                   <div
                     tabIndex="0"

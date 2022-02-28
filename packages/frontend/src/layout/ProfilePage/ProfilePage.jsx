@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useCurrentUser } from '../../hooks/graphQLAPI';
 import './ProfilePage.scss';
 
@@ -11,7 +11,7 @@ export function ProfilePage() {
   }
 
   if (error) {
-    return <Redirect to="/login" />;
+    return <Navigate to="/login" />;
   }
 
   const { profile } = data;

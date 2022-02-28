@@ -1,18 +1,16 @@
-import React from 'react';
 import './WelcomeModal.scss';
-import { Modal } from 'react-router-modal';
+import { Dialog } from '@reach/dialog';
+import '@reach/dialog/styles.css';
 import useSeenWelcome from '../../hooks/useSeenWelcome';
 
 export default function WelcomeModal() {
   const [seenWelcome, loaded, setSeenWelcome] = useSeenWelcome();
-  const recordDismiss = () => {
-    setSeenWelcome();
-  };
+  const onClose = () => setSeenWelcome(false);
 
   return (
     !seenWelcome &&
     loaded && (
-      <Modal onBackdropClick={recordDismiss}>
+      <Dialog isOpen onClose={onClose}>
         <div className="welcome-modal">
           <h2>Welcome to Scout!</h2>
           <p>
@@ -27,7 +25,7 @@ export default function WelcomeModal() {
             others. To do so start collecting or click on the collections tab
           </p>
         </div>
-      </Modal>
+      </Dialog>
     )
   );
 }

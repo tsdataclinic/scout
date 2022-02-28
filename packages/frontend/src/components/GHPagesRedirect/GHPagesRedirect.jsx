@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 export default function GHPagesRedirect() {
   const [redirect, setRedirect] = useState(null);
@@ -18,7 +18,7 @@ export default function GHPagesRedirect() {
   }, []);
 
   if (redirect) {
-    return <Redirect to={redirect} />;
+    return <Navigate to={redirect} />;
   }
   return null;
 }

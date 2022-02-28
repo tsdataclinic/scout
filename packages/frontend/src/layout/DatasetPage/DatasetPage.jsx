@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import moment from 'moment';
 import { Switch } from 'antd';
 import RawHTML from '../../components/RawHTML/RawHTML';
@@ -16,9 +17,10 @@ import ExamplesExplorer from './ExamplesExplorer';
 
 const formatDate = date => moment(date).format('MMMM DD, YYYY');
 
-export default function DatasetPage({ match }) {
+export default function DatasetPage() {
   usePageView();
-  const { datasetID } = match.params;
+  const navigate = useNavigate();
+  const { datasetID } = useParams();
 
   const { loading, error, data } = useDatasetGQL(datasetID);
   const dataset = loading || error ? null : data.dataset;
@@ -52,8 +54,7 @@ export default function DatasetPage({ match }) {
     if (currentDataset?.resource?.type === 'file') {
       return (
         <p className="intro">
-          {/* eslint-disable-next-line react/no-unescaped-entities */}
-          This resource points of a file which we currently don't have the
+          This resource points of a file which we currently don&apos;t have the
           ability to analyse. We are working to bring more types of data to
           Scout. Check back shortly
         </p>
@@ -162,23 +163,30 @@ export default function DatasetPage({ match }) {
           <button
             type="button"
             className={activeTab === 'joins' ? 'active' : ''}
-            onClick={() => setActiveTab('joins')}
+            onClick={() => {
+              setActiveTab('joins');
+            }}
           >
             Potential Join Columns
           </button>
           <button
             type="button"
             className={activeTab === 'theme' ? 'active' : ''}
-            onClick={() => setActiveTab('theme')}
+            onClick={() => {
+              navigate('theme');
+              setActiveTab('theme');
+            }}
           >
             Thematically Similar
           </button>
           <button
             type="button"
             className={activeTab === 'examples' ? 'active' : ''}
-            onClick={() => setActiveTab('examples')}
+            onClick={() => {
+              setActiveTab('examples');
+            }}
           >
-            <ExamplesExplorer />
+            Examples
           </button>
         </div>
         {activeTab === 'joins' &&
@@ -205,6 +213,7 @@ export default function DatasetPage({ match }) {
             dataset={dataset}
           />
         )}
+        {activeTab === 'examples' && <ExamplesExplorer datasetId={datasetID} />}
       </div>
     </div>
   );

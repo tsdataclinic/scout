@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import {
   useAttemptLogin,
   useAttemptSignUp,
@@ -165,7 +165,7 @@ export default function UserAccountModal() {
   const { data: currentUser } = useCurrentUser();
   console.log('current user ', currentUser);
   if (currentUser && currentUser.profile) {
-    return <Redirect to="/profile" />;
+    return <Navigate to="/profile" />;
   }
   return (
     <div className="user-account-modal">

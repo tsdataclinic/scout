@@ -1,5 +1,5 @@
-import React from 'react';
 import './CollectionPage.scss';
+import { useParams } from 'react-router-dom';
 import {
   EmailShareButton,
   FacebookShareButton,
@@ -28,9 +28,9 @@ function getShareableURL(collectionName, datasetIds) {
   return `${urlOrigin}/collection/${collectionName}/${datasetIdsStr}`;
 }
 
-export default function CollectionPage({ match }) {
+export default function CollectionPage() {
   usePageView();
-  const { name, datasetIDs: datasetIdsFromURL, id } = match.params;
+  const { name, datasetIDs: datasetIdsFromURL, id } = useParams();
   const loadingCollectionFromURL = !!datasetIdsFromURL;
 
   const [{ collections }] = useUserCollections();

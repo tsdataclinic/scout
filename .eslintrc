@@ -29,6 +29,7 @@
       { "extensions": [".tsx", ".jsx"] }
     ],
     "react/prop-types": "off",
+    "react/no-unused-prop-types": "off",
     "react/react-in-jsx-scope": "off",
     "react/require-default-props": "off",
     "import/extensions": [
@@ -61,7 +62,7 @@
 
   "overrides": [
     {
-      "files": ["**/*.tsx"],
+      "files": ["**/*.{ts,tsx}"],
       "parser": "@typescript-eslint/parser",
       "parserOptions": {
         "ecmaFeatures": {
@@ -91,19 +92,21 @@
             "allowExpressions": true
           }
         ],
-
-        "no-unused-vars": [
+        "@typescript-eslint/no-unused-vars": [
           "error",
           {
             "argsIgnorePattern": "^_",
             "ignoreRestSiblings": true
           }
         ],
+
+        "no-unused-vars": "off",
         "react/jsx-filename-extension": [
           "warn",
           { "extensions": [".tsx", ".jsx"] }
         ],
         "react/prop-types": "off",
+        "react/no-unused-prop-types": "off",
         "react/react-in-jsx-scope": "off",
         "react/require-default-props": "off",
         "import/extensions": [

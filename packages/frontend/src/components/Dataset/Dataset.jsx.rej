@@ -1,5 +1,0 @@
-diff a/src/components/Dataset/Dataset.jsx b/src/components/Dataset/Dataset.jsx	(rejected hunks)
-@@ -12 +12,2 @@ import ViewOnOpenPortal from '../ViewOnOpenPortal/ViewOnOpenPortal';
--import PortalInfo from '../../components/PortalInfo/PortalInfo';
-+import PortalInfo from '../PortalInfo/PortalInfo';
-+

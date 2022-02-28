@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import './SideNav.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
+import classNames from 'classnames';
 import { ReactComponent as ExploreSVG } from '../../icons/explore.svg';
 import { ReactComponent as CollectionsSVG } from '../../icons/collection.svg';
 import { ReactComponent as DataClinicSVG } from '../../icons/dataClinicWhite.svg';
@@ -25,11 +26,14 @@ export default function SideNav() {
         <p className="scout-sub">by data clinic</p>
       </Link>
       <NavLink
-        activeClassName="active-nav"
+        className={({ isActive }) =>
+          classNames('explore', {
+            'active-nav': isActive,
+          })
+        }
         alt="Explore"
-        className="explore"
         exact
-        to="/"
+        to="/explore"
       >
         <ExploreSVG />
         <h1>Explore</h1>
@@ -53,9 +57,12 @@ export default function SideNav() {
       </div>
       <NavLink
         exact
-        activeClassName="active-nav"
+        className={({ isActive }) =>
+          classNames('about', {
+            'active-nav': isActive,
+          })
+        }
         alt="about"
-        className="about"
         to="/about"
       >
         <DataClinicSVG />
@@ -65,9 +72,12 @@ export default function SideNav() {
       {!USE_SINGLE_CITY && (
         <NavLink
           exact
-          activeClassName="active-nav"
           alt="login/sign-up"
-          className="login"
+          className={({ isActive }) =>
+            classNames('login', {
+              'active-nav': isActive,
+            })
+          }
           to="/login"
         >
           <FontAwesomeIcon size="2x" icon={faUser} />

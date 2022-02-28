@@ -17,6 +17,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { CollectionsModule } from './collections/collections.module';
+import { GithubModule } from './github/github.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { CollectionsModule } from './collections/collections.module';
     UsersModule,
     PassportModule,
     CollectionsModule,
+    GithubModule,
   ],
   controllers: [AppController],
   providers: [AppService],
