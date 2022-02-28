@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './HomePage.scss';
 import { DebounceInput } from 'react-debounce-input';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -121,7 +121,7 @@ export default function HomePage({ portal }) {
             <FontAwesomeIcon size="lg" icon={faSearch} />
             <DebounceInput
               type="text"
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={e => setSearchTerm(e.target.value)}
               value={searchTerm}
               debounceTimeout={1000}
               placeholder="Search for dataset"
@@ -153,10 +153,10 @@ export default function HomePage({ portal }) {
                 'Downloads',
                 'Views',
               ]}
-              onDirection={(direction) => setSortDirection(direction)}
+              onDirection={direction => setSortDirection(direction)}
               selected={sortBy}
               direction={sortDirection}
-              onSelected={(selected) => setSortBy(selected)}
+              onSelected={selected => setSortBy(selected)}
             />
           )}
         </div>
@@ -165,7 +165,7 @@ export default function HomePage({ portal }) {
           {loading ? (
             <DatasetsLoading />
           ) : (
-            datasets.map((dataset) => (
+            datasets.map(dataset => (
               <Dataset key={dataset?.id} dataset={dataset} query={searchTerm} />
             ))
           )}

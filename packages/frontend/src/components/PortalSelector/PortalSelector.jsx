@@ -25,7 +25,7 @@ export default function PortalSelector({ selectedPortal }) {
 
   const selectPortal = portal => {
     setShowMenu(false);
-    navigate(`/${portal.abbreviation}`);
+    navigate(`/explore/${portal.abbreviation}`);
   };
 
   const filteredPortals =

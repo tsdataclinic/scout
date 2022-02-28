@@ -14,7 +14,7 @@ import Dataset from '../../components/Dataset/Dataset';
 import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
 import { useCollection, useDatasetsFromIds } from '../../hooks/graphQLAPI';
 import { useUserCollections } from '../../hooks/collections';
-import { USE_SINGLE_CITY } from '../../flags';
+import { DISABLE_USER_ACCOUNTS } from '../../flags';
 
 const EMPTY_COLLECTION = {
   datasetIds: [],
@@ -37,7 +37,7 @@ export default function CollectionPage() {
   const { loading, data, error } = useCollection(id);
 
   // first try to load a collection to get the dataset ids to load
-  let collection = USE_SINGLE_CITY
+  let collection = DISABLE_USER_ACCOUNTS
     ? collections.find(col => col.id === id)
     : data.collection;
 
@@ -74,8 +74,10 @@ export default function CollectionPage() {
   }
 
   if (
-    (error && !USE_SINGLE_CITY) ||
-    (USE_SINGLE_CITY && collections.length >= 1 && collection === undefined)
+    (error && !DISABLE_USER_ACCOUNTS) ||
+    (DISABLE_USER_ACCOUNTS &&
+      collections.length >= 1 &&
+      collection === undefined)
   ) {
     return <p>Something went wrong</p>;
   }

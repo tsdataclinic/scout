@@ -4,7 +4,7 @@ import {
   useCurrentUserCollections,
   useDatasetsFromIds,
 } from './graphQLAPI';
-import { USE_SINGLE_CITY } from '../flags';
+import { DISABLE_USER_ACCOUNTS } from '../flags';
 
 export function useUserCollections() {
   // TODO: This function gets triggered 40+ times on each refresh. This does
@@ -90,7 +90,8 @@ export function useUserCollections() {
         type: 'ADD_TO_PENDING_COLLECTION',
         payload: datasetID,
       });
-    } else if (USE_SINGLE_CITY) {
+    } else if (DISABLE_USER_ACCOUNTS) {
+      // TODO: check if we're authenticated and decide the right thing to do
       dispatch({
         type: 'ADD_TO_CURRENT_COLLECTION',
         payload: datasetID,
@@ -109,7 +110,7 @@ export function useUserCollections() {
         type: 'REMOVE_FROM_PENDING_COLLECTION',
         payload: datasetID,
       });
-    } else if (USE_SINGLE_CITY) {
+    } else if (DISABLE_USER_ACCOUNTS) {
       // TODO: this should remove dataset from the backend once multi-city
       // db is ready
       dispatch({

@@ -1,8 +1,10 @@
-import './ExamplesExplorer.scss';
+import './ResourcesExplorer.scss';
 import { useQuery } from 'react-query';
-import { useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { GithubResult } from './types';
 import GithubResultGroup from './GithubResultGroup';
+
+const GITHUB_TOKEN_LOCAL_STORAGE_KEY = 'githubToken';
 
 const RESULTS_DATA: readonly GithubResult[] = [
   {
@@ -50,14 +52,56 @@ type Props = {
   datasetId: string;
 };
 
-export default function ExamplesExplorer({ datasetId }: Props): JSX.Element {
+function useGithubCodeForAuth(): string | void {
+  const [githubToken, setGithubToken] = useState<string | undefined>(
+    () =>
+      window.localStorage.getItem(GITHUB_TOKEN_LOCAL_STORAGE_KEY) || undefined,
+  );
+
+  useEffect(() => {
+    async function authenticate(githubAuthCode: string): Promise<void> {
+      const response = await fetch(`/api/github/authenticate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          authCode: githubAuthCode,
+        }),
+      });
+      const { token } = await response.json();
+      if (token) {
+        window.localStorage.setItem(GITHUB_TOKEN_LOCAL_STORAGE_KEY, token);
+        console.log('TOKEN', token);
+        setGithubToken(token);
+      }
+    }
+
+    if (!window.localStorage.getItem(GITHUB_TOKEN_LOCAL_STORAGE_KEY)) {
+      // check if there is a github code in the URL
+      // (github sets this when it redirects the user back to Scout)
+      const match = window.location.href.match(/\?code=(.*)/);
+      if (match) {
+        const code = match[1];
+        if (code) {
+          authenticate(code);
+        }
+      }
+    }
+  }, []);
+
+  return githubToken;
+}
+
+export default function ResourcesExplorer({ datasetId }: Props): JSX.Element {
   const { data } = useQuery('githubCommitSearch', () =>
     fetch('/api/github/search/commits').then(res => res.json()),
   );
 
   console.log(data);
 
-  // TODO: NEXT UP: github auth
+  const githubAuthToken = useGithubCodeForAuth();
+
   const [codeResults, commitResults] = useMemo(() => {
     const codeObjs: GithubResult[] = [];
     const commitObjs: GithubResult[] = [];
@@ -72,17 +116,19 @@ export default function ExamplesExplorer({ datasetId }: Props): JSX.Element {
   }, []);
 
   return (
-    <div className="examples-explorer">
-      <p>Find examples on GitHub</p>
+    <div className="resources-explorer">
+      <p>Find code examples on GitHub</p>
       <GithubResultGroup
         datasetId={datasetId}
         resultType="COMMIT"
         results={codeResults}
+        githubAuthToken={githubAuthToken}
       />
       <GithubResultGroup
         datasetId={datasetId}
         resultType="CODE"
         results={commitResults}
+        githubAuthToken={githubAuthToken}
       />
     </div>
   );

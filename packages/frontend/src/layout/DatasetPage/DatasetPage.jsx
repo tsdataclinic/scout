@@ -13,7 +13,7 @@ import ViewOnOpenPortal from '../../components/ViewOnOpenPortal/ViewOnOpenPortal
 import { useDatasetGQL } from '../../hooks/graphQLAPI';
 import { ThematicSimilarityExplorer } from '../../components/ThematicSimilarityExplorer/ThematicSimilarityExplorer';
 import { USE_SINGLE_CITY } from '../../flags';
-import ExamplesExplorer from './ExamplesExplorer';
+import ResourcesExplorer from './ResourcesExplorer';
 
 const formatDate = date => moment(date).format('MMMM DD, YYYY');
 
@@ -193,10 +193,10 @@ export default function DatasetPage() {
           </button>
           <button
             type="button"
-            className={activeTab === 'examples' ? 'active' : ''}
-            onClick={() => onChangeTab('examples')}
+            className={activeTab === 'resources' ? 'active' : ''}
+            onClick={() => onChangeTab('resources')}
           >
-            Examples
+            Resources
           </button>
         </div>
         {activeTab === 'joins' &&
@@ -215,15 +215,17 @@ export default function DatasetPage() {
           ) : (
             renderNotFound(dataset, parentDataset)
           ))}
-        {activeTab === 'theme' && (
+        {activeTab === 'theme' && dataset ? (
           <ThematicSimilarityExplorer
             global={globalSearch}
             datasetId={datasetId}
             portal={dataset.portal.id}
             dataset={dataset}
           />
+        ) : null}
+        {activeTab === 'resources' && (
+          <ResourcesExplorer datasetId={datasetId} />
         )}
-        {activeTab === 'examples' && <ExamplesExplorer datasetId={datasetId} />}
       </div>
     </div>
   );

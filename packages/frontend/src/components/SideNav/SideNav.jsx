@@ -10,7 +10,7 @@ import { ReactComponent as DataClinicSVG } from '../../icons/dataClinicWhite.svg
 import CollectionTab from '../CollectionTab/CollectionTab';
 // import { useCurrentCollection } from '../../hooks/collections';
 import { useCurrentUser } from '../../hooks/graphQLAPI';
-import { USE_SINGLE_CITY } from '../../flags';
+import { DISABLE_USER_ACCOUNTS } from '../../flags';
 
 export default function SideNav() {
   const [showCollectionTab, setShowCollectionTab] = useState(false);
@@ -69,7 +69,7 @@ export default function SideNav() {
         <h1>About</h1>
       </NavLink>
 
-      {!USE_SINGLE_CITY && (
+      {DISABLE_USER_ACCOUNTS ? null : (
         <NavLink
           exact
           alt="login/sign-up"

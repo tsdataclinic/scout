@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import uuidv4 from 'uuid';
 import {
   useCreateCollection,
   useDatasetsFromIds,
 } from '../../hooks/graphQLAPI';
 import { useUserCollections } from '../../hooks/collections';
-import { USE_SINGLE_CITY } from '../../flags';
+import { DISABLE_USER_ACCOUNTS } from '../../flags';
 
 export function CollectionTabCreate({ isPending, datasetIds, onDone }) {
   const [name, setName] = useState('');
@@ -19,7 +19,9 @@ export function CollectionTabCreate({ isPending, datasetIds, onDone }) {
 
   const onTryCreateCollection = async () => {
     try {
-      if (USE_SINGLE_CITY) {
+      // TODO: when user accounts are enabled, we will want this part
+      // to check if a user is authenticated or not
+      if (DISABLE_USER_ACCOUNTS) {
         const newId = uuidv4();
         if (isPending) {
           createCollectionFromPending({
