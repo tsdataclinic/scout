@@ -6,7 +6,7 @@ import resultTypeToLabel from './resultTypeToLabel';
 
 type Props = {
   githubAuthToken: string | void;
-  datasetId: string;
+  datasetID: string;
   resultType: GithubResultType;
   results: readonly GithubResult[];
 };
@@ -23,13 +23,13 @@ function getGithubRequestAuthURL(): string {
 
 export default function GithubResultGroup({
   githubAuthToken,
-  datasetId,
+  datasetID,
   resultType,
   results,
 }: Props): JSX.Element {
   const rows = results.map(({ repoURL, repoLabel, metadata }: GithubResult) => (
     <GithubResultRow
-      datasetId={datasetId}
+      datasetID={datasetID}
       key={repoURL}
       repoURL={repoURL}
       repoLabel={repoLabel}

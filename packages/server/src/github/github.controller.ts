@@ -46,24 +46,24 @@ export class GithubController {
     );
   }
 
-  @Get('search/code/:datasetId')
+  @Get('search/code/:datasetID')
   async getGithubCodeSearchResults(
     @Headers('Authorization') githubAuthToken: string,
-    @Param('datasetId') datasetId: string,
+    @Param('datasetID') datasetID: string,
   ): Promise<CodeResult[]> {
     return this.githubService.getGithubCodeSearchResults(
-      datasetId,
+      datasetID,
       githubAuthToken,
     );
   }
 
-  @Get('search/commits/:datasetId')
+  @Get('search/commits/:datasetID')
   async getGithubCommitSearchResults(
     @Headers('Authorization') githubAuthToken: string,
-    @Param('datasetId') datasetId: string,
+    @Param('datasetID') datasetID: string,
   ): Promise<CommitResult[]> {
     return this.githubService.getGithubCommitSearchResults(
-      datasetId,
+      datasetID,
       githubAuthToken,
     );
   }

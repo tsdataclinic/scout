@@ -43,12 +43,12 @@ const COMMIT_RESULT_SCRAPER_CONFIG = {
 @Injectable()
 export class GithubService {
   async getGithubCommitSearchResults(
-    datasetId: string,
+    datasetID: string,
     githubAuthToken: string,
   ): Promise<CommitResult[]> {
     if (githubAuthToken) {
       const response = await axios.get(
-        `https://api.github.com/search/commits?q=${datasetId}`,
+        `https://api.github.com/search/commits?q=${datasetID}`,
         {
           headers: {
             Accept: 'application/json',
@@ -91,7 +91,7 @@ export class GithubService {
     const { data, response } = await scrapeIt<{
       commitResults: CommitResult[];
     }>(
-      `https://github.com/search?q=${datasetId}&type=commits`,
+      `https://github.com/search?q=${datasetID}&type=commits`,
       COMMIT_RESULT_SCRAPER_CONFIG,
     );
 
@@ -106,14 +106,14 @@ export class GithubService {
 
   // TODO: this one requires authentication
   getGithubCodeSearchResults(
-    datasetId: string,
+    datasetID: string,
     githubAuthToken: string,
   ): CodeResult[] {
     console.log(githubAuthToken);
     return [
       {
         repoURL: 'test',
-        repoLabel: datasetId,
+        repoLabel: datasetID,
         codeFileLabel: 'test',
         codeFileURL: 'test',
       },

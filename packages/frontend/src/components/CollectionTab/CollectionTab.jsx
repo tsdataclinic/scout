@@ -29,7 +29,7 @@ export default function CollectionTab({ visible, onDismiss }) {
       {tab === 'create' && (
         <CollectionTabCreate
           isPending={activeCollection.id === 'pending'}
-          datasetIds={activeCollection.datasets.map(d => d.id)}
+          datasetIDs={activeCollection.datasets.map(d => d.id)}
           onDone={onCollectionCreated}
         />
       )}

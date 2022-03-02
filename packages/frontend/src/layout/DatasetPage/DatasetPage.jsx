@@ -20,9 +20,9 @@ const formatDate = date => moment(date).format('MMMM DD, YYYY');
 export default function DatasetPage() {
   usePageView();
   const navigate = useNavigate();
-  const { datasetId, tab } = useParams();
+  const { datasetID, tab } = useParams();
 
-  const { loading, error, data } = useDatasetGQL(datasetId);
+  const { loading, error, data } = useDatasetGQL(datasetID);
   const dataset = loading || error ? null : data.dataset;
 
   // const parentId = dataset?.parentDatasetID;
@@ -122,12 +122,12 @@ export default function DatasetPage() {
             className="collection-button"
             disabled={!dataset}
             onClick={() =>
-              inCurrentCollection(datasetId)
-                ? removeFromCurrentCollection(datasetId)
-                : addToCurrentCollection(datasetId)
+              inCurrentCollection(datasetID)
+                ? removeFromCurrentCollection(datasetID)
+                : addToCurrentCollection(datasetID)
             }
           >
-            {inCurrentCollection(datasetId)
+            {inCurrentCollection(datasetID)
               ? 'Remove From Collection'
               : 'Add to Collection'}{' '}
           </button>
@@ -217,13 +217,13 @@ export default function DatasetPage() {
         {activeTab === 'theme' && dataset ? (
           <ThematicSimilarityExplorer
             global={globalSearch}
-            datasetId={datasetId}
+            datasetID={datasetID}
             portal={dataset.portal.id}
             dataset={dataset}
           />
         ) : null}
         {activeTab === 'resources' && (
-          <ResourcesExplorer datasetId={datasetId} />
+          <ResourcesExplorer datasetID={datasetID} />
         )}
       </div>
     </div>

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { useUserCollections } from '../../hooks/collections';
 
@@ -8,7 +7,7 @@ export function CollectionTabAdd({ onSwitch, onCreate, onDismiss }) {
   console.log('Active collection', activeCollection);
 
   const isReloadingDatasets =
-    activeCollection.datasetIds.length > 0 &&
+    activeCollection.datasetIDs.length > 0 &&
     activeCollection.datasets.length === 0;
 
   return (

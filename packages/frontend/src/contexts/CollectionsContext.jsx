@@ -4,7 +4,7 @@ import Dexie from 'dexie';
 export const CollectionsContext = createContext();
 
 // A collection has the form
-// datasetIds: array of dataset ids
+// datasetIDs: array of dataset ids
 // name : the name of the collection
 // id : a random id for the collection
 // description : short 255 character description of the collection
@@ -43,7 +43,7 @@ const reducer = (state, action) => {
           c.id === state.activeCollectionID
             ? {
                 ...c,
-                datasetIds: c.datasetIds.concat(payload),
+                datasetIDs: c.datasetIDs.concat(payload),
               }
             : c,
         ),
@@ -65,7 +65,7 @@ const reducer = (state, action) => {
           c.id === state.activeCollectionID
             ? {
                 ...c,
-                datasetIds: c.datasetIds.filter(id => id !== payload),
+                datasetIDs: c.datasetIDs.filter(id => id !== payload),
               }
             : c,
         ),

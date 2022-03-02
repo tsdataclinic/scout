@@ -4,13 +4,13 @@ import { GithubResult } from './types';
 import { getTokenFromCache } from './useGithubAuth';
 
 export default function useGithubCommitSearch(
-  datasetId: string,
+  datasetID: string,
 ): GithubResult[] {
   const githubAuthToken = getTokenFromCache();
   const { data } = useQuery('githubCodeSearch', () =>
-    httpRequest('/api/github/search/code/:datasetId', {
+    httpRequest('/api/github/search/code/:datasetID', {
       token: githubAuthToken,
-      urlParams: { datasetId },
+      urlParams: { datasetID },
     }),
   );
 

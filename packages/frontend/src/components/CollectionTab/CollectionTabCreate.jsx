@@ -7,12 +7,12 @@ import {
 import { useUserCollections } from '../../hooks/collections';
 import { DISABLE_USER_ACCOUNTS } from '../../flags';
 
-export function CollectionTabCreate({ isPending, datasetIds, onDone }) {
+export function CollectionTabCreate({ isPending, datasetIDs, onDone }) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [, setErrorMessage] = useState(null);
   const { loading: loadingDatasets, data: datasetData } =
-    useDatasetsFromIds(datasetIds);
+    useDatasetsFromIds(datasetIDs);
   const [createCollection] = useCreateCollection();
   const [, { createCollectionFromPending, createEmptyCollection }] =
     useUserCollections();
@@ -28,7 +28,7 @@ export function CollectionTabCreate({ isPending, datasetIds, onDone }) {
             id: newId,
             name,
             description,
-            datasetIds,
+            datasetIDs,
           });
           onDone(newId);
         } else {
@@ -41,7 +41,7 @@ export function CollectionTabCreate({ isPending, datasetIds, onDone }) {
           variables: {
             name,
             description,
-            datasetIds,
+            datasetIDs,
           },
         });
         onDone(result.data.createCollection.id);

@@ -178,12 +178,12 @@ export const useCreateCollection = () => {
     mutation CreateCollection(
       $name: String!
       $description: String!
-      $datasetIds: [String!]!
+      $datasetIDs: [String!]!
     ) {
       createCollection(
         name: $name
         description: $description
-        datasetIds: $datasetIds
+        datasetIDs: $datasetIDs
       ) {
         name
         description
@@ -210,8 +210,8 @@ export const useDatasetColumnsWithSuggestionCounts = (id, global) => {
 
 export const useAddToCollection = () => {
   const mut = gql`
-    mutation addToCollection($id: String!, $datasetIds: [String!]!) {
-      addToCollection(id: $id, datasetIds: $datasetIds) {
+    mutation addToCollection($id: String!, $datasetIDs: [String!]!) {
+      addToCollection(id: $id, datasetIDs: $datasetIDs) {
         id
         datasets {
           id
@@ -226,10 +226,10 @@ export const useAddToCollection = () => {
   return useMutation(mut);
 };
 
-export const useDatasetGQL = datasetId => {
+export const useDatasetGQL = datasetID => {
   const DatasetQuery = gql`
-    query Dataset($datasetId: String!) {
-      dataset(id: $datasetId) {
+    query Dataset($datasetID: String!) {
+      dataset(id: $datasetID) {
         id
         name
         department
@@ -255,7 +255,7 @@ export const useDatasetGQL = datasetId => {
       }
     }
   `;
-  return useQuery(DatasetQuery, { variables: { datasetId } });
+  return useQuery(DatasetQuery, { variables: { datasetID } });
 };
 
 export const useColumnsGQL = (portal, { limit, page, search }) => {
@@ -319,10 +319,10 @@ export const useJoinableDatasetsPaged = (columnID, global, limit, offset) => {
   });
 };
 
-export const useSimilarDatasets = (datasetId, portal) => {
+export const useSimilarDatasets = (datasetID, portal) => {
   const getSimilarQuery = gql`
-    query SimilarDatasets($datasetId: String!, $portalId: String) {
-      dataset(id: $datasetId) {
+    query SimilarDatasets($datasetID: String!, $portalId: String) {
+      dataset(id: $datasetID) {
         thematicallySimilarDatasets(portalId: $portalId) {
           dataset {
             name
@@ -341,7 +341,7 @@ export const useSimilarDatasets = (datasetId, portal) => {
     }
   `;
   return useQuery(getSimilarQuery, {
-    variables: { datasetId, portalId: portal },
+    variables: { datasetID, portalId: portal },
   });
 };
 

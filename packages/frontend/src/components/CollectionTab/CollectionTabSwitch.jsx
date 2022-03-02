@@ -32,7 +32,7 @@ export function CollectionTabSwitch({ onSwitch }) {
                     <p className="name">{c.name}</p>
                     <p className="dataset-count">
                       {' '}
-                      {c.datasetIds ? c.datasetIds.length : 0} datasets{' '}
+                      {c.datasetIDs ? c.datasetIDs.length : 0} datasets{' '}
                     </p>
                   </button>
                 </div>

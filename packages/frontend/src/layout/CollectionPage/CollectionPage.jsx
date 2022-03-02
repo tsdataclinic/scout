@@ -17,21 +17,21 @@ import { useUserCollections } from '../../hooks/collections';
 import { DISABLE_USER_ACCOUNTS } from '../../flags';
 
 const EMPTY_COLLECTION = {
-  datasetIds: [],
+  datasetIDs: [],
   description: '',
   name: '',
 };
 
-function getShareableURL(collectionName, datasetIds) {
+function getShareableURL(collectionName, datasetIDs) {
   const urlOrigin = window.location.origin;
-  const datasetIdsStr = datasetIds.join(',');
-  return `${urlOrigin}/collection/${collectionName}/${datasetIdsStr}`;
+  const datasetIDsStr = datasetIDs.join(',');
+  return `${urlOrigin}/collection/${collectionName}/${datasetIDsStr}`;
 }
 
 export default function CollectionPage() {
   usePageView();
-  const { name, datasetIDs: datasetIdsFromURL, id } = useParams();
-  const loadingCollectionFromURL = !!datasetIdsFromURL;
+  const { name, datasetIDs: datasetIDsFromURL, id } = useParams();
+  const loadingCollectionFromURL = !!datasetIDsFromURL;
 
   const [{ collections }] = useUserCollections();
   const { loading, data, error } = useCollection(id);
@@ -41,15 +41,15 @@ export default function CollectionPage() {
     ? collections.find(col => col.id === id)
     : data.collection;
 
-  let datasetIdsToLoad;
-  if (datasetIdsFromURL === undefined) {
-    datasetIdsToLoad = collection ? collection.datasetIds : [];
+  let datasetIDsToLoad;
+  if (datasetIDsFromURL === undefined) {
+    datasetIDsToLoad = collection ? collection.datasetIDs : [];
   } else {
-    datasetIdsToLoad = datasetIdsFromURL.split(',');
+    datasetIDsToLoad = datasetIDsFromURL.split(',');
   }
 
   const datasets =
-    useDatasetsFromIds(datasetIdsToLoad).data?.datasetsByIds || [];
+    useDatasetsFromIds(datasetIDsToLoad).data?.datasetsByIds || [];
 
   if (collection === undefined && !loadingCollectionFromURL) {
     // load something empty by default until we've retrieved the collection
@@ -59,14 +59,14 @@ export default function CollectionPage() {
   if (loadingCollectionFromURL) {
     collection = {
       name,
-      datasetIds: datasetIdsToLoad,
+      datasetIDs: datasetIDsToLoad,
       description: 'Shared collection',
     };
   }
 
   const { description, name: collectionName } = collection;
 
-  const shareableURL = getShareableURL(collection.name, datasetIdsToLoad);
+  const shareableURL = getShareableURL(collection.name, datasetIDsToLoad);
   const [isCopied, setCopied] = useClipboard(shareableURL);
 
   if (loading || collections.length === 0) {

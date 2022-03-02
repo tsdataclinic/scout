@@ -1,7 +1,7 @@
 type API = {
   '/api/github/authenticate': { token: string | null };
-  '/api/github/search/commits/:datasetId': {
-    urlParams: { datasetId: string };
+  '/api/github/search/commits/:datasetID': {
+    urlParams: { datasetID: string };
     returns: Array<{
       repoLabel: string;
       repoURL: string;
@@ -11,8 +11,8 @@ type API = {
       commitDescription: string;
     }>;
   };
-  '/api/github/search/code/:datasetId': {
-    urlParams: { datasetId: string };
+  '/api/github/search/code/:datasetID': {
+    urlParams: { datasetID: string };
     returns: Array<{
       repoURL: string;
       repoLabel: string;

@@ -24,7 +24,7 @@ export function useUserCollections() {
   );
 
   const { data: collectionDatasets } = useDatasetsFromIds(
-    activeNonPendingCollection ? activeNonPendingCollection.datasetIds : [],
+    activeNonPendingCollection ? activeNonPendingCollection.datasetIDs : [],
   );
 
   const combinedState = {
@@ -36,13 +36,13 @@ export function useUserCollections() {
             id: 'pending',
             name: 'Pending Collection',
             description: 'placeholder',
-            datasetIds: state.pendingCollection,
+            datasetIDs: state.pendingCollection,
             datasets: pendingDatasets ? pendingDatasets.datasetsByIds : [],
             createdAt: new Date(),
           }
         : {
             ...activeNonPendingCollection,
-            datasetIds: activeNonPendingCollection?.datasetIds || [],
+            datasetIDs: activeNonPendingCollection?.datasetIDs || [],
             datasets: collectionDatasets
               ? collectionDatasets.datasetsByIds
               : [],
@@ -66,7 +66,7 @@ export function useUserCollections() {
         c => c.id === state.activeCollectionID,
       );
       return currentCollection
-        ? currentCollection.datasetIds.includes(id)
+        ? currentCollection.datasetIDs.includes(id)
         : false;
     }
 
@@ -99,7 +99,7 @@ export function useUserCollections() {
     } else {
       // Adds to existing collection on the backend
       addTo({
-        variables: { id: state.activeCollectionID, datasetIds: [datasetID] },
+        variables: { id: state.activeCollectionID, datasetIDs: [datasetID] },
       });
     }
   };
@@ -124,17 +124,17 @@ export function useUserCollections() {
     id,
     name,
     description,
-    datasetIds,
+    datasetIDs,
   }) => {
     if (state.activeCollectionID === 'pending') {
-      console.log('DATASET IDS', datasetIds);
+      console.log('DATASET IDS', datasetIDs);
       dispatch({
         type: 'CREATE_FROM_PENDING_COLLECTION',
         payload: {
           id,
           name,
           description,
-          datasetIds,
+          datasetIDs,
           createdAt: new Date(),
         },
       });
@@ -148,7 +148,7 @@ export function useUserCollections() {
         id,
         name,
         description,
-        datasetIds: [],
+        datasetIDs: [],
         createdAt: new Date(),
       },
     });

@@ -64,8 +64,8 @@ type LoginResult {
 }
 
 type Mutation {
-  addToCollection(datasetIds: [String!]!, id: String!): Collection!
-  createCollection(datasetIds: [String!]!, description: String!, name: String!): Collection!
+  addToCollection(datasetIDs: [String!]!, id: String!): Collection!
+  createCollection(datasetIDs: [String!]!, description: String!, name: String!): Collection!
   deleteCollection(id: String!): Collection!
   signIn(email: String!, password: String!): LoginResult
   signUp(email: String!, password: String!, username: String!): SignupResult!

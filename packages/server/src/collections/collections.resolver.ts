@@ -35,10 +35,10 @@ export class CollectionsResolver {
     @CurrentUser() currentUser: User,
     @Args('name') name: string,
     @Args('description') description: string,
-    @Args('datasetIds', { type: () => [String] }) datasetIds: string[],
+    @Args('datasetIDs', { type: () => [String] }) datasetIDs: string[],
   ): Promise<Collection> {
     const user = await this.userService.findById(currentUser.id);
-    const datasets = await this.datasetService.findByIds(datasetIds);
+    const datasets = await this.datasetService.findByIds(datasetIDs);
     return this.collectionService.createCollection(
       name,
       datasets,
@@ -72,12 +72,12 @@ export class CollectionsResolver {
   async addToCollection(
     @CurrentUser() currentUser: User,
     @Args('id') id: string,
-    @Args('datasetIds', { type: () => [String] }) datasetIds: string[],
+    @Args('datasetIDs', { type: () => [String] }) datasetIDs: string[],
   ) {
     const collection = await this.collectionService.findById(id);
     if (collection) {
       const user = await this.userService.findById(currentUser.id);
-      const datasets = await this.datasetService.findByIds(datasetIds);
+      const datasets = await this.datasetService.findByIds(datasetIDs);
       const collectionOwner = await collection.user;
       if (currentUser.id === collectionOwner.id) {
         return this.collectionService.addToCollection(id, datasets);
