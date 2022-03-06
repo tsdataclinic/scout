@@ -1,4 +1,5 @@
-import { useState } from 'react';
+/* eslint-disable */
+import { useState, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import './SideNav.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,20 +10,20 @@ import { ReactComponent as CollectionsSVG } from '../../icons/collection.svg';
 import { ReactComponent as DataClinicSVG } from '../../icons/dataClinicWhite.svg';
 import CollectionTab from '../CollectionTab/CollectionTab';
 // import { useCurrentCollection } from '../../hooks/collections';
-import { useCurrentUser } from '../../hooks/graphQLAPI';
-import { DISABLE_USER_ACCOUNTS } from '../../flags';
+import useLoginLogout from '../../auth/useLoginLogout';
+import useCurrentUser from '../../auth/useCurrentUser';
 
 export default function SideNav() {
   const [showCollectionTab, setShowCollectionTab] = useState(false);
   // const [collection] = useCurrentCollection();
   const collection = { datasets: [] };
-  const { data: userData } = useCurrentUser();
+  const { user, isAuthenticated } = useCurrentUser();
+  const { login, logout } = useLoginLogout();
 
   return (
     <nav className="side-nav">
       <Link alt="Data Clinic" className="title" to="/">
         <h2 className="scout-h2">scout</h2>
-
         <p className="scout-sub">by data clinic</p>
       </Link>
       <NavLink
@@ -69,21 +70,29 @@ export default function SideNav() {
         <h1>About</h1>
       </NavLink>
 
-      {DISABLE_USER_ACCOUNTS ? null : (
-        <NavLink
-          exact
-          alt="login/sign-up"
-          className={({ isActive }) =>
-            classNames('login', {
-              'active-nav': isActive,
-            })
+      <div
+        role="button"
+        className="login"
+        onClick={async () => {
+          try {
+            if (isAuthenticated) {
+              await logout();
+            } else {
+              await login();
+            }
+
+            // refresh the page after logging in or out just to make sure all
+            // application state gets reset correctly
+            window.location.reload();
+          } catch (err) {
+            console.error(err);
           }
-          to="/login"
-        >
-          <FontAwesomeIcon size="2x" icon={faUser} />
-          <h1>{userData ? userData.profile.username : 'account'}</h1>
-        </NavLink>
-      )}
+        }}
+      >
+        <FontAwesomeIcon size="2x" icon={faUser} />
+        {/* <h1>{user ? user.username : 'account'}</h1> */}
+        <h1>{isAuthenticated ? 'Sign out' : 'Sign in'}</h1>
+      </div>
     </nav>
   );
 }

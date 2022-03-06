@@ -10,7 +10,7 @@ export default function CollectionCard({ collection }) {
       <h3>{collection.name}</h3>
       <div className="collection-stats">
         <span>
-          Datasets: {collection.datasetIDs ? collection.datasetIDs.length : 0}
+          Datasets: {collection.datasetIds ? collection.datasetIds.length : 0}
         </span>
       </div>
     </div>

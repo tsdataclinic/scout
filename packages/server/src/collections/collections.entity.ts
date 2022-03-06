@@ -32,10 +32,7 @@ export class Collection {
   datasets: Promise<Dataset[]>;
 
   @Field(type => User)
-  @ManyToOne(
-    type => User,
-    user => user,
-  )
+  @ManyToOne(type => User, user => user)
   @Field(type => User)
   user: Promise<User>;
 }

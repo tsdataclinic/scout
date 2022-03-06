@@ -1,4 +1,3 @@
-import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLayerGroup } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
@@ -11,13 +10,15 @@ export default function CollectionsPage() {
   usePageView();
   const [{ collections }] = useUserCollections();
   const nonPendingCollections = collections.filter(c => c.id !== 'pending');
+  const numCollections = nonPendingCollections.length;
 
-  console.log('User page collections ', collections);
   return (
     <div className="collections-page">
       <div className="collections-header">
         <h2>My Collections</h2>
-        <p>{nonPendingCollections.length} Collections</p>
+        <p>
+          {numCollections} {numCollections === 1 ? 'collection' : 'collections'}
+        </p>
       </div>
 
       {nonPendingCollections.length === 0 && (

@@ -1,7 +1,7 @@
 type API = {
   '/api/github/authenticate': { token: string | null };
-  '/api/github/search/commits/:datasetID': {
-    urlParams: { datasetID: string };
+  '/api/github/search/commits/:datasetId': {
+    urlParams: { datasetId: string };
     returns: Array<{
       repoLabel: string;
       repoURL: string;
@@ -11,8 +11,8 @@ type API = {
       commitDescription: string;
     }>;
   };
-  '/api/github/search/code/:datasetID': {
-    urlParams: { datasetID: string };
+  '/api/github/search/code/:datasetId': {
+    urlParams: { datasetId: string };
     returns: Array<{
       repoURL: string;
       repoLabel: string;
@@ -51,11 +51,11 @@ export default async function httpRequest<Endpoint extends keyof API>(
   let newEndpoint;
   if (endpoint.includes(':') && urlParams) {
     const urlParts = endpoint.split('/');
-    // replace all tokens starting with a colon with their value in `urlParams`
+    // replace all params starting with a colon with their value in `urlParams`
     const newParts = urlParts.map(part => {
       if (part.startsWith(':')) {
-        const tokenName = part.slice(1);
-        return tokenName in urlParams ? urlParams[tokenName] : part;
+        const paramName = part.slice(1);
+        return paramName in urlParams ? urlParams[paramName] : part;
       }
       return part;
     });
@@ -69,7 +69,7 @@ export default async function httpRequest<Endpoint extends keyof API>(
     'Content-Type': 'application/json',
   };
   if (token) {
-    newHeaders.Authorization = `Token ${token}`;
+    newHeaders.Authorization = `token ${token}`;
   }
 
   const newConfig = {

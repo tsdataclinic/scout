@@ -5,8 +5,8 @@ import usePageView from '../../hooks/analytics';
 import { useDataset, useJoinableDatasets } from '../../hooks/datasets';
 
 export default function ComparisonPage() {
-  const { datasetID } = useParams();
-  const dataset = useDataset(datasetID);
+  const { datasetId } = useParams();
+  const dataset = useDataset(datasetId);
   const joins = useJoinableDatasets(dataset);
   usePageView();
   return (

@@ -3,9 +3,9 @@ import Dataset from '../Dataset/Dataset';
 import { useSimilarDatasets } from '../../hooks/graphQLAPI';
 import { useUserCollections } from '../../hooks/collections';
 
-export function ThematicSimilarityExplorer({ datasetID, global, portal }) {
+export function ThematicSimilarityExplorer({ datasetId, global, portal }) {
   const { loading, data, error } = useSimilarDatasets(
-    datasetID,
+    datasetId,
     global ? null : portal,
   );
   const similarDatasets =

@@ -7,7 +7,7 @@ export function CollectionTabAdd({ onSwitch, onCreate, onDismiss }) {
   console.log('Active collection', activeCollection);
 
   const isReloadingDatasets =
-    activeCollection.datasetIDs.length > 0 &&
+    activeCollection.datasetIds.length > 0 &&
     activeCollection.datasets.length === 0;
 
   return (
@@ -20,7 +20,7 @@ export function CollectionTabAdd({ onSwitch, onCreate, onDismiss }) {
               <p className="collection-name">{activeCollection.name}</p>
             </>
           ) : (
-            <h3>Create a new dataset form selection</h3>
+            <h3>Create a new dataset from selection</h3>
           )}
 
           {activeCollection.id !== 'pending' ? (

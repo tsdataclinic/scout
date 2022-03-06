@@ -5,25 +5,25 @@ import useGithubCommitSearch from './useGithubCommitSearch';
 import useGithubCodeSearch from './useGithubCodeSearch';
 
 type Props = {
-  datasetID: string;
+  datasetId: string;
 };
 
-export default function ResourcesExplorer({ datasetID }: Props): JSX.Element {
+export default function ResourcesExplorer({ datasetId }: Props): JSX.Element {
   const githubAuthToken = useGithubAuth();
-  const commitResults = useGithubCommitSearch(datasetID);
-  const codeResults = useGithubCodeSearch(datasetID);
+  const commitResults = useGithubCommitSearch(datasetId);
+  const codeResults = useGithubCodeSearch(datasetId);
 
   return (
     <div className="resources-explorer">
       <p>Find code examples on GitHub</p>
       <GithubResultGroup
-        datasetID={datasetID}
+        datasetId={datasetId}
         resultType="COMMIT"
         results={commitResults}
         githubAuthToken={githubAuthToken}
       />
       <GithubResultGroup
-        datasetID={datasetID}
+        datasetId={datasetId}
         resultType="CODE"
         results={codeResults}
         githubAuthToken={githubAuthToken}

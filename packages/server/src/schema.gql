@@ -58,17 +58,10 @@ type JoinSuggestion {
   potentialOverlap: Float!
 }
 
-type LoginResult {
-  error: String
-  token: String
-}
-
 type Mutation {
-  addToCollection(datasetIDs: [String!]!, id: String!): Collection!
-  createCollection(datasetIDs: [String!]!, description: String!, name: String!): Collection!
+  addToCollection(datasetIds: [String!]!, id: String!): Collection!
+  createCollection(datasetIds: [String!]!, description: String!, name: String!): Collection!
   deleteCollection(id: String!): Collection!
-  signIn(email: String!, password: String!): LoginResult
-  signUp(email: String!, password: String!, username: String!): SignupResult!
 }
 
 type PagedDatasets {
@@ -117,12 +110,6 @@ type ScoredDataset {
   score: Float!
 }
 
-type SignupResult {
-  error: String
-  success: Boolean
-  token: String
-}
-
 type Tag {
   datasets: [Dataset!]!
   id: String!
@@ -133,7 +120,8 @@ type Tag {
 type User {
   collections: [Collection!]!
   email: String!
+  familyName: String!
+  givenName: String!
   id: String!
-  password: String!
-  username: String!
+  identityProvider: String!
 }

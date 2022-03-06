@@ -89,17 +89,17 @@ export function useDatasetCount() {
   return noDatasets;
 }
 
-export function useDataset(datasetID) {
+export function useDataset(datasetId) {
   const [dataset, setDataset] = useState(null);
   const [{ datasetsRefreshedAt }, , db] = useStateValue();
 
   useEffect(() => {
-    if (datasetID) {
-      db.Datasets.get({ id: datasetID }).then(foundDataset =>
+    if (datasetId) {
+      db.Datasets.get({ id: datasetId }).then(foundDataset =>
         setDataset(foundDataset),
       );
     }
-  }, [datasetID, datasetsRefreshedAt, db.Datasets]);
+  }, [datasetId, datasetsRefreshedAt, db.Datasets]);
   return dataset;
 }
 

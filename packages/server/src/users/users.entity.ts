@@ -1,28 +1,14 @@
-import {
-  Entity,
-  Column,
-  BeforeInsert,
-  PrimaryGeneratedColumn,
-  PrimaryColumn,
-  Unique,
-  OneToMany,
-} from 'typeorm';
-import { ObjectType, Field, Int } from '@nestjs/graphql';
-import * as bcrypt from 'bcrypt';
+import { Entity, Column, PrimaryColumn, Unique, OneToMany } from 'typeorm';
+import { ObjectType, Field } from '@nestjs/graphql';
 import { Collection } from '../collections/collections.entity';
 
 @ObjectType()
 @Entity()
-@Unique(['email'])
-@Unique(['username'])
 export class User {
+  // Azure Object ID for this user
   @Field()
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn()
   id: string;
-
-  @Field()
-  @Column()
-  username: string;
 
   @Field()
   @Column()
@@ -30,21 +16,17 @@ export class User {
 
   @Field()
   @Column()
-  password: string;
+  identityProvider: string;
+
+  @Field()
+  @Column()
+  familyName: string;
+
+  @Field()
+  @Column()
+  givenName: string;
 
   @Field(type => [Collection])
-  @OneToMany(
-    () => Collection,
-    collection => collection.user,
-  )
+  @OneToMany(() => Collection, collection => collection.user)
   collections: Promise<Collection[]>;
-
-  @BeforeInsert()
-  async hashPassword() {
-    this.password = await bcrypt.hash(this.password, 10);
-  }
-
-  async comparePassword(attempt: string): Promise<boolean> {
-    return await bcrypt.compare(attempt, this.password);
-  }
 }

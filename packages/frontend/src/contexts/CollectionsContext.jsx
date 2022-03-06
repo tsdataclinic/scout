@@ -3,16 +3,17 @@ import Dexie from 'dexie';
 
 export const CollectionsContext = createContext();
 
-// A collection has the form
-// datasetIDs: array of dataset ids
-// name : the name of the collection
-// id : a random id for the collection
-// description : short 255 character description of the collection
-//
+/**
+ * A collection has the form
+ * - datasetIds: array of dataset ids
+ * - name : the name of the collection
+ * - id : a random id for the collection
+ * - description : short 255 character description of the collection
+ */
 const initalState = {
   // array of datasets to add to the pending collection
   pendingCollection: [],
-  activeCollectionID: 'pending',
+  activeCollectionId: 'pending',
 };
 
 const db = new Dexie('CollectionCache');
@@ -26,7 +27,7 @@ const reducer = (state, action) => {
     case 'SET_ACTIVE_COLLECTION':
       return {
         ...state,
-        activeCollectionID: payload,
+        activeCollectionId: payload,
       };
 
     case 'ADD_TO_PENDING_COLLECTION': {
@@ -40,10 +41,10 @@ const reducer = (state, action) => {
       return {
         ...state,
         collections: (state.collections || []).map(c =>
-          c.id === state.activeCollectionID
+          c.id === state.activeCollectionId
             ? {
                 ...c,
-                datasetIDs: c.datasetIDs.concat(payload),
+                datasetIds: c.datasetIds.concat(payload),
               }
             : c,
         ),
@@ -62,10 +63,10 @@ const reducer = (state, action) => {
       return {
         ...state,
         collections: (state.collections || []).map(c =>
-          c.id === state.activeCollectionID
+          c.id === state.activeCollectionId
             ? {
                 ...c,
-                datasetIDs: c.datasetIDs.filter(id => id !== payload),
+                datasetIds: c.datasetIds.filter(id => id !== payload),
               }
             : c,
         ),
@@ -76,7 +77,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         pendingCollection: [],
-        activeCollectionID: payload.id,
+        activeCollectionId: payload.id,
         collections: [...(state.collections || []), payload],
       };
 
@@ -92,10 +93,12 @@ const reducer = (state, action) => {
 
 export function CollectionsProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initalState);
-  const { cacheLoaded, collections, activeCollectionID, pendingCollection } =
+  const { cacheLoaded, collections, activeCollectionId, pendingCollection } =
     state;
 
-  // Restore state
+  // Restore state on mount
+  // TODO: if we're authenticated, then we should hydrate state from API
+  // calls, not from local cached state
   useEffect(() => {
     db.CollectionCache.get(1).then(result => {
       if (result) {
@@ -123,13 +126,13 @@ export function CollectionsProvider({ children }) {
       db.CollectionCache.put({
         data: JSON.stringify({
           collections,
-          activeCollectionID,
+          activeCollectionId,
           pendingCollection,
         }),
         id: 1,
       });
     }
-  }, [cacheLoaded, collections, activeCollectionID, pendingCollection]);
+  }, [cacheLoaded, collections, activeCollectionId, pendingCollection]);
 
   const context = React.useMemo(() => [state, dispatch], [state, dispatch]);
 

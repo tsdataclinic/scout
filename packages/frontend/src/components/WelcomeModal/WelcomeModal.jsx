@@ -10,7 +10,7 @@ export default function WelcomeModal() {
   return (
     !seenWelcome &&
     loaded && (
-      <Dialog isOpen onClose={onClose}>
+      <Dialog isOpen onDismiss={() => onClose()}>
         <div className="welcome-modal">
           <h2>Welcome to Scout!</h2>
           <p>

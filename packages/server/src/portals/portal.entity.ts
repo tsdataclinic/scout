@@ -41,17 +41,11 @@ export class Portal {
   uniqueColumnFields: PagedFieldCount;
 
   @Field(type => [DatasetColumn])
-  @OneToMany(
-    type => DatasetColumn,
-    datasetColumn => datasetColumn.portal,
-  )
+  @OneToMany(type => DatasetColumn, datasetColumn => datasetColumn.portal)
   datasetColumns: Promise<DatasetColumn[]>;
 
   @Field(type => [Dataset])
-  @OneToMany(
-    type => Dataset,
-    dataset => dataset.portal,
-  )
+  @OneToMany(type => Dataset, dataset => dataset.portal)
   datasets: Promise<Dataset[]>;
 
   @Field(type => PagedDatasets)

@@ -10,7 +10,7 @@ import {
   Parent,
 } from '@nestjs/graphql';
 import { LoginResult, SignupResult } from './signin.types';
-import { GqlAuthGuard, CurrentUser } from '../auth/gql-auth-guard';
+import { AzureADGuard, CurrentUser } from '../auth/azure-ad.guard';
 import { UseGuards } from '@nestjs/common';
 import { Collection } from '../collections/collections.entity';
 
@@ -27,11 +27,12 @@ export class UserResolver {
   }
 
   @Query(returns => User)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(AzureADGuard)
   async profile(@CurrentUser() user: User) {
     return user;
   }
 
+  /*
   @Mutation(returns => SignupResult)
   async signUp(
     @Args('username') userename: string,
@@ -74,6 +75,7 @@ export class UserResolver {
       return { error: 'Username or password incorrect' };
     }
   }
+  */
 
   @ResolveField(returns => [Collection])
   async collections(@Parent() user: User): Promise<Collection[]> {

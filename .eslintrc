@@ -80,7 +80,7 @@
         "plugin:@typescript-eslint/recommended",
         "prettier"
       ],
-      "plugins": ["react", "jsx-a11y", "react-hooks", "@typescript-eslint"],
+      "plugins": ["@typescript-eslint", "react", "jsx-a11y", "react-hooks"],
       "rules": {
         "@typescript-eslint/array-type": [
           "error",

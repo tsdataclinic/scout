@@ -7,6 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '../config/config.service';
 import { JwtStrategy } from './jwt.strategy';
+import { AzureADStrategy } from './azure-ad.strategy';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { JwtStrategy } from './jwt.strategy';
     PassportModule,
     ConfigModule,
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, AzureADStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}

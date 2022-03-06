@@ -9,6 +9,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
+  /*
   async login(user: any) {
     const payload = { username: user.username, id: user.id, email: user.email };
     return {
@@ -27,4 +28,5 @@ export class AuthService {
     }
     return null;
   }
+  */
 }

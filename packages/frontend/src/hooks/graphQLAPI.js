@@ -140,9 +140,7 @@ export const useCurrentUser = () => {
   const CurrentUser = gql`
     query Profile {
       profile {
-        email
         id
-        username
       }
     }
   `;
@@ -153,18 +151,13 @@ export const useCurrentUserCollections = () => {
   const CurrentUserAndCollections = gql`
     query Profile {
       profile {
-        email
         id
-        username
         collections {
           id
           name
           description
           datasets {
             id
-            name
-            description
-            department
           }
         }
       }
@@ -178,12 +171,12 @@ export const useCreateCollection = () => {
     mutation CreateCollection(
       $name: String!
       $description: String!
-      $datasetIDs: [String!]!
+      $datasetIds: [String!]!
     ) {
       createCollection(
         name: $name
         description: $description
-        datasetIDs: $datasetIDs
+        datasetIds: $datasetIds
       ) {
         name
         description
@@ -210,8 +203,8 @@ export const useDatasetColumnsWithSuggestionCounts = (id, global) => {
 
 export const useAddToCollection = () => {
   const mut = gql`
-    mutation addToCollection($id: String!, $datasetIDs: [String!]!) {
-      addToCollection(id: $id, datasetIDs: $datasetIDs) {
+    mutation addToCollection($id: String!, $datasetIds: [String!]!) {
+      addToCollection(id: $id, datasetIds: $datasetIds) {
         id
         datasets {
           id
@@ -226,10 +219,10 @@ export const useAddToCollection = () => {
   return useMutation(mut);
 };
 
-export const useDatasetGQL = datasetID => {
+export const useDatasetGQL = datasetId => {
   const DatasetQuery = gql`
-    query Dataset($datasetID: String!) {
-      dataset(id: $datasetID) {
+    query Dataset($datasetId: String!) {
+      dataset(id: $datasetId) {
         id
         name
         department
@@ -255,7 +248,7 @@ export const useDatasetGQL = datasetID => {
       }
     }
   `;
-  return useQuery(DatasetQuery, { variables: { datasetID } });
+  return useQuery(DatasetQuery, { variables: { datasetId } });
 };
 
 export const useColumnsGQL = (portal, { limit, page, search }) => {
@@ -319,10 +312,10 @@ export const useJoinableDatasetsPaged = (columnID, global, limit, offset) => {
   });
 };
 
-export const useSimilarDatasets = (datasetID, portal) => {
+export const useSimilarDatasets = (datasetId, portal) => {
   const getSimilarQuery = gql`
-    query SimilarDatasets($datasetID: String!, $portalId: String) {
-      dataset(id: $datasetID) {
+    query SimilarDatasets($datasetId: String!, $portalId: String) {
+      dataset(id: $datasetId) {
         thematicallySimilarDatasets(portalId: $portalId) {
           dataset {
             name
@@ -341,7 +334,7 @@ export const useSimilarDatasets = (datasetID, portal) => {
     }
   `;
   return useQuery(getSimilarQuery, {
-    variables: { datasetID, portalId: portal },
+    variables: { datasetId, portalId: portal },
   });
 };
 

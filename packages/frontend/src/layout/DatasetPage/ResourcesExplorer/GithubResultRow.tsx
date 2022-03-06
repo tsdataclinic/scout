@@ -4,20 +4,20 @@ import assertUnreachable from '../../../utils/assertUnreachable';
 import { GithubResultMetadata } from './types';
 
 type Props = {
-  datasetID: string;
+  datasetId: string;
   repoLabel: string;
   repoURL: string;
   resultMetadata: GithubResultMetadata;
 };
 
 export default function GithubResultRow({
-  datasetID,
+  datasetId,
   repoLabel,
   repoURL,
   resultMetadata,
 }: Props): JSX.Element {
   const searchType = resultMetadata.type === 'COMMIT' ? 'commits' : 'code';
-  const repoSearchURL = `${repoURL}/search?q=${datasetID}&type=${searchType}`;
+  const repoSearchURL = `${repoURL}/search?q=${datasetId}&type=${searchType}`;
 
   function renderMetadata(): JSX.Element {
     const resultType = resultMetadata.type;

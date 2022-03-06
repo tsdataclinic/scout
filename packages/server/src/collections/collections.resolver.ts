@@ -4,7 +4,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Query, Args, Mutation, Resolver } from '@nestjs/graphql';
-import { CurrentUser, GqlAuthGuard } from '../auth/gql-auth-guard';
+import { CurrentUser, AzureADGuard } from '../auth/azure-ad.guard';
 import { UsersService } from '../users/users.service';
 import { Collection } from './collections.entity';
 import { CollectionsService } from './collections.service';
@@ -30,15 +30,15 @@ export class CollectionsResolver {
   }
 
   @Mutation(returns => Collection)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(AzureADGuard)
   async createCollection(
     @CurrentUser() currentUser: User,
     @Args('name') name: string,
     @Args('description') description: string,
-    @Args('datasetIDs', { type: () => [String] }) datasetIDs: string[],
+    @Args('datasetIds', { type: () => [String] }) datasetIds: string[],
   ): Promise<Collection> {
     const user = await this.userService.findById(currentUser.id);
-    const datasets = await this.datasetService.findByIds(datasetIDs);
+    const datasets = await this.datasetService.findByIds(datasetIds);
     return this.collectionService.createCollection(
       name,
       datasets,
@@ -48,7 +48,7 @@ export class CollectionsResolver {
   }
 
   @Mutation(returns => Collection)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(AzureADGuard)
   async deleteCollection(
     @CurrentUser() currentUser: User,
     @Args('id') id: string,
@@ -68,16 +68,16 @@ export class CollectionsResolver {
   }
 
   @Mutation(returns => Collection)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(AzureADGuard)
   async addToCollection(
     @CurrentUser() currentUser: User,
     @Args('id') id: string,
-    @Args('datasetIDs', { type: () => [String] }) datasetIDs: string[],
+    @Args('datasetIds', { type: () => [String] }) datasetIds: string[],
   ) {
     const collection = await this.collectionService.findById(id);
     if (collection) {
       const user = await this.userService.findById(currentUser.id);
-      const datasets = await this.datasetService.findByIds(datasetIDs);
+      const datasets = await this.datasetService.findByIds(datasetIds);
       const collectionOwner = await collection.user;
       if (currentUser.id === collectionOwner.id) {
         return this.collectionService.addToCollection(id, datasets);

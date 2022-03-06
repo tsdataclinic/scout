@@ -8,6 +8,7 @@ import {
   FacebookIcon,
   TwitterIcon,
 } from 'react-share';
+import { useIsAuthenticated } from '@azure/msal-react';
 import usePageView from '../../hooks/analytics';
 import useClipboard from '../../hooks/useClipboard';
 import Dataset from '../../components/Dataset/Dataset';
@@ -17,39 +18,45 @@ import { useUserCollections } from '../../hooks/collections';
 import { DISABLE_USER_ACCOUNTS } from '../../flags';
 
 const EMPTY_COLLECTION = {
-  datasetIDs: [],
+  datasetIds: [],
   description: '',
   name: '',
 };
 
-function getShareableURL(collectionName, datasetIDs) {
+function getShareableURL(collectionName, datasetIds) {
   const urlOrigin = window.location.origin;
-  const datasetIDsStr = datasetIDs.join(',');
-  return `${urlOrigin}/collection/${collectionName}/${datasetIDsStr}`;
+  const datasetIdsStr = datasetIds.join(',');
+  return `${urlOrigin}/collection/${collectionName}/${datasetIdsStr}`;
 }
 
 export default function CollectionPage() {
   usePageView();
-  const { name, datasetIDs: datasetIDsFromURL, id } = useParams();
-  const loadingCollectionFromURL = !!datasetIDsFromURL;
+  const isAuthenticated = useIsAuthenticated();
+
+  const { name, datasetIds: datasetIdsFromURL, id } = useParams();
+  const loadingCollectionFromURL = !!datasetIdsFromURL;
 
   const [{ collections }] = useUserCollections();
   const { loading, data, error } = useCollection(id);
 
   // first try to load a collection to get the dataset ids to load
-  let collection = DISABLE_USER_ACCOUNTS
-    ? collections.find(col => col.id === id)
-    : data.collection;
+  let collection = isAuthenticated
+    ? data?.collection
+    : collections.find(col => col.id === id);
 
-  let datasetIDsToLoad;
-  if (datasetIDsFromURL === undefined) {
-    datasetIDsToLoad = collection ? collection.datasetIDs : [];
+  let datasetIdsToLoad;
+  if (datasetIdsFromURL === undefined) {
+    if (isAuthenticated && collection) {
+      datasetIdsToLoad = collection.datasets.map(d => d.id);
+    } else {
+      datasetIdsToLoad = collection ? collection.datasetIds : [];
+    }
   } else {
-    datasetIDsToLoad = datasetIDsFromURL.split(',');
+    datasetIdsToLoad = datasetIdsFromURL.split(',');
   }
 
   const datasets =
-    useDatasetsFromIds(datasetIDsToLoad).data?.datasetsByIds || [];
+    useDatasetsFromIds(datasetIdsToLoad).data?.datasetsByIds || [];
 
   if (collection === undefined && !loadingCollectionFromURL) {
     // load something empty by default until we've retrieved the collection
@@ -59,14 +66,14 @@ export default function CollectionPage() {
   if (loadingCollectionFromURL) {
     collection = {
       name,
-      datasetIDs: datasetIDsToLoad,
+      datasetIds: datasetIdsToLoad,
       description: 'Shared collection',
     };
   }
 
   const { description, name: collectionName } = collection;
 
-  const shareableURL = getShareableURL(collection.name, datasetIDsToLoad);
+  const shareableURL = getShareableURL(collection.name, datasetIdsToLoad);
   const [isCopied, setCopied] = useClipboard(shareableURL);
 
   if (loading || collections.length === 0) {

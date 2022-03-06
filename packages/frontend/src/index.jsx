@@ -1,4 +1,3 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'normalize.css'; // Ensure consistent layout across browsers
@@ -9,6 +8,8 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { CollectionsProvider } from './contexts/CollectionsContext';
 import { SearchProvider } from './contexts/SearchContext';
+import AuthProvider from './auth/AuthProvider';
+import getAuthToken from './auth/getAuthToken';
 
 const httpLink = createHttpLink({
   uri: process.env.REACT_APP_API_URL
@@ -16,9 +17,8 @@ const httpLink = createHttpLink({
     : 'http://localhost:5000/graphql',
 });
 
-const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('token');
-
+const authLink = setContext(async (_, { headers }) => {
+  const token = await getAuthToken();
   return {
     headers: {
       ...headers,
@@ -34,11 +34,13 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <SearchProvider>
-      <CollectionsProvider>
-        <App />
-      </CollectionsProvider>
-    </SearchProvider>
+    <AuthProvider>
+      <SearchProvider>
+        <CollectionsProvider>
+          <App />
+        </CollectionsProvider>
+      </SearchProvider>
+    </AuthProvider>
   </ApolloProvider>,
   document.getElementById('root'),
 );

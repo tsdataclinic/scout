@@ -75,24 +75,15 @@ export class Dataset {
   portalId: string;
 
   @Field(type => Portal)
-  @ManyToOne(
-    type => Portal,
-    portal => portal.id,
-  )
+  @ManyToOne(type => Portal, portal => portal.id)
   portal: Promise<Portal>;
 
   @Field(type => [Collection])
-  @ManyToMany(
-    () => Collection,
-    collection => collection.datasets,
-  )
+  @ManyToMany(() => Collection, collection => collection.datasets)
   collections: Promise<Collection>;
 
   @Field(type => [DatasetColumn])
-  @OneToMany(
-    type => DatasetColumn,
-    datasetColumn => datasetColumn.dataset,
-  )
+  @OneToMany(type => DatasetColumn, datasetColumn => datasetColumn.dataset)
   datasetColumns: Promise<DatasetColumn[]>;
 
   @Field(type => [ScoredDataset])

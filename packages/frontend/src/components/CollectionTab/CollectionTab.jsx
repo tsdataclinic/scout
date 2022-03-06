@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useUserCollections } from '../../hooks/collections';
 import { CollectionTabCreate } from './CollectionTabCreate';
 import { CollectionTabSwitch } from './CollectionTabSwitch';
@@ -6,7 +6,7 @@ import { CollectionTabAdd } from './CollectionTabAdd';
 import './CollectionTab.scss';
 
 export default function CollectionTab({ visible, onDismiss }) {
-  const [{ activeCollection, activeCollectionID }, { setActiveCollection }] =
+  const [{ activeCollection, activeCollectionId }, { setActiveCollection }] =
     useUserCollections();
 
   const [tab, setTab] = useState('add');
@@ -15,9 +15,9 @@ export default function CollectionTab({ visible, onDismiss }) {
     setTab('create');
   };
 
-  const onCollectionCreated = collectionID => {
-    if (collectionID) {
-      setActiveCollection(collectionID);
+  const onCollectionCreated = collectionId => {
+    if (collectionId) {
+      setActiveCollection(collectionId);
     }
     setTab('add');
   };
@@ -29,15 +29,15 @@ export default function CollectionTab({ visible, onDismiss }) {
       {tab === 'create' && (
         <CollectionTabCreate
           isPending={activeCollection.id === 'pending'}
-          datasetIDs={activeCollection.datasets.map(d => d.id)}
+          datasetIds={activeCollection.datasets.map(d => d.id)}
           onDone={onCollectionCreated}
         />
       )}
 
-      {tab === 'add' && activeCollectionID && (
+      {tab === 'add' && activeCollectionId && (
         <CollectionTabAdd
           onSwitch={() => setTab('switch')}
-          collectionId={activeCollectionID}
+          collectionId={activeCollectionId}
           onDismiss={onDismiss}
           onCreate={onCreate}
         />

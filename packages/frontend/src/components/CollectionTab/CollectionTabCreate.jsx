@@ -1,51 +1,50 @@
 import { useState } from 'react';
+import { useIsAuthenticated } from '@azure/msal-react';
 import uuidv4 from 'uuid';
 import {
   useCreateCollection,
   useDatasetsFromIds,
 } from '../../hooks/graphQLAPI';
 import { useUserCollections } from '../../hooks/collections';
-import { DISABLE_USER_ACCOUNTS } from '../../flags';
 
-export function CollectionTabCreate({ isPending, datasetIDs, onDone }) {
+export function CollectionTabCreate({ isPending, datasetIds, onDone }) {
+  const isAuthenticated = useIsAuthenticated();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [, setErrorMessage] = useState(null);
   const { loading: loadingDatasets, data: datasetData } =
-    useDatasetsFromIds(datasetIDs);
+    useDatasetsFromIds(datasetIds);
   const [createCollection] = useCreateCollection();
   const [, { createCollectionFromPending, createEmptyCollection }] =
     useUserCollections();
 
   const onTryCreateCollection = async () => {
     try {
-      // TODO: when user accounts are enabled, we will want this part
-      // to check if a user is authenticated or not
-      if (DISABLE_USER_ACCOUNTS) {
-        const newId = uuidv4();
-        if (isPending) {
-          createCollectionFromPending({
-            id: newId,
-            name,
-            description,
-            datasetIDs,
-          });
-          onDone(newId);
-        } else {
-          createEmptyCollection({ id: newId, name, description });
-          onDone(newId);
-        }
-      } else {
-        // Requires authentication
+      let collectionId;
+      if (isAuthenticated) {
         const result = await createCollection({
           variables: {
             name,
             description,
-            datasetIDs,
+            datasetIds,
           },
         });
-        onDone(result.data.createCollection.id);
+        collectionId = result.data.createCollection.id;
+      } else {
+        collectionId = uuidv4();
       }
+
+      if (isPending) {
+        createCollectionFromPending({
+          name,
+          description,
+          datasetIds,
+          id: collectionId,
+        });
+      } else {
+        createEmptyCollection({ id: collectionId, name, description });
+      }
+      onDone(collectionId);
     } catch (err) {
       setErrorMessage('Something went wrong');
     }

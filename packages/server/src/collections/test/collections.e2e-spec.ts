@@ -46,7 +46,7 @@ describe('CollectionsController (e2e)', () => {
   const createCollection = (
     userId: string,
     collectionId: string,
-    datasetIDs: string[],
+    datasetIds: string[],
   ) => `
     
   `;
