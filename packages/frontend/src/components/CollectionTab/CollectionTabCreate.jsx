@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { useIsAuthenticated } from '@azure/msal-react';
 import uuidv4 from 'uuid';
 import {
   useCreateCollection,
   useDatasetsFromIds,
 } from '../../hooks/graphQLAPI';
 import { useUserCollections } from '../../hooks/collections';
+import useCurrentUser from '../../auth/useCurrentUser';
 
 export function CollectionTabCreate({ isPending, datasetIds, onDone }) {
-  const isAuthenticated = useIsAuthenticated();
+  const { isAuthenticated } = useCurrentUser();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [, setErrorMessage] = useState(null);

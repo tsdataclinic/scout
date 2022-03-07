@@ -8,14 +8,13 @@ import {
   FacebookIcon,
   TwitterIcon,
 } from 'react-share';
-import { useIsAuthenticated } from '@azure/msal-react';
 import usePageView from '../../hooks/analytics';
 import useClipboard from '../../hooks/useClipboard';
 import Dataset from '../../components/Dataset/Dataset';
 import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
 import { useCollection, useDatasetsFromIds } from '../../hooks/graphQLAPI';
 import { useUserCollections } from '../../hooks/collections';
-import { DISABLE_USER_ACCOUNTS } from '../../flags';
+import useCurrentUser from '../../auth/useCurrentUser';
 
 const EMPTY_COLLECTION = {
   datasetIds: [],
@@ -31,7 +30,7 @@ function getShareableURL(collectionName, datasetIds) {
 
 export default function CollectionPage() {
   usePageView();
-  const isAuthenticated = useIsAuthenticated();
+  const { isAuthenticated } = useCurrentUser();
 
   const { name, datasetIds: datasetIdsFromURL, id } = useParams();
   const loadingCollectionFromURL = !!datasetIdsFromURL;
@@ -81,10 +80,8 @@ export default function CollectionPage() {
   }
 
   if (
-    (error && !DISABLE_USER_ACCOUNTS) ||
-    (DISABLE_USER_ACCOUNTS &&
-      collections.length >= 1 &&
-      collection === undefined)
+    (error && isAuthenticated) ||
+    (!isAuthenticated && collections.length >= 1 && collection === undefined)
   ) {
     return <p>Something went wrong</p>;
   }
