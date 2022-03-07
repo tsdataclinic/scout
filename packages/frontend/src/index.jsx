@@ -12,9 +12,7 @@ import AuthProvider from './auth/AuthProvider';
 import getAuthToken from './auth/getAuthToken';
 
 const httpLink = createHttpLink({
-  uri: process.env.REACT_APP_API_URL
-    ? process.env.REACT_APP_API_URL
-    : 'http://localhost:5000/graphql',
+  uri: process.env.REACT_APP_SCOUT_API_URL || 'http://localhost:5000/graphql',
 });
 
 const authLink = setContext(async (_, { headers }) => {

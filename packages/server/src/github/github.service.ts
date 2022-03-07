@@ -82,7 +82,7 @@ export class GithubService {
         );
       } else {
         throw new Error(
-          `ERROR: github commit search failed (using API). Response status ${response.status}`,
+          `ERROR: github COMMITS search failed (using API). Response status ${response.status}`,
         );
       }
     }
@@ -105,26 +105,51 @@ export class GithubService {
   }
 
   // TODO: this one requires authentication
-  getGithubCodeSearchResults(
+  async getGithubCodeSearchResults(
     datasetId: string,
     githubAuthToken: string,
-  ): CodeResult[] {
+  ): Promise<CodeResult[]> {
     console.log(githubAuthToken);
-    return [
-      {
-        repoURL: 'https://github.com/tspannhw/data-gov-dump',
-        repoLabel: 'tspannhw/data-gov-dump',
-        codeFileLabel: 'packages/11a7cff4-eaaa-4e27-83f6-21ca28add0ec.json',
-        codeFileURL:
-          'https://github.com/tspannhw/data-gov-dump/blob/e8c64394d2deca69f48930d846a88c65cf1c718c/packages/11a7cff4-eaaa-4e27-83f6-21ca28add0ec.json',
-      },
-      {
-        repoURL: 'https://github.com/axibase/open-data-catalog',
-        repoLabel: 'axibase/open-data-catalog',
-        codeFileLabel: 'socrata/3h2n-5cm9.md',
-        codeFileURL:
-          'https://github.com/axibase/open-data-catalog/blob/18210b49b6e2c7ef05d316b6699d2f0778fa565f/socrata/3h2n-5cm9.md',
-      },
-    ];
+    if (githubAuthToken) {
+      const response = await axios.get(
+        `https://api.github.com/search/code?q=${datasetId}`,
+        {
+          headers: {
+            Accept: 'application/json',
+            Authorization: githubAuthToken,
+          },
+        },
+      );
+
+      if (response.status === 200) {
+        console.log(response.data);
+        return response.data.items.map(
+          (result: {
+            html_url: string;
+            path: string;
+            repository: { html_url: string; full_name: string };
+          }) => {
+            const { repository, html_url, path } = result;
+
+            // get the last 2 parts of the path
+            const pathParts = path.split('/').slice(-2);
+            const fileLabel = pathParts.join('/');
+
+            return {
+              repoLabel: repository.full_name,
+              repoURL: repository.html_url,
+              codeFileLabel: fileLabel,
+              codeFileURL: html_url,
+            };
+          },
+        );
+      } else {
+        throw new Error(
+          `ERROR: github CODE search failed (using API). Response status ${response.status}`,
+        );
+      }
+    } else {
+      return [];
+    }
   }
 }

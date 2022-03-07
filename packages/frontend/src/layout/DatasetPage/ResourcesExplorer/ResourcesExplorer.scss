@@ -1,4 +1,7 @@
 .resources-explorer {
+  overflow: auto;
+  padding-right: 32px;
+
   > * {
     margin-bottom: 24px;
   }
