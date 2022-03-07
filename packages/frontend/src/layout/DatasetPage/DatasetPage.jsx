@@ -12,7 +12,6 @@ import './DatasetPage.scss';
 import ViewOnOpenPortal from '../../components/ViewOnOpenPortal/ViewOnOpenPortal';
 import { useDatasetGQL } from '../../hooks/graphQLAPI';
 import { ThematicSimilarityExplorer } from '../../components/ThematicSimilarityExplorer/ThematicSimilarityExplorer';
-import { USE_SINGLE_CITY } from '../../flags';
 import ResourcesExplorer from './ResourcesExplorer';
 
 const formatDate = date => moment(date).format('MMMM DD, YYYY');
@@ -165,15 +164,13 @@ export default function DatasetPage() {
       <div className="dataset-recomendataions">
         <div className="bar-and-toggle">
           <h2>Other datasets to consider</h2>
-          {USE_SINGLE_CITY ? null : (
-            <Switch
-              checked={globalSearch}
-              onChange={setGlobalSearch}
-              checkedChildren="All portals"
-              unCheckedChildren="Just this portal"
-              style={{ background: '#009aa6' }}
-            />
-          )}
+          <Switch
+            checked={globalSearch}
+            onChange={setGlobalSearch}
+            checkedChildren="All portals"
+            unCheckedChildren="Just this portal"
+            style={{ background: '#009aa6' }}
+          />
         </div>
         <div className="tabs">
           <button

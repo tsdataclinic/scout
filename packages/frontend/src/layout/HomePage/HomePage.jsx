@@ -6,7 +6,6 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 // import { gql, useQuery } from '@apollo/client';
 import { Switch } from 'antd';
 import { useSearchDatasets } from '../../hooks/graphQLAPI';
-import { USE_SINGLE_CITY } from '../../flags';
 
 /*
 import {
@@ -113,9 +112,7 @@ export default function HomePage({ portal }) {
       />
       <div className="datasets">
         <div className="selector-and-search">
-          {!USE_SINGLE_CITY && !globalSearch ? (
-            <PortalSelector selectedPortal={portal} />
-          ) : null}
+          {!globalSearch ? <PortalSelector selectedPortal={portal} /> : null}
 
           <div className="search">
             <FontAwesomeIcon size="lg" icon={faSearch} />
@@ -128,15 +125,13 @@ export default function HomePage({ portal }) {
             />
           </div>
 
-          {USE_SINGLE_CITY ? null : (
-            <Switch
-              checked={globalSearch}
-              onChange={setGlobalSearch}
-              checkedChildren="All portals"
-              unCheckedChildren="Specific portal"
-              style={{ margin: '0px 10px', background: '#009aa6' }}
-            />
-          )}
+          <Switch
+            checked={globalSearch}
+            onChange={setGlobalSearch}
+            checkedChildren="All portals"
+            unCheckedChildren="Specific portal"
+            style={{ margin: '0px 10px', background: '#009aa6' }}
+          />
         </div>
         <div className="count-and-sort">
           <p>

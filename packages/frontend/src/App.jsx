@@ -17,8 +17,6 @@ import CollectionsPage from './layout/CollectionsPage/CollectionsPage';
 import WelcomeModal from './components/WelcomeModal/WelcomeModal';
 import GHPagesRedirect from './components/GHPagesRedirect/GHPagesRedirect';
 import { DEFAULT_PORTAL } from './portals';
-import { USE_SINGLE_CITY } from './flags';
-import UserAccountModal from './components/UserAccountModal/UserAccountModal';
 import { ProfilePage } from './layout/ProfilePage/ProfilePage';
 import { usePortals } from './hooks/graphQLAPI';
 
@@ -41,11 +39,6 @@ function PortalRoute() {
     ? Portals.find(p => p.abbreviation === portal)
     : null;
   if (Portals && !portalDetails) {
-    return <Navigate to={`/${DEFAULT_PORTAL}`} />;
-  }
-
-  // TODO: remove this when multi-city is ready to go
-  if (portalDetails && portal !== DEFAULT_PORTAL && USE_SINGLE_CITY) {
     return <Navigate to={`/${DEFAULT_PORTAL}`} />;
   }
 
@@ -76,9 +69,6 @@ function App() {
                   )
                 }
               />
-              {!USE_SINGLE_CITY && (
-                <Route exact path="/login" element={<UserAccountModal />} />
-              )}
               <Route exact path="/about" element={<AboutPage />} />
               <Route exact path="/profile" element={<ProfilePage />} />
 
