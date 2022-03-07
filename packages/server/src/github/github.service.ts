@@ -104,12 +104,10 @@ export class GithubService {
     );
   }
 
-  // TODO: this one requires authentication
   async getGithubCodeSearchResults(
     datasetId: string,
     githubAuthToken: string,
   ): Promise<CodeResult[]> {
-    console.log(githubAuthToken);
     if (githubAuthToken) {
       const response = await axios.get(
         `https://api.github.com/search/code?q=${datasetId}`,
@@ -122,7 +120,6 @@ export class GithubService {
       );
 
       if (response.status === 200) {
-        console.log(response.data);
         return response.data.items.map(
           (result: {
             html_url: string;

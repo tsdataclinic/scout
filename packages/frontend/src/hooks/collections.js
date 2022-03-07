@@ -1,13 +1,13 @@
-import { useIsAuthenticated } from '@azure/msal-react';
 import { useCollectionsValue } from '../contexts/CollectionsContext';
 import {
   useAddToCollection,
   useCurrentUserCollections,
   useDatasetsFromIds,
 } from './graphQLAPI';
+import useCurrentUser from '../auth/useCurrentUser';
 
 export function useUserCollections() {
-  const isAuthenticated = useIsAuthenticated();
+  const { isAuthenticated } = useCurrentUser();
 
   // TODO: This function gets triggered 40+ times on each refresh. This does
   // not seem very performant
