@@ -3,6 +3,7 @@ import {
   useAddToCollection,
   useCurrentUserCollections,
   useDatasetsFromIds,
+  useRemoveDatasetFromCollection,
 } from './graphQLAPI';
 import useCurrentUser from '../auth/useCurrentUser';
 
@@ -22,7 +23,9 @@ export function useUserCollections() {
         datasetIds: col.datasets.map(d => d.id),
       }))
     : [];
+
   const [addTo] = useAddToCollection();
+  const [removeFrom] = useRemoveDatasetFromCollection();
 
   const localOrServerCollections = isAuthenticated
     ? serverCollections
@@ -58,10 +61,10 @@ export function useUserCollections() {
           },
   };
 
-  const setActiveCollection = collectionID => {
+  const setActiveCollection = collectionId => {
     dispatch({
       type: 'SET_ACTIVE_COLLECTION',
-      payload: collectionID,
+      payload: collectionId,
     });
   };
 
@@ -127,8 +130,12 @@ export function useUserCollections() {
         type: 'REMOVE_FROM_CURRENT_COLLECTION',
         payload: datasetId,
       });
+    } else {
+      // remove from existing collection on the backend
+      removeFrom({
+        variables: { datasetId, collectionId: state.activeCollectionId },
+      });
     }
-    // TODO: add backend remove
   };
 
   const createCollectionFromPending = ({

@@ -90,4 +90,30 @@ export class CollectionsResolver {
       throw new NotFoundException(id, 'Could not find collection');
     }
   }
+
+  @Mutation(returns => Collection)
+  @UseGuards(AzureADGuard)
+  async removeDatasetFromCollection(
+    @CurrentUser() currentUser: User,
+    @Args('collectionId') collectionId: string,
+    @Args('datasetId') datasetId: string,
+  ) {
+    const collection = await this.collectionService.findById(collectionId);
+    if (collection) {
+      const dataset = await this.datasetService.findById(datasetId);
+      const collectionOwner = await collection.user;
+      if (currentUser.id === collectionOwner.id) {
+        return this.collectionService.removeDatasetFromCollection(
+          collectionId,
+          dataset,
+        );
+      } else {
+        throw new UnauthorizedException(
+          'You are not authorized to alter this collection',
+        );
+      }
+    } else {
+      throw new NotFoundException(collectionId, 'Could not find collection');
+    }
+  }
 }

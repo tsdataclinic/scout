@@ -55,5 +55,23 @@ export class CollectionsService {
     throw new NotFoundException(id, 'Could not find collection');
   }
 
-  removeFromCollection(id: string, datasets: Dataset[]) {}
+  async removeDatasetFromCollection(
+    collectionId: string,
+    datasetToRemove: Dataset,
+  ) {
+    const collection = await this.collectionRepo.findOne(collectionId, {
+      relations: ['datasets'],
+    });
+    if (collection) {
+      const datasetId = datasetToRemove.id;
+      const datasets = await collection.datasets;
+
+      collection.datasets = Promise.resolve(
+        datasets.filter(d => d.id !== datasetId),
+      );
+
+      return this.collectionRepo.save(collection);
+    }
+    throw new NotFoundException(collectionId, 'Could not find collection');
+  }
 }

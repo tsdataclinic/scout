@@ -26,7 +26,7 @@ export function CollectionTabCreate({ isPending, datasetIds, onDone }) {
           variables: {
             name,
             description,
-            datasetIds,
+            datasetIds: isPending ? datasetIds : [],
           },
         });
         collectionId = result.data.createCollection.id;
@@ -42,7 +42,12 @@ export function CollectionTabCreate({ isPending, datasetIds, onDone }) {
           id: collectionId,
         });
       } else {
-        createEmptyCollection({ id: collectionId, name, description });
+        createEmptyCollection({
+          id: collectionId,
+          name,
+          description,
+          datasetIds: [],
+        });
       }
       onDone(collectionId);
     } catch (err) {

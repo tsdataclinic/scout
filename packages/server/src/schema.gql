@@ -62,6 +62,7 @@ type Mutation {
   addToCollection(datasetIds: [String!]!, id: String!): Collection!
   createCollection(datasetIds: [String!]!, description: String!, name: String!): Collection!
   deleteCollection(id: String!): Collection!
+  removeDatasetFromCollection(collectionId: String!, datasetId: String!): Collection!
 }
 
 type PagedDatasets {

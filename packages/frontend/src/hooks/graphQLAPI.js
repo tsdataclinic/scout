@@ -147,24 +147,25 @@ export const useCurrentUser = () => {
   return useQuery(CurrentUser);
 };
 
-export const useCurrentUserCollections = () => {
-  const CurrentUserAndCollections = gql`
-    query Profile {
-      profile {
+const GET_ALL_CURRENT_USER_COLLECTIONS = gql`
+  query Profile {
+    profile {
+      id
+      collections {
         id
-        collections {
+        name
+        description
+        datasets {
           id
-          name
-          description
-          datasets {
-            id
-          }
         }
       }
     }
-  `;
-  return useQuery(CurrentUserAndCollections);
-};
+  }
+`;
+
+export function useCurrentUserCollections() {
+  return useQuery(GET_ALL_CURRENT_USER_COLLECTIONS);
+}
 
 export const useCreateCollection = () => {
   const CreateCollection = gql`
@@ -184,7 +185,9 @@ export const useCreateCollection = () => {
       }
     }
   `;
-  return useMutation(CreateCollection);
+  return useMutation(CreateCollection, {
+    refetchQueries: [{ query: GET_ALL_CURRENT_USER_COLLECTIONS }],
+  });
 };
 
 export const useDatasetColumnsWithSuggestionCounts = (id, global) => {
@@ -218,6 +221,30 @@ export const useAddToCollection = () => {
   `;
   return useMutation(mut);
 };
+
+export function useRemoveDatasetFromCollection() {
+  const removeDatasetFromCollectionMutation = gql`
+    mutation removeDatasetFromCollection(
+      $collectionId: String!
+      $datasetId: String!
+    ) {
+      removeDatasetFromCollection(
+        collectionId: $collectionId
+        datasetId: $datasetId
+      ) {
+        id
+        name
+        description
+        datasets {
+          id
+          name
+          description
+        }
+      }
+    }
+  `;
+  return useMutation(removeDatasetFromCollectionMutation);
+}
 
 export const useDatasetGQL = datasetId => {
   const DatasetQuery = gql`
