@@ -21,7 +21,8 @@ const AuthConfig: AzureAuthConfig = {
       authority:
         'https://twosigmadataclinic.b2clogin.com/twosigmadataclinic.onmicrosoft.com/B2C_1_scout_signup_signin',
       knownAuthorities: ['twosigmadataclinic.b2clogin.com'],
-      redirectUri: process.env.REACT_APP_SCOUT_URI || 'http://localhost:3000',
+      redirectUri:
+        process.env.REACT_APP_SCOUT_CLIENT_URI || 'http://localhost:3000',
     },
   },
 
