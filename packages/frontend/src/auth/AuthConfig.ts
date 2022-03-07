@@ -27,10 +27,7 @@ const AuthConfig: AzureAuthConfig = {
   },
 
   api: {
-    b2cScopes: [
-      'https://twosigmadataclinic.onmicrosoft.com/scout-api/Scout.Read',
-      'https://twosigmadataclinic.onmicrosoft.com/scout-api/Scout.Write',
-    ],
+    b2cScopes: [],
   },
 
   loginRequest: {
