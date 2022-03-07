@@ -15,3 +15,9 @@ services:
     # mount the db directory and src directory into the container
     env_file: 
       - ./packages/server/.env
+
+  # web client (the frontend)
+  client:
+    build: ./packages/frontend
+    ports:
+      - 3000:3000
