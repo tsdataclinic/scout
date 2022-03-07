@@ -21,7 +21,6 @@ export default function DatasetPage() {
   usePageView();
   const navigate = useNavigate();
   const { datasetId, tab } = useParams();
-
   const { loading, error, data } = useDatasetGQL(datasetId);
   const dataset = loading || error ? null : data.dataset;
 

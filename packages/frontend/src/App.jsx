@@ -21,7 +21,6 @@ import { USE_SINGLE_CITY } from './flags';
 import UserAccountModal from './components/UserAccountModal/UserAccountModal';
 import { ProfilePage } from './layout/ProfilePage/ProfilePage';
 import { usePortals } from './hooks/graphQLAPI';
-import AuthProvider from './auth/AuthProvider';
 
 const queryClient = new QueryClient();
 
@@ -63,53 +62,51 @@ function App() {
     : '';
 
   return (
-    <AuthProvider>
-      <QueryClientProvider client={queryClient}>
-        <div className="App">
-          <Router basename={baseName}>
-            <div className="content">
-              <Routes>
-                <Route
-                  exact
-                  path="/"
-                  element={
-                    sessionStorage.redirect ? null : (
-                      <Navigate from="/" to={`/explore/${DEFAULT_PORTAL}`} />
-                    )
-                  }
-                />
-                {!USE_SINGLE_CITY && (
-                  <Route exact path="/login" element={<UserAccountModal />} />
-                )}
-                <Route exact path="/about" element={<AboutPage />} />
-                <Route exact path="/profile" element={<ProfilePage />} />
-
-                <Route path="/collections" element={<CollectionsPage />} />
-                <Route
-                  path="/collection/:name/:datasetIds"
-                  element={<CollectionPage />}
-                />
-                <Route path="/collection/:id" element={<CollectionPage />} />
-                <Route path="/explore/:portal" element={<PortalRoute />} />
-                <Route path="/explore/:portal/dataset/:datasetIds">
-                  <Route path=":tab" element={<DatasetPage />} />
-                  <Route path="" element={<DatasetPage />} />
-                </Route>
-                <Route
-                  path="*"
-                  element={
+    <QueryClientProvider client={queryClient}>
+      <div className="App">
+        <Router basename={baseName}>
+          <div className="content">
+            <Routes>
+              <Route
+                exact
+                path="/"
+                element={
+                  sessionStorage.redirect ? null : (
                     <Navigate from="/" to={`/explore/${DEFAULT_PORTAL}`} />
-                  }
-                />
-              </Routes>
-            </div>
-            <SideNav />
-            <GHPagesRedirect />
-            <WelcomeModal />
-          </Router>
-        </div>
-      </QueryClientProvider>
-    </AuthProvider>
+                  )
+                }
+              />
+              {!USE_SINGLE_CITY && (
+                <Route exact path="/login" element={<UserAccountModal />} />
+              )}
+              <Route exact path="/about" element={<AboutPage />} />
+              <Route exact path="/profile" element={<ProfilePage />} />
+
+              <Route path="/collections" element={<CollectionsPage />} />
+              <Route
+                path="/collection/:name/:datasetIds"
+                element={<CollectionPage />}
+              />
+              <Route path="/collection/:id" element={<CollectionPage />} />
+              <Route path="/explore/:portal" element={<PortalRoute />} />
+              <Route path="/explore/:portal/dataset/:datasetId">
+                <Route path=":tab" element={<DatasetPage />} />
+                <Route path="" element={<DatasetPage />} />
+              </Route>
+              <Route
+                path="*"
+                element={
+                  <Navigate from="/" to={`/explore/${DEFAULT_PORTAL}`} />
+                }
+              />
+            </Routes>
+          </div>
+          <SideNav />
+          <GHPagesRedirect />
+          <WelcomeModal />
+        </Router>
+      </div>
+    </QueryClientProvider>
   );
 }
 
