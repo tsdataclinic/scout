@@ -25,8 +25,10 @@ export class GithubController {
       'https://github.com/login/oauth/access_token',
       {
         code: authCode,
-        client_id: this.configService.get('REACT_APP_SCOUT_GITHUB_CLIENT_ID'),
-        client_secret: this.configService.get('SCOUT_GITHUB_CLIENT_SECRET'),
+        client_id: this.configService.get('SCOUT_SERVER_GITHUB_CLIENT_ID'),
+        client_secret: this.configService.get(
+          'SCOUT_SERVER_GITHUB_CLIENT_SECRET',
+        ),
       },
       {
         headers: { Accept: 'application/json' },

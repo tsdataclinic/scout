@@ -3,6 +3,7 @@ import { BearerStrategy } from 'passport-azure-ad';
 import { Injectable } from '@nestjs/common';
 import { User } from '../users/users.entity';
 import { UsersService } from '../users/users.service';
+import { ConfigService } from '../config/config.service';
 
 type AzureADB2CToken = {
   // issuer (includes tenant id)
@@ -38,16 +39,19 @@ export class AzureADStrategy extends PassportStrategy(
   BearerStrategy,
   'azure-ad',
 ) {
-  constructor(private userService: UsersService) {
-    // TODO: get this from configService (as env vars)
+  constructor(
+    private configService: ConfigService,
+    private userService: UsersService,
+  ) {
     super({
-      identityMetadata:
-        'https://twosigmadataclinic.b2clogin.com/twosigmadataclinic.onmicrosoft.com/v2.0/.well-known/openid-configuration',
-      clientID: 'e721ad4d-7392-4ef5-a5a8-36250b38e3a3',
+      identityMetadata: configService.get(
+        'SCOUT_SERVER_AZURE_B2C_IDENTITY_METADATA_URI',
+      ),
+      clientID: configService.get('SCOUT_SERVER_AZURE_APP_CLIENT_ID'),
       loggingLevel: null,
 
       // required for Azure AD B2C
-      policyName: 'B2C_1_scout_signup_signin',
+      policyName: configService.get('SCOUT_SERVER_AZURE_B2C_AUTH_POLICY_NAME'),
 
       // required for Azure AD B2C
       isB2C: true,
@@ -55,6 +59,10 @@ export class AzureADStrategy extends PassportStrategy(
       // required for Azure AD B2C
       validateIssuer: false,
     });
+    console.log(
+      'identity URI',
+      configService.get('SCOUT_SERVER_AZURE_B2C_IDENTITY_METADATA_URI'),
+    );
   }
 
   /**

@@ -10,7 +10,6 @@ import { Portal } from '../portals/portal.entity';
 import { Dataset } from '../dataset/dataset.entity';
 import { DatasetColumn } from 'src/dataset-columns/dataset-column.entity';
 import { Logger } from '@nestjs/common';
-import { Tag } from '../tags/tags.entity';
 import * as fs from 'fs';
 import { SearchService } from '../search/search.service';
 import { PortalExternalInfo } from './portal-details-lookup';
@@ -37,7 +36,7 @@ export class PortalSyncService {
   @Timeout(0)
   async onceAtStartup() {
     if (this.configService.get('UPDATE_ON_BOOT')) {
-      // await this.refreshPortalList();
+      await this.refreshPortalList();
       await this.searchService.createIndex({ recreate: true });
       await this.searchService.populateIndex();
 
@@ -197,6 +196,7 @@ export class PortalSyncService {
   }
 
   async refreshPortalList() {
+    console.log('BEGINNING IMPORT INTO DATABASE');
     const portalListRequest = await fetch(
       'http://api.us.socrata.com/api/catalog/v1/domains',
     );
