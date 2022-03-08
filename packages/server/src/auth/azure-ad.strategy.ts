@@ -59,10 +59,6 @@ export class AzureADStrategy extends PassportStrategy(
       // required for Azure AD B2C
       validateIssuer: false,
     });
-    console.log(
-      'identity URI',
-      configService.get('SCOUT_SERVER_AZURE_B2C_IDENTITY_METADATA_URI'),
-    );
   }
 
   /**
