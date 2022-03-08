@@ -1,8 +1,10 @@
-node_modules/
 .eslintcache
 .DS_Store
-yarn-error.log
-build
 .ipynb_checkpoints
-packages/server/model
 *.swp
+
+yarn-error.log
+ormconfig.json
+build/
+node_modules/
+packages/server/model
