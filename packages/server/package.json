@@ -54,7 +54,7 @@
     "rxjs": "^7.5.4",
     "scrape-it": "^5.3.2",
     "sqlite3": "^5.0.2",
-    "typeorm": "^0.2.26"
+    "typeorm": "^0.2.45"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.2.1",

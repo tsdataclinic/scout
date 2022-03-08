@@ -32,15 +32,15 @@ export class Dataset {
   department: string;
 
   @Field({ nullable: true })
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   metadataUpdatedAt: Date;
 
   @Field({ nullable: true })
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   updatedAt: Date;
 
   @Field({ nullable: true })
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   createdAt: Date;
 
   @Field({ nullable: true })
