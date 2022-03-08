@@ -3,7 +3,7 @@
   "host": "localhost",
   "port": 5432,
   "username": "postgres",
-  "dbname": "",
+  "dbname": "scout",
   "password": "",
   "entities": ["dist/**/*.entity{.ts,.js}"],
   "synchronize": false,
