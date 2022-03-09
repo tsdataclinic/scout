@@ -1,5 +1,5 @@
-import React from 'react';
 import './Dataset.scss';
+import numeral from 'numeral';
 import { hilightMatches, formatDate } from '../../utils/formatters';
 import { useGetSimilarDatasets, useGetJoinNumbers } from '../../hooks/datasets';
 import { ReactComponent as ThematicIcon } from '../../icons/joinable.svg';
@@ -36,6 +36,7 @@ export default function Dataset({
   ] = useUserCollections();
 
   const inCollection = inCurrentCollection(dataset.id);
+  console.log('similarity', similarity);
 
   return (
     <div className="dataset" key={dataset.id}>
@@ -67,7 +68,7 @@ export default function Dataset({
       {similarity && (
         <p className="similarity">
           <p className="header">Similarity</p>
-          <p>{(similarity * 100).toPrecision(2)}%</p>
+          <p>{numeral(similarity).format('0%')}</p>
         </p>
       )}
       {viewInOpenPortal && <ViewOnOpenPortal permalink={dataset.permalink} />}
