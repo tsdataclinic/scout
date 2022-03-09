@@ -5,9 +5,7 @@ import { useGetSimilarDatasets, useGetJoinNumbers } from '../../hooks/datasets';
 import { ReactComponent as ThematicIcon } from '../../icons/joinable.svg';
 import { ReactComponent as JoinIcon } from '../../icons/thematicSimilarity.svg';
 import { useUserCollections } from '../../hooks/collections';
-
 import DatasetLink from '../DatasetLink/DatasetLink';
-// import RawHTML from '../RawHTML/RawHTML';
 import ViewOnOpenPortal from '../ViewOnOpenPortal/ViewOnOpenPortal';
 import PortalInfo from '../PortalInfo/PortalInfo';
 
@@ -46,9 +44,7 @@ export default function Dataset({
         </div>
 
         <DatasetLink className="title" dataset={dataset}>
-          {/* <Link className="title" to={`/dataset/${dataset.id}`}> */}
           <h2>{formattedName}</h2>
-          {/* </Link> */}
         </DatasetLink>
         {dataset.permalink}
       </div>
@@ -71,18 +67,21 @@ export default function Dataset({
         </p>
       )}
       {viewInOpenPortal && <ViewOnOpenPortal permalink={dataset.permalink} />}
-      {showStats && (
-        <div className="comparison-stats">
-          <div className="comparison-stat dataset-join-thematic">
-            <ThematicIcon />
-            <span>{Math.max(similarDatasets.length - 1, 0)}</span>
+      {
+        /* TODO: remove this stats feature and the associated css */
+        showStats && (
+          <div className="comparison-stats">
+            <div className="comparison-stat dataset-join-thematic">
+              <ThematicIcon />
+              <span>{Math.max(similarDatasets.length - 1, 0)}</span>
+            </div>
+            <div className="comparison-stat dataset-join-join">
+              <JoinIcon />
+              <span>{joinNumber}</span>
+            </div>
           </div>
-          <div className="comparison-stat dataset-join-join">
-            <JoinIcon />
-            <span>{joinNumber}</span>
-          </div>
-        </div>
-      )}
+        )
+      }
       <div className="dataset-description">{formattedDescription}</div>
       <div className="dataset-meta">
         <div className="update-frequency">

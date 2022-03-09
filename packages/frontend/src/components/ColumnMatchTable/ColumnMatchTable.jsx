@@ -6,7 +6,6 @@ import ColumnSuggestions from '../ColumnSuggestions/ColumnSuggestions';
 
 export default function ColumnMatchTable({ dataset, global }) {
   const columns = dataset?.datasetColumns;
-  console.log('Columns are ', columns);
   // const colJoins =
   //   columns && joinColumns
   //     ? columns.map((c) => ({

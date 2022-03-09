@@ -13,7 +13,6 @@ import {
   useSortOrder,
   useFilterBarState,
 } from '../../hooks/search';
-
 import Dataset from '../../components/Dataset/Dataset';
 import SortMenu from '../../components/SortMenu/SortMenu';
 import DatasetsLoading from '../../components/Loading/DatasetsLoading/DatasetsLoading';
@@ -139,7 +138,12 @@ export default function HomePage({ portal }) {
             <DatasetsLoading />
           ) : (
             datasets.map(dataset => (
-              <Dataset key={dataset?.id} dataset={dataset} query={searchTerm} />
+              <Dataset
+                key={dataset?.id}
+                showStats={false}
+                dataset={dataset}
+                query={searchTerm}
+              />
             ))
           )}
         </ul>

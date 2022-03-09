@@ -256,11 +256,9 @@ export class PortalSyncService {
     const perPage = 100;
     const pages = Math.ceil(portal.datasetCount / perPage);
     const allDatasets = await Promise.all(
-      Array(pages)
-        .fill(undefined)
-        .map((_, page: number) =>
-          this.getPageOfDatasets(portal, page, perPage),
-        ),
+      [...Array(pages)].map((_, page: number) =>
+        this.getPageOfDatasets(portal, page, perPage),
+      ),
     );
 
     const flattenedDatasets: SocrataDataset[] = [];

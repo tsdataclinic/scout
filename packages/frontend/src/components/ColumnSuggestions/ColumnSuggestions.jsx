@@ -50,7 +50,6 @@ export default function ColumnSuggestions({ global, columnId, dataset }) {
   }
 
   if (error) {
-    console.log('The error', error);
     return <p>Something went wrong</p>;
   }
   const column = data ? data.datasetColumn : null;
@@ -74,7 +73,7 @@ export default function ColumnSuggestions({ global, columnId, dataset }) {
         <span>{column.joinSuggestionCount} datasets</span>
       </div>
 
-      {!collapsed && (
+      {collapsed ? null : (
         <JoinableDatasets column={column} global={global} dataset={dataset} />
       )}
     </div>
