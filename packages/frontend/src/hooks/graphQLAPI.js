@@ -259,7 +259,6 @@ export const useDatasetGQL = datasetId => {
         createdAt
         permalink
         updateFrequency
-        updatedAutomation
         datasetColumns {
           name
           type

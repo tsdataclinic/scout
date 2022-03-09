@@ -141,10 +141,6 @@ export default function DatasetPage() {
         </section>
         <section className="metadata">
           <h2>Metadata</h2>
-          <h3>Update Automation</h3>
-          {/* TODO: fix this. Right now a `null` value represents Yes,
-            and `false` is No. This is weird. */}
-          <p>{dataset?.updatedAutomation === null ? 'Yes' : 'No'}</p>
           <h3>Update Frequency</h3>
           <p>{dataset?.updateFrequency}</p>
           {dataset?.department && (
