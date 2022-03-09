@@ -36,7 +36,6 @@ export default function Dataset({
   ] = useUserCollections();
 
   const inCollection = inCurrentCollection(dataset.id);
-  console.log('similarity', similarity);
 
   return (
     <div className="dataset" key={dataset.id}>
@@ -91,7 +90,7 @@ export default function Dataset({
           {dataset.updateFrequency}
         </div>
         <div className="dataset-last-updated">
-          <span>Last Update at:</span>
+          <span>Last Update:</span>
           {formatDate(dataset.updatedAt)}
         </div>
       </div>

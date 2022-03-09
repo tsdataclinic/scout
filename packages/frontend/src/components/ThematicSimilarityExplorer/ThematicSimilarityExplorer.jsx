@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import './ThematicSimilariryExplorer.scss';
 import Dataset from '../Dataset/Dataset';
 import { useSimilarDatasets } from '../../hooks/graphQLAPI';
@@ -8,8 +9,15 @@ export function ThematicSimilarityExplorer({ datasetId, global, portal }) {
     datasetId,
     global ? null : portal,
   );
-  const similarDatasets =
-    loading || error ? [] : data.dataset.thematicallySimilarDatasets;
+
+  const similarDatasets = useMemo(() => {
+    const loadedDatasets =
+      loading || error ? [] : data.dataset.thematicallySimilarDatasets;
+
+    // don't show this dataset as being similar to itself
+    return loadedDatasets.filter(({ dataset }) => dataset.id !== datasetId);
+  }, [data, loading, error, datasetId]);
+
   const [
     ,
     {

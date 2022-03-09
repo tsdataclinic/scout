@@ -344,15 +344,17 @@ export const useSimilarDatasets = (datasetId, portal) => {
       dataset(id: $datasetId) {
         thematicallySimilarDatasets(portalId: $portalId) {
           dataset {
+            id
             name
+            description
+            updateFrequency
+            updatedAt
             portal {
               name
               id
               adminLevel
               abbreviation
             }
-            description
-            id
           }
           score
         }
