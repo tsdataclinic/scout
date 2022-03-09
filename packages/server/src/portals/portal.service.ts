@@ -18,7 +18,7 @@ export class PortalService {
     return this.portalRepo.find();
   }
 
-  createOrUpdatePortal(portal: Portal) {
+  createOrUpdatePortal(portal: Portal): Promise<Portal> {
     return this.portalRepo.save(portal);
   }
 }

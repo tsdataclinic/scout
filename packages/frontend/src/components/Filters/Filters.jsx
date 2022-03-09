@@ -3,6 +3,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import MultiSelector from '../MultiSelector/MultiSelector';
+import ColumnSelector from './ColumnSelector';
 
 import {
   useFilterUIStates,
@@ -19,16 +20,21 @@ import {
   useDepartmentsGQL,
 } from '../../hooks/graphQLAPI';
 
-export default function Filters({ collapsed, onCollapseFilterBar, portal }) {
+export default function Filters({
+  collapsed,
+  onCollapseFilterBar,
+  portal,
+  globalSearch,
+}) {
   const [filterStates, setFilterState] = useFilterUIStates();
-
   const [selectedCategories, setSelectedCategories] = useSelectedCategories();
   const [selectedTags, setSelectedTags] = useSelectedTags();
-  const [selectedColumns, setSelectedColumns] = useSelectedColumns(
-    'data.cityofnewyork.us',
-  );
+  const [selectedColumns, setSelectedColumns] = useSelectedColumns();
   const [selectedDepartments, setSelectedDepartments] =
     useSelectedDepartments();
+
+  // TODO: handle filters with global search
+  console.log('is global', globalSearch);
 
   return (
     <div className={`filters ${collapsed ? 'collapsed' : ''}`}>
@@ -55,29 +61,26 @@ export default function Filters({ collapsed, onCollapseFilterBar, portal }) {
                 }
                 title="Categories"
               />
-            </div>
-            <div className="departments">
-              <MultiSelector
-                itemFetcher={useDepartmentsGQL}
-                selectedHook={useSelectedDepartments}
-                collapse={filterStates.departments}
-                onCollapse={(collapsed) =>
-                  setFilterState('departments', collapsed)
-                }
-                title="Departments"
-              />
-            </div> */}
-            <div className="columns">
-              <MultiSelector
-                itemFetcher={useColumnsGQL}
-                selectedHook={useSelectedColumns}
-                collapse={filterStates.columns}
-                onCollapse={_collapsed => setFilterState('columns', _collapsed)}
-                title="Columns"
-                key="Columns"
-              />
-            </div>
-            {/* <div className="tags">
+              */}
+          </div>
+          <div className="departments">
+            {/*
+            <MultiSelector
+              itemFetcher={useDepartmentsGQL}
+              selectedHook={useSelectedDepartments}
+              collapse={filterStates.departments}
+              onCollapse={isCollapsed =>
+                setFilterState('departments', isCollapsed)
+              }
+              title="Departments"
+              portalId={portal.id}
+            />
+            */}
+          </div>
+          <div className="columns">
+            <ColumnSelector portalId={portal.id} />
+          </div>
+          {/* <div className="tags">
               <MultiSelector
                 itemFetcher={useTagsGQL}
                 selectedHook ={useSelectedTags}
@@ -86,7 +89,6 @@ export default function Filters({ collapsed, onCollapseFilterBar, portal }) {
                 title="Tags"
               />
             </div> */}
-          </div>
         </>
       ) : (
         <h2>

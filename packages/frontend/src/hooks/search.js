@@ -2,7 +2,7 @@ import { useSearchState } from '../contexts/SearchContext';
 
 export function useSelectedTags() {
   const [{ tags }, dispatch] = useSearchState();
-  const setSelectedTags = (newTags) => {
+  const setSelectedTags = newTags => {
     dispatch({
       type: 'SET_TAGS',
       payload: newTags,
@@ -13,7 +13,7 @@ export function useSelectedTags() {
 
 export function useSelectedCategories() {
   const [{ categories }, dispatch] = useSearchState();
-  const setSelectedCategories = (newCategories) => {
+  const setSelectedCategories = newCategories => {
     dispatch({
       type: 'SET_CATEGORIES',
       payload: newCategories,
@@ -24,7 +24,7 @@ export function useSelectedCategories() {
 
 export function useSelectedColumns() {
   const [{ columns }, dispatch] = useSearchState();
-  const setSelectedColumns = (newColumns) => {
+  const setSelectedColumns = newColumns => {
     dispatch({
       type: 'SET_COLUMNS',
       payload: newColumns,
@@ -35,7 +35,7 @@ export function useSelectedColumns() {
 
 export function useSelectedDepartments() {
   const [{ departments }, dispatch] = useSearchState();
-  const setSelectedDepartments = (newDepartments) => {
+  const setSelectedDepartments = newDepartments => {
     dispatch({
       type: 'SET_DEPARTMENTS',
       payload: newDepartments,
@@ -46,7 +46,7 @@ export function useSelectedDepartments() {
 
 export function useSearchTerm() {
   const [{ term }, dispatch] = useSearchState();
-  const setSearchTerm = (newTerm) => {
+  const setSearchTerm = newTerm => {
     dispatch({
       type: 'SET_TERM',
       payload: newTerm,
@@ -57,7 +57,7 @@ export function useSearchTerm() {
 
 export function useSortVariable() {
   const [{ sortVariable }, dispatch] = useSearchState();
-  const setSortVariable = (newSortVariable) => {
+  const setSortVariable = newSortVariable => {
     dispatch({
       type: 'SET_SORT_VARIABLE',
       payload: newSortVariable,
@@ -79,7 +79,7 @@ export function useFilterUIStates() {
 export function useFilterBarState() {
   const [{ collapseFilters }, dispatch] = useSearchState();
 
-  const setCollapseFilter = (collapse) => {
+  const setCollapseFilter = collapse => {
     dispatch({
       type: 'SET_COLLAPSE_FILTER_BAR',
       payload: collapse,
@@ -89,7 +89,7 @@ export function useFilterBarState() {
 }
 export function useSortOrder() {
   const [{ sortOrder }, dispatch] = useSearchState();
-  const setSearchTerm = (newSortOrder) => {
+  const setSearchTerm = newSortOrder => {
     dispatch({
       type: 'SET_SORT_ORDER',
       payload: newSortOrder,

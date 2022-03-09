@@ -32,7 +32,7 @@ export default function ColumnMatchTable({ dataset, global }) {
         ? columns.map(column => (
             <ColumnSuggestions
               dataset={dataset}
-              columnID={column.id}
+              columnId={column.id}
               key={column.id}
               global={global}
             />

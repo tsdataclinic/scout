@@ -67,10 +67,6 @@ export class Dataset {
   @Column({ nullable: true })
   updateFrequency: string;
 
-  @Field({ nullable: true })
-  @Column({ nullable: true })
-  updatedAutomation: boolean;
-
   @Column({ nullable: false })
   portalId: string;
 

@@ -6,17 +6,13 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 // import { gql, useQuery } from '@apollo/client';
 import { Switch } from 'antd';
 import { useSearchDatasets } from '../../hooks/graphQLAPI';
-
-/*
 import {
-  useCategories,
-  useTags,
-  useDepartments,
-  useDatasetsDB,
-  useColumns,
-  useStateLoaded,
-} from '../../hooks/datasets';
-*/
+  useSelectedColumns,
+  useSearchTerm,
+  useSortVariable,
+  useSortOrder,
+  useFilterBarState,
+} from '../../hooks/search';
 
 import Dataset from '../../components/Dataset/Dataset';
 import SortMenu from '../../components/SortMenu/SortMenu';
@@ -25,19 +21,6 @@ import { usePagination } from '../../hooks/pagination';
 import usePageView from '../../hooks/analytics';
 import PortalSelector from '../../components/PortalSelector/PortalSelector';
 import Filters from '../../components/Filters/Filters';
-
-import {
-  /*
-  useSelectedCategories,
-  useSelectedTags,
-  useSelectedDepartments,
-  useSelectedColumns,
-  */
-  useSearchTerm,
-  useSortVariable,
-  useSortOrder,
-  useFilterBarState,
-} from '../../hooks/search';
 
 /*
 const ALL_DATASETS_PAGED = gql`
@@ -52,13 +35,13 @@ const ALL_DATASETS_PAGED = gql`
 
 export default function HomePage({ portal }) {
   usePageView();
-
   /*
   const [selectedTags] = useSelectedTags();
-  const [selectedColumns] = useSelectedColumns();
   const [selectedCategories] = useSelectedCategories();
   const [selectedDepartments] = useSelectedDepartments();
   */
+  const [selectedColumns] = useSelectedColumns();
+  console.log('Selected columns', selectedColumns);
 
   const [searchTerm, setSearchTerm] = useSearchTerm();
   const [sortBy, setSortBy] = useSortVariable();
@@ -78,18 +61,12 @@ export default function HomePage({ portal }) {
     },
   );
 
-  console.log('Searching for datasets?', {
-    loading,
-    data,
-    error,
-  });
-
   const datasets = loading || error ? [] : data.searchDatasets.datasets;
 
   const [pageNo, { pageButtons }] = usePagination({
     totalCount: totalDatasets,
     perPage: datasetsPerPage,
-    invaidators: [searchTerm, portal.socrataDomain],
+    invalidators: [searchTerm, portal.socrataDomain],
   });
 
   useEffect(() => {
@@ -109,6 +86,7 @@ export default function HomePage({ portal }) {
         onCollapseFilterBar={setCollapseFilterBar}
         collapsed={collapseFilterBar}
         portal={portal}
+        globalSearch={globalSearch}
       />
       <div className="datasets">
         <div className="selector-and-search">

@@ -5,11 +5,11 @@ import './ColumnSuggestions.scss';
 import { useDatasetColumnsWithSuggestionCounts } from '../../hooks/graphQLAPI';
 import { JoinableDatasets } from '../JoinableDatasets/JoinableDatasets';
 
-export default function ColumnSuggestions({ global, columnID, dataset }) {
+export default function ColumnSuggestions({ global, columnId, dataset }) {
   const [collapsed, setCollapsed] = useState(true);
 
   const { loading, data, error } = useDatasetColumnsWithSuggestionCounts(
-    columnID,
+    columnId,
     global,
   );
 
@@ -50,6 +50,7 @@ export default function ColumnSuggestions({ global, columnID, dataset }) {
   }
 
   if (error) {
+    console.log('The error', error);
     return <p>Something went wrong</p>;
   }
   const column = data ? data.datasetColumn : null;

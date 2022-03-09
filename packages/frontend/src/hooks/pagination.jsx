@@ -45,13 +45,15 @@ export function usePaginationWithItems(data, perPage = 20) {
     },
   ];
 }
-export function usePagination({ perPage = 20, totalCount, invaidators }) {
+
+// TODO: refactor this. Hooks should not return components.
+export function usePagination({ perPage = 20, totalCount, invalidators }) {
   const [currentPageNo, setCurrentPageNo] = useState(0);
   const pages = Math.ceil(totalCount / perPage);
 
   const shouldInvalidate = React.useMemo(
-    () => invaidators || [perPage, totalCount],
-    [invaidators, perPage, totalCount],
+    () => invalidators || [perPage, totalCount],
+    [invalidators, perPage, totalCount],
   );
 
   useEffect(() => {

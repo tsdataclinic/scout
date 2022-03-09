@@ -27,7 +27,6 @@ type Dataset {
   type: String
   updateFrequency: String
   updatedAt: DateTime
-  updatedAutomation: Boolean
   views: Float
 }
 

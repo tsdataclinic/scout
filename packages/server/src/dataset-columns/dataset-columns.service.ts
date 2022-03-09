@@ -32,7 +32,7 @@ export class DatasetColumnsService {
   ): Promise<PagedFieldCount> {
     let query = this.datasetColumnsRepo.createQueryBuilder('column');
 
-    query = query.where('portalId = :portal', {
+    query = query.where('"portalId" = :portal', {
       portal: portal.id,
     });
 
@@ -114,7 +114,9 @@ export class DatasetColumnsService {
     );
   }
 
-  createOrUpdate(datasetColumn: DatasetColumn) {
+  async createOrUpdate(
+    datasetColumn: DatasetColumn,
+  ): Promise<void | DatasetColumn> {
     return this.datasetColumnsRepo.save(datasetColumn).catch(err => {
       console.log('failed to save ', datasetColumn);
       console.log(err);

@@ -300,7 +300,7 @@ export const useColumnsGQL = (portal, { limit, page, search }) => {
   `;
 
   const variables = {
-    portal: 'data.ny.gov',
+    portal,
     limit,
     offset: limit * page,
     search,

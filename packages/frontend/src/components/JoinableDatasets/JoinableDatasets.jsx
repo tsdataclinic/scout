@@ -22,6 +22,7 @@ export function JoinableDatasets({ column, global }) {
   if (loading) {
     return <p>Loading...</p>;
   }
+
   if (error) {
     return <p>Something went wrong</p>;
   }
