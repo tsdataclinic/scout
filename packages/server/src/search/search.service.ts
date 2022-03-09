@@ -202,26 +202,40 @@ export class SearchService {
       query: fullQuery,
     });
 
+    const searchQuery = {
+      bool: {
+        must: fullQuery,
+      },
+    };
+
     const { body } = await this.esService.search({
       index: this.configService.get('ELASTICSEARCH_INDEX'),
       body: {
-        query: {
-          bool: {
-            must: fullQuery,
-          },
-        },
+        query: searchQuery,
         from: offset,
         size: limit,
         _source: ['title'],
       },
     });
     const hits = body.hits.hits;
-
     const ids = hits.map(item => item._id);
 
     console.log('Got a result!', body);
 
-    return { ids, total: body.hits.total.value };
+    // get how many results we found
+    // We need to use a `count` query for this because the `search` API
+    // maxes out at 10000 results, and if we are doing an all-portal search
+    // then we need to get the real count which is bigger than 10k.
+    const {
+      body: { count },
+    } = await this.esService.count({
+      index: this.configService.get('ELASTICSEARCH_INDEX'),
+      body: {
+        query: searchQuery,
+      },
+    });
+
+    return { ids, total: count };
   }
 
   //** Populates the elastic search index with one batch of the dataset data */

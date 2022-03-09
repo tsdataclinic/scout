@@ -1,3 +1,4 @@
+import numeral from 'numeral';
 import { useEffect, useState } from 'react';
 import './HomePage.scss';
 import { DebounceInput } from 'react-debounce-input';
@@ -112,8 +113,8 @@ export default function HomePage({ portal }) {
         </div>
         <div className="count-and-sort">
           <p>
-            <span className="bold">{totalDatasets}</span> datasets{' '}
-            {searchTerm ? 'sorted by relevance' : ''}
+            <span className="bold">{numeral(totalDatasets).format('0,0')}</span>{' '}
+            datasets {searchTerm ? 'sorted by relevance' : ''}
           </p>
 
           {searchTerm ? null : (
