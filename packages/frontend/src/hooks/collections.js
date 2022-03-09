@@ -15,6 +15,10 @@ export function useUserCollections() {
   const [state, dispatch] = useCollectionsValue();
   const { data } = useCurrentUserCollections();
   const { data: pendingDatasets } = useDatasetsFromIds(state.pendingCollection);
+
+  // TODO: we shouldn't need to query the server here. We should be able
+  // to safely assume that whatever is in the global state is the most
+  // up-to-date data
   const serverCollections = data
     ? data.profile.collections.map(col => ({
         id: col.id,
@@ -73,27 +77,17 @@ export function useUserCollections() {
       return state.pendingCollection.includes(id);
     }
 
-    if (serverCollections) {
-      const collection = serverCollections.find(
-        c => c.id === state.activeCollectionId,
-      );
-      if (collection) {
-        return collection.datasetIds.includes(id);
-      }
-      return false;
-    }
+    const userCollections = isAuthenticated
+      ? serverCollections
+      : state.collections;
 
-    if (state.collections) {
-      const currentCollection = state.collections.find(
-        c => c.id === state.activeCollectionId,
-      );
+    const currentCollection = userCollections.find(
+      c => c.id === state.activeCollectionId,
+    );
 
-      return currentCollection
-        ? currentCollection.datasetIds.includes(id)
-        : false;
-    }
-
-    return false;
+    return currentCollection
+      ? currentCollection.datasetIds.includes(id)
+      : false;
   };
 
   const addToCurrentCollection = async datasetId => {
