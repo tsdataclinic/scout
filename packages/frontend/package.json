@@ -47,6 +47,7 @@
     "uuid": "^3.4.0"
   },
   "devDependencies": {
+    "@types/numeral": "^2.0.2",
     "gh-pages": "^2.2.0",
     "husky": "1.2.0",
     "lint-staged": "^9.2.1",
