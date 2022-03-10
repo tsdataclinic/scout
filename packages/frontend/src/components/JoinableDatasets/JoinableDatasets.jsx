@@ -31,32 +31,25 @@ export function JoinableDatasets({ column, global, dataset }) {
   useEffect(() => {
     if (column && column.joinSuggestionCount > 0) {
       getUniqueEntries(dataset, column).then(parentUniques => {
-        const uniqueEntriesFromOtherDatasets = pagedJoins.map(joinableColumn =>
-          Promise.all([
-            joinableColumn,
-            getUniqueEntries(
-              joinableColumn.column.dataset,
-              joinableColumn.column,
-            ),
-          ]),
+        pagedJoins.forEach(joinableColumn =>
+          getUniqueEntries(
+            joinableColumn.column.dataset,
+            joinableColumn.column,
+          ).then(otherUniques => {
+            const uniqueVals = new Set(otherUniques);
+            const overlapObj = {
+              datasetId: joinableColumn.column.dataset.id,
+              columnField: joinableColumn.column.field,
+              parentUniquesCount: parentUniques.length,
+              matches: parentUniques.filter(v => uniqueVals.has(v)),
+            };
+
+            setOverlapLookup(prevMap => {
+              const clonedMap = new Map([...prevMap.entries()]);
+              return clonedMap.set(overlapObj.datasetId, overlapObj);
+            });
+          }),
         );
-
-        Promise.all(uniqueEntriesFromOtherDatasets).then(results => {
-          const overlaps = results.map(([joinableColumn, uniques]) => ({
-            datasetId: joinableColumn.column.dataset.id,
-            columnField: joinableColumn.column.field,
-            parentUniquesCount: parentUniques.length,
-            matches: parentUniques.filter(v => uniques.includes(v)),
-          }));
-
-          // convert to a map where the key is the dataset id
-          const overlapMap = overlaps.reduce(
-            (map, overlapObj) => map.set(overlapObj.datasetId, overlapObj),
-            new Map(),
-          );
-
-          setOverlapLookup(overlapMap);
-        });
       });
     }
   }, [column, pagedJoins, dataset]);
