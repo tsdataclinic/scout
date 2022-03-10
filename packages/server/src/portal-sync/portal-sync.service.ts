@@ -76,7 +76,7 @@ type SocrataDataset = {
     tags: unknown[];
 
     // The singular category given to the asset by the owning domain
-    domain_category: string;
+    domain_category?: string;
 
     // An array of tags given to the asset by the owning domain
     domain_tags: string[];
@@ -117,7 +117,8 @@ const DATA_REFRESH_CONFIG = {
   // if `usePortalListOverride` is true, then use this list of portals instead
   // of pulling all portals from Socrata
   portalList: [
-    'data.cityofchicago.org',
+    'data.ct.gov',
+    // 'data.cityofchicago.org',
     /*
     'data.cityofnewyork.us',
     'data.ny.gov',
@@ -185,14 +186,18 @@ export class PortalSyncService {
     const domain_metadata = classification?.domain_metadata || [];
 
     // get category
-    const { domain_category: domainCategory, categories } = classification;
+    const categories = classification?.categories || [];
+    const domainCategory = classification?.domain_category || '';
 
     // remove all categories that are equal to the domainCategory (which is the
     // definitive category, it's defined by the dataset owner)
     const extraCategories = categories.filter(
       cat => cat.toLowerCase() !== domainCategory.toLowerCase(),
     );
-    const allCategories = [domainCategory].concat(extraCategories);
+    const allCategories =
+      domainCategory === ''
+        ? extraCategories
+        : [domainCategory].concat(extraCategories);
 
     // get update frequency
     const updateFrequency = domain_metadata.find(({ key }) =>
