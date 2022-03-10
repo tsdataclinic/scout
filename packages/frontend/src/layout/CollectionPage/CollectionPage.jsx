@@ -31,10 +31,8 @@ function getShareableURL(collectionName, datasetIds) {
 export default function CollectionPage() {
   usePageView();
   const { isAuthenticated } = useCurrentUser();
-
   const { name, datasetIds: datasetIdsFromURL, id } = useParams();
   const loadingCollectionFromURL = !!datasetIdsFromURL;
-
   const [{ collections }] = useUserCollections();
   const { loading, data, error } = useCollection(id);
 
@@ -75,12 +73,12 @@ export default function CollectionPage() {
   const shareableURL = getShareableURL(collection.name, datasetIdsToLoad);
   const [isCopied, setCopied] = useClipboard(shareableURL);
 
-  if (loading || collections.length === 0) {
+  if (loading || (collections.length === 0 && !loadingCollectionFromURL)) {
     return <p>Loading...</p>;
   }
 
   if (
-    (error && isAuthenticated) ||
+    (error && isAuthenticated && !loadingCollectionFromURL) ||
     (!isAuthenticated && collections.length >= 1 && collection === undefined)
   ) {
     return <p>Something went wrong</p>;
