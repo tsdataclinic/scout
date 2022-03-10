@@ -107,7 +107,7 @@ type SocrataDataset = {
  */
 const DATA_REFRESH_CONFIG = {
   // set this to true to ignore populating elastic search
-  skipElasticSearchRebuild: true,
+  skipElasticSearchRebuild: false,
   skipPostgresRefresh: false,
   skipMLDatasetProcessing: false,
 
