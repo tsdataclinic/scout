@@ -413,7 +413,6 @@ export const useJoinableDatasetsPaged = (columnID, global, limit, offset) => {
       }
     }
   `;
-  console.log({ id: columnID, global, limit, offset });
   return useQuery(query, {
     variables: { id: columnID, global, limit, offset },
   });

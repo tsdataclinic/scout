@@ -311,29 +311,18 @@ export class SearchService {
     portalIds?: string[];
   }) {
     console.log('Populating Elasticsearch index');
-    const body = await this.parseAndPrepareData(options);
-    console.log('Body to push count', body.length);
 
-    const batchSize = 100;
+    console.log(
+      'Processing dataset batches with the magic of ML (this might take a while)...',
+    );
+    if (options.skipMLDatasetProcessing) {
+      console.log("Actually, we're skipping doing any ML");
+    }
 
-    // split all prepared data into batches
-    const batches = [];
-    body.forEach((inst, index) => {
-      const batchIndex = Math.floor(index / (batchSize * 2));
-      if (batches[batchIndex]) {
-        batches[batchIndex].push(inst);
-      } else {
-        batches[batchIndex] = [inst];
-      }
+    await this.parseAndPopulateData({
+      ...options,
+      model: await (options.skipMLDatasetProcessing ? undefined : use.load()),
     });
-
-    console.log('Beginning loading batches into Elasticsearch...');
-    await batches.reduce(async (previousPromise, nextBatch, index) => {
-      await previousPromise;
-      console.log('Loading in batch ', index, ' of ', batches.length);
-      return this.populateIndexBatch(nextBatch);
-    }, Promise.resolve());
-
     console.log('Done creating Elasticsearch index');
   }
 
@@ -363,11 +352,11 @@ export class SearchService {
    * If `options.portalIds` is provided, then we will only load the
    * datasets from the given portal ids.
    */
-  async parseAndPrepareData(options: {
+  async parseAndPopulateData(options: {
     skipMLDatasetProcessing: boolean;
     portalIds?: string[];
-  }) {
-    const body = [];
+    model?: any;
+  }): Promise<void> {
     console.log('Getting all datasets from db');
 
     const totalDatasets = options.portalIds
@@ -376,75 +365,83 @@ export class SearchService {
 
     console.log('Found total datasets', totalDatasets);
 
-    const batchSize = 1000;
-    const numBatches = Math.ceil(totalDatasets / batchSize);
+    const parsingBatchSize = 500;
+    const uploadBatchSize = 100;
+    const numBatches = Math.ceil(totalDatasets / parsingBatchSize);
 
     console.log(
       'Total ',
       totalDatasets,
       ' Batch size ',
-      batchSize,
+      parsingBatchSize,
       ' Number of batches ',
       numBatches,
     );
 
-    console.log(
-      'Beginning processing dataset batches with the magic of ML (this might take a while)...',
-    );
-    const model = await (options.skipMLDatasetProcessing
-      ? undefined
-      : use.load());
-    if (options.skipMLDatasetProcessing) {
-      console.log("Actually, we're skipping doing any ML");
-    }
-
-    const datasetsWithVector = await [...Array(numBatches)].reduce(
-      async (prevDatasetsListPromise, _, index) => {
-        const prevDatasetsList = await prevDatasetsListPromise;
-        const datasets =
-          await this.datasetService.findAllForElasticSearchInsertion(
-            batchSize,
-            index * batchSize,
-            options?.portalIds,
-          );
-
-        console.log('Processing batch', index, datasets[0].id);
-        const datasetsWithVectorBatch = await this.generateEmbeddingVectors(
-          datasets,
-          model,
+    await [...Array(numBatches)].reduce(async (prevPromise, _, index) => {
+      // wait for the previous promise to resolve
+      await prevPromise;
+      const datasets =
+        await this.datasetService.findAllForElasticSearchInsertion(
+          parsingBatchSize,
+          index * parsingBatchSize,
+          options?.portalIds,
         );
 
-        return prevDatasetsList.concat(datasetsWithVectorBatch);
-      },
-      Promise.resolve([]),
-    );
+      console.log('Processing batch', index, datasets[0].id);
+      const datasetsWithVector = await this.generateEmbeddingVectors(
+        datasets,
+        options.model,
+      );
 
-    datasetsWithVector.forEach(item => {
-      try {
-        body.push(
-          {
-            index: {
-              _index: this.configService.get('ELASTICSEARCH_INDEX'),
-              _id: item.id,
+      const body = [];
+      datasetsWithVector.forEach(item => {
+        try {
+          body.push(
+            {
+              index: {
+                _index: this.configService.get('ELASTICSEARCH_INDEX'),
+                _id: item.id,
+              },
             },
-          },
-          {
-            title: item.name,
-            description: item.description,
-            vector: Array.from(item.vector),
-            portal: item.portalId,
-            department: item.department,
-            categories: item.categories,
-            columns: item.datasetColumnFields,
-          },
-        );
-      } catch (err) {
-        console.log('Unable to map batch for elasticsearch', item);
-        throw err;
-      }
-    });
+            {
+              title: item.name,
+              description: item.description,
+              vector: Array.from(item.vector),
+              portal: item.portalId,
+              department: item.department,
+              categories: item.categories,
+              columns: item.datasetColumnFields,
+            },
+          );
+        } catch (err) {
+          console.log('Unable to map batch for elasticsearch', item);
+          throw err;
+        }
+      });
 
-    console.log('Datasets to push count', datasetsWithVector.length);
-    return body;
+      // split all prepared data into batches
+      const uploadBatches = [];
+      body.forEach((inst, index) => {
+        const batchIndex = Math.floor(index / (uploadBatchSize * 2));
+        if (uploadBatches[batchIndex]) {
+          uploadBatches[batchIndex].push(inst);
+        } else {
+          uploadBatches[batchIndex] = [inst];
+        }
+      });
+
+      console.log('Loading sub-batches into Elasticsearch...');
+      await uploadBatches.reduce(async (previousPromise, nextBatch, index) => {
+        await previousPromise;
+        console.log(
+          'Loading in sub-batch ',
+          index,
+          ' of ',
+          uploadBatches.length,
+        );
+        return this.populateIndexBatch(nextBatch);
+      }, Promise.resolve());
+    }, Promise.resolve([]));
   }
 }

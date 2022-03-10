@@ -118,9 +118,9 @@ const DATA_REFRESH_CONFIG = {
   // of pulling all portals from Socrata
   portalList: [
     'data.ct.gov',
-    // 'data.cityofchicago.org',
-    /*
+    'data.cityofchicago.org',
     'data.cityofnewyork.us',
+    /*
     'data.ny.gov',
     'data.nashville.gov',
     */

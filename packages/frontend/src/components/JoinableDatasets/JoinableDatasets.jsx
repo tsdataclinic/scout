@@ -5,17 +5,19 @@ import './JoinableDatasets.scss';
 import { usePagination } from '../../hooks/pagination';
 import JoinColumn from '../JoinColumn/JoinColumn';
 
+const JOINABLE_DATASETS_PAGE_SIZE = 10;
+
 export function JoinableDatasets({ column, global, dataset }) {
   const [pageNo, { pageButtons }] = usePagination({
-    totalCount: column.joinSuggestionsCount,
-    perPage: 10,
+    totalCount: column.joinSuggestionCount,
+    perPage: JOINABLE_DATASETS_PAGE_SIZE,
   });
 
   const { data, loading, error } = useJoinableDatasetsPaged(
     column.id,
     global,
-    10,
-    pageNo,
+    JOINABLE_DATASETS_PAGE_SIZE,
+    pageNo * JOINABLE_DATASETS_PAGE_SIZE,
   );
 
   const [overlapLookup, setOverlapLookup] = useState(new Map());
@@ -93,7 +95,11 @@ export function JoinableDatasets({ column, global, dataset }) {
       ) : (
         <div>No matching datasets found</div>
       )}
-      {pagedJoins && pagedJoins.length > 0 ? pageButtons : null}
+      {pagedJoins &&
+      pagedJoins.length > 0 &&
+      column.joinSuggestionCount > JOINABLE_DATASETS_PAGE_SIZE
+        ? pageButtons
+        : null}
     </div>
   );
 }
