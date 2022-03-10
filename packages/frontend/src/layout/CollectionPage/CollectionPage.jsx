@@ -125,6 +125,7 @@ export default function CollectionPage() {
             viewInOpenPortal
             key={dataset.id}
             dataset={dataset}
+            showStats={false}
           />
         ))}
       </div>
