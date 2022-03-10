@@ -3,7 +3,7 @@ import FilterLoading from '../Loading/FilterLoading/FilterLoading';
 import './MultiSelector.scss';
 
 type FilterItem = {
-  field: string;
+  value: string;
   occurrences: number;
 };
 
@@ -17,6 +17,7 @@ type Props = {
   pageButtons: JSX.Element;
   searchTerm: string;
   selectedItems: readonly string[];
+  sentenceCase?: boolean;
   title: string;
 };
 
@@ -31,6 +32,7 @@ export default function MultiSelector({
   searchTerm,
   selectedItems,
   title,
+  sentenceCase = false,
 }: Props): JSX.Element {
   const clearItems = (): void => {
     onItemSelectionChange([]);
@@ -58,11 +60,9 @@ export default function MultiSelector({
         <>
           <div className="search">
             <input
-              disabled={isLoading}
               placeholder="filter"
               value={searchTerm}
               onChange={e => onSearchTermChange(e.target.value)}
-              key="search"
             />
           </div>
           <ul className="multi-list">
@@ -73,21 +73,28 @@ export default function MultiSelector({
                 // TODO: remove this eslint-disable
                 // eslint-disable-next-line
                 <li
-                  key={item.field}
-                  onClick={() => toggleItem(item.field)}
+                  key={item.value}
+                  onClick={() => toggleItem(item.value)}
                   className={classNames('multi-buttons', {
                     selected:
-                      selectedItems && selectedItems.includes(item.field),
+                      selectedItems && selectedItems.includes(item.value),
                   })}
                 >
                   <input
                     type="checkbox"
                     checked={
-                      selectedItems && selectedItems.includes(item.field)
+                      selectedItems && selectedItems.includes(item.value)
                     }
                     className="checkbox"
                   />
-                  <span className="item-name">{item.field}</span>
+                  <span
+                    className="item-name"
+                    style={{
+                      textTransform: sentenceCase ? 'capitalize' : undefined,
+                    }}
+                  >
+                    {item.value}
+                  </span>
                   <span className="pill">{item.occurrences}</span>
                 </li>
               ))

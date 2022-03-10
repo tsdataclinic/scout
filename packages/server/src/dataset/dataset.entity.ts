@@ -31,6 +31,9 @@ export class Dataset {
   @Column({ nullable: true })
   department: string;
 
+  @Column({ type: 'simple-array', nullable: false, default: '' })
+  categories: string[];
+
   @Field({ nullable: true })
   @Column({ type: 'timestamp', nullable: true })
   metadataUpdatedAt: Date;
@@ -50,10 +53,6 @@ export class Dataset {
   @Field({ nullable: true })
   @Column({ nullable: true })
   permalink: string;
-
-  @Field({ nullable: true })
-  @Column({ nullable: true })
-  classification: string;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
@@ -93,4 +92,40 @@ export class PagedDatasets {
 
   @Field()
   total: number;
+}
+
+@ObjectType()
+export class CategoryCount {
+  @Field()
+  category: string;
+
+  @Field()
+  occurrences: number;
+}
+
+@ObjectType()
+export class PagedCategoryCount {
+  @Field(type => [CategoryCount])
+  items: CategoryCount[];
+
+  @Field()
+  total: Number;
+}
+
+@ObjectType()
+export class DepartmentCount {
+  @Field()
+  department: string;
+
+  @Field()
+  occurrences: number;
+}
+
+@ObjectType()
+export class PagedDepartmentCount {
+  @Field(type => [DepartmentCount])
+  items: DepartmentCount[];
+
+  @Field()
+  total: Number;
 }

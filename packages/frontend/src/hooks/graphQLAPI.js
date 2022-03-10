@@ -1,9 +1,5 @@
 import { useQuery, gql, useMutation } from '@apollo/client';
 
-export const useCategoriesGQL = () => [];
-
-export const useDepartmentsGQL = () => [];
-
 export const useDatasetsFromIds = ids => {
   const DatasetsFromIdsQuery = gql`
     query GetDatasetsByIds($ids: [String!]!) {
@@ -54,19 +50,28 @@ export const useCollection = id => {
   return useQuery(CollectionQuery, { variables: { id: id || '' } });
 };
 
-export const useSearchDatasets = (portal, { search, limit, offset }) => {
+export const useSearchDatasets = (
+  portal,
+  { search, limit, offset, datasetColumns, categories, departments },
+) => {
   const SearchPortalQuery = gql`
     query SearchPortalDatasets(
       $portal: String
       $limit: Float
       $offset: Float
       $search: String
+      $datasetColumns: [String!]
+      $categories: [String!]
+      $departments: [String!]
     ) {
       searchDatasets(
         portal: $portal
         limit: $limit
         offset: $offset
         search: $search
+        datasetColumns: $datasetColumns
+        categories: $categories
+        departments: $departments
       ) {
         datasets {
           portal {
@@ -88,7 +93,15 @@ export const useSearchDatasets = (portal, { search, limit, offset }) => {
   `;
 
   return useQuery(SearchPortalQuery, {
-    variables: { portal, limit, offset, search },
+    variables: {
+      portal,
+      limit,
+      offset,
+      search,
+      datasetColumns,
+      categories,
+      departments,
+    },
   });
 };
 
@@ -276,6 +289,72 @@ export const useDatasetGQL = datasetId => {
   `;
   return useQuery(DatasetQuery, { variables: { datasetId } });
 };
+
+export function useCategoriesGQL(portal, { limit, page, search }) {
+  // TODO - Figure out why Float works here but Int does not
+  const getCategoriesQuery = gql`
+    query Categories(
+      $portal: String!
+      $limit: Float
+      $offset: Float
+      $search: String
+    ) {
+      portal(id: $portal) {
+        uniqueCategories(limit: $limit, offset: $offset, search: $search) {
+          items {
+            category
+            occurrences
+          }
+          total
+        }
+      }
+    }
+  `;
+
+  const variables = {
+    portal,
+    limit,
+    offset: limit * page,
+    search,
+  };
+
+  return useQuery(getCategoriesQuery, {
+    variables,
+  });
+}
+
+export function useDepartmentsGQL(portal, { limit, page, search }) {
+  // TODO - Figure out why Float works here but Int does not
+  const GET_DEPARTMENTS_QUERY = gql`
+    query Departments(
+      $portal: String!
+      $limit: Float
+      $offset: Float
+      $search: String
+    ) {
+      portal(id: $portal) {
+        uniqueDepartments(limit: $limit, offset: $offset, search: $search) {
+          items {
+            department
+            occurrences
+          }
+          total
+        }
+      }
+    }
+  `;
+
+  const variables = {
+    portal,
+    limit,
+    offset: limit * page,
+    search,
+  };
+
+  return useQuery(GET_DEPARTMENTS_QUERY, {
+    variables,
+  });
+}
 
 export const useColumnsGQL = (portal, { limit, page, search }) => {
   // TODO - Figure out why Float works here but Int does not

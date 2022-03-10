@@ -1,6 +1,11 @@
 import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Dataset, PagedDatasets } from '../dataset/dataset.entity';
+import {
+  Dataset,
+  PagedDatasets,
+  PagedCategoryCount,
+  PagedDepartmentCount,
+} from '../dataset/dataset.entity';
 import {
   DatasetColumn,
   PagedFieldCount,
@@ -36,6 +41,12 @@ export class Portal {
   @Field({ nullable: true })
   @Column({ nullable: true })
   abbreviation: string;
+
+  @Field(type => PagedDepartmentCount)
+  uniqueDepartments: PagedDepartmentCount;
+
+  @Field(type => PagedCategoryCount)
+  uniqueCategories: PagedCategoryCount;
 
   @Field(type => PagedFieldCount)
   uniqueColumnFields: PagedFieldCount;

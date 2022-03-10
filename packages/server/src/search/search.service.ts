@@ -1,7 +1,10 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { ConfigService } from '../config/config.service';
-import { DatasetService } from '../dataset/dataset.service';
+import {
+  DatasetService,
+  DatasetForElasticSearch,
+} from '../dataset/dataset.service';
 import { Dataset } from '../dataset/dataset.entity';
 import { ScoredDataset } from './types/ScoredDataset';
 
@@ -94,6 +97,15 @@ export class SearchService {
                   type: 'dense_vector',
                   dims: 512,
                 },
+                department: {
+                  type: 'text',
+                },
+                categories: {
+                  type: 'text',
+                },
+                columns: {
+                  type: 'text',
+                },
               },
             },
           },
@@ -155,8 +167,7 @@ export class SearchService {
       const hits = body.hits.hits;
       const ids = hits.map(item => item._id);
       const scores = hits.map(item => item._score);
-      console.log('ids are ', ids);
-      console.log('scores are ', scores);
+
       //Find the datasets in the full database
       const datasets = await this.datasetService.findByIds(ids);
 
@@ -172,12 +183,21 @@ export class SearchService {
     }
   }
 
-  async search(search = 'car', portal?: string, offset = 0, limit = 20) {
+  async search(
+    search = 'car',
+    portal?: string,
+    offset = 0,
+    limit = 20,
+    datasetColumns: string[] = [],
+    categories: string[] = [],
+    departments: string[] = [],
+  ) {
     console.log('RUNNING QUERY', {
       search,
       portal,
       offset,
       limit,
+      datasetColumns,
     });
 
     const matchQuery = {
@@ -190,11 +210,36 @@ export class SearchService {
     const matchAll = { match_all: {} };
 
     const query = search && search.length > 0 ? matchQuery : matchAll;
-    const portalMatch = { match: { portal } };
     const fullQuery: any[] = [query];
 
+    // add portal query
+    const portalMatch = { match: { portal } };
     if (portal) {
       fullQuery.push(portalMatch);
+    }
+
+    // add dataset columns query
+    if (datasetColumns.length > 0) {
+      const columnMatches = datasetColumns.map(columnField => ({
+        match: { columns: columnField },
+      }));
+      fullQuery.push(...columnMatches);
+    }
+
+    // add categories query
+    if (categories.length > 0) {
+      const categoryMatches = categories.map(category => ({
+        match: { categories: category },
+      }));
+      fullQuery.push(...categoryMatches);
+    }
+
+    // add departments query
+    if (departments.length > 0) {
+      const departmentMatches = departments.map(department => ({
+        match: { department },
+      }));
+      fullQuery.push(...departmentMatches);
     }
 
     console.log('Running elasticsearch query', {
@@ -219,8 +264,6 @@ export class SearchService {
     });
     const hits = body.hits.hits;
     const ids = hits.map(item => item._id);
-
-    console.log('Got a result!', body);
 
     // get how many results we found
     // We need to use a `count` query for this because the `search` API
@@ -248,7 +291,7 @@ export class SearchService {
         },
         err => {
           if (err) {
-            // console.error(JSON.stringify(err));
+            console.log('Failed to insert a batch', err);
             reject(err);
           }
           resolve(undefined);
@@ -259,10 +302,18 @@ export class SearchService {
 
   /**
    * Populate the entire elastic search database
+   *
+   * If `options.portalIds` is provided, then we will only load the
+   * datasets from the given portal ids.
    */
-  async populateIndex() {
+  async populateIndex(options: {
+    skipMLDatasetProcessing: boolean;
+    portalIds?: string[];
+  }) {
     console.log('Populating Elasticsearch index');
-    const body = await this.parseAndPrepareData();
+    const body = await this.parseAndPrepareData(options);
+    console.log('Body to push count', body.length);
+
     const batchSize = 100;
 
     // split all prepared data into batches
@@ -286,57 +337,89 @@ export class SearchService {
     console.log('Done creating Elasticsearch index');
   }
 
-  async generateEmbeddingVectors(datasets: Dataset[], model) {
+  async generateEmbeddingVectors(
+    datasets: DatasetForElasticSearch[],
+    model: undefined | any,
+  ) {
     const datasetText = datasets.map(d => d.name + '. ' + d.description);
-    const embeddings = await (await model.embed(datasetText)).data();
+    const embeddings = model
+      ? await (await model.embed(datasetText)).data()
+      : undefined;
+
     const datasetsWithVector = datasets.map((d, index) => ({
       ...d,
       portalId: d.portalId,
-      vector: embeddings.slice(index * 512, (index + 1) * 512),
+      vector: embeddings
+        ? embeddings.slice(index * 512, (index + 1) * 512)
+        : Array(512).fill(0),
     }));
     return datasetsWithVector;
   }
 
-  async parseAndPrepareData() {
+  /**
+   * Pull datasets from the database and prepare the batches to load into
+   * elasticsearch.
+   *
+   * If `options.portalIds` is provided, then we will only load the
+   * datasets from the given portal ids.
+   */
+  async parseAndPrepareData(options: {
+    skipMLDatasetProcessing: boolean;
+    portalIds?: string[];
+  }) {
     const body = [];
     console.log('Getting all datasets from db');
 
-    const totalDatasets = await this.datasetService.count();
+    const totalDatasets = options.portalIds
+      ? await this.datasetService.countForPortals(options.portalIds)
+      : await this.datasetService.countAll();
+
+    console.log('Found total datasets', totalDatasets);
+
     const batchSize = 1000;
-    const noBatches = Math.ceil(totalDatasets / batchSize);
+    const numBatches = Math.ceil(totalDatasets / batchSize);
 
     console.log(
-      'total ',
+      'Total ',
       totalDatasets,
-      ' batch size ',
+      ' Batch size ',
       batchSize,
-      ' no batches ',
-      noBatches,
+      ' Number of batches ',
+      numBatches,
     );
-    let datasetsWithVector = [];
 
     console.log(
       'Beginning processing dataset batches with the magic of ML (this might take a while)...',
     );
-    const model = await use.load();
-    await [...Array(noBatches)].reduce(async (previousPromise, _, index) => {
-      await previousPromise;
-      const datasets = await this.datasetService.findAll(
-        batchSize,
-        index * batchSize,
-      );
-      console.log('Processing batch', index, datasets[0].id);
-      const datasetsWithVectorBatch = await this.generateEmbeddingVectors(
-        datasets,
-        model,
-      );
-      datasetsWithVector = [...datasetsWithVector, ...datasetsWithVectorBatch];
-      return Promise.resolve();
-    }, Promise.resolve);
+    const model = await (options.skipMLDatasetProcessing
+      ? undefined
+      : use.load());
+    if (options.skipMLDatasetProcessing) {
+      console.log("Actually, we're skipping doing any ML");
+    }
 
-    console.log('With vector ', datasetsWithVector[0]);
+    const datasetsWithVector = await [...Array(numBatches)].reduce(
+      async (prevDatasetsListPromise, _, index) => {
+        const prevDatasetsList = await prevDatasetsListPromise;
+        const datasets =
+          await this.datasetService.findAllForElasticSearchInsertion(
+            batchSize,
+            index * batchSize,
+            options?.portalIds,
+          );
 
-    datasetsWithVector.map(item => {
+        console.log('Processing batch', index, datasets[0].id);
+        const datasetsWithVectorBatch = await this.generateEmbeddingVectors(
+          datasets,
+          model,
+        );
+
+        return prevDatasetsList.concat(datasetsWithVectorBatch);
+      },
+      Promise.resolve([]),
+    );
+
+    datasetsWithVector.forEach(item => {
       try {
         body.push(
           {
@@ -350,14 +433,18 @@ export class SearchService {
             description: item.description,
             vector: Array.from(item.vector),
             portal: item.portalId,
+            department: item.department,
+            categories: item.categories,
+            columns: item.datasetColumnFields,
           },
         );
       } catch (err) {
-        console.log('updable to map ', item);
+        console.log('Unable to map batch for elasticsearch', item);
         throw err;
       }
     });
 
+    console.log('Datasets to push count', datasetsWithVector.length);
     return body;
   }
 }

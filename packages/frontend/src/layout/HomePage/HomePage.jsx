@@ -1,5 +1,5 @@
 import numeral from 'numeral';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import './HomePage.scss';
 import { DebounceInput } from 'react-debounce-input';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,6 +9,8 @@ import { Switch } from 'antd';
 import { useSearchDatasets } from '../../hooks/graphQLAPI';
 import {
   useSelectedColumns,
+  useSelectedCategories,
+  useSelectedDepartments,
   useSearchTerm,
   useSortVariable,
   useSortOrder,
@@ -22,27 +24,24 @@ import usePageView from '../../hooks/analytics';
 import PortalSelector from '../../components/PortalSelector/PortalSelector';
 import Filters from '../../components/Filters/Filters';
 
-/*
-const ALL_DATASETS_PAGED = gql`
-  query Query($limit: Int, $offset: Int) {
-    datasets(limit: $limit, offset: $offset) {
-      name
-      description
-    }
-  }
-`;
-*/
+function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  }, [value]);
+  return ref.current;
+}
 
 export default function HomePage({ portal }) {
   usePageView();
+  const prevPortal = usePrevious(portal);
   /*
   const [selectedTags] = useSelectedTags();
-  const [selectedCategories] = useSelectedCategories();
-  const [selectedDepartments] = useSelectedDepartments();
   */
-  const [selectedColumns] = useSelectedColumns();
-  console.log('Selected columns', selectedColumns);
-
+  const [selectedDepartments, setSelectedDepartments] =
+    useSelectedDepartments();
+  const [selectedCategories, setSelectedCategories] = useSelectedCategories();
+  const [selectedColumns, setSelectedColumns] = useSelectedColumns();
   const [searchTerm, setSearchTerm] = useSearchTerm();
   const [sortBy, setSortBy] = useSortVariable();
   const [sortDirection, setSortDirection] = useSortOrder();
@@ -52,12 +51,30 @@ export default function HomePage({ portal }) {
 
   const [globalSearch, setGlobalSearch] = useState(false);
 
+  useEffect(() => {
+    // if the portal has changed, clear the selected columns
+    if (portal?.id !== prevPortal?.id) {
+      setSelectedColumns([]);
+      setSelectedCategories([]);
+      setSelectedDepartments([]);
+    }
+  }, [
+    portal?.id,
+    prevPortal?.id,
+    setSelectedColumns,
+    setSelectedCategories,
+    setSelectedDepartments,
+  ]);
+
   const { loading, data, error } = useSearchDatasets(
     globalSearch ? null : portal.id,
     {
       limit: datasetsPerPage,
       offset: datasetsPerPage * currentPage,
       search: searchTerm,
+      datasetColumns: selectedColumns,
+      categories: selectedCategories,
+      departments: selectedDepartments,
     },
   );
 
@@ -68,6 +85,7 @@ export default function HomePage({ portal }) {
     perPage: datasetsPerPage,
     invalidators: [searchTerm, portal.socrataDomain],
   });
+  console.log(pageNo);
 
   useEffect(() => {
     setCurrentPage(pageNo);

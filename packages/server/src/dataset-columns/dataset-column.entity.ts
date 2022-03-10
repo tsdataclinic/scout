@@ -42,18 +42,11 @@ export class DatasetColumn {
 
   @Index()
   @Field(type => Portal)
-  @ManyToOne(
-    type => Portal,
-    portal => portal.id,
-  )
+  @ManyToOne(type => Portal, portal => portal.id)
   portal: Promise<Portal>;
 
   @Field(type => Dataset)
-  @ManyToOne(
-    type => Dataset,
-    dataset => dataset.id,
-    { nullable: true },
-  )
+  @ManyToOne(type => Dataset, dataset => dataset.id, { nullable: true })
   dataset: Promise<Dataset>;
 }
 

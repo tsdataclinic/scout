@@ -25,6 +25,36 @@ export class PortalResolver {
   }
 
   @ResolveField()
+  async uniqueDepartments(
+    @Parent() portal: Portal,
+    @Args('limit', { nullable: true }) limit?: number,
+    @Args('offset', { nullable: true }) offset?: number,
+    @Args('search', { nullable: true }) search?: string,
+  ) {
+    return this.datasetService.uniqueDepartmentsForPortal(
+      portal.id,
+      limit,
+      offset,
+      search,
+    );
+  }
+
+  @ResolveField()
+  async uniqueCategories(
+    @Parent() portal: Portal,
+    @Args('limit', { nullable: true }) limit?: number,
+    @Args('offset', { nullable: true }) offset?: number,
+    @Args('search', { nullable: true }) search?: string,
+  ) {
+    return this.datasetService.uniqueCategoriesForPortal(
+      portal.id,
+      limit,
+      offset,
+      search,
+    );
+  }
+
+  @ResolveField()
   async uniqueColumnFields(
     @Parent() portal: Portal,
     @Args('limit', { nullable: true }) limit?: number,
@@ -32,7 +62,7 @@ export class PortalResolver {
     @Args('search', { nullable: true }) search?: string,
   ) {
     return this.datasetColumnService.uniqueCountsForPortal(
-      portal,
+      portal.id,
       limit,
       offset,
       search,

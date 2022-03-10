@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Headers, Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { GithubService } from './github.service';
-import { ConfigService } from 'src/config/config.service';
+import { ConfigService } from '../config/config.service';
 import { CommitResult, CodeResult } from './types';
 
 interface GithubAuthDTO {

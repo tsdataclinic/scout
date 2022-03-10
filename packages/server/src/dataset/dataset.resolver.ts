@@ -36,8 +36,22 @@ export class DatasetResolver {
     @Args('limit', { nullable: true }) limit: number,
     @Args('offset', { nullable: true }) offset: number,
     @Args('search', { nullable: true }) search: string,
+    @Args('datasetColumns', { nullable: true, type: () => [String] })
+    datasetColumns: string[],
+    @Args('categories', { nullable: true, type: () => [String] })
+    categories: string[],
+    @Args('departments', { nullable: true, type: () => [String] })
+    departments: string[],
   ) {
-    return this.datasetService.search(portal, limit, offset, search);
+    return this.datasetService.search(
+      portal,
+      limit,
+      offset,
+      search,
+      datasetColumns,
+      categories,
+      departments,
+    );
   }
 
   @ResolveField()

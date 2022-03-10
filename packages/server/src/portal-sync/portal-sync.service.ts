@@ -107,7 +107,9 @@ type SocrataDataset = {
  */
 const DATA_REFRESH_CONFIG = {
   // set this to true to ignore populating elastic search
-  skipElasticSearchRebuild: true,
+  skipElasticSearchRebuild: false,
+  skipPostgresRefresh: false,
+  skipMLDatasetProcessing: false,
 
   // set this to true to use a hardcoded list of portals
   usePortalListOverride: true,
@@ -115,10 +117,12 @@ const DATA_REFRESH_CONFIG = {
   // if `usePortalListOverride` is true, then use this list of portals instead
   // of pulling all portals from Socrata
   portalList: [
-    // 'data.cityofnewyork.us',
-    // 'data.ny.gov',
     'data.cityofchicago.org',
-    //  'data.nashville.gov',
+    /*
+    'data.cityofnewyork.us',
+    'data.ny.gov',
+    'data.nashville.gov',
+    */
   ],
 };
 
@@ -136,11 +140,18 @@ export class PortalSyncService {
   @Timeout(0)
   async onceAtStartup() {
     if (this.configService.get('UPDATE_ON_BOOT')) {
-      await this.refreshPortalList();
+      if (!DATA_REFRESH_CONFIG.skipPostgresRefresh) {
+        await this.refreshPortalList();
+      }
 
       if (!DATA_REFRESH_CONFIG.skipElasticSearchRebuild) {
         await this.searchService.createIndex({ recreate: true });
-        await this.searchService.populateIndex();
+        await this.searchService.populateIndex({
+          skipMLDatasetProcessing: DATA_REFRESH_CONFIG.skipMLDatasetProcessing,
+          portalIds: DATA_REFRESH_CONFIG.usePortalListOverride
+            ? DATA_REFRESH_CONFIG.portalList
+            : undefined,
+        });
       } else {
         console.log('Skipping elasticsearch update');
       }
@@ -167,19 +178,28 @@ export class PortalSyncService {
   mapSocrataDataset(datasetData: SocrataDataset, portal: Portal): Dataset {
     const dataset = new Dataset();
     const { resource, classification, permalink } = datasetData;
-    const domain_metadata = classification?.domain_metadata || [];
 
     // Process domain_metadata to try and get more helpful information
     // This can be an imperfect process because each portal defines their
     // metadata keys a bit differently.
-    if (domain_metadata.length > 0) {
-      console.log('Domain metadata', domain_metadata);
-    }
+    const domain_metadata = classification?.domain_metadata || [];
 
+    // get category
+    const { domain_category: domainCategory, categories } = classification;
+
+    // remove all categories that are equal to the domainCategory (which is the
+    // definitive category, it's defined by the dataset owner)
+    const extraCategories = categories.filter(
+      cat => cat.toLowerCase() !== domainCategory.toLowerCase(),
+    );
+    const allCategories = [domainCategory].concat(extraCategories);
+
+    // get update frequency
     const updateFrequency = domain_metadata.find(({ key }) =>
       key.toLowerCase().includes('frequency'),
     )?.value;
 
+    // get agency
     let department = domain_metadata.find(({ key }) =>
       key.toLowerCase().includes('agency'),
     )?.value;
@@ -203,6 +223,7 @@ export class PortalSyncService {
     dataset.department = department;
     dataset.permalink = permalink;
     dataset.portal = Promise.resolve(portal);
+    dataset.categories = allCategories;
     return dataset;
   }
 

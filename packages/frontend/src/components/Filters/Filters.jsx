@@ -2,8 +2,9 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faAngleDown } from '@fortawesome/free-solid-svg-icons';
-import MultiSelector from '../MultiSelector/MultiSelector';
 import ColumnSelector from './ColumnSelector';
+import CategoriesSelector from './CategoriesSelector';
+import DepartmentSelector from './DepartmentSelector';
 
 import {
   useFilterUIStates,
@@ -29,7 +30,6 @@ export default function Filters({
   const [filterStates, setFilterState] = useFilterUIStates();
   const [selectedCategories, setSelectedCategories] = useSelectedCategories();
   const [selectedTags, setSelectedTags] = useSelectedTags();
-  const [selectedColumns, setSelectedColumns] = useSelectedColumns();
   const [selectedDepartments, setSelectedDepartments] =
     useSelectedDepartments();
 
@@ -51,36 +51,16 @@ export default function Filters({
             </button>
           </h2>
           <div className="filters-scroll-area">
-            {/* <div className="categories">
-              <MultiSelector
-                itemFetcher={useCategoriesGQL}
-                selectedHook={useSelectedCategories}
-                collapse={filterStates.categories}
-                onCollapse={(collapsed) =>
-                  setFilterState('categories', collapsed)
-                }
-                title="Categories"
-              />
-              */}
-          </div>
-          <div className="departments">
-            {/*
-            <MultiSelector
-              itemFetcher={useDepartmentsGQL}
-              selectedHook={useSelectedDepartments}
-              collapse={filterStates.departments}
-              onCollapse={isCollapsed =>
-                setFilterState('departments', isCollapsed)
-              }
-              title="Departments"
-              portalId={portal.id}
-            />
-            */}
-          </div>
-          <div className="columns">
-            <ColumnSelector portalId={portal.id} />
-          </div>
-          {/* <div className="tags">
+            <div className="departments">
+              <DepartmentSelector portalId={portal.id} />
+            </div>
+            <div className="columns">
+              <ColumnSelector portalId={portal.id} />
+            </div>
+            <div className="categories">
+              <CategoriesSelector portalId={portal.id} />
+            </div>
+            {/* <div className="tags">
               <MultiSelector
                 itemFetcher={useTagsGQL}
                 selectedHook ={useSelectedTags}
@@ -89,6 +69,7 @@ export default function Filters({
                 title="Tags"
               />
             </div> */}
+          </div>
         </>
       ) : (
         <h2>

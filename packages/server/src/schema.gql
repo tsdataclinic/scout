@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type CategoryCount {
+  category: String!
+  occurrences: Float!
+}
+
 type Collection {
   datasets: [Dataset!]!
   description: String!
@@ -11,7 +16,6 @@ type Collection {
 }
 
 type Dataset {
-  classification: String
   collections: [Collection!]!
   createdAt: DateTime
   datasetColumns: [DatasetColumn!]!
@@ -47,6 +51,11 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type DepartmentCount {
+  department: String!
+  occurrences: Float!
+}
+
 type FieldCount {
   field: String!
   occurrences: Float!
@@ -64,8 +73,18 @@ type Mutation {
   removeDatasetFromCollection(collectionId: String!, datasetId: String!): Collection!
 }
 
+type PagedCategoryCount {
+  items: [CategoryCount!]!
+  total: Float!
+}
+
 type PagedDatasets {
   datasets: [Dataset!]!
+  total: Float!
+}
+
+type PagedDepartmentCount {
+  items: [DepartmentCount!]!
   total: Float!
 }
 
@@ -85,7 +104,9 @@ type Portal {
   logo: String
   name: String!
   searchDatasets(limit: Float, offset: Float, search: String): PagedDatasets!
+  uniqueCategories(limit: Float, offset: Float, search: String): PagedCategoryCount!
   uniqueColumnFields(limit: Float, offset: Float, search: String): PagedFieldCount!
+  uniqueDepartments(limit: Float, offset: Float, search: String): PagedDepartmentCount!
 }
 
 type Query {
@@ -99,7 +120,7 @@ type Query {
   portal(id: String!): Portal!
   portals: [Portal!]!
   profile: User!
-  searchDatasets(limit: Float, offset: Float, portal: String, search: String): PagedDatasets!
+  searchDatasets(categories: [String!], datasetColumns: [String!], departments: [String!], limit: Float, offset: Float, portal: String, search: String): PagedDatasets!
   tag(id: Float!): Tag!
   tags: [Tag!]!
   user(id: String!): User!

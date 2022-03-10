@@ -1,9 +1,9 @@
-const socrataEndpoint = (domain) =>
+const socrataEndpoint = domain =>
   `https://api.us.socrata.com/api/catalog/v1?domains=${domain}&search_context=${domain}`;
 async function getMaifestPage(domain, pageNo, limit = 100) {
   return fetch(
     `${socrataEndpoint(domain)}&offset=${pageNo * limit}&limit=${limit}`,
-  ).then((r) => r.json());
+  ).then(r => r.json());
 }
 
 /**
@@ -17,9 +17,9 @@ export async function getManifest(domain) {
   const pages = Math.ceil(totalEntries / 100);
   return Promise.all(
     [...Array(pages)].map((_, i) =>
-      getMaifestPage(domain, i).then((resp) => resp.results),
+      getMaifestPage(domain, i).then(resp => resp.results),
     ),
-  ).then((list) =>
+  ).then(list =>
     list.reduce(
       (datasetPage, allDatasets) => [...allDatasets, ...datasetPage],
       [],
@@ -34,11 +34,11 @@ export async function getManifest(domain) {
 export function getColumns(datasets) {
   const columnList = {};
 
-  datasets.forEach((dataset) => {
+  datasets.forEach(dataset => {
     if (dataset.resource.columns_name) {
       dataset.resource.columns_name
-        .map((c) => c.trim())
-        .forEach((col) => {
+        .map(c => c.trim())
+        .forEach(col => {
           if (col in columnList) {
             columnList[col] += 1;
           } else {
@@ -81,13 +81,13 @@ export function getCategories(datasets) {
  */
 export function getDepartments(datasets) {
   const departments = datasets
-    .map((dataset) =>
+    .map(dataset =>
       dataset.classification.domain_metadata.find(
-        (md) => md.key === 'Dataset-Information_Agency',
+        md => md.key === 'Dataset-Information_Agency',
       ),
     )
-    .filter((d) => d)
-    .map((d) => d.value);
+    .filter(d => d)
+    .map(d => d.value);
   const counts = departments.reduce(
     (totals, department) =>
       department in totals
@@ -104,9 +104,9 @@ export function getDepartments(datasets) {
 export function getTagList(datasets) {
   const tagList = {};
 
-  datasets.forEach((dataset) => {
+  datasets.forEach(dataset => {
     if (dataset.classification.domain_tags) {
-      dataset.classification.domain_tags.forEach((tag) => {
+      dataset.classification.domain_tags.forEach(tag => {
         if (tag in tagList) {
           tagList[tag] += 1;
         } else {
@@ -124,7 +124,7 @@ export function getUniqueEntriesCount(dataset, column) {
     `https://${domain}/resource/${
       dataset.id
     }.json?$select=distinct|> select count(*) ${column.replace(/ /g, '_')}`,
-  ).then((r) => r.json());
+  ).then(r => r.json());
 }
 export function getUniqueEntries(dataset, column) {
   const domain = dataset.portal;
@@ -134,8 +134,8 @@ export function getUniqueEntries(dataset, column) {
       dataset.id
     }.json?$select=distinct ${column.replace(/ /g, '_')}`,
   )
-    .then((r) => r.json())
-    .then((r) => {
+    .then(r => r.json())
+    .then(r => {
       if (r.errorCode || r.error) {
         console.warn(
           'Failed to load unique entries for dataset ',
@@ -145,12 +145,12 @@ export function getUniqueEntries(dataset, column) {
         );
         return [];
       }
-      return r.map((entry) => Object.values(entry)[0]);
+      return r.map(entry => Object.values(entry)[0]);
     });
 }
 
 // Used to get the results from the direct API request in to the same format as the bulk request
-export const datasetToDBLite = (dataset) => ({
+export const datasetToDBLite = dataset => ({
   id: dataset.id,
   name: dataset.name,
   portal: dataset.domain,
@@ -173,7 +173,7 @@ export const datasetToDBLite = (dataset) => ({
   updatedAutomation: null,
   owner: null,
 });
-export const datasetToDB = (dataset) => {
+export const datasetToDB = dataset => {
   const { resource, metadata, classification } = dataset;
   const domain_metadata = classification
     ? classification.domain_metadata
@@ -195,8 +195,8 @@ export const datasetToDB = (dataset) => {
     id: resource.id,
     name: resource.name,
     portal: metadata.domain,
-    columns: resource.columns_name.map((c) => c.trim()),
-    columnFields: resource.columns_field_name.map((c) => c.trim()),
+    columns: resource.columns_name.map(c => c.trim()),
+    columnFields: resource.columns_field_name.map(c => c.trim()),
     columnTypes: resource.columns_datatype,
     metaDataUpdatedAt: resource.metadata_updated_at,
     updatedAt: resource.data_updated_at,

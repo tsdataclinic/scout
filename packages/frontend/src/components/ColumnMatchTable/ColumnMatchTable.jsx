@@ -1,11 +1,26 @@
-import React from 'react';
+import { useMemo } from 'react';
 import './ColumnMatchTable.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import ColumnSuggestions from '../ColumnSuggestions/ColumnSuggestions';
 
 export default function ColumnMatchTable({ dataset, global }) {
-  const columns = dataset?.datasetColumns;
+  const columns = useMemo(() => {
+    if (dataset) {
+      // remove duplicate columns
+      const seenIds = new Set();
+      const newColumns = [];
+      dataset.datasetColumns.forEach(col => {
+        if (!seenIds.has(col.id)) {
+          newColumns.push(col);
+          seenIds.add(col.id);
+        }
+      });
+      return newColumns;
+    }
+    return [];
+  }, [dataset]);
+
   // const colJoins =
   //   columns && joinColumns
   //     ? columns.map((c) => ({
@@ -30,9 +45,9 @@ export default function ColumnMatchTable({ dataset, global }) {
       {dataset
         ? columns.map(column => (
             <ColumnSuggestions
+              key={column.id}
               dataset={dataset}
               columnId={column.id}
-              key={column.id}
               global={global}
             />
           ))

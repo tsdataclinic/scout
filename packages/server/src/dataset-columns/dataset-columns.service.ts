@@ -25,7 +25,7 @@ export class DatasetColumnsService {
   }
 
   async uniqueCountsForPortal(
-    portal: Portal,
+    portalId: string,
     limit?: number,
     offset?: number,
     search?: string,
@@ -33,11 +33,12 @@ export class DatasetColumnsService {
     let query = this.datasetColumnsRepo.createQueryBuilder('column');
 
     query = query.where('"portalId" = :portal', {
-      portal: portal.id,
+      portal: portalId,
     });
 
     //TODO make this safer
-    if (search) query.andWhere('field like :search', { search: `%${search}%` });
+    if (search)
+      query.andWhere('field ilike :search', { search: `%${search}%` });
 
     let countQuery = query.clone();
 
@@ -55,7 +56,6 @@ export class DatasetColumnsService {
     if (offset) query = query.skip(offset);
 
     const result = await query.getRawMany();
-    console.log('unique query result ', result, total);
 
     const pagedResult = {
       items: result,
