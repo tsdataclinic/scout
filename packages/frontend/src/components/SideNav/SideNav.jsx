@@ -9,17 +9,17 @@ import { ReactComponent as ExploreSVG } from '../../icons/explore.svg';
 import { ReactComponent as CollectionsSVG } from '../../icons/collection.svg';
 import { ReactComponent as DataClinicSVG } from '../../icons/dataClinicWhite.svg';
 import CollectionTab from '../CollectionTab/CollectionTab';
-// import { useCurrentCollection } from '../../hooks/collections';
+import { useUserCollections } from '../../hooks/collections';
 import useLoginLogout from '../../auth/useLoginLogout';
 import useCurrentUser from '../../auth/useCurrentUser';
 
 export default function SideNav() {
   const [showCollectionTab, setShowCollectionTab] = useState(false);
-  // const [collection] = useCurrentCollection();
-  const collection = { datasets: [] };
+  const [{ activeCollection }] = useUserCollections();
   const { user, isAuthenticated } = useCurrentUser();
   const { login, logout } = useLoginLogout();
 
+  console.log('Active col', activeCollection);
   return (
     <nav className="side-nav">
       <Link alt="Data Clinic" className="title" to="/">
@@ -40,8 +40,10 @@ export default function SideNav() {
         <h1>Explore</h1>
       </NavLink>
       <div className="collections-button" style={{ position: 'relative' }}>
-        {collection.datasets.length > 0 && (
-          <div className="collection-counter">{collection.datasets.length}</div>
+        {activeCollection.datasetIds.length > 0 && (
+          <div className="collection-counter">
+            {activeCollection.datasetIds.length}
+          </div>
         )}
         <button
           onClick={() => setShowCollectionTab(!showCollectionTab)}
