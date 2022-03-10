@@ -397,6 +397,7 @@ export const useJoinableDatasetsPaged = (columnID, global, limit, offset) => {
         joinSuggestions(global: $global, limit: $limit, offset: $offset) {
           potentialOverlap
           column {
+            field
             dataset {
               name
               id

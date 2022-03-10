@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { getUniqueEntries } from '../../utils/socrata';
 import { useJoinableDatasetsPaged } from '../../hooks/graphQLAPI';
 import './JoinableDatasets.scss';
@@ -18,49 +18,46 @@ export function JoinableDatasets({ column, global, dataset }) {
     pageNo,
   );
 
+  const [overlapLookup, setOverlapLookup] = useState(new Map());
+
   const pagedJoins = useMemo(
     () => (data ? data.datasetColumn.joinSuggestions : []),
     [data],
   );
-  console.log('Joinable dataset props', { column, dataset });
 
   // query for the joinable dataset ids to figure out the % match
   useEffect(() => {
-    console.log('hello');
-    if (!column && column.joinSuggestionCount > 0) {
-      console.log('doing socrata query!');
+    if (column && column.joinSuggestionCount > 0) {
       getUniqueEntries(dataset, column).then(parentUniques => {
-        console.log('oh holy shit', parentUniques);
-        pagedJoins.forEach(
-          _j => undefined,
-          /*
-          getUniqueEntries(j, column)
-            .then(res =>
-              setOverlaps(perviousOverlaps => [
-                ...perviousOverlaps,
-                {
-                  id: j.id,
-                  matches: parentUniques.filter(e => res.includes(e)),
-                  leftSize: parentUniques.length,
-                },
-              ]),
-            )
-            .catch(() => {
-              setOverlaps(perviousOverlaps => [
-                ...perviousOverlaps,
-                {
-                  id: j.id,
-                  matches: 0,
-                  error: 'failed to fetch',
-                },
-              ]);
-            }),
-            */
+        const uniqueEntriesFromOtherDatasets = pagedJoins.map(joinableColumn =>
+          Promise.all([
+            joinableColumn,
+            getUniqueEntries(
+              joinableColumn.column.dataset,
+              joinableColumn.column,
+            ),
+          ]),
         );
+
+        Promise.all(uniqueEntriesFromOtherDatasets).then(results => {
+          const overlaps = results.map(([joinableColumn, uniques]) => ({
+            datasetId: joinableColumn.column.dataset.id,
+            columnField: joinableColumn.column.field,
+            parentUniquesCount: parentUniques.length,
+            matches: parentUniques.filter(v => uniques.includes(v)),
+          }));
+
+          // convert to a map where the key is the dataset id
+          const overlapMap = overlaps.reduce(
+            (map, overlapObj) => map.set(overlapObj.datasetId, overlapObj),
+            new Map(),
+          );
+
+          setOverlapLookup(overlapMap);
+        });
       });
     }
   }, [column, pagedJoins, dataset]);
-  //  }, [column, dataset, joins, collapsed, overlaps]);
 
   if (loading) {
     return <p>Loading...</p>;
@@ -70,22 +67,28 @@ export function JoinableDatasets({ column, global, dataset }) {
     return <p>Something went wrong</p>;
   }
 
-  console.log('join result', data?.datasetColumn);
-
   return (
     <div className="columns-suggestions-matches">
       <h3 style={{ textTransform: 'uppercase' }}>Matching datasets</h3>
       {pagedJoins && pagedJoins.length > 0 ? (
         <ul>
-          {pagedJoins.map(join => (
-            <li key={join.column.dataset.id}>
-              <JoinColumn
-                dataset={join.column.dataset}
-                matches={[]}
-                matchPC={join.potentialOverlap}
-              />
-            </li>
-          ))}
+          {pagedJoins.map(join => {
+            const overlapObj = overlapLookup.get(join.column.dataset.id);
+            const matches = overlapObj?.matches || [];
+            return (
+              <li key={join.column.dataset.id}>
+                <JoinColumn
+                  dataset={join.column.dataset}
+                  matches={matches}
+                  matchPC={
+                    overlapObj
+                      ? matches.length / overlapObj.parentUniquesCount
+                      : undefined
+                  }
+                />
+              </li>
+            );
+          })}
         </ul>
       ) : (
         <div>No matching datasets found</div>

@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
+import numeral from 'numeral';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
-import { faAngleRight, faAngleDown } from '@fortawesome/free-solid-svg-icons';
+import {
+  faTable,
+  faAngleRight,
+  faAngleDown,
+} from '@fortawesome/free-solid-svg-icons';
 import DatasetLink from '../DatasetLink/DatasetLink';
 import { useUserCollections } from '../../hooks/collections';
 import './JoinColumn.scss';
@@ -16,11 +21,6 @@ export default function JoinColumn({ dataset, matches, matchPC }) {
       inCurrentCollection,
     },
   ] = useUserCollections();
-
-  console.log({
-    matches,
-    matchPC,
-  });
 
   return (
     <div className="join-column">
@@ -41,10 +41,8 @@ export default function JoinColumn({ dataset, matches, matchPC }) {
           {dataset.name}
         </span>
         <span>
-          {(Math.random() * 100).toLocaleString({
-            maximumSignificantDigits: 1,
-          })}{' '}
-          % ids match
+          {matchPC === undefined ? '...' : numeral(matchPC).format('0%')} ids
+          match
         </span>
         <span>
           <DatasetLink dataset={dataset}>View</DatasetLink>
@@ -64,29 +62,38 @@ export default function JoinColumn({ dataset, matches, matchPC }) {
             : 'Add to collection'}
         </button>
       </div>
-      {/* {!collapsed &&
+      {!collapsed &&
         (matches ? (
           <div className="join-column-unique">
-            <h3>COMMON IDS</h3>
+            <h3 style={{ textTransform: 'uppercase' }}>Common IDs</h3>
             <ul>
-              {matches.matches.slice(0, 10).map((uid) => (
-                <li key={uid}>
+              {matches.slice(0, 10).map(uid => (
+                <li key={String(uid)}>
                   <div className="bar" />
                   <FontAwesomeIcon icon={faTable} />
-                  <span>{uid}</span>
+                  <span>
+                    {uid === undefined ? (
+                      <span style={{ fontStyle: 'italic' }}>null</span>
+                    ) : (
+                      uid
+                    )}
+                  </span>
                 </li>
               ))}
             </ul>
             <div>
-              and{' '}
-              {matches.matches.length -
-                Math.min(10, matches.matches.slice(0, 10).length)}{' '}
-              more
+              {matches.length > 10 ? (
+                <>
+                  and{' '}
+                  {matches.length - Math.min(10, matches.slice(0, 10).length)}{' '}
+                  more
+                </>
+              ) : null}
             </div>
           </div>
         ) : (
           <h2>Loading</h2>
-        ))} */}
+        ))}
     </div>
   );
 }

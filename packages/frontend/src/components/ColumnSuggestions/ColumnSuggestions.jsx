@@ -41,9 +41,12 @@ export default function ColumnSuggestions({ global, columnId, dataset }) {
         onClick={() => setCollapsed(!collapsed)}
         tabIndex="0"
       >
-        <span className="column-collapse">
+        <span
+          className="column-collapse"
+          style={{ textTransform: 'capitalize' }}
+        >
           <FontAwesomeIcon icon={collapsed ? faAngleRight : faAngleDown} />{' '}
-          {column.name}
+          {column.name.toLowerCase()}
         </span>
         <span>{column.type}</span>
         <span>{column.joinSuggestionCount} datasets</span>
