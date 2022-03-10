@@ -107,7 +107,7 @@ type SocrataDataset = {
  */
 const DATA_REFRESH_CONFIG = {
   // set this to true to ignore populating elastic search
-  skipElasticSearchRebuild: false,
+  skipElasticSearchRebuild: true,
   skipPostgresRefresh: false,
   skipMLDatasetProcessing: false,
 
@@ -117,8 +117,8 @@ const DATA_REFRESH_CONFIG = {
   // if `usePortalListOverride` is true, then use this list of portals instead
   // of pulling all portals from Socrata
   portalList: [
-    'data.ct.gov',
-    'data.cityofchicago.org',
+    // 'data.ct.gov',
+    // 'data.cityofchicago.org',
     'data.cityofnewyork.us',
     /*
     'data.ny.gov',
@@ -229,6 +229,7 @@ export class PortalSyncService {
     dataset.permalink = permalink;
     dataset.portal = Promise.resolve(portal);
     dataset.categories = allCategories;
+    dataset.downloads = resource.download_count;
     return dataset;
   }
 
