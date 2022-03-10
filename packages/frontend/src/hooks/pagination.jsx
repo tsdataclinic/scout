@@ -47,22 +47,22 @@ export function usePaginationWithItems(data, perPage = 20) {
 }
 
 // TODO: refactor this. Hooks should not return components.
-export function usePagination({ perPage = 20, totalCount, invalidators }) {
+export function usePagination({ perPage = 20, totalCount, invalidators = [] }) {
   const [currentPageNo, setCurrentPageNo] = useState(0);
   const pages = Math.ceil(totalCount / perPage);
 
-  const shouldInvalidate = React.useMemo(
-    () => invalidators || [perPage, totalCount],
-    [invalidators, perPage, totalCount],
-  );
-
   useEffect(() => {
     setCurrentPageNo(0);
-  }, [shouldInvalidate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, invalidators);
 
   const pageButtons = (
     <nav>
       <ReactPaginate
+        key={invalidators
+          .filter(x => typeof x === 'string' || typeof x === 'number')
+          .map(String)
+          .join('-')}
         previousLabel="previous"
         nextLabel="next"
         breakLabel="..."

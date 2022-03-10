@@ -85,11 +85,12 @@ export default function HomePage({ portal }) {
     perPage: datasetsPerPage,
     invalidators: [searchTerm, portal.socrataDomain],
   });
-  console.log(pageNo);
 
   useEffect(() => {
     setCurrentPage(pageNo);
   }, [pageNo]);
+
+  console.log('page num', pageNo);
 
   useEffect(() => {
     if (!loading && data) {
