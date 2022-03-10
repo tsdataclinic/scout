@@ -6,11 +6,15 @@ import { useSelectedColumns } from '../../hooks/search';
 
 type Props = {
   portalId: string;
+  isGlobal: boolean;
 };
 
 const NUM_ITEMS_PER_PAGE = 20;
 
-export default function ColumnSelector({ portalId }: Props): JSX.Element {
+export default function ColumnSelector({
+  portalId,
+  isGlobal,
+}: Props): JSX.Element {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
@@ -26,7 +30,9 @@ export default function ColumnSelector({ portalId }: Props): JSX.Element {
   );
 
   const [selectedColumns, setSelectedColumns] = useSelectedColumns();
+
   const { loading, data } = useColumnsGQL(portalId, {
+    isGlobal,
     limit: NUM_ITEMS_PER_PAGE,
     page: pageNumber,
     search: searchTerm,

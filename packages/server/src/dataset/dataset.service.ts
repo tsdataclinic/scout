@@ -44,12 +44,17 @@ export class DatasetService {
     limit?: number,
     offset?: number,
     search?: string,
+    isGlobal?: boolean,
   ) {
-    let baseQuery = this.datasetRepo
-      .createQueryBuilder('dataset')
-      .where('"portalId" = :portal', {
+    let baseQuery = this.datasetRepo.createQueryBuilder('dataset');
+    console.log('looking at portal', portalId);
+    if (isGlobal) {
+      baseQuery = baseQuery.where('1=1');
+    } else {
+      baseQuery = baseQuery.where('"portalId" = :portal', {
         portal: portalId,
       });
+    }
 
     //TODO make this safer
     if (search) {
@@ -58,12 +63,10 @@ export class DatasetService {
       });
     }
 
-    console.log('running the query');
     const { total } = await baseQuery
       .clone()
       .select('COUNT(DISTINCT department) as total')
       .getRawOne();
-    console.log(total);
 
     let departmentQuery = baseQuery
       .clone()
@@ -83,7 +86,6 @@ export class DatasetService {
     }
 
     const result = await departmentQuery.getRawMany();
-    console.log(result);
     const pagedResult = {
       items: result,
       total,
@@ -96,15 +98,21 @@ export class DatasetService {
     limit?: number,
     offset?: number,
     search?: string,
+    isGlobal?: boolean,
   ) {
     // TODO model the data better, with a separate categories table.
     // That way we don't have to manually do everything in-memory here.
 
-    const query = this.datasetRepo
-      .createQueryBuilder('dataset')
-      .where('"portalId" = :portal', {
+    let query = this.datasetRepo.createQueryBuilder('dataset');
+    if (isGlobal) {
+      query = query.where('1=1');
+    } else {
+      query = query.where('"portalId" = :portal', {
         portal: portalId,
-      })
+      });
+    }
+
+    query = query
       .select('categories')
       .addSelect('COUNT(*)', 'occurrences')
       .groupBy('categories');

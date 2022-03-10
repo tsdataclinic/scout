@@ -29,12 +29,17 @@ export class DatasetColumnsService {
     limit?: number,
     offset?: number,
     search?: string,
+    isGlobal?: boolean,
   ): Promise<PagedFieldCount> {
     let query = this.datasetColumnsRepo.createQueryBuilder('column');
 
-    query = query.where('"portalId" = :portal', {
-      portal: portalId,
-    });
+    if (isGlobal) {
+      query = query.where('1=1');
+    } else {
+      query = query.where('"portalId" = :portal', {
+        portal: portalId,
+      });
+    }
 
     //TODO make this safer
     if (search)

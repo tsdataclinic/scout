@@ -104,9 +104,9 @@ type Portal {
   logo: String
   name: String!
   searchDatasets(limit: Float, offset: Float, search: String): PagedDatasets!
-  uniqueCategories(limit: Float, offset: Float, search: String): PagedCategoryCount!
-  uniqueColumnFields(limit: Float, offset: Float, search: String): PagedFieldCount!
-  uniqueDepartments(limit: Float, offset: Float, search: String): PagedDepartmentCount!
+  uniqueCategories(isGlobal: Boolean, limit: Float, offset: Float, search: String): PagedCategoryCount!
+  uniqueColumnFields(isGlobal: Boolean, limit: Float, offset: Float, search: String): PagedFieldCount!
+  uniqueDepartments(isGlobal: Boolean, limit: Float, offset: Float, search: String): PagedDepartmentCount!
 }
 
 type Query {

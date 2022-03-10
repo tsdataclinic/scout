@@ -28,8 +28,6 @@ function PortalRoute() {
   const Portals = portalData ? portalData.portals : null;
   const { portal } = useParams();
 
-  console.log('Portals retrieved:', Portals);
-
   if (
     ['login', 'about', 'profile', 'collection', 'collections'].includes(portal)
   ) {

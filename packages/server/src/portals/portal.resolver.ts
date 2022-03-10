@@ -30,12 +30,14 @@ export class PortalResolver {
     @Args('limit', { nullable: true }) limit?: number,
     @Args('offset', { nullable: true }) offset?: number,
     @Args('search', { nullable: true }) search?: string,
+    @Args('isGlobal', { nullable: true }) isGlobal?: boolean,
   ) {
     return this.datasetService.uniqueDepartmentsForPortal(
       portal.id,
       limit,
       offset,
       search,
+      isGlobal,
     );
   }
 
@@ -45,12 +47,14 @@ export class PortalResolver {
     @Args('limit', { nullable: true }) limit?: number,
     @Args('offset', { nullable: true }) offset?: number,
     @Args('search', { nullable: true }) search?: string,
+    @Args('isGlobal', { nullable: true }) isGlobal?: boolean,
   ) {
     return this.datasetService.uniqueCategoriesForPortal(
       portal.id,
       limit,
       offset,
       search,
+      isGlobal,
     );
   }
 
@@ -60,12 +64,14 @@ export class PortalResolver {
     @Args('limit', { nullable: true }) limit?: number,
     @Args('offset', { nullable: true }) offset?: number,
     @Args('search', { nullable: true }) search?: string,
+    @Args('isGlobal', { nullable: true }) isGlobal?: boolean,
   ) {
     return this.datasetColumnService.uniqueCountsForPortal(
       portal.id,
       limit,
       offset,
       search,
+      isGlobal,
     );
   }
 

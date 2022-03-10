@@ -33,9 +33,6 @@ export default function Filters({
   const [selectedDepartments, setSelectedDepartments] =
     useSelectedDepartments();
 
-  // TODO: handle filters with global search
-  console.log('is global', globalSearch);
-
   return (
     <div className={`filters ${collapsed ? 'collapsed' : ''}`}>
       {!collapsed ? (
@@ -52,13 +49,19 @@ export default function Filters({
           </h2>
           <div className="filters-scroll-area">
             <div className="departments">
-              <DepartmentSelector portalId={portal.id} />
+              <DepartmentSelector
+                portalId={portal.id}
+                isGlobal={globalSearch}
+              />
             </div>
             <div className="columns">
-              <ColumnSelector portalId={portal.id} />
+              <ColumnSelector portalId={portal.id} isGlobal={globalSearch} />
             </div>
             <div className="categories">
-              <CategoriesSelector portalId={portal.id} />
+              <CategoriesSelector
+                portalId={portal.id}
+                isGlobal={globalSearch}
+              />
             </div>
             {/* <div className="tags">
               <MultiSelector
