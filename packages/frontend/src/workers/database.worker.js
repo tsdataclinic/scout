@@ -6,12 +6,14 @@ import {
   loadDepartmentsIntoDB,
 } from '../database';
 
+/*
 import {
   getCategories,
   getColumns,
   getTagList,
   getDepartments,
 } from '../utils/socrata';
+*/
 
 // eslint-disable-next-line
 self.addEventListener('message', work);
@@ -19,10 +21,17 @@ self.addEventListener('message', work);
 export default function work(event) {
   const { manifest, portal } = event.data;
 
+  /*
   const tagList = getTagList(manifest);
   const categories = getCategories(manifest);
   const departments = getDepartments(manifest);
   const columns = getColumns(manifest);
+  */
+  const tagList = {};
+  const categories = [];
+  const departments = [];
+  const columns = [];
+
   loadDatasetsIntoDB(manifest.slice(0, 100), portal.socrataDomain).then(() => {
     this.postMessage({
       event: 'database_updated',

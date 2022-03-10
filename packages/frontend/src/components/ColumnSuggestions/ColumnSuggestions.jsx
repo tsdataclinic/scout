@@ -5,6 +5,12 @@ import './ColumnSuggestions.scss';
 import { useDatasetColumnsWithSuggestionCounts } from '../../hooks/graphQLAPI';
 import { JoinableDatasets } from '../JoinableDatasets/JoinableDatasets';
 
+/**
+ * This is one row in the ColumnMatchTable. It renders the column name, type,
+ * and how many joinable datasets there are.
+ *
+ * This row can in turn be expanded to show the joinable datasets.
+ */
 export default function ColumnSuggestions({ global, columnId, dataset }) {
   const [collapsed, setCollapsed] = useState(true);
 
@@ -12,38 +18,7 @@ export default function ColumnSuggestions({ global, columnId, dataset }) {
     columnId,
     global,
   );
-
-  // useEffect(() => {
-  //   if (collapsed === false && overlaps.length === 0) {
-  //     if (joins.length > 0) {
-  //       getUniqueEntries(dataset, column).then((parentUniques) => {
-  //         joins.forEach((j) =>
-  //           getUniqueEntries(j, column)
-  //             .then((res) =>
-  //               setOverlaps((perviousOverlaps) => [
-  //                 ...perviousOverlaps,
-  //                 {
-  //                   id: j.id,
-  //                   matches: parentUniques.filter((e) => res.includes(e)),
-  //                   leftSize: parentUniques.length,
-  //                 },
-  //               ]),
-  //             )
-  //             .catch(() => {
-  //               setOverlaps((perviousOverlaps) => [
-  //                 ...perviousOverlaps,
-  //                 {
-  //                   id: j.id,
-  //                   matches: 0,
-  //                   error: 'failed to fetch',
-  //                 },
-  //               ]);
-  //             }),
-  //         );
-  //       });
-  //     }
-  //   }
-  // }, [column, dataset, joins, collapsed, overlaps]);
+  const column = data ? data.datasetColumn : null;
 
   if (loading) {
     return <p>Loading...</p>;
@@ -52,15 +27,16 @@ export default function ColumnSuggestions({ global, columnId, dataset }) {
   if (error) {
     return <p>Something went wrong</p>;
   }
-  const column = data ? data.datasetColumn : null;
 
   return (
     <div className={`column-suggestions ${collapsed ? 'collapsed' : ''}`}>
       <div
         className="table-row"
         role="button"
-        onKeyDown={() => {
-          setCollapsed(!collapsed);
+        onKeyDown={e => {
+          if (e.code === 'Space') {
+            setCollapsed(!collapsed);
+          }
         }}
         onClick={() => setCollapsed(!collapsed)}
         tabIndex="0"

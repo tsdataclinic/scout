@@ -112,7 +112,7 @@ const DATA_REFRESH_CONFIG = {
   skipMLDatasetProcessing: false,
 
   // set this to true to use a hardcoded list of portals
-  usePortalListOverride: true,
+  usePortalListOverride: false,
 
   // if `usePortalListOverride` is true, then use this list of portals instead
   // of pulling all portals from Socrata

@@ -208,6 +208,7 @@ export const useDatasetColumnsWithSuggestionCounts = (id, global) => {
     query DatasetColumnWithSuggestions($id: Int!, $global: Boolean!) {
       datasetColumn(id: $id) {
         name
+        field
         type
         id
         joinSuggestionCount(global: $global)

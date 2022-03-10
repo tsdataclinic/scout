@@ -126,22 +126,23 @@ export function getUniqueEntriesCount(dataset, column) {
     }.json?$select=distinct|> select count(*) ${column.replace(/ /g, '_')}`,
   ).then(r => r.json());
 }
-export function getUniqueEntries(dataset, column) {
-  const domain = dataset.portal;
+
+export async function getUniqueEntries(dataset, column) {
+  const portalDomain = dataset.portal.id;
 
   return fetch(
-    `https://${domain}/resource/${
+    `https://${portalDomain}/resource/${
       dataset.id
-    }.json?$select=distinct ${column.replace(/ /g, '_')}`,
+    }.json?$select=distinct ${column.field.replace(/ /g, '_')}`,
   )
     .then(r => r.json())
     .then(r => {
       if (r.errorCode || r.error) {
         console.warn(
           'Failed to load unique entries for dataset ',
-          dataset,
+          dataset.id,
           ' column ',
-          column,
+          column.field,
         );
         return [];
       }

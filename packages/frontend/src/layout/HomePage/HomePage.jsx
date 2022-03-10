@@ -24,6 +24,10 @@ import usePageView from '../../hooks/analytics';
 import PortalSelector from '../../components/PortalSelector/PortalSelector';
 import Filters from '../../components/Filters/Filters';
 
+// TODO: remove this when we've figured out how to combine elastic search with
+// relational postgres search/sorting
+const HIDE_SORT_MENU = true;
+
 function usePrevious(value) {
   const ref = useRef();
   useEffect(() => {
@@ -90,8 +94,6 @@ export default function HomePage({ portal }) {
     setCurrentPage(pageNo);
   }, [pageNo]);
 
-  console.log('page num', pageNo);
-
   useEffect(() => {
     if (!loading && data) {
       setTotalDatasets(data.searchDatasets.total);
@@ -136,7 +138,7 @@ export default function HomePage({ portal }) {
             datasets {searchTerm ? 'sorted by relevance' : ''}
           </p>
 
-          {searchTerm ? null : (
+          {searchTerm || HIDE_SORT_MENU ? null : (
             <SortMenu
               options={[
                 'Name',

@@ -6,7 +6,7 @@ import DatasetLink from '../DatasetLink/DatasetLink';
 import { useUserCollections } from '../../hooks/collections';
 import './JoinColumn.scss';
 
-export default function ColumnJoin({ dataset }) {
+export default function JoinColumn({ dataset, matches, matchPC }) {
   const [collapsed, setCollapsed] = useState(true);
   const [
     ,
@@ -16,6 +16,11 @@ export default function ColumnJoin({ dataset }) {
       inCurrentCollection,
     },
   ] = useUserCollections();
+
+  console.log({
+    matches,
+    matchPC,
+  });
 
   return (
     <div className="join-column">
@@ -46,11 +51,13 @@ export default function ColumnJoin({ dataset }) {
         </span>
         <button
           type="button"
-          onClick={() =>
-            inCurrentCollection(dataset.id)
-              ? removeFromCurrentCollection(dataset.id)
-              : addToCurrentCollection(dataset.id)
-          }
+          onClick={() => {
+            if (inCurrentCollection(dataset.id)) {
+              removeFromCurrentCollection(dataset.id);
+            } else {
+              addToCurrentCollection(dataset.id);
+            }
+          }}
         >
           {inCurrentCollection(dataset.id)
             ? 'Remove from collection'
