@@ -116,16 +116,29 @@ const DATA_REFRESH_CONFIG = {
 
   // if `usePortalListOverride` is true, then use this list of portals instead
   // of pulling all portals from Socrata
-  portalList: [
-    // 'data.ct.gov',
-    // 'data.cityofchicago.org',
-    'data.cityofnewyork.us',
-    /*
-    'data.ny.gov',
-    'data.nashville.gov',
-    */
-  ],
+  portalList: process.env.PORTAL_OVERRIDE_LIST
+    ? process.env.PORTAL_OVERRIDE_LIST.split(',')
+    : [
+        // 'data.ct.gov',
+        // 'data.cityofchicago.org',
+        'data.cityofnewyork.us',
+        // 'data.ny.gov',
+        // 'data.nashville.gov',
+      ],
 };
+
+function usePortalListOverride(): boolean {
+  // if a PORTAL_OVERRIDE_LIST is provided via env var then it takes prcedent
+  // over whatever is hardcoded in DATA_REFRESH_CONFIG
+  if (
+    process.env.PORTAL_OVERRIDE_LIST &&
+    process.env.PORTAL_OVERRIDE_LIST !== ''
+  ) {
+    return true;
+  }
+
+  return DATA_REFRESH_CONFIG.usePortalListOverride;
+}
 
 @Injectable()
 export class PortalSyncService {
@@ -149,7 +162,7 @@ export class PortalSyncService {
         await this.searchService.createIndex({ recreate: true });
         await this.searchService.populateIndex({
           skipMLDatasetProcessing: DATA_REFRESH_CONFIG.skipMLDatasetProcessing,
-          portalIds: DATA_REFRESH_CONFIG.usePortalListOverride
+          portalIds: usePortalListOverride()
             ? DATA_REFRESH_CONFIG.portalList
             : undefined,
         });
@@ -353,7 +366,7 @@ export class PortalSyncService {
     } = await portalListRequest.json();
 
     // Overwrite the portal list with the ones specified
-    const validPortals = DATA_REFRESH_CONFIG.usePortalListOverride
+    const validPortals = usePortalListOverride()
       ? new Set(DATA_REFRESH_CONFIG.portalList)
       : new Set(Object.keys(PortalExternalInfo));
     const portalList = portalListRemote.results.filter(portal =>

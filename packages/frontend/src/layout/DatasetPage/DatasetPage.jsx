@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import moment from 'moment';
 import { Switch } from 'antd';
@@ -19,32 +19,35 @@ const formatDate = date => moment(date).format('MMMM DD, YYYY');
 export default function DatasetPage() {
   usePageView();
   const navigate = useNavigate();
-  const { datasetId, tab } = useParams();
+  const { datasetId, tab: urlTab } = useParams();
   const { loading, error, data } = useDatasetGQL(datasetId);
   const dataset = loading || error ? null : data.dataset;
 
   // const parentId = dataset?.parentDatasetID;
   const parentDataset = null; // useDataset(parentId);
-  const [activeTab, setActiveTab] = useState(tab || 'joins');
+  const [activeTab, setActiveTab] = useState(urlTab || 'joins');
 
   const [globalSearch, setGlobalSearch] = useState(false);
 
-  const onChangeTab = newTab => {
-    // only switch if it's going to be a new tab
-    if (newTab !== activeTab) {
-      const currURL = window.location.pathname;
-      // drop the last part of the path
-      const urlParts = currURL.split('/').slice(0, -1).join('/');
-      navigate(`${urlParts}/${newTab}`);
-      setActiveTab(newTab);
-    }
-  };
+  const onChangeTab = useCallback(
+    newTab => {
+      // only switch if it's going to be a new tab
+      if (newTab !== activeTab) {
+        const currURL = window.location.pathname;
+        // drop the last part of the path
+        const urlParts = currURL.split('/').slice(0, -1).join('/');
+        navigate(`${urlParts}/${newTab}`);
+        setActiveTab(newTab);
+      }
+    },
+    [activeTab, navigate, setActiveTab],
+  );
 
   useEffect(() => {
-    if (tab === undefined) {
-      navigate('joins');
+    if (urlTab === undefined) {
+      onChangeTab('joins');
     }
-  }, [tab, navigate]);
+  }, [urlTab, navigate, onChangeTab]);
 
   useEffect(() => {
     const page = `${window.location.pathname}/${activeTab}`;

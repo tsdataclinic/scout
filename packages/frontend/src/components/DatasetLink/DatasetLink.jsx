@@ -5,7 +5,7 @@ export default function DatasetLink({ dataset, className, children }) {
   return (
     <Link
       className={className}
-      to={`/explore/${portal.abbreviation}/dataset/${dataset.id}`}
+      to={`/explore/${portal.abbreviation}/dataset/${dataset.id}/joins`}
     >
       {children}
     </Link>
