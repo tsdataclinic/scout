@@ -1,5 +1,8 @@
 import './Dataset.scss';
 import numeral from 'numeral';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Popover from 'react-bootstrap/Popover';
+import Button from 'react-bootstrap/Button';
 import { hilightMatches, formatDate } from '../../utils/formatters';
 import { useGetSimilarDatasets, useGetJoinNumbers } from '../../hooks/datasets';
 import { ReactComponent as ThematicIcon } from '../../icons/joinable.svg';
@@ -8,6 +11,8 @@ import { useUserCollections } from '../../hooks/collections';
 import DatasetLink from '../DatasetLink/DatasetLink';
 import ViewOnOpenPortal from '../ViewOnOpenPortal/ViewOnOpenPortal';
 import PortalInfo from '../PortalInfo/PortalInfo';
+import 'bootstrap/dist/css/bootstrap.css';
+import { CollectionTabAdd } from '../CollectionTab/CollectionTabAdd';
 
 export default function Dataset({
   dataset,
@@ -49,16 +54,30 @@ export default function Dataset({
         {dataset.permalink}
       </div>
       {showCollectionButtons && (
-        <button
-          type="button"
-          onClick={() =>
-            inCollection
-              ? removeFromCurrentCollection(dataset.id)
-              : addToCurrentCollection(dataset.id)
+        <OverlayTrigger
+          placement="bottom"
+          trigger="click"
+          overlay={
+            <Popover>
+              <Popover.Title as="h3">Select a Collection</Popover.Title>
+              <Popover.Content>
+                <CollectionTabAdd />
+              </Popover.Content>
+            </Popover>
           }
         >
-          {inCollection ? 'Remove from collection' : 'Add to collection'}
-        </button>
+          <Button
+            className="addCollectionButton"
+            variant="success"
+            onClick={() =>
+              inCollection
+                ? removeFromCurrentCollection(dataset.id)
+                : addToCurrentCollection(dataset.id)
+            }
+          >
+            {inCollection ? 'Remove from collection' : 'Add to collection'}{' '}
+          </Button>
+        </OverlayTrigger>
       )}
       {similarity && (
         <p className="similarity">
