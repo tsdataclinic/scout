@@ -19,7 +19,6 @@ export default function SideNav() {
   const { user, isAuthenticated } = useCurrentUser();
   const { login, logout } = useLoginLogout();
 
-  console.log('Active col', activeCollection);
   return (
     <nav className="side-nav">
       <Link alt="Data Clinic" className="title" to="/">
