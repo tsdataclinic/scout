@@ -33,6 +33,7 @@ export const useCollection = id => {
         name
         description
         id
+        createdAt
         datasets {
           name
           description

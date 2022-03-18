@@ -22,10 +22,15 @@ const EMPTY_COLLECTION = {
   name: '',
 };
 
-function getShareableURL(collectionName, datasetIds) {
+function getShareableURLForUnauthenticated(collectionName, datasetIds) {
   const urlOrigin = window.location.origin;
   const datasetIdsStr = datasetIds.join(',');
   return `${urlOrigin}/collection/${collectionName}/${datasetIdsStr}`;
+}
+
+function getShareableURLForAuthenticated(collectionId) {
+  const urlOrigin = window.location.origin;
+  return `${urlOrigin}/collection/${collectionId}`;
 }
 
 export default function CollectionPage() {
@@ -36,6 +41,7 @@ export default function CollectionPage() {
   const [{ collections }] = useUserCollections();
   const { loading, data, error } = useCollection(id);
 
+  console.log(id, loading);
   // first try to load a collection to get the dataset ids to load
   let collection = isAuthenticated
     ? data?.collection
@@ -68,9 +74,11 @@ export default function CollectionPage() {
     };
   }
 
-  const { description, name: collectionName } = collection;
+  const { description, name: collectionName, createdAt } = collection;
 
-  const shareableURL = getShareableURL(collection.name, datasetIdsToLoad);
+  const shareableURL = isAuthenticated
+    ? getShareableURLForAuthenticated(id)
+    : getShareableURLForUnauthenticated(collection.name, datasetIdsToLoad);
   const [isCopied, setCopied] = useClipboard(shareableURL);
 
   if (loading || (collections.length === 0 && !loadingCollectionFromURL)) {
@@ -97,6 +105,7 @@ export default function CollectionPage() {
             {datasets.length} dataset
             {datasets.length > 1 ? 's' : ''}
           </p>
+          <p>Created at: {createdAt && new Date(createdAt).toString()} </p>
         </section>
         <div>
           <h3>Share this collection:</h3>
