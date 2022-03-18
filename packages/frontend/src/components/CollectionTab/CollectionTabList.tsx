@@ -1,18 +1,22 @@
 import { Link } from 'react-router-dom';
 
+type Collection = {
+  datasetIds: string[];
+  description: string;
+  id: string;
+  name: string;
+};
+
 type Props = {
-  collections: ReadonlyArray<{
-    datasetIds: string[];
-    description: string;
-    id: string;
-    name: string;
-  }>;
+  collections: readonly Collection[];
+  onCollectionSelect: (collection: Collection) => void;
   onCreate: () => void;
   onDismiss: () => void;
 };
 
 export default function CollectionTabList({
   collections,
+  onCollectionSelect,
   onCreate,
   onDismiss,
 }: Props): JSX.Element {
@@ -26,7 +30,18 @@ export default function CollectionTabList({
           <ul>
             {collections.map(collection => (
               <li key={collection.id} className="collection-tab-dataset">
-                <div>
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onKeyPress={e => {
+                    if (e.key === 'Enter') {
+                      onCollectionSelect(collection);
+                    }
+                  }}
+                  onClick={() => {
+                    onCollectionSelect(collection);
+                  }}
+                >
                   <p className="name">{collection.name}</p>
                   <p className="agency">{collection.description}</p>
                 </div>

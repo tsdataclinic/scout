@@ -25,6 +25,10 @@ export default function CollectionTab({ visible, onDismiss }) {
     setTab('list');
   };
 
+  const onCollectionSelect = collection => {
+    console.log('Selected collection', collection);
+  };
+
   if (!visible) return '';
 
   return (
@@ -34,6 +38,7 @@ export default function CollectionTab({ visible, onDismiss }) {
           collections={collections}
           onDismiss={onDismiss}
           onCreate={onCreate}
+          onCollectionSelect={onCollectionSelect}
         />
       ) : null}
 
