@@ -46,7 +46,7 @@ yarn install
 The search backend uses Elasticsearch. To run it locally, the easiest way to do it is with [docker-compose](https://docs.docker.com/compose/install/):
 
 ```
-docker-compose -f docker-compose.yml
+docker-compose -f docker-compose.yml up
 ```
 
 Note if you see an error about max_map_count you need to increase that number with a command like
