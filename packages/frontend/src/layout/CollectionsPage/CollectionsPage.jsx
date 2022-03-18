@@ -1,6 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLayerGroup } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
 import CollectionCard from '../../components/CollectionCard/CollectionCard';
 import { useUserCollections } from '../../hooks/collections';
 import './CollectionsPage.scss';
@@ -47,9 +46,7 @@ export default function CollectionsPage() {
           <ul>
             {nonPendingCollections.map(collection => (
               <li key={collection.id}>
-                <Link to={`/collection/${collection.id}`}>
-                  <CollectionCard collection={collection} />
-                </Link>
+                <CollectionCard collection={collection} />
               </li>
             ))}
           </ul>
