@@ -4,7 +4,6 @@ import { useUserCollections } from '../../hooks/collections';
 export function CollectionTabAdd({ onSwitch, onCreate, onDismiss }) {
   const [{ activeCollection }, { removeFromCurrentCollection }] =
     useUserCollections();
-  console.log('Active collection', activeCollection);
 
   const isReloadingDatasets =
     activeCollection.datasetIds.length > 0 &&

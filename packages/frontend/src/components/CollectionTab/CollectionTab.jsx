@@ -4,12 +4,15 @@ import { CollectionTabCreate } from './CollectionTabCreate';
 import { CollectionTabSwitch } from './CollectionTabSwitch';
 import { CollectionTabAdd } from './CollectionTabAdd';
 import './CollectionTab.scss';
+import CollectionTabList from './CollectionTabList';
 
 export default function CollectionTab({ visible, onDismiss }) {
-  const [{ activeCollection, activeCollectionId }, { setActiveCollection }] =
-    useUserCollections();
+  const [
+    { activeCollection, collections, activeCollectionId },
+    { setActiveCollection },
+  ] = useUserCollections();
 
-  const [tab, setTab] = useState('add');
+  const [tab, setTab] = useState('list');
 
   const onCreate = () => {
     setTab('create');
@@ -19,13 +22,21 @@ export default function CollectionTab({ visible, onDismiss }) {
     if (collectionId) {
       setActiveCollection(collectionId);
     }
-    setTab('add');
+    setTab('list');
   };
 
   if (!visible) return '';
 
   return (
     <div className="collection-tab">
+      {tab === 'list' ? (
+        <CollectionTabList
+          collections={collections}
+          onDismiss={onDismiss}
+          onCreate={onCreate}
+        />
+      ) : null}
+
       {tab === 'create' && (
         <CollectionTabCreate
           isPending={activeCollection.id === 'pending'}
