@@ -29,24 +29,28 @@ export default function CollectionCard({ collection }) {
 
   return (
     <div className="collection-card">
-      <p className="created-at">
-        Collection created {formatDate(collection.createdAt)}
-      </p>
-      <h3>
-        <Link to={`/collection/${collection.id}`}>{collection.name}</Link>
-      </h3>
-      <div className="collection-stats">
-        <span>
-          Datasets: {collection.datasetIds ? collection.datasetIds.length : 0}
-        </span>
+      <div className="custom-column left">
+        <p className="created-at">
+          Collection created {formatDate(collection.createdAt)}
+        </p>
+        <h3>
+          <Link to={`/collection/${collection.id}`}>{collection.name}</Link>
+        </h3>
+        <div className="collection-stats">
+          <span>
+            Datasets: {collection.datasetIds ? collection.datasetIds.length : 0}
+          </span>
+        </div>
       </div>
-      <button
-        onClick={onTryDeleteCollection}
-        type="button"
-        className="header-button"
-      >
-        <TrashCanSVG />
-      </button>
+      <div className="custom-column right">
+        <button
+          onClick={onTryDeleteCollection}
+          type="button"
+          className="header-button"
+        >
+          <TrashCanSVG />
+        </button>
+      </div>
     </div>
   );
 }
