@@ -2,6 +2,7 @@ import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import Dexie from 'dexie';
 import useCurrentUser from '../auth/useCurrentUser';
 import { useCurrentUserCollections } from '../hooks/graphQLAPI';
+import { DEFAULT_PORTAL } from '../portals';
 
 export const CollectionsContext = createContext();
 
@@ -13,6 +14,9 @@ export const CollectionsContext = createContext();
  * - description : short 255 character description of the collection
  */
 const initialState = {
+  activePortalAbbreviation: DEFAULT_PORTAL,
+  globalPortalsAreActive: false,
+
   // array of datasets to add to the pending collection
   pendingCollection: [],
   activeCollectionId: 'pending',
@@ -28,6 +32,17 @@ db.version(1).stores({
 const reducer = (state, action) => {
   const { type, payload } = action;
   switch (type) {
+    case 'PORTAL_SET_ACTIVE':
+      return {
+        ...state,
+        activePortalAbbreviation: payload.activePortalAbbreviation,
+      };
+    case 'PORTAL_SET_GLOBAL':
+      return {
+        ...state,
+        globalPortalsAreActive: payload.isGlobal,
+      };
+
     case 'SET_ACTIVE_COLLECTION':
       return {
         ...state,
@@ -97,8 +112,14 @@ const reducer = (state, action) => {
 
 export function CollectionsProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { hydratedData, collections, activeCollectionId, pendingCollection } =
-    state;
+  const {
+    activePortalAbbreviation,
+    globalPortalsAreActive,
+    hydratedData,
+    collections,
+    activeCollectionId,
+    pendingCollection,
+  } = state;
   const { isAuthenticated } = useCurrentUser();
   const { data: collectionsFromDB, loading: areCollectionsLoading } =
     useCurrentUserCollections();
@@ -195,14 +216,23 @@ export function CollectionsProvider({ children }) {
     if (hydratedData) {
       db.CollectionCache.put({
         data: JSON.stringify({
-          collections,
+          activePortalAbbreviation,
           activeCollectionId,
+          collections,
+          globalPortalsAreActive,
           pendingCollection,
         }),
         id: 1,
       });
     }
-  }, [hydratedData, collections, activeCollectionId, pendingCollection]);
+  }, [
+    activePortalAbbreviation,
+    globalPortalsAreActive,
+    hydratedData,
+    collections,
+    activeCollectionId,
+    pendingCollection,
+  ]);
 
   const context = React.useMemo(() => [state, dispatch], [state, dispatch]);
 

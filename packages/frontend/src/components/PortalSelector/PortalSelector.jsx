@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
+import { useCollectionsValue } from '../../contexts/CollectionsContext';
 import PortalInfo from '../PortalInfo/PortalInfo';
 
 import './PortalSelector.scss';
@@ -21,10 +22,17 @@ export default function PortalSelector({ selectedPortal }) {
   const navigate = useNavigate();
   const { loading, data } = useQuery(AVAILABLE_PORTALS);
   const [search, setSearch] = useState('');
+  const [, dispatch] = useCollectionsValue();
 
   const selectPortal = portal => {
     setShowMenu(false);
     navigate(`/explore/${portal.abbreviation}`);
+    dispatch({
+      type: 'PORTAL_SET_ACTIVE',
+      payload: {
+        activePortalAbbreviation: portal.abbreviation,
+      },
+    });
   };
 
   const filteredPortals = useMemo(() => {
