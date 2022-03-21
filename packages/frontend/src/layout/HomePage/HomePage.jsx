@@ -1,4 +1,5 @@
 import numeral from 'numeral';
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import './HomePage.scss';
 import { DebounceInput } from 'react-debounce-input';
@@ -23,6 +24,8 @@ import { usePagination } from '../../hooks/pagination';
 import usePageView from '../../hooks/analytics';
 import PortalSelector from '../../components/PortalSelector/PortalSelector';
 import Filters from '../../components/Filters/Filters';
+import { useCollectionsValue } from '../../contexts/CollectionsContext';
+import { GLOBAL_PORTAL_IDENTIFIER } from '../../portals';
 
 // TODO: remove this when we've figured out how to combine elastic search with
 // relational postgres search/sorting
@@ -36,8 +39,9 @@ function usePrevious(value) {
   return ref.current;
 }
 
-export default function HomePage({ portal }) {
+export default function HomePage({ portal, initialGlobalSearchVal }) {
   usePageView();
+  const navigate = useNavigate();
   const prevPortal = usePrevious(portal);
   /*
   const [selectedTags] = useSelectedTags();
@@ -53,7 +57,8 @@ export default function HomePage({ portal }) {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalDatasets, setTotalDatasets] = useState(0);
 
-  const [globalSearch, setGlobalSearch] = useState(false);
+  const [globalSearch, setGlobalSearch] = useState(initialGlobalSearchVal);
+  const [globalState, dispatch] = useCollectionsValue();
 
   useEffect(() => {
     // if the portal has changed, clear the selected columns
@@ -71,7 +76,7 @@ export default function HomePage({ portal }) {
   ]);
 
   const { loading, data, error } = useSearchDatasets(
-    globalSearch ? null : portal.id,
+    globalSearch ? null : portal?.id,
     {
       limit: datasetsPerPage,
       offset: datasetsPerPage * currentPage,
@@ -87,7 +92,7 @@ export default function HomePage({ portal }) {
   const [pageNo, { pageButtons }] = usePagination({
     totalCount: totalDatasets,
     perPage: datasetsPerPage,
-    invalidators: [searchTerm, portal.socrataDomain],
+    invalidators: [searchTerm, portal?.socrataDomain],
   });
 
   useEffect(() => {
@@ -126,7 +131,21 @@ export default function HomePage({ portal }) {
 
           <Switch
             checked={globalSearch}
-            onChange={setGlobalSearch}
+            onChange={isOn => {
+              setGlobalSearch(isOn);
+              dispatch({
+                type: 'PORTAL_SET_GLOBAL',
+                payload: {
+                  isGlobal: isOn,
+                },
+              });
+
+              const portalAbbr = isOn
+                ? GLOBAL_PORTAL_IDENTIFIER
+                : globalState.activePortalAbbreviation;
+
+              navigate(`/explore/${portalAbbr}`);
+            }}
             checkedChildren="All portals"
             unCheckedChildren="Specific portal"
             style={{ margin: '0px 10px', background: '#009aa6' }}

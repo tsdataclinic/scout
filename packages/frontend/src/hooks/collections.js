@@ -44,8 +44,10 @@ export function useUserCollections() {
   );
 
   const combinedState = {
+    activePortalAbbreviation: state.activePortalAbbreviation,
     activeCollectionId: state.activeCollectionId,
     collections: localOrServerCollections,
+    globalPortalsAreActive: state.globalPortalsAreActive,
     activeCollection:
       state.activeCollectionId === 'pending'
         ? {
