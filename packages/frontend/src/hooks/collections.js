@@ -112,24 +112,32 @@ export function useUserCollections() {
     }
   };
 
-  const removeFromCurrentCollection = datasetId => {
+  const removeFromCurrentCollection = async (datasetId, collectionId) => {
     if (state.activeCollectionId === 'pending') {
       dispatch({
         type: 'REMOVE_FROM_PENDING_COLLECTION',
         payload: datasetId,
       });
-    } else if (!isAuthenticated) {
+      return undefined;
+    }
+
+    if (!isAuthenticated) {
       // add to the current collection locally
       dispatch({
         type: 'REMOVE_FROM_CURRENT_COLLECTION',
         payload: datasetId,
       });
-    } else {
-      // remove from existing collection on the backend
-      removeFrom({
-        variables: { datasetId, collectionId: state.activeCollectionId },
-      });
+      return undefined;
     }
+
+    // remove from existing collection on the backend
+    const result = await removeFrom({
+      variables: {
+        datasetId,
+        collectionId: collectionId || state.activeCollectionId,
+      },
+    });
+    return result.data?.removeDatasetFromCollection;
   };
 
   const createCollectionFromPending = ({

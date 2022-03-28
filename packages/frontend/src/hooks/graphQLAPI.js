@@ -265,8 +265,6 @@ export function useRemoveDatasetFromCollection() {
         description
         datasets {
           id
-          name
-          description
         }
       }
     }

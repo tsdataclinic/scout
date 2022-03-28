@@ -165,6 +165,7 @@
         margin-top: -26px;
     }
 }
+
 .add-to-collection {
     flex: 1;
     display: flex;
@@ -265,6 +266,11 @@
             color: #5a7598;
         }
     }
+    span.name {
+      font-size: 12px;
+      color: black;
+    }
+
     &:hover {
         background-color: #f7fafc;
     }
