@@ -23,7 +23,9 @@ export default function CollectionTabList({
   >();
 
   const title = collectionToView ? (
-    <Link to={getCollectionURL(collectionToView)}>{collectionToView.name}</Link>
+    <Link style={{ color: 'black' }} to={getCollectionURL(collectionToView)}>
+      {collectionToView.name}
+    </Link>
   ) : (
     'My Collections'
   );

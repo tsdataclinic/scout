@@ -41,7 +41,6 @@ export default function CollectionPage() {
   const [{ collections }] = useUserCollections();
   const { loading, data, error } = useCollection(id);
 
-  console.log(id, loading);
   // first try to load a collection to get the dataset ids to load
   let collection = isAuthenticated
     ? data?.collection
