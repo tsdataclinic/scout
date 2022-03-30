@@ -127,14 +127,13 @@ export function CollectionsProvider({ children }) {
 
     async function hydrateFromAPI() {
       if (!areCollectionsLoading) {
-        const initialCollections = collectionsFromDB.profile.collections.map(
-          col => ({
+        const initialCollections =
+          collectionsFromDB?.profile.collections.map(col => ({
             id: col.id,
             name: col.name,
             description: col.description,
             datasetIds: col.datasets.map(d => d.id),
-          }),
-        );
+          })) || [];
 
         // we still need to load cached data, because there can be things here
         // that can help us in hydrating the data

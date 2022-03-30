@@ -1,18 +1,13 @@
 import './Dataset.scss';
 import numeral from 'numeral';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Popover from 'react-bootstrap/Popover';
-import Button from 'react-bootstrap/Button';
 import { hilightMatches, formatDate } from '../../utils/formatters';
 import { useGetSimilarDatasets, useGetJoinNumbers } from '../../hooks/datasets';
 import { ReactComponent as ThematicIcon } from '../../icons/joinable.svg';
 import { ReactComponent as JoinIcon } from '../../icons/thematicSimilarity.svg';
-import { useUserCollections } from '../../hooks/collections';
 import DatasetLink from '../DatasetLink/DatasetLink';
 import ViewOnOpenPortal from '../ViewOnOpenPortal/ViewOnOpenPortal';
 import PortalInfo from '../PortalInfo/PortalInfo';
-import 'bootstrap/dist/css/bootstrap.css';
-import { CollectionTabAdd } from '../CollectionTab/CollectionTabAdd';
+import AddToCollectionButton from '../AddToCollectionButton';
 
 export default function Dataset({
   dataset,
@@ -29,17 +24,6 @@ export default function Dataset({
 
   const { portal } = dataset; // dataset ? portalForDomain(dataset.portal) : null;
 
-  const [
-    ,
-    {
-      addToCurrentCollection,
-      removeFromCurrentCollection,
-      inCurrentCollection,
-    },
-  ] = useUserCollections();
-
-  const inCollection = inCurrentCollection(dataset.id);
-
   return (
     <div className="dataset" key={dataset.id}>
       <div className="dataset-title">
@@ -53,32 +37,9 @@ export default function Dataset({
         </DatasetLink>
         {dataset.permalink}
       </div>
-      {showCollectionButtons && (
-        <OverlayTrigger
-          placement="bottom"
-          trigger="click"
-          overlay={
-            <Popover>
-              <Popover.Title as="h3">Select a Collection</Popover.Title>
-              <Popover.Content>
-                <CollectionTabAdd />
-              </Popover.Content>
-            </Popover>
-          }
-        >
-          <Button
-            className="addCollectionButton"
-            variant="success"
-            onClick={() =>
-              inCollection
-                ? removeFromCurrentCollection(dataset.id)
-                : addToCurrentCollection(dataset.id)
-            }
-          >
-            {inCollection ? 'Remove from collection' : 'Add to collection'}{' '}
-          </Button>
-        </OverlayTrigger>
-      )}
+      {showCollectionButtons ? (
+        <AddToCollectionButton datasetId={dataset.id} />
+      ) : null}
       {similarity && (
         <p className="similarity">
           <p className="header">Similarity</p>
