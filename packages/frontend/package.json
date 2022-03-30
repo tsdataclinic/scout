@@ -17,6 +17,7 @@
     "@nestjs/elasticsearch": "^7.1.0",
     "@reach/dialog": "^0.16.2",
     "@reach/menu-button": "^0.16.2",
+    "@reach/visually-hidden": "^0.16.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -46,8 +47,9 @@
     "react-router-dom": "^6.2.1",
     "react-scripts": "^5.0.0",
     "react-share": "^4.4.0",
+    "react-toastify": "^8.2.0",
     "react-use-fuse": "^0.5.2",
-    "uuid": "^3.4.0"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@emotion/babel-plugin": "^11.7.2",

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useQuery, gql, QueryResult } from '@apollo/client';
-import { Link } from 'react-router-dom';
 import { Collection } from './types';
 import getDatasetURL from '../../../utils/getDatasetURL';
 import { useUserCollections } from '../../../hooks/collections';
+import UnderlinedLink from './UnderlinedLink';
 
 type Dataset = {
   id: string;
@@ -50,9 +50,9 @@ export default function DatasetList({ collection }: Props): JSX.Element {
         <li key={dataset.id} className="collection-tab-dataset">
           <div>
             <p>
-              <Link to={getDatasetURL(dataset)}>
-                <span className="name">{dataset.name}</span>
-              </Link>
+              <UnderlinedLink to={getDatasetURL(dataset)}>
+                {dataset.name}
+              </UnderlinedLink>
             </p>
             <p className="agency">{dataset.department}</p>
           </div>

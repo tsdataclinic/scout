@@ -6,6 +6,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Collection } from './types';
 import DatasetList from './DatasetList';
 import getCollectionURL from '../../../utils/getCollectionURL';
+import UnderlinedLink from './UnderlinedLink';
 
 type Props = {
   collections: readonly Collection[];
@@ -23,9 +24,9 @@ export default function CollectionTabList({
   >();
 
   const title = collectionToView ? (
-    <Link style={{ color: 'black' }} to={getCollectionURL(collectionToView)}>
+    <UnderlinedLink to={getCollectionURL(collectionToView)}>
       {collectionToView.name}
-    </Link>
+    </UnderlinedLink>
   ) : (
     'My Collections'
   );
@@ -83,14 +84,14 @@ export default function CollectionTabList({
                     }}
                   >
                     <p>
-                      <Link
+                      <UnderlinedLink
                         to={getCollectionURL(collection)}
                         onClick={e => {
                           e.stopPropagation();
                         }}
                       >
-                        <span className="name">{collection.name}</span>
-                      </Link>
+                        {collection.name}
+                      </UnderlinedLink>
                     </p>
                     <p className="agency">{collection.description}</p>
                   </div>
