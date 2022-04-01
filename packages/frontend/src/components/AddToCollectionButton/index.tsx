@@ -1,11 +1,14 @@
 /** @jsxImportSource @emotion/react */
 import '@reach/menu-button/styles.css';
+import pluralize from 'pluralize';
 import { toast } from 'react-toastify';
 import { useCallback, useState, useMemo, ReactElement } from 'react';
 import { css } from '@emotion/react/macro';
 import { useQuery, gql } from '@apollo/client';
 import styled from '@emotion/styled/macro';
 import { Menu, MenuButton, MenuList, MenuItem } from '@reach/menu-button';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import noop from '../../utils/noop';
 import LoadingSpinner from '../Loading/LoadingSpinner';
 import Modal from '../Modal';
@@ -106,7 +109,7 @@ export default function AddToCollectionButton({
       );
     }
 
-    if (numCollectionsWithDataset === 0) {
+    if (collections.length === 0) {
       return (
         <StyledMenuItem
           onSelect={() => {
@@ -121,9 +124,21 @@ export default function AddToCollectionButton({
     return items;
   }
 
+  const buttonText =
+    numCollectionsWithDataset === 0
+      ? 'Add to collection'
+      : `In ${pluralize('collection', numCollectionsWithDataset, true)}`;
+
   return (
     <Menu>
-      <MenuButton>Add to collection ({numCollectionsWithDataset})</MenuButton>
+      <MenuButton>
+        {buttonText}
+        <FontAwesomeIcon
+          style={{ marginLeft: 8 }}
+          size="1x"
+          icon={faCaretDown}
+        />
+      </MenuButton>
       <StyledMenuList>{renderMenuContent()}</StyledMenuList>
       {isCreateModalOpen ? (
         <Modal isOpen onDismiss={onDismissModal}>
