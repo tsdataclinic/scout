@@ -39,11 +39,6 @@ export default function SideNav() {
         <h1>Explore</h1>
       </NavLink>
       <div className="collections-button" style={{ position: 'relative' }}>
-        {activeCollection.datasetIds.length > 0 && (
-          <div className="collection-counter">
-            {activeCollection.datasetIds.length}
-          </div>
-        )}
         <button
           onClick={() => setShowCollectionTab(!showCollectionTab)}
           type="button"
