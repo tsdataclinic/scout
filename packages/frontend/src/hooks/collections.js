@@ -90,7 +90,11 @@ export function useUserCollections() {
       : false;
   };
 
-  const addToCurrentCollection = async datasetId => {
+  // TODO: $ATC - rename to `addToCollection`, we're getting rid of idea
+  // of a 'current' collection
+  // TODO: $ATC - update the dispatches so that unauthenticated users add
+  // the dataset to the correct collection
+  const addToCurrentCollection = async (datasetId, collectionId) => {
     if (state.activeCollectionId === 'pending') {
       // the collection doesn't exist in the backend yet, so we just have
       // to add to the collection in-browser.
@@ -107,11 +111,18 @@ export function useUserCollections() {
     } else {
       // Adds to existing collection on the backend
       addTo({
-        variables: { id: state.activeCollectionId, datasetIds: [datasetId] },
+        variables: {
+          id: collectionId || state.activeCollectionId,
+          datasetIds: [datasetId],
+        },
       });
     }
   };
 
+  // TODO: $ATC - rename to `removeFromCollection`, we're getting rid of idea
+  // of a 'current' collection
+  // TODO: $ATC - update the dispatches so that unauthenticated users remove
+  // the dataset from the correct collection
   const removeFromCurrentCollection = async (datasetId, collectionId) => {
     if (state.activeCollectionId === 'pending') {
       dispatch({
@@ -137,7 +148,7 @@ export function useUserCollections() {
         collectionId: collectionId || state.activeCollectionId,
       },
     });
-    return result.data?.removeDatasetFromCollection;
+    return result.data?.useRemoveDatasetFromCollection;
   };
 
   const createCollectionFromPending = ({

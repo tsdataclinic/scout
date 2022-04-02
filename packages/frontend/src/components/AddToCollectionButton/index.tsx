@@ -6,7 +6,7 @@ import { useCallback, useState, useMemo, ReactElement } from 'react';
 import { css } from '@emotion/react/macro';
 import { useQuery, gql } from '@apollo/client';
 import styled from '@emotion/styled/macro';
-import { Menu, MenuButton, MenuList, MenuItem } from '@reach/menu-button';
+import { Menu, MenuButton, MenuList } from '@reach/menu-button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import noop from '../../utils/noop';
@@ -14,6 +14,8 @@ import LoadingSpinner from '../Loading/LoadingSpinner';
 import Modal from '../Modal';
 import CollectionCreateForm from '../CollectionTab/CollectionCreateForm';
 import useCollectionCreate from '../CollectionTab/useCollectionCreate';
+import BasicMenuItem from './BasicMenuItem';
+import CollectionMenuItem from './CollectionMenuItem';
 
 const GET_COLLECTIONS_QUERY = gql`
   query GetUserCollections {
@@ -35,26 +37,21 @@ const StyledMenuList = styled(MenuList)`
   margin-top: 4px;
 `;
 
-const StyledMenuItem = styled(MenuItem)`
-  max-width: 340px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  &:hover {
-    background-color: #f7fafc;
-    color: black;
-  }
+const MenuItemHeader = styled.h6`
+  font-size: 13px;
+  font-weight: 700;
+  padding-left: 10px;
 `;
 
-function useCollections(): [
-  ReadonlyArray<{
+type Collection = {
+  id: string;
+  name: string;
+  datasets: ReadonlyArray<{
     id: string;
-    name: string;
-    datasets: ReadonlyArray<{
-      id: string;
-    }>;
-  }>,
-  boolean,
-] {
+  }>;
+};
+
+function useCollections(): [readonly Collection[], boolean] {
   const { data, loading } = useQuery(GET_COLLECTIONS_QUERY);
   return [data?.profile.collections || [], loading];
 }
@@ -77,25 +74,41 @@ export default function AddToCollectionButton({
   // calculate how many collections have this dataset
   const collectionsWithDataset = useMemo(
     () =>
-      collections.filter(coll => coll.datasets.some(d => d.id === datasetId)),
+      new Set(
+        collections
+          .filter(col => col.datasets.some(d => d.id === datasetId))
+          .map(col => col.id),
+      ),
     [collections, datasetId],
   );
-  const numCollectionsWithDataset = collectionsWithDataset.length;
+  const numCollectionsWithDataset = collectionsWithDataset.size;
 
-  const items = useMemo(
-    () =>
-      collections.map(coll => (
-        <StyledMenuItem key={coll.id} onSelect={() => undefined}>
-          {coll.name}
-        </StyledMenuItem>
-      )),
-    [collections],
-  );
+  const [itemsWithDataset, itemsWithoutDataset] = useMemo(() => {
+    function collectionToMenuItem(col: Collection): JSX.Element {
+      return (
+        <CollectionMenuItem
+          collectionId={col.id}
+          datasetId={datasetId}
+          name={col.name}
+          collectionContainsDataset={collectionsWithDataset.has(col.id)}
+        />
+      );
+    }
+
+    const withDataset = collections
+      .filter(col => collectionsWithDataset.has(col.id))
+      .map(collectionToMenuItem);
+    const withoutDataset = collections
+      .filter(col => !collectionsWithDataset.has(col.id))
+      .map(collectionToMenuItem);
+
+    return [withDataset, withoutDataset];
+  }, [collections, collectionsWithDataset, datasetId]);
 
   function renderMenuContent(): JSX.Element | ReactElement[] {
     if (loadingCollections) {
       return (
-        <StyledMenuItem
+        <BasicMenuItem
           onSelect={noop}
           css={{
             cursor: 'default',
@@ -105,26 +118,43 @@ export default function AddToCollectionButton({
           }}
         >
           <LoadingSpinner />
-        </StyledMenuItem>
+        </BasicMenuItem>
       );
     }
 
     if (collections.length === 0) {
       return (
-        <StyledMenuItem
+        <BasicMenuItem
           onSelect={() => {
             setIsCreateModalOpen(true);
           }}
         >
           Create your first collection
-        </StyledMenuItem>
+        </BasicMenuItem>
       );
     }
 
-    return items;
+    if (itemsWithDataset.length > 0) {
+      return (
+        <>
+          <MenuItemHeader>Collections that have this dataset</MenuItemHeader>
+          {itemsWithDataset}
+          <MenuItemHeader
+            css={css`
+              margin-top: 8px;
+            `}
+          >
+            Other collections
+          </MenuItemHeader>
+          {itemsWithoutDataset}
+        </>
+      );
+    }
+
+    return itemsWithoutDataset;
   }
 
-  const buttonText =
+  const menuButtonText =
     numCollectionsWithDataset === 0
       ? 'Add to collection'
       : `In ${pluralize('collection', numCollectionsWithDataset, true)}`;
@@ -132,7 +162,7 @@ export default function AddToCollectionButton({
   return (
     <Menu>
       <MenuButton>
-        {buttonText}
+        {menuButtonText}
         <FontAwesomeIcon
           style={{ marginLeft: 8 }}
           size="1x"
