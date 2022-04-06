@@ -1,5 +1,5 @@
 import './CollectionTabList.scss';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
@@ -19,9 +19,14 @@ export default function CollectionTabList({
   onCreate,
   onDismiss,
 }: Props): JSX.Element {
-  const [collectionToView, setCollectionToView] = useState<
-    Collection | undefined
+  const [collectionIdToView, setCollectionIdToView] = useState<
+    string | undefined
   >();
+
+  const collectionToView = useMemo(
+    () => collections.find(col => col.id === collectionIdToView),
+    [collections, collectionIdToView],
+  );
 
   const title = collectionToView ? (
     <UnderlinedLink to={getCollectionURL(collectionToView)}>
@@ -31,18 +36,17 @@ export default function CollectionTabList({
     'My Collections'
   );
 
-  // TODO: $ATC replace with actual icon
   const backIcon = collectionToView ? (
     <span
       role="button"
       tabIndex={0}
       onKeyPress={e => {
         if (e.key === 'Enter') {
-          setCollectionToView(undefined);
+          setCollectionIdToView(undefined);
         }
       }}
       onClick={() => {
-        setCollectionToView(undefined);
+        setCollectionIdToView(undefined);
       }}
     >
       <FontAwesomeIcon
@@ -76,11 +80,11 @@ export default function CollectionTabList({
                     tabIndex={0}
                     onKeyPress={e => {
                       if (e.key === 'Enter') {
-                        setCollectionToView(collection);
+                        setCollectionIdToView(collection.id);
                       }
                     }}
                     onClick={() => {
-                      setCollectionToView(collection);
+                      setCollectionIdToView(collection.id);
                     }}
                   >
                     <p>

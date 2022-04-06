@@ -84,13 +84,14 @@ export default function AddToCollectionButton({
   const numCollectionsWithDataset = collectionsWithDataset.size;
 
   const [itemsWithDataset, itemsWithoutDataset] = useMemo(() => {
-    function collectionToMenuItem(col: Collection): JSX.Element {
+    function collectionToMenuItem(collection: Collection): JSX.Element {
       return (
         <CollectionMenuItem
-          collectionId={col.id}
+          key={collection.id}
+          collectionId={collection.id}
           datasetId={datasetId}
-          name={col.name}
-          collectionContainsDataset={collectionsWithDataset.has(col.id)}
+          name={collection.name}
+          collectionContainsDataset={collectionsWithDataset.has(collection.id)}
         />
       );
     }

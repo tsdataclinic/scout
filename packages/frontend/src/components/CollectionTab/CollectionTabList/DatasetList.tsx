@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useQuery, gql, QueryResult } from '@apollo/client';
 import { Collection } from './types';
 import getDatasetURL from '../../../utils/getDatasetURL';
@@ -41,8 +40,7 @@ export default function DatasetList({ collection }: Props): JSX.Element {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore TODO: remove this when useUserCollections is type-annotated
   const [, { removeFromCurrentCollection }] = useUserCollections();
-  const [datasetIds, setDatasetIds] = useState<string[]>(collection.datasetIds);
-  const datasets = useDatasets(datasetIds).data?.datasetsByIds || [];
+  const datasets = useDatasets(collection.datasetIds).data?.datasetsByIds || [];
 
   return (
     <ul>
@@ -59,16 +57,7 @@ export default function DatasetList({ collection }: Props): JSX.Element {
           <button
             type="button"
             onClick={async () => {
-              // TODO: $ATC remove collection optimistically?
-              // TODO: $ATC use the return value here to reset the collection
-              // and also refresh the useDatasets query
-              const newCollection: {
-                description: string;
-                id: string;
-                name: string;
-                datasets: Array<{ id: string }>;
-              } = await removeFromCurrentCollection(dataset.id, collection.id);
-              setDatasetIds(newCollection.datasets.map(d => d.id));
+              removeFromCurrentCollection(dataset.id, collection.id);
             }}
           >
             Remove

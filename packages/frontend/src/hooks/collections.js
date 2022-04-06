@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useCollectionsValue } from '../contexts/CollectionsContext';
 import {
   useAddToCollection,
@@ -27,6 +28,10 @@ export function useUserCollections() {
         datasetIds: col.datasets.map(d => d.id),
       }))
     : [];
+
+  useEffect(() => {
+    console.log('server collections changed', data?.profile?.collections);
+  }, [data?.profile?.collections]);
 
   const [addTo] = useAddToCollection();
   const [removeFrom] = useRemoveDatasetFromCollection();
@@ -126,15 +131,15 @@ export function useUserCollections() {
   // TODO: $ATC - update the dispatches so that unauthenticated users remove
   // the dataset from the correct collection
   const removeFromCurrentCollection = async (datasetId, collectionId) => {
-    if (state.activeCollectionId === 'pending') {
-      dispatch({
-        type: 'REMOVE_FROM_PENDING_COLLECTION',
-        payload: datasetId,
-      });
-      return undefined;
-    }
-
     if (!isAuthenticated) {
+      if (state.activeCollectionId === 'pending') {
+        dispatch({
+          type: 'REMOVE_FROM_PENDING_COLLECTION',
+          payload: datasetId,
+        });
+        return undefined;
+      }
+
       // add to the current collection locally
       dispatch({
         type: 'REMOVE_FROM_CURRENT_COLLECTION',
@@ -150,7 +155,7 @@ export function useUserCollections() {
         collectionId: collectionId || state.activeCollectionId,
       },
     });
-    return result.data?.useRemoveDatasetFromCollection;
+    return result.data?.removeDatasetFromCollection;
   };
 
   const createCollectionFromPending = ({
