@@ -1,8 +1,10 @@
+/* @jsxImportSource @emotion/react */
 import './CollectionTabList.scss';
+import { css } from '@emotion/react';
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { Collection } from './types';
 import DatasetList from './DatasetList';
 import getCollectionURL from '../../../utils/getCollectionURL';
@@ -76,6 +78,16 @@ export default function CollectionTabList({
               {collections.map(collection => (
                 <li key={collection.id} className="collection-tab-dataset">
                   <div
+                    css={css`
+                      display: flex;
+                      justify-content: space-between;
+                      .collection-tab-list__chevron-right {
+                        color: #a6b9d2 !important;
+                      }
+                      &:hover .collection-tab-list__chevron-right {
+                        color: #5a7598 !important;
+                      }
+                    `}
                     role="button"
                     tabIndex={0}
                     onKeyPress={e => {
@@ -87,17 +99,31 @@ export default function CollectionTabList({
                       setCollectionIdToView(collection.id);
                     }}
                   >
-                    <p>
-                      <UnderlinedLink
-                        to={getCollectionURL(collection)}
-                        onClick={e => {
-                          e.stopPropagation();
-                        }}
-                      >
-                        {collection.name}
-                      </UnderlinedLink>
-                    </p>
-                    <p className="agency">{collection.description}</p>
+                    <div
+                      css={css`
+                        overflow: hidden;
+                        padding-right: 8px !important;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                      `}
+                    >
+                      <p>
+                        <UnderlinedLink
+                          to={getCollectionURL(collection)}
+                          onClick={e => {
+                            e.stopPropagation();
+                          }}
+                        >
+                          {collection.name}
+                        </UnderlinedLink>
+                      </p>
+                      <p className="agency">{collection.description}</p>
+                    </div>
+                    <FontAwesomeIcon
+                      className="collection-tab-list__chevron-right"
+                      size="1x"
+                      icon={faChevronRight}
+                    />
                   </div>
                 </li>
               ))}

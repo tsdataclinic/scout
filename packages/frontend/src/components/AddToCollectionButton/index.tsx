@@ -1,4 +1,4 @@
-/** @jsxImportSource @emotion/react */
+/* @jsxImportSource @emotion/react */
 import '@reach/menu-button/styles.css';
 import pluralize from 'pluralize';
 import { toast } from 'react-toastify';
