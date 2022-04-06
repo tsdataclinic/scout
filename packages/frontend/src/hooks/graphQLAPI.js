@@ -1,4 +1,5 @@
 import { useQuery, gql, useMutation } from '@apollo/client';
+import { DEFAULT_PORTAL_ID } from '../portals';
 
 export const useDatasetsFromIds = ids => {
   const DatasetsFromIdsQuery = gql`
@@ -331,11 +332,11 @@ export function useCategoriesGQL(portal, { limit, page, search, isGlobal }) {
   `;
 
   const variables = {
-    portal,
     limit,
     offset: limit * page,
     search,
     isGlobal,
+    portal: portal || DEFAULT_PORTAL_ID,
   };
 
   return useQuery(getCategoriesQuery, {
@@ -372,10 +373,10 @@ export function useDepartmentsGQL(portal, { limit, page, search, isGlobal }) {
 
   const variables = {
     isGlobal,
-    portal,
     limit,
     offset: limit * page,
     search,
+    portal: portal || DEFAULT_PORTAL_ID,
   };
 
   return useQuery(GET_DEPARTMENTS_QUERY, {
@@ -411,11 +412,11 @@ export const useColumnsGQL = (portal, { limit, page, search, isGlobal }) => {
   `;
 
   const variables = {
-    portal,
     limit,
     offset: limit * page,
     search,
     isGlobal,
+    portal: portal || DEFAULT_PORTAL_ID,
   };
 
   return useQuery(getColumnsQuery, {

@@ -18,7 +18,7 @@ import AboutPage from './layout/AboutPage/AboutPage';
 import CollectionsPage from './layout/CollectionsPage/CollectionsPage';
 import WelcomeModal from './components/WelcomeModal/WelcomeModal';
 import GHPagesRedirect from './components/GHPagesRedirect/GHPagesRedirect';
-import { DEFAULT_PORTAL } from './portals';
+import { DEFAULT_PORTAL, GLOBAL_PORTAL_IDENTIFIER } from './portals';
 import { ProfilePage } from './layout/ProfilePage/ProfilePage';
 import { usePortals } from './hooks/graphQLAPI';
 
@@ -38,12 +38,15 @@ function PortalRoute() {
   const portalDetails = Portals
     ? Portals.find(p => p.abbreviation === portal)
     : null;
-  if (Portals && !portalDetails) {
+  if (Portals && !portalDetails && portal !== GLOBAL_PORTAL_IDENTIFIER) {
     return <Navigate to={`/${DEFAULT_PORTAL}`} />;
   }
 
   return Portals ? (
-    <HomePage portal={Portals.find(p => p.abbreviation === portal)} />
+    <HomePage
+      portal={Portals.find(p => p.abbreviation === portal)}
+      initialGlobalSearchVal={portal === GLOBAL_PORTAL_IDENTIFIER}
+    />
   ) : (
     'Loading ...'
   );

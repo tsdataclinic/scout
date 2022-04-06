@@ -50,16 +50,16 @@ export default function Filters({
           <div className="filters-scroll-area">
             <div className="departments">
               <DepartmentSelector
-                portalId={portal.id}
+                portalId={portal?.id}
                 isGlobal={globalSearch}
               />
             </div>
             <div className="columns">
-              <ColumnSelector portalId={portal.id} isGlobal={globalSearch} />
+              <ColumnSelector portalId={portal?.id} isGlobal={globalSearch} />
             </div>
             <div className="categories">
               <CategoriesSelector
-                portalId={portal.id}
+                portalId={portal?.id}
                 isGlobal={globalSearch}
               />
             </div>

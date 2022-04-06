@@ -68,6 +68,7 @@ Then, run the following commands inside it:
 ```
 CREATE DATABASE scout;
 CREATE USER postgres;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 ```
 
 That's all you need to do in postgres. You can quit postgres by entering `\q`.

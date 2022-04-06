@@ -9,14 +9,17 @@ import { ReactComponent as ExploreSVG } from '../../icons/explore.svg';
 import { ReactComponent as CollectionsSVG } from '../../icons/collection.svg';
 import { ReactComponent as DataClinicSVG } from '../../icons/dataClinicWhite.svg';
 import CollectionTab from '../CollectionTab/CollectionTab';
+import { GLOBAL_PORTAL_IDENTIFIER } from '../../portals';
 import { useUserCollections } from '../../hooks/collections';
 import useLoginLogout from '../../auth/useLoginLogout';
 import useCurrentUser from '../../auth/useCurrentUser';
 
 export default function SideNav() {
   const [showCollectionTab, setShowCollectionTab] = useState(false);
-  const [{ activeCollection }] = useUserCollections();
-  const { user, isAuthenticated } = useCurrentUser();
+  const [
+    { activeCollection, activePortalAbbreviation, globalPortalsAreActive },
+  ] = useUserCollections();
+  const { isAuthenticated } = useCurrentUser();
   const { login, logout } = useLoginLogout();
 
   return (
@@ -33,7 +36,11 @@ export default function SideNav() {
         }
         alt="Explore"
         exact
-        to="/explore"
+        to={`/explore/${
+          globalPortalsAreActive
+            ? GLOBAL_PORTAL_IDENTIFIER
+            : activePortalAbbreviation
+        }`}
       >
         <ExploreSVG />
         <h1>Explore</h1>
