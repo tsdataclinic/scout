@@ -16,6 +16,7 @@ import CollectionCreateForm from '../CollectionTab/CollectionCreateForm';
 import useCollectionCreate from '../CollectionTab/useCollectionCreate';
 import BasicMenuItem from './BasicMenuItem';
 import CollectionMenuItem from './CollectionMenuItem';
+import { usePreventCollectionTabBlur } from '../CollectionTab/CollectionTab';
 
 const GET_COLLECTIONS_QUERY = gql`
   query GetUserCollections {
@@ -64,6 +65,7 @@ type Props = {
 export default function AddToCollectionButton({
   datasetId,
 }: Props): JSX.Element {
+  const preventCollectionTabBlur = usePreventCollectionTabBlur();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -161,16 +163,21 @@ export default function AddToCollectionButton({
       : `In ${pluralize('collection', numCollectionsWithDataset, true)}`;
 
   return (
+    /* eslint-disable jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events */
     <Menu>
       <MenuButton>
-        {menuButtonText}
-        <FontAwesomeIcon
-          style={{ marginLeft: 8 }}
-          size="1x"
-          icon={faCaretDown}
-        />
+        <div onClick={preventCollectionTabBlur}>
+          {menuButtonText}
+          <FontAwesomeIcon
+            style={{ marginLeft: 8 }}
+            size="1x"
+            icon={faCaretDown}
+          />
+        </div>
       </MenuButton>
-      <StyledMenuList>{renderMenuContent()}</StyledMenuList>
+      <StyledMenuList>
+        <div onClick={preventCollectionTabBlur}>{renderMenuContent()}</div>
+      </StyledMenuList>
       {isCreateModalOpen ? (
         <Modal isOpen onDismiss={onDismissModal}>
           <CollectionCreateForm
@@ -205,5 +212,6 @@ export default function AddToCollectionButton({
         </Modal>
       ) : null}
     </Menu>
+    /* eslint-enable */
   );
 }

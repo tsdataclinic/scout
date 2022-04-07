@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useCollectionsValue } from '../contexts/CollectionsContext';
 import {
   useAddToCollection,
@@ -28,10 +27,6 @@ export function useUserCollections() {
         datasetIds: col.datasets.map(d => d.id),
       }))
     : [];
-
-  useEffect(() => {
-    console.log('server collections changed', data?.profile?.collections);
-  }, [data?.profile?.collections]);
 
   const [addTo] = useAddToCollection();
   const [removeFrom] = useRemoveDatasetFromCollection();

@@ -5,6 +5,7 @@ import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import pluralize from 'pluralize';
 import { Collection } from './types';
 import DatasetList from './DatasetList';
 import getCollectionURL from '../../../utils/getCollectionURL';
@@ -131,7 +132,9 @@ export default function CollectionTabList({
                     {collection.name}
                   </UnderlinedLink>
                 </p>
-                <p className="agency">{collection.description}</p>
+                <p className="agency">
+                  {pluralize('dataset', collection.datasetIds.length, true)}
+                </p>
               </div>
               <FontAwesomeIcon
                 className="collection-tab-list__chevron-right"

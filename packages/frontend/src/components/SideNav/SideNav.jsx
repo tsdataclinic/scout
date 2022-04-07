@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { useState, useEffect } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import './SideNav.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,11 +16,14 @@ import useCurrentUser from '../../auth/useCurrentUser';
 
 export default function SideNav() {
   const [showCollectionTab, setShowCollectionTab] = useState(false);
-  const [
-    { activeCollection, activePortalAbbreviation, globalPortalsAreActive },
-  ] = useUserCollections();
+  const [{ activePortalAbbreviation, globalPortalsAreActive }] =
+    useUserCollections();
   const { isAuthenticated } = useCurrentUser();
   const { login, logout } = useLoginLogout();
+  const onCollectionTabDismiss = useCallback(
+    () => setShowCollectionTab(false),
+    [],
+  );
 
   return (
     <nav className="side-nav">
@@ -54,10 +57,12 @@ export default function SideNav() {
           <CollectionsSVG />
           <h1>Collections</h1>
         </button>
-        <CollectionTab
-          visible={showCollectionTab}
-          onDismiss={() => setShowCollectionTab(false)}
-        />
+        {showCollectionTab ? (
+          <CollectionTab
+            visible={showCollectionTab}
+            onDismiss={onCollectionTabDismiss}
+          />
+        ) : null}
       </div>
       <NavLink
         exact
