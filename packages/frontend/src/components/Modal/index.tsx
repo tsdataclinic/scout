@@ -1,6 +1,6 @@
 /* @jsxImportSource @emotion/react */
 import { ReactNode } from 'react';
-import { css } from '@emotion/react';
+import { css } from '@emotion/react/macro';
 import { Dialog } from '@reach/dialog';
 import { VisuallyHidden } from '@reach/visually-hidden';
 import '@reach/dialog/styles.css';

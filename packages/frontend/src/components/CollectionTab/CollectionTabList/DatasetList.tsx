@@ -3,6 +3,7 @@ import { Collection } from './types';
 import getDatasetURL from '../../../utils/getDatasetURL';
 import { useUserCollections } from '../../../hooks/collections';
 import UnderlinedLink from './UnderlinedLink';
+import EmptyPanelContent from './EmptyPanelContent';
 
 type Dataset = {
   id: string;
@@ -41,6 +42,14 @@ export default function DatasetList({ collection }: Props): JSX.Element {
   // @ts-ignore TODO: remove this when useUserCollections is type-annotated
   const [, { removeFromCurrentCollection }] = useUserCollections();
   const datasets = useDatasets(collection.datasetIds).data?.datasetsByIds || [];
+
+  if (datasets.length === 0) {
+    return (
+      <EmptyPanelContent>
+        No datasets have been added to this dataset.
+      </EmptyPanelContent>
+    );
+  }
 
   return (
     <ul>

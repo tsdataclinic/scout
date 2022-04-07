@@ -5,6 +5,8 @@ import AuthConfig from './AuthConfig';
 /**
  * Returns a new auth token that can be used as a Bearer token for
  * authenticated API calls.
+ *
+ * Returns undefined if there is no user authenticated.
  */
 export default async function getAuthToken(): Promise<string | undefined> {
   const allAuthenticatedAccounts = MSAL_INSTANCE.getAllAccounts();
