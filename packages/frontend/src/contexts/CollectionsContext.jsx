@@ -114,7 +114,11 @@ export function CollectionsProvider({ children }) {
           payload: {
             ...initialState,
             activePortalAbbreviation: cachedState.activePortalAbbreviation,
-            collections: cachedState.collections,
+
+            // scrub the 'pending' collection in case it was left in the cache
+            collections: cachedState.collections.filter(
+              c => c.id === 'pending',
+            ),
             globalPortalsAreActive: cachedState.globalPortalsAreActive,
             hydratedData: true,
           },
