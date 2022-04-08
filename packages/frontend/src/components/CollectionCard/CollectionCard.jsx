@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
-import { formatDate } from '../../utils/formatters';
 import { useDeleteCollection } from '../../hooks/graphQLAPI';
 import useCurrentUser from '../../auth/useCurrentUser';
 import Modal from '../Modal';
@@ -48,9 +47,6 @@ export default function CollectionCard({ collection }) {
   return (
     <div className="collection-card" css={{ position: 'relative' }}>
       <div className="custom-column left">
-        <p className="created-at">
-          Collection created {formatDate(collection.createdAt)}
-        </p>
         <h3>
           <Link to={`/collection/${collection.id}`}>{collection.name}</Link>
         </h3>

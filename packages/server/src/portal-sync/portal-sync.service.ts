@@ -107,12 +107,12 @@ type SocrataDataset = {
  */
 const DATA_REFRESH_CONFIG = {
   // set this to true to ignore populating elastic search
-  skipElasticSearchRebuild: false,
+  skipElasticSearchRebuild: true,
   skipPostgresRefresh: false,
   skipMLDatasetProcessing: false,
 
   // set this to true to use a hardcoded list of portals
-  usePortalListOverride: false,
+  usePortalListOverride: true,
 
   // if `usePortalListOverride` is true, then use this list of portals instead
   // of pulling all portals from Socrata
@@ -120,10 +120,10 @@ const DATA_REFRESH_CONFIG = {
     ? process.env.PORTAL_OVERRIDE_LIST.split(',')
     : [
         // 'data.ct.gov',
-        // 'data.cityofchicago.org',
+        'data.cityofchicago.org',
         'data.cityofnewyork.us',
         // 'data.ny.gov',
-        // 'data.nashville.gov',
+        'data.nashville.gov',
       ],
 };
 

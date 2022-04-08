@@ -38,5 +38,5 @@ export class Collection {
 
   @Field({ nullable: true })
   @Column({ type: 'timestamp with time zone', nullable: true })
-  createdAt: Date;  
+  createdAt: Date;
 }

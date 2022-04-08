@@ -12,6 +12,7 @@ export const CollectionsContext = createContext();
  * - name : the name of the collection
  * - id : a random id for the collection
  * - description : short 255 character description of the collection
+ * - createdAt: the date the collection is created
  */
 const initialState = {
   activePortalAbbreviation: DEFAULT_PORTAL,

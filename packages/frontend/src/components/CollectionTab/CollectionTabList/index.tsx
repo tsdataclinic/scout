@@ -55,7 +55,6 @@ export default function CollectionTabList({
     >
       <FontAwesomeIcon
         className="collection-tab-list__back-arrow"
-        css={{ color: 'black', marginTop: -2, marginRight: 8 }}
         size="1x"
         icon={faArrowLeft}
       />
