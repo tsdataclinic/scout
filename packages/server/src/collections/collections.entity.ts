@@ -37,6 +37,6 @@ export class Collection {
   user: Promise<User>;
 
   @Field({ nullable: true })
-  @Column({ type: 'timestamp with time zone', nullable: true })
+  @Column({ type: 'timestamp with time zone' })
   createdAt: Date;
 }
