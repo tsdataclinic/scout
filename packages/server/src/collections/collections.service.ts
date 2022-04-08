@@ -40,8 +40,8 @@ export class CollectionsService {
     return collections;
   }
 
-  async deleteCollection(id: string) {
-    return this.collectionRepo.delete(id);
+  async deleteCollection(collection: Collection) {
+    return this.collectionRepo.remove(collection);
   }
 
   async addToCollection(id: string, datasetsToAdd: Dataset[]) {

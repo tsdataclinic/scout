@@ -209,7 +209,7 @@ export const useDeleteCollection = () => {
   const DeleteCollection = gql`
     mutation DeleteCollection($id: String!) {
       deleteCollection(id: $id) {
-        id
+        name
       }
     }
   `;
