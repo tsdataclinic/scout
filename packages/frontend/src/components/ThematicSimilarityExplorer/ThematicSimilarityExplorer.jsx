@@ -2,7 +2,6 @@ import { useMemo } from 'react';
 import './ThematicSimilariryExplorer.scss';
 import Dataset from '../Dataset/Dataset';
 import { useSimilarDatasets } from '../../hooks/graphQLAPI';
-import { useUserCollections } from '../../hooks/collections';
 
 export function ThematicSimilarityExplorer({ datasetId, global, portal }) {
   const { loading, data, error } = useSimilarDatasets(
@@ -18,15 +17,6 @@ export function ThematicSimilarityExplorer({ datasetId, global, portal }) {
     return loadedDatasets.filter(({ dataset }) => dataset.id !== datasetId);
   }, [data, loading, error, datasetId]);
 
-  const [
-    ,
-    {
-      inCurrentCollection,
-      addToCurrentCollection,
-      removeFromCurrentCollection,
-    },
-  ] = useUserCollections();
-
   return (
     <div className="thematic-similarity-explorer">
       <p>
@@ -36,16 +26,7 @@ export function ThematicSimilarityExplorer({ datasetId, global, portal }) {
       {loading && <p>Loading ...</p>}
       <div className="dataset-recomendataions-theme-list">
         {similarDatasets?.map(d => (
-          <Dataset
-            showStats={false}
-            onAddToCollection={() => addToCurrentCollection(d.dataset.id)}
-            onRemoveFromCollection={() =>
-              removeFromCurrentCollection(d.dataset.id)
-            }
-            dataset={d.dataset}
-            similarity={d.score}
-            inCollection={inCurrentCollection(d.id)}
-          />
+          <Dataset showStats={false} dataset={d.dataset} similarity={d.score} />
         ))}
       </div>
     </div>

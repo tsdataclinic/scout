@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useUserCollections } from '../../hooks/collections';
 import { CollectionTabCreate } from './CollectionTabCreate';
-import { CollectionTabSwitch } from './CollectionTabSwitch';
-import { CollectionTabAdd } from './CollectionTabAdd';
 import './CollectionTab.scss';
 import CollectionTabList from './CollectionTabList';
 
@@ -34,10 +32,7 @@ function useDismissOnBlur(onDismiss) {
 export default function CollectionTab({ visible, onDismiss }) {
   const preventCollectionTabBlur = useDismissOnBlur(onDismiss);
 
-  const [
-    { activeCollection, collections, activeCollectionId },
-    { setActiveCollection },
-  ] = useUserCollections();
+  const [{ collections }] = useUserCollections();
 
   const [tab, setTab] = useState('list');
 
@@ -45,10 +40,7 @@ export default function CollectionTab({ visible, onDismiss }) {
     setTab('create');
   };
 
-  const onCollectionCreated = collectionId => {
-    if (collectionId) {
-      setActiveCollection(collectionId);
-    }
+  const onCollectionCreated = () => {
     setTab('list');
   };
 
@@ -68,25 +60,7 @@ export default function CollectionTab({ visible, onDismiss }) {
         />
       ) : null}
 
-      {tab === 'create' && (
-        <CollectionTabCreate
-          isPending={activeCollection.id === 'pending'}
-          datasetIds={activeCollection.datasets.map(d => d.id)}
-          onDone={onCollectionCreated}
-        />
-      )}
-
-      {tab === 'add' && activeCollectionId && (
-        <CollectionTabAdd
-          onSwitch={() => setTab('switch')}
-          collectionId={activeCollectionId}
-          onDismiss={onDismiss}
-          onCreate={onCreate}
-        />
-      )}
-      {tab === 'switch' && (
-        <CollectionTabSwitch onSwitch={() => setTab('add')} />
-      )}
+      {tab === 'create' && <CollectionTabCreate onDone={onCollectionCreated} />}
     </div>
   );
 }

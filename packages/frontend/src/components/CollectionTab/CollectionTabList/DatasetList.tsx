@@ -40,7 +40,7 @@ function useDatasets(ids: string[]): QueryResult<{
 export default function DatasetList({ collection }: Props): JSX.Element {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore TODO: remove this when useUserCollections is type-annotated
-  const [, { removeFromCurrentCollection }] = useUserCollections();
+  const [, { removeFromCollection }] = useUserCollections();
   const datasets = useDatasets(collection.datasetIds).data?.datasetsByIds || [];
 
   if (datasets.length === 0) {
@@ -66,7 +66,7 @@ export default function DatasetList({ collection }: Props): JSX.Element {
           <button
             type="button"
             onClick={async () => {
-              removeFromCurrentCollection(dataset.id, collection.id);
+              removeFromCollection(dataset.id, collection.id);
             }}
           >
             Remove

@@ -4,7 +4,6 @@ import pluralize from 'pluralize';
 import { toast } from 'react-toastify';
 import { useCallback, useState, useMemo, ReactElement } from 'react';
 import { css } from '@emotion/react/macro';
-import { useQuery, gql } from '@apollo/client';
 import styled from '@emotion/styled/macro';
 import { Menu, MenuButton, MenuList } from '@reach/menu-button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -17,20 +16,7 @@ import useCollectionCreate from '../CollectionTab/useCollectionCreate';
 import BasicMenuItem from './BasicMenuItem';
 import CollectionMenuItem from './CollectionMenuItem';
 import { usePreventCollectionTabBlur } from '../CollectionTab/CollectionTab';
-
-const GET_COLLECTIONS_QUERY = gql`
-  query GetUserCollections {
-    profile {
-      collections {
-        id
-        name
-        datasets {
-          id
-        }
-      }
-    }
-  }
-`;
+import { useUserCollections } from '../../hooks/collections';
 
 const StyledMenuList = styled(MenuList)`
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
@@ -42,20 +28,14 @@ const MenuItemHeader = styled.h6`
   font-size: 13px;
   font-weight: 700;
   padding-left: 10px;
+  padding-right: 24px;
 `;
 
 type Collection = {
   id: string;
   name: string;
-  datasets: ReadonlyArray<{
-    id: string;
-  }>;
+  datasetIds: readonly string[];
 };
-
-function useCollections(): [readonly Collection[], boolean] {
-  const { data, loading } = useQuery(GET_COLLECTIONS_QUERY);
-  return [data?.profile.collections || [], loading];
-}
 
 type Props = {
   /** An AddToCollection button should always be associated to a dataset id */
@@ -70,19 +50,24 @@ export default function AddToCollectionButton({
   const [description, setDescription] = useState('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [onTryCreateCollection, isCreating] = useCollectionCreate();
-  const [collections, loadingCollections] = useCollections();
   const onDismissModal = useCallback(() => setIsCreateModalOpen(false), []);
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore TODO: remove this ts-ignore
+  const [{ collections, loadingCollections }, { addToCollection }] =
+    useUserCollections();
 
   // calculate how many collections have this dataset
   const collectionsWithDataset = useMemo(
     () =>
       new Set(
         collections
-          .filter(col => col.datasets.some(d => d.id === datasetId))
-          .map(col => col.id),
+          .filter((col: Collection) => col.datasetIds.includes(datasetId))
+          .map((col: Collection) => col.id),
       ),
     [collections, datasetId],
   );
+
   const numCollectionsWithDataset = collectionsWithDataset.size;
 
   const [itemsWithDataset, itemsWithoutDataset] = useMemo(() => {
@@ -99,10 +84,10 @@ export default function AddToCollectionButton({
     }
 
     const withDataset = collections
-      .filter(col => collectionsWithDataset.has(col.id))
+      .filter((col: Collection) => collectionsWithDataset.has(col.id))
       .map(collectionToMenuItem);
     const withoutDataset = collections
-      .filter(col => !collectionsWithDataset.has(col.id))
+      .filter((col: Collection) => !collectionsWithDataset.has(col.id))
       .map(collectionToMenuItem);
 
     return [withDataset, withoutDataset];
@@ -142,14 +127,14 @@ export default function AddToCollectionButton({
         <>
           <MenuItemHeader>Collections that have this dataset</MenuItemHeader>
           {itemsWithDataset}
-          <MenuItemHeader
-            css={css`
-              margin-top: 8px;
-            `}
-          >
+          <MenuItemHeader css={{ marginTop: 8 }}>
             Other collections
           </MenuItemHeader>
-          {itemsWithoutDataset}
+          {itemsWithoutDataset.length === 0 ? (
+            <p css={{ marginLeft: 10 }}>There are no other collections</p>
+          ) : (
+            itemsWithoutDataset
+          )}
         </>
       );
     }
@@ -198,12 +183,16 @@ export default function AddToCollectionButton({
               style={{ marginRight: 8 }}
               disabled={isCreating}
               onClick={async () => {
-                await onTryCreateCollection(name, description);
+                const collectionId = await onTryCreateCollection(
+                  name,
+                  description,
+                );
+                await addToCollection(datasetId, collectionId);
                 onDismissModal();
-                toast('Collection created!');
+                toast('Created collection!');
               }}
             >
-              Create
+              Create and add dataset
             </button>
             <button type="button" onClick={onDismissModal}>
               Cancel

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import CollectionCreateForm from './CollectionCreateForm';
 import useCollectionCreate from './useCollectionCreate';
 
@@ -19,13 +20,14 @@ export function CollectionTabCreate({ onDone }) {
         <button
           type="submit"
           onClick={async () => {
-            const createdCollectionId = await onTryCreateCollection();
-            onDone(createdCollectionId);
+            await onTryCreateCollection(name, description);
+            onDone();
+            toast('Created collection');
           }}
         >
           Create
         </button>
-        <button type="button" onClick={() => onDone(undefined)}>
+        <button type="button" onClick={() => onDone()}>
           Cancel
         </button>
       </div>

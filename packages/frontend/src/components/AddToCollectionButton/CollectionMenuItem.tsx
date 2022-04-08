@@ -59,11 +59,10 @@ export default function CollectionMenuItem({
 }: Props): JSX.Element {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const [, { addToCurrentCollection, removeFromCurrentCollection }] =
-    useUserCollections();
+  const [, { addToCollection, removeFromCollection }] = useUserCollections();
 
   const onRemoveClick = (): void => {
-    removeFromCurrentCollection(datasetId, collectionId);
+    removeFromCollection(datasetId, collectionId);
   };
 
   if (collectionContainsDataset) {
@@ -79,7 +78,7 @@ export default function CollectionMenuItem({
     <BasicMenuItem
       key={collectionId}
       onSelect={() => {
-        addToCurrentCollection(datasetId, collectionId);
+        addToCollection(datasetId, collectionId);
       }}
     >
       {name}
