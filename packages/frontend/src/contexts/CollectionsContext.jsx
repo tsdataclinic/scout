@@ -67,6 +67,14 @@ const reducer = (state, action) => {
         ),
       };
 
+    case 'DELETE_COLLECTION':
+      return {
+        ...state,
+        collections: state.collections.filter(
+          c => c.id !== payload.collectionId,
+        ),
+      };
+
     case 'CREATE_EMPTY_COLLECTION':
       return {
         ...state,

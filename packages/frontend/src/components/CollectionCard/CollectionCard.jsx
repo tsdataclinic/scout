@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import { useDeleteCollection } from '../../hooks/graphQLAPI';
 import useCurrentUser from '../../auth/useCurrentUser';
 import Modal from '../Modal';
+import { useCollectionsValue } from '../../contexts/CollectionsContext';
 
 export default function CollectionCard({ collection }) {
   const { isAuthenticated } = useCurrentUser();
@@ -17,6 +18,7 @@ export default function CollectionCard({ collection }) {
   const [deleteCollection] = useDeleteCollection();
   const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [, dispatch] = useCollectionsValue();
 
   const onDismissModal = () => setShowDeleteConfirmModal(false);
 
@@ -37,7 +39,12 @@ export default function CollectionCard({ collection }) {
         onDismissModal();
         toast('Collection deleted');
       } else {
-        setErrorMessage('Cannot delete collection unless authenticated');
+        dispatch({
+          type: 'DELETE_COLLECTION',
+          payload: {
+            collectionId: collection.id,
+          },
+        });
       }
     } catch (err) {
       setErrorMessage('Something went wrong');
