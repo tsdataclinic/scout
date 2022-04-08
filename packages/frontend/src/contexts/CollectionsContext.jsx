@@ -117,7 +117,7 @@ export function CollectionsProvider({ children }) {
 
             // scrub the 'pending' collection in case it was left in the cache
             collections: cachedState.collections.filter(
-              c => c.id === 'pending',
+              c => c.id !== 'pending',
             ),
             globalPortalsAreActive: cachedState.globalPortalsAreActive,
             hydratedData: true,
