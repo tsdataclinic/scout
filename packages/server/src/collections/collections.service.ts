@@ -27,6 +27,7 @@ export class CollectionsService {
     collection.datasets = Promise.resolve(datasets);
     console.log('Creating collection with user ', user);
     collection.user = Promise.resolve(user);
+    collection.createdAt = new Date();
     return this.collectionRepo.save(collection);
   }
 
@@ -39,8 +40,8 @@ export class CollectionsService {
     return collections;
   }
 
-  async deleteCollection(id: string) {
-    return this.collectionRepo.delete(id);
+  async deleteCollection(collection: Collection) {
+    return this.collectionRepo.remove(collection);
   }
 
   async addToCollection(id: string, datasetsToAdd: Dataset[]) {

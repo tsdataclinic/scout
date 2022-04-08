@@ -12,16 +12,13 @@ export const CollectionsContext = createContext();
  * - name : the name of the collection
  * - id : a random id for the collection
  * - description : short 255 character description of the collection
+ * - createdAt: the date the collection is created
  */
 const initialState = {
   activePortalAbbreviation: DEFAULT_PORTAL,
   globalPortalsAreActive: false,
-
-  // array of datasets to add to the pending collection
-  pendingCollection: [],
-  activeCollectionId: 'pending',
-  hydratedData: false,
   collections: [],
+  hydratedData: false,
 };
 
 const db = new Dexie('CollectionCache');
@@ -43,61 +40,37 @@ const reducer = (state, action) => {
         globalPortalsAreActive: payload.isGlobal,
       };
 
-    case 'SET_ACTIVE_COLLECTION':
-      return {
-        ...state,
-        activeCollectionId: payload,
-      };
-
-    case 'ADD_TO_PENDING_COLLECTION': {
-      return {
-        ...state,
-        pendingCollection: [...state.pendingCollection, payload],
-      };
-    }
-
-    case 'ADD_TO_CURRENT_COLLECTION': {
+    case 'ADD_TO_COLLECTION': {
       return {
         ...state,
         collections: state.collections.map(c =>
-          c.id === state.activeCollectionId
+          c.id === payload.collectionId
             ? {
                 ...c,
-                datasetIds: c.datasetIds.concat(payload),
+                datasetIds: c.datasetIds.concat(payload.datasetId),
               }
             : c,
         ),
       };
     }
 
-    case 'REMOVE_FROM_PENDING_COLLECTION':
-      return {
-        ...state,
-        pendingCollection: state.pendingCollection.filter(
-          dID => dID !== payload,
-        ),
-      };
-
-    case 'REMOVE_FROM_CURRENT_COLLECTION':
+    case 'REMOVE_FROM_COLLECTION':
       return {
         ...state,
         collections: state.collections.map(c =>
-          c.id === state.activeCollectionId
+          c.id === payload.collectionId
             ? {
                 ...c,
-                datasetIds: c.datasetIds.filter(id => id !== payload),
+                datasetIds: c.datasetIds.filter(id => id !== payload.datasetId),
               }
             : c,
         ),
       };
 
-    case 'CREATE_FROM_PENDING_COLLECTION':
     case 'CREATE_EMPTY_COLLECTION':
       return {
         ...state,
-        pendingCollection: [],
-        activeCollectionId: payload.id,
-        collections: [...state.collections, payload],
+        collections: [...state.collections, payload.collection],
       };
 
     case 'HYDRATE_STATE':
@@ -117,8 +90,6 @@ export function CollectionsProvider({ children }) {
     globalPortalsAreActive,
     hydratedData,
     collections,
-    activeCollectionId,
-    pendingCollection,
   } = state;
   const { isAuthenticated } = useCurrentUser();
   const { data: collectionsFromDB, loading: areCollectionsLoading } =
@@ -134,7 +105,9 @@ export function CollectionsProvider({ children }) {
           type: 'HYDRATE_STATE',
           payload: {
             ...initialState,
-            ...cachedState,
+            activePortalAbbreviation: cachedState.activePortalAbbreviation,
+            collections: cachedState.collections,
+            globalPortalsAreActive: cachedState.globalPortalsAreActive,
             hydratedData: true,
           },
         });
@@ -146,70 +119,20 @@ export function CollectionsProvider({ children }) {
       }
     }
 
-    async function hydrateFromAPI() {
-      if (!areCollectionsLoading) {
-        const initialCollections = collectionsFromDB.profile.collections.map(
-          col => ({
-            id: col.id,
-            name: col.name,
-            description: col.description,
-            datasetIds: col.datasets.map(d => d.id),
-          }),
-        );
-
-        // we still need to load cached data, because there can be things here
-        // that can help us in hydrating the data
-        const cachedData = await db.CollectionCache.get(1);
-        const cachedState = cachedData ? JSON.parse(cachedData.data) : {};
-
-        let initialActiveCollectionId = 'pending';
-        let initialPendingCollection = [];
-
-        // if there are no collections in our db, then let's take the
-        // cached pending collection as our starting point
-        if (initialCollections.length === 0 && cachedState.pendingCollection) {
-          initialPendingCollection = cachedState.pendingCollection;
-        }
-
-        // if we have at least one collection then we can make a smarter
-        // choice for our starting activeCollectionId
-        if (initialCollections.length > 0) {
-          const cachedActiveCollectionId = cachedState.activeCollectionId || '';
-
-          // check if the cached activeCollectionId is a valid id
-          if (initialCollections.some(c => c.id === cachedActiveCollectionId)) {
-            initialActiveCollectionId = cachedActiveCollectionId;
-          } else {
-            initialActiveCollectionId = initialCollections[0].id;
-          }
-        }
-
+    if (!hydratedData) {
+      if (isAuthenticated) {
         dispatch({
           type: 'HYDRATE_STATE',
           payload: {
             ...initialState,
-            activeCollectionId: initialActiveCollectionId,
-            pendingCollection: initialPendingCollection,
             hydratedData: true,
           },
         });
-      }
-    }
-
-    if (!hydratedData) {
-      if (isAuthenticated) {
-        hydrateFromAPI();
       } else {
         hydrateFromLocalCache();
       }
     }
-  }, [
-    isAuthenticated,
-    hydratedData,
-    collectionsFromDB,
-    activeCollectionId,
-    areCollectionsLoading,
-  ]);
+  }, [isAuthenticated, hydratedData, collectionsFromDB, areCollectionsLoading]);
 
   // Cache state
   useEffect(() => {
@@ -217,10 +140,8 @@ export function CollectionsProvider({ children }) {
       db.CollectionCache.put({
         data: JSON.stringify({
           activePortalAbbreviation,
-          activeCollectionId,
           collections,
           globalPortalsAreActive,
-          pendingCollection,
         }),
         id: 1,
       });
@@ -230,8 +151,6 @@ export function CollectionsProvider({ children }) {
     globalPortalsAreActive,
     hydratedData,
     collections,
-    activeCollectionId,
-    pendingCollection,
   ]);
 
   const context = React.useMemo(() => [state, dispatch], [state, dispatch]);

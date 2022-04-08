@@ -1,3 +1,4 @@
+/* @jsxImportSource @emotion/react */
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import moment from 'moment';
@@ -7,12 +8,12 @@ import ColumnMatchTable from '../../components/ColumnMatchTable/ColumnMatchTable
 import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
 import '../../components/Loading/Loading.scss';
 import usePageView from '../../hooks/analytics';
-import { useUserCollections } from '../../hooks/collections';
 import './DatasetPage.scss';
 import ViewOnOpenPortal from '../../components/ViewOnOpenPortal/ViewOnOpenPortal';
 import { useDatasetGQL } from '../../hooks/graphQLAPI';
 import { ThematicSimilarityExplorer } from '../../components/ThematicSimilarityExplorer/ThematicSimilarityExplorer';
 import ResourcesExplorer from './ResourcesExplorer';
+import AddToCollectionButton from '../../components/AddToCollectionButton';
 
 const formatDate = date => moment(date).format('MMMM DD, YYYY');
 
@@ -94,15 +95,6 @@ export default function DatasetPage() {
     );
   };
 
-  const [
-    ,
-    {
-      addToCurrentCollection,
-      removeFromCurrentCollection,
-      inCurrentCollection,
-    },
-  ] = useUserCollections();
-
   return (
     <div className="dataset-page" key={dataset ? dataset.id : 'unknown'}>
       <div className="dataset-details">
@@ -118,20 +110,11 @@ export default function DatasetPage() {
             className={dataset ? '' : 'animate'}
             html={dataset?.description}
           />
-          <button
-            type="button"
-            className="collection-button"
-            disabled={!dataset}
-            onClick={() =>
-              inCurrentCollection(datasetId)
-                ? removeFromCurrentCollection(datasetId)
-                : addToCurrentCollection(datasetId)
-            }
-          >
-            {inCurrentCollection(datasetId)
-              ? 'Remove From Collection'
-              : 'Add to Collection'}{' '}
-          </button>
+          {dataset ? (
+            <div css={{ marginTop: 8 }}>
+              <AddToCollectionButton datasetId={dataset.id} />
+            </div>
+          ) : null}
         </section>
         <section className="external-link">
           {dataset && (

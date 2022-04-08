@@ -34,6 +34,7 @@ export const useCollection = id => {
         name
         description
         id
+        createdAt
         datasets {
           name
           description
@@ -204,6 +205,19 @@ export const useCreateCollection = () => {
   });
 };
 
+export const useDeleteCollection = () => {
+  const DeleteCollection = gql`
+    mutation DeleteCollection($id: String!) {
+      deleteCollection(id: $id) {
+        name
+      }
+    }
+  `;
+  return useMutation(DeleteCollection, {
+    refetchQueries: [{ query: GET_ALL_CURRENT_USER_COLLECTIONS }],
+  });
+};
+
 export const useDatasetColumnsWithSuggestionCounts = (id, global) => {
   const Query = gql`
     query DatasetColumnWithSuggestions($id: Int!, $global: Boolean!) {
@@ -252,8 +266,6 @@ export function useRemoveDatasetFromCollection() {
         description
         datasets {
           id
-          name
-          description
         }
       }
     }

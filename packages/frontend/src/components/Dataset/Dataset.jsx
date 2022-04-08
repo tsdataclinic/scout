@@ -4,10 +4,10 @@ import { hilightMatches, formatDate } from '../../utils/formatters';
 import { useGetSimilarDatasets, useGetJoinNumbers } from '../../hooks/datasets';
 import { ReactComponent as ThematicIcon } from '../../icons/joinable.svg';
 import { ReactComponent as JoinIcon } from '../../icons/thematicSimilarity.svg';
-import { useUserCollections } from '../../hooks/collections';
 import DatasetLink from '../DatasetLink/DatasetLink';
 import ViewOnOpenPortal from '../ViewOnOpenPortal/ViewOnOpenPortal';
 import PortalInfo from '../PortalInfo/PortalInfo';
+import AddToCollectionButton from '../AddToCollectionButton';
 
 export default function Dataset({
   dataset,
@@ -24,17 +24,6 @@ export default function Dataset({
 
   const { portal } = dataset; // dataset ? portalForDomain(dataset.portal) : null;
 
-  const [
-    ,
-    {
-      addToCurrentCollection,
-      removeFromCurrentCollection,
-      inCurrentCollection,
-    },
-  ] = useUserCollections();
-
-  const inCollection = inCurrentCollection(dataset.id);
-
   return (
     <div className="dataset" key={dataset.id}>
       <div className="dataset-title">
@@ -48,18 +37,9 @@ export default function Dataset({
         </DatasetLink>
         {dataset.permalink}
       </div>
-      {showCollectionButtons && (
-        <button
-          type="button"
-          onClick={() =>
-            inCollection
-              ? removeFromCurrentCollection(dataset.id)
-              : addToCurrentCollection(dataset.id)
-          }
-        >
-          {inCollection ? 'Remove from collection' : 'Add to collection'}
-        </button>
-      )}
+      {showCollectionButtons ? (
+        <AddToCollectionButton datasetId={dataset.id} />
+      ) : null}
       {similarity && (
         <p className="similarity">
           <p className="header">Similarity</p>

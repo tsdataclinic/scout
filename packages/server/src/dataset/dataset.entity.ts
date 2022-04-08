@@ -35,15 +35,15 @@ export class Dataset {
   categories: string[];
 
   @Field({ nullable: true })
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'timestamp with time zone', nullable: true })
   metadataUpdatedAt: Date;
 
   @Field({ nullable: true })
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'timestamp with time zone', nullable: true })
   updatedAt: Date;
 
   @Field({ nullable: true })
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'timestamp with time zone', nullable: true })
   createdAt: Date;
 
   @Field({ nullable: true })

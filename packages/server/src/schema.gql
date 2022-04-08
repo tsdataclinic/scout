@@ -8,6 +8,7 @@ type CategoryCount {
 }
 
 type Collection {
+  createdAt: DateTime
   datasets: [Dataset!]!
   description: String!
   id: String!

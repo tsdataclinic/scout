@@ -35,4 +35,8 @@ export class Collection {
   @ManyToOne(type => User, user => user)
   @Field(type => User)
   user: Promise<User>;
+
+  @Field({ nullable: true })
+  @Column({ type: 'timestamp with time zone', nullable: true })
+  createdAt: Date;
 }

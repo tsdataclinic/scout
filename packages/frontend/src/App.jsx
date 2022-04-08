@@ -1,4 +1,6 @@
 import 'antd/dist/antd.css';
+import 'react-toastify/dist/ReactToastify.min.css';
+import { ToastContainer } from 'react-toastify';
 import './App.scss';
 import {
   BrowserRouter as Router,
@@ -96,6 +98,7 @@ function App() {
           <GHPagesRedirect />
           <WelcomeModal />
         </Router>
+        <ToastContainer />
       </div>
     </QueryClientProvider>
   );

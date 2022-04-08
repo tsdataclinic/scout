@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import numeral from 'numeral';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile } from '@fortawesome/free-regular-svg-icons';
@@ -8,19 +8,11 @@ import {
   faAngleDown,
 } from '@fortawesome/free-solid-svg-icons';
 import DatasetLink from '../DatasetLink/DatasetLink';
-import { useUserCollections } from '../../hooks/collections';
 import './JoinColumn.scss';
+import AddToCollectionButton from '../AddToCollectionButton';
 
 export default function JoinColumn({ dataset, matches, matchPC }) {
   const [collapsed, setCollapsed] = useState(true);
-  const [
-    ,
-    {
-      addToCurrentCollection,
-      removeFromCurrentCollection,
-      inCurrentCollection,
-    },
-  ] = useUserCollections();
 
   return (
     <div className="join-column">
@@ -28,7 +20,7 @@ export default function JoinColumn({ dataset, matches, matchPC }) {
         <span
           onClick={() => setCollapsed(!collapsed)}
           onKeyDown={e => {
-            if (e.keycode === 32) {
+            if (e.key === ' ') {
               setCollapsed(!collapsed);
             }
           }}
@@ -47,20 +39,7 @@ export default function JoinColumn({ dataset, matches, matchPC }) {
         <span>
           <DatasetLink dataset={dataset}>View</DatasetLink>
         </span>
-        <button
-          type="button"
-          onClick={() => {
-            if (inCurrentCollection(dataset.id)) {
-              removeFromCurrentCollection(dataset.id);
-            } else {
-              addToCurrentCollection(dataset.id);
-            }
-          }}
-        >
-          {inCurrentCollection(dataset.id)
-            ? 'Remove from collection'
-            : 'Add to collection'}
-        </button>
+        <AddToCollectionButton datasetId={dataset.id} />
       </div>
       {!collapsed &&
         (matches ? (

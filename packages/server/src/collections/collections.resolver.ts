@@ -57,10 +57,10 @@ export class CollectionsResolver {
     if (collection) {
       const collectionOwner = await collection.user;
       if (collectionOwner.id === currentUser.id) {
-        return this.collectionService.deleteCollection(id);
+        return this.collectionService.deleteCollection(collection);
       } else {
         throw new UnauthorizedException(
-          'You are not authroized to delete this collection',
+          'You are not authorized to delete this collection',
         );
       }
     }

@@ -15,6 +15,7 @@ import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
 import { useCollection, useDatasetsFromIds } from '../../hooks/graphQLAPI';
 import { useUserCollections } from '../../hooks/collections';
 import useCurrentUser from '../../auth/useCurrentUser';
+import { formatDate } from '../../utils/formatters';
 
 const EMPTY_COLLECTION = {
   datasetIds: [],
@@ -22,11 +23,19 @@ const EMPTY_COLLECTION = {
   name: '',
 };
 
-function getShareableURL(collectionName, datasetIds) {
+function getShareableURLForUnauthenticated(collectionName, datasetIds) {
   const urlOrigin = window.location.origin;
   const datasetIdsStr = datasetIds.join(',');
   return `${urlOrigin}/collection/${collectionName}/${datasetIdsStr}`;
 }
+
+// TODO: $CollectionsManagement - make shareable URLs for authenticated users work
+/*
+function getShareableURLForAuthenticated(collectionId) {
+  const urlOrigin = window.location.origin;
+  return `${urlOrigin}/collection/${collectionId}`;
+}
+*/
 
 export default function CollectionPage() {
   usePageView();
@@ -68,9 +77,19 @@ export default function CollectionPage() {
     };
   }
 
-  const { description, name: collectionName } = collection;
+  const { description, name: collectionName, createdAt } = collection;
 
-  const shareableURL = getShareableURL(collection.name, datasetIdsToLoad);
+  /*
+  TODO: $CollectionsManagement - make shareable URLs for authenticated users work
+  const shareableURL = isAuthenticated
+    ? getShareableURLForAuthenticated(id)
+    : getShareableURLForUnauthenticated(collection.name, datasetIdsToLoad);
+  */
+  const shareableURL = getShareableURLForUnauthenticated(
+    collection.name,
+    datasetIdsToLoad,
+  );
+
   const [isCopied, setCopied] = useClipboard(shareableURL);
 
   if (loading || (collections.length === 0 && !loadingCollectionFromURL)) {
@@ -96,6 +115,10 @@ export default function CollectionPage() {
           <p>
             {datasets.length} dataset
             {datasets.length > 1 ? 's' : ''}
+          </p>
+          <p>
+            Creation date:{' '}
+            {createdAt ? formatDate(new Date(createdAt)) : 'Unknown'}
           </p>
         </section>
         <div>
