@@ -50,7 +50,7 @@ cd scout
 yarn install
 ```
 
-### 3.3. Running Elasticsearch
+### 3.3 Running Elasticsearch
 
 The search backend uses Elasticsearch. To run it locally, the easiest way to do it is with [docker-compose](https://docs.docker.com/compose/install/):
 
@@ -145,7 +145,7 @@ export SCOUT_SERVER_AZURE_B2C_IDENTITY_METADATA_URI='===REPLACE_ME==='
 
 Replace all variables that say `===REPLACE_ME===` with their appropriate values. You will need to set up a few things first to get the necessary keys.
 
-#### 3.5.1. GitHub configuration
+#### 3.5.1 GitHub configuration
 
 We use GitHub authentication for automated code searches to display helpful resources for datasets.
 
@@ -191,7 +191,7 @@ Then go to `https://localhost:3000` to view the application. You're all set up n
 
 ## 4. Troubleshooting
 
-### Error when running `yarn sync-schema`: `client password must be a string`
+### 4.1 Error when running `yarn sync-schema`: `client password must be a string`
 
 The `packages/server/ormconfig.json` uses an empty password. If you installed postgres through Homebrew then the default postgres user should default to not requiring a password. If you installed postgres through a different method, the password should be whichever you used when installing the database.
 
@@ -199,10 +199,10 @@ Set your postgres user's password in `packages/server/ormconfig.json`. **Make su
 
 If you change your postgres user to not require a password or a blank password then you can leave `ormconfig.json` as is.
 
-### `TypeError: JwtStrategy requires a secret or key`
+### 4.2 `TypeError: JwtStrategy requires a secret or key`
 
 Make sure you've set up your [environment variables](#35-environment-variables) correctly.
 
-### The server is not recognizing the environment variables
+### 4.3 The server is not recognizing the environment variables
 
 Remember to reload your environment variables after you've changed them. You can do this by just opening a new terminal window. Alternatively, run `source ~/.zshrc` or `source ~/.bash_profile` (depending on your shell) to reload your environment variables after you've changed them.
