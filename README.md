@@ -107,7 +107,7 @@ Your database should now be seeded with some initial data. Now, you need to set 
 
 Add the following to your `.zshrc` or `.bash_profile` (depending on which shell you are running). If you are on Windows, you will need to add these as environment variables on your PowerShell, or whichever shell you use.
 
-```
+```bash
 export SCOUT_AZURE_CLIENT_ID='===REPLACE_ME==='
 export SCOUT_GITHUB_CLIENT_ID='===REPLACE_ME==='
 
