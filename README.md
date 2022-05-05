@@ -1,37 +1,39 @@
-# A searchable interface for any Socrata Open Data Portal
+# Scout
 
-![screenshot](https://scout.tsdataclinic.com/screenshot.png)
+![Screenshot of Scout](https://scout.tsdataclinic.com/screenshot.png)
 
-Introducing Scout, an open source tool that eases the discovery and curation of thematically related and joinable datasets to broaden the application of open data to uncover new insights.
+Scout is a data discovery tool for open data portals. It is an open source product that eases the search and curation of thematically related and joinable datasets to broaden the application of open data to uncover new insights.
 
 Scout is designed to help surface datasets in open data portals that might have escaped your attention before.
 
 At the moment, Scout only provides access to open data portals made accessible via the [Socrata API](https://socratadiscovery.docs.apiary.io/#).
 
-Try it out [here](https://scout.tsdataclinic.com)
+Try it out [here](https://scout.tsdataclinic.com).
 
-## Contributing
+## 1. Contributing {#contributing}
 
 We love all contributions, be it a bug report or feature request via a GitHub issue, or feedback over email
 
-## Roadmap
+## 2. Roadmap {#roadmap}
+
+**This roadmap is out of date and needs to be updated.**
 
 We will maintain a 6 month roadmap which you can read here: [roadmap](https://github.com/tsdataclinic/scout/blob/master/Roadmap.md). If you want clarification on the roadmap or have suggestions or other comments, please open an [issue](https://github.com/tsdataclinic/scout/issues).
 
-## Development
+## 3. Developing
 
-If you want to help with the development of scout, you will need to be able to run the code locally.
+If you want to help with the development of Scout, you need to be able to run the code locally.
 
-### Prerequisites
+### 3.1 Prerequisites
 
 Make sure you have the following installed:
 
 - Node
 - Yarn
-- Postgres
+- Postgres (on MacOS we recommend installing with [Homebrew](https://brew.sh/) rather than a manual download)
 - Docker
 
-### Installing requirements
+### 3.2 Installing requirements
 
 To get started clone the repo and install requirements:
 
@@ -41,7 +43,7 @@ cd scout
 yarn install
 ```
 
-### Running Elasticsearch
+### 3.3. Running Elasticsearch
 
 The search backend uses Elasticsearch. To run it locally, the easiest way to do it is with [docker-compose](https://docs.docker.com/compose/install/):
 
@@ -55,7 +57,7 @@ Note if you see an error about max_map_count you need to increase that number wi
 sudo sysctl -w vm.max_map_count=262144
 ```
 
-### Populating your local database
+### 3.4 Populating your local database
 
 The `ormconfig.json` in `packages/server/` is configured to point to a local postgres `scout` database. So we will need to create this database locally. First, start your postgres client:
 
@@ -101,7 +103,7 @@ When you see the following message:
 
 Then it means the data refresh is done. You should quit the server now (ctrl+C should do the trick). Next time you start the server you can just use `yarn start` as normal, without the `UPDATE_ON_BOOT` environment variable.
 
-### Environment variables
+### 3.5 Environment variables {#environment-variables}
 
 Your database should now be seeded with some initial data. Now, you need to set up your environment variables with the necessary API keys and configurations for the Scout app to run.
 
@@ -136,13 +138,13 @@ export SCOUT_SERVER_AZURE_B2C_IDENTITY_METADATA_URI='===REPLACE_ME==='
 
 Replace all variables that say `===REPLACE_ME===` with their appropriate values. You will need to set up a few things first to get the necessary keys.
 
-**1. GitHub configuration**
+#### 3.5.1. GitHub configuration
 
 We use GitHub authentication for automated code searches to display helpful resources for datasets.
 
 To get a GitHub Client ID and GitHub Client Secret you should [register a GitHub application](https://github.com/settings/applications/new).
 
-**2. Azure AD B2C configuration**
+#### 3.5.2 Azure AD B2C configuration
 
 Scout uses Azure AD B2C for authentication. This is more complicated to set up.
 
@@ -156,7 +158,7 @@ Once these are all set up you can update the necessary Azure environment variabl
 
 **Remember to run `source ~/.zshrc` or `source ~/.bash_profile` to reload your environment variables after you've changed them.**
 
-### Running the API server
+### 3.6 Running the API server
 
 If your server is running, stop the server (use Ctrl+C to end the server process) so it can pick up your newly set up environment variables.
 
@@ -169,7 +171,7 @@ yarn start
 
 Note that we didn't need the `PORTAL_OVERRIDE_LIST` or `UPDATE_ON_BOOT` environment variables anymore. Those were only necessary for populating the database. You shouldn't need them again.
 
-### Running the frontend server
+### 3.7 Running the frontend server
 
 The frontend is built in [React](https://reactjs.org/) and is bundled together using [Create React App](https://create-react-app.dev/). It runs on `https://localhost:3000` by default. To start the frontend server:
 
@@ -180,12 +182,20 @@ yarn start
 
 Then go to `https://localhost:3000` to view the application. You're all set up now!
 
-## Socrata Data Discovery API
+## 4. Troubleshooting
 
-Main data source for the project is the Socrata Data Discovery API. API docs live here:
+### Error when running `yarn sync-schema`: `client password must be a string`
 
-https://socratadiscovery.docs.apiary.io/
+The `packages/server/ormconfig.json` uses an empty password. If you installed postgres through Homebrew then the default postgres user should default to not requiring a password. If you installed postgres through a different method, the password should be whichever you used when installing the database.
 
-```
+Set your postgres user's password in `packages/server/ormconfig.json`. **Make sure to not commit this password back.**
 
-```
+If you change your postgres user to not require a password or a blank password then you can leave `ormconfig.json` as is.
+
+### `TypeError: JwtStrategy requires a secret or key`
+
+Make sure you've set up your [environment variables](#environment-variables) correctly.
+
+### The server is not recognizing the environment variables
+
+Remember to reload your environment variables after you've changed them. You can do this by just opening a new terminal window. Alternatively, run `source ~/.zshrc` or `source ~/.bash_profile` (depending on your shell) to reload your environment variables after you've changed them.
