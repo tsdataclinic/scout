@@ -154,7 +154,7 @@ Scout uses Azure AD B2C for authentication. This is more complicated to set up.
 
 Once these are all set up you can update the necessary Azure environment variables with your keys and URIs.
 
-==Remember to run `source ~/.zshrc` or `source ~/.bash_profile` to reload your environment variables after you've changed them.==
+**Remember to run `source ~/.zshrc` or `source ~/.bash_profile` to reload your environment variables after you've changed them.**
 
 ### Running the API server
 
