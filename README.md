@@ -101,7 +101,64 @@ When you see the following message:
 
 Then it means the data refresh is done. You should quit the server now (ctrl+C should do the trick). Next time you start the server you can just use `yarn start` as normal, without the `UPDATE_ON_BOOT` environment variable.
 
+### Environment variables
+
+Your database should now be seeded with some initial data. Now, you need to set up your environment variables with the necessary API keys and configurations for the Scout app to run.
+
+Add the following to your `.zshrc` or `.bash_profile` (depending on which shell you are running). If you are on Windows, you will need to add these as environment variables on your PowerShell, or whichever shell you use.
+
+```
+export SCOUT_AZURE_CLIENT_ID='===REPLACE_ME==='
+export SCOUT_GITHUB_CLIENT_ID='===REPLACE_ME==='
+
+export REACT_APP_SCOUT_API_URI='http://localhost:5000/graphql'
+export REACT_APP_SCOUT_CLIENT_URI='http://localhost:3000'
+export REACT_APP_SCOUT_GITHUB_CLIENT_ID=$SCOUT_GITHUB_CLIENT_ID
+export REACT_APP_SCOUT_AZURE_APP_CLIENT_ID=$SCOUT_AZURE_CLIENT_ID
+
+# should be of the form 'my_azure_team_name.b2clogin.com'
+export REACT_APP_SCOUT_AZURE_AUTHORITIES='===REPLACE_ME==='
+
+# should be of the form 'https://my_azure_team_name.b2clogin.com/my_azure_team_name.onmicrosoft.com/my_B2C_auth_policy_name'
+export REACT_APP_SCOUT_AZURE_FULL_AUTHORITY_URL='===REPLACE_ME==='
+
+# should be of the form 'https://my_azure_team_name.onmicrosoft.com/my-api/MyApi.API'
+export REACT_APP_SCOUT_AZURE_B2C_SCOPES='===REPLACE_ME==='
+
+export SCOUT_SERVER_GITHUB_CLIENT_ID=$SCOUT_GITHUB_CLIENT_ID
+export SCOUT_SERVER_GITHUB_CLIENT_SECRET='===REPLACE_ME==='
+export SCOUT_SERVER_AZURE_APP_CLIENT_ID=$SCOUT_AZURE_CLIENT_ID
+export SCOUT_SERVER_AZURE_B2C_AUTH_POLICY_NAME='===REPLACE_ME==='
+
+# should be of the form 'https://my_azure_team_name.b2clogin.com/my_azure_team_name.onmicrosoft.com/v2.0/.well-known/openid-configuration'
+export SCOUT_SERVER_AZURE_B2C_IDENTITY_METADATA_URI='===REPLACE_ME==='
+```
+
+Replace all variables that say `===REPLACE_ME===` with their appropriate values. You will need to set up a few things first to get the necessary keys.
+
+**1. GitHub configuration**
+
+We use GitHub authentication for automated code searches to display helpful resources for datasets.
+
+To get a GitHub Client ID and GitHub Client Secret you should [register a GitHub application](https://github.com/settings/applications/new).
+
+**2. Azure AD B2C configuration**
+
+Scout uses Azure AD B2C for authentication. This is more complicated to set up.
+
+1. [Register an Azure AD B2C tenant](https://docs.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-tenant).
+2. [Register a web application](https://docs.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-tenant) in your Azure AD B2C tenant.
+3. [Add a web API](https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-web-api-application) so Azure can accept and respond to requests of client applications that present an access token.
+4. [Add any identity providers you want](https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-identity-provider) if you want to allow social media logins, such as through Facebook or Google.
+5. [Set up a sign-up and sign-in policy for Azure AD B2C](https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-sign-up-and-sign-in-policy) so that the necessary authentication flows can be enabled.
+
+Once these are all set up you can update the necessary Azure environment variables with your keys and URIs.
+
+==Remember to run `source ~/.zshrc` or `source ~/.bash_profile` to reload your environment variables after you've changed them.==
+
 ### Running the API server
+
+If your server is running, stop the server (use Ctrl+C to end the server process) so it can pick up your newly set up environment variables.
 
 The API server uses [NestJS](https://nestjs.com/) and runs on `https://localhost:5000`. To start the API server:
 
