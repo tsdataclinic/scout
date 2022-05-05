@@ -10,6 +10,8 @@ At the moment, Scout only provides access to open data portals made accessible v
 
 Try it out [here](https://scout.tsdataclinic.com).
 
+**Table of Contents**
+
 1. [Contributing](#1-contributing)
 2. [Roadmap](#2-roadmap)
 3. [Developing](#3-developing)
