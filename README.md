@@ -19,13 +19,11 @@ Try it out [here](https://scout.tsdataclinic.com).
 
 ## 1. Contributing
 
-We love all contributions, be it a bug report or feature request via a GitHub issue, or feedback over email
+We love all contributions, be it a bug report or feature request via a GitHub issue, or feedback over email.
 
 ## 2. Roadmap
 
-**This roadmap is out of date and needs to be updated.**
-
-We will maintain a 6 month roadmap which you can read here: [roadmap](https://github.com/tsdataclinic/scout/blob/master/Roadmap.md). If you want clarification on the roadmap or have suggestions or other comments, please open an [issue](https://github.com/tsdataclinic/scout/issues).
+**A new roadmap is coming up soon for 2022.**
 
 ## 3. Developing
 
@@ -96,7 +94,9 @@ Create the necessary postgres tables:
 yarn sync-schema
 ```
 
-If you see a message that says `Schema syncronization finished successfully.` then it means you're good to go. Now that the tables are created, you need to populate them with data. You will need to start up the API server with the `PORTAL_OVERRIDE_LIST` and `UPDATE_ON_BOOT` environment variables.
+If you see a message that says `Schema syncronization finished successfully.` then it means you're good to go. Now that the tables are created, you need to populate them with data.
+
+We currently don't have a script you can run to populate the database. The official way is to start up the server with a few environment variable overrides to tell the server to populate the database on startup. You will need to start up the API server with the `PORTAL_OVERRIDE_LIST` and `UPDATE_ON_BOOT` environment variables set as follows:
 
 ```
 PORTAL_OVERRIDE_LIST=data.cityofnewyork.us,data.cityofchicago.org,data.nashville.gov UPDATE_ON_BOOT=true yarn start
@@ -108,7 +108,7 @@ When you see the following message:
 
 > Done updating all data
 
-Then it means the data refresh is done. You should quit the server now (ctrl+C should do the trick). Next time you start the server you can just use `yarn start` as normal, without the `UPDATE_ON_BOOT` environment variable.
+Then it means the data refresh is done. You should quit the server now (ctrl+C to quit). Next time you start the server you can just use `yarn start` as normal, without the `UPDATE_ON_BOOT` environment variable.
 
 ### 3.5 Environment variables
 
@@ -193,7 +193,7 @@ Then go to `https://localhost:3000` to view the application. You're all set up n
 
 ### 4.1 Error when running `yarn sync-schema`: `client password must be a string`
 
-The `packages/server/ormconfig.json` uses an empty password. If you installed postgres through Homebrew then the default postgres user should default to not requiring a password. If you installed postgres through a different method, the password should be whichever you used when installing the database.
+The `packages/server/ormconfig.json` config uses an empty password. If you installed postgres through Homebrew then by default the postgres user is configured to not required a password. If you installed postgres through a different method, the password should be whichever you used when installing the database.
 
 Set your postgres user's password in `packages/server/ormconfig.json`. **Make sure to not commit this password back.**
 
@@ -206,3 +206,13 @@ Make sure you've set up your [environment variables](#35-environment-variables) 
 ### 4.3 The server is not recognizing the environment variables
 
 Remember to reload your environment variables after you've changed them. You can do this by just opening a new terminal window. Alternatively, run `source ~/.zshrc` or `source ~/.bash_profile` (depending on your shell) to reload your environment variables after you've changed them.
+
+### 4.4 I cannot connect to Postgres.
+
+Make sure your postgres server is running. If you just installed Postgres or just rebooted your computer, then it's likely your Postgres server is not running yet.
+
+```
+pg_ctl -D /usr/local/var/postgres start
+```
+
+If this command doesn't work then you should replace `/usr/local/var/postgres` with the path to your Postgres data directory. If you installed Postgres through homebrew then it might be in `/opt/homebrew/var/postgres` (you can run `brew info postgres` to find out where the data directory is).
