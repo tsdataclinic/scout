@@ -10,11 +10,16 @@ At the moment, Scout only provides access to open data portals made accessible v
 
 Try it out [here](https://scout.tsdataclinic.com).
 
-## 1. Contributing {#contributing}
+1. [Contributing](#1-contributing)
+2. [Roadmap](#2-roadmap)
+3. [Developing](#3-developing)
+4. [Troubleshooting](#4-troubleshooting)
+
+## 1. Contributing
 
 We love all contributions, be it a bug report or feature request via a GitHub issue, or feedback over email
 
-## 2. Roadmap {#roadmap}
+## 2. Roadmap
 
 **This roadmap is out of date and needs to be updated.**
 
@@ -103,7 +108,7 @@ When you see the following message:
 
 Then it means the data refresh is done. You should quit the server now (ctrl+C should do the trick). Next time you start the server you can just use `yarn start` as normal, without the `UPDATE_ON_BOOT` environment variable.
 
-### 3.5 Environment variables {#environment-variables}
+### 3.5 Environment variables
 
 Your database should now be seeded with some initial data. Now, you need to set up your environment variables with the necessary API keys and configurations for the Scout app to run.
 
@@ -194,7 +199,7 @@ If you change your postgres user to not require a password or a blank password t
 
 ### `TypeError: JwtStrategy requires a secret or key`
 
-Make sure you've set up your [environment variables](#environment-variables) correctly.
+Make sure you've set up your [environment variables](#35-environment-variables) correctly.
 
 ### The server is not recognizing the environment variables
 
