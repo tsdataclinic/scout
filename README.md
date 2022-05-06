@@ -56,7 +56,7 @@ The search backend uses Elasticsearch. To run it locally, the easiest way to do 
 docker-compose -f docker-compose.yml up
 ```
 
-Note if you see an error about max_map_count you need to increase that number with a command like
+Note if you see an error about max_map_count then you need to increase that number with the following command:
 
 ```
 sudo sysctl -w vm.max_map_count=262144
