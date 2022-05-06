@@ -4,7 +4,7 @@ Please include a summary of the changes. Also include relevant motivation and co
 
 ## Screenshots or Videos (if applicable)
 
-Include screenshots or video recordings of your change (if applicable).
+Include screenshots or video recordings to show off your change (if applicable).
 
 ## Related Issues
 
