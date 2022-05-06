@@ -2,9 +2,9 @@
 
 Please include a summary of the changes. Also include relevant motivation and context. List any dependencies that are required for this change.
 
-## Screenshots or Videos (if appropriate)
+## Screenshots or Videos (if applicable)
 
-Include screenshots or video recordings, if relevant to your change.
+Include screenshots or video recordings of your change (if applicable).
 
 ## Related Issues
 
