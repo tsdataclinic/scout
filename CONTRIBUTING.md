@@ -2,7 +2,7 @@
 
 We love contributions and we want to make contributing to this project as easy and transparent as possible.
 
-## Table of Contents
+## Table of contents
 
 1. [Reporting a bug](#1-reporting-a-bug)
 2. [Proposing new features](#2-proposing-new-features)
