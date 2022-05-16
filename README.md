@@ -19,7 +19,7 @@ Try it out [here](https://scout.tsdataclinic.com).
 
 ## 1. Contributing
 
-We love all contributions, be it a bug report or feature request via a GitHub issue, or feedback over email.
+We love all contributions, be it a bug report or feature request. Check out our Contributing guidelines for all ways you can contribute to the project.
 
 ## 2. Roadmap
 
