@@ -14,13 +14,13 @@ We love contributions and we want to make contributing to this project as easy a
 
 To report a bug please submit an issue using our [Bug template](https://github.com/tsdataclinic/scout/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5BBUG%5D).
 
-2. Proposing new features
+## 2. Proposing new features
 
 To propose a new feature please submit a discussion in the [Feature Requests & Ideas](https://github.com/tsdataclinic/scout/discussions/categories/feature-requests-ideas) discussion section. If you see other feature requests there that interest you we encourage you to leave your thoughts!
 
 You don't need to have your idea fully fleshed out, that's what the discussion is for! We can all work together to figure out what the best thing to build is.
 
-3. Submitting feedback and questions
+## 3. Submitting feedback and questions
 
 In general, the [discussions](https://github.com/tsdataclinic/scout/discussions) section of the repo is the best place to view announcements, leave feedback, and submit any questions. Go to the appropriate category and start a new discussion, we'd love to hear your thoughts.
 
@@ -34,7 +34,7 @@ The available discussion sections are:
 - Polls: any polls from the maintainers about features or product direction
 - Q&A: for any questions about the product, features, or codebase
 
-4. Contributing to the codebase
+## 4. Contributing to the codebase
 
 If you'd like to contribute to the codebase then you will first need to [set up the project locally](https://github.com/tsdataclinic/scout#3-developing). Once you have the project running on your local machine then you are ready to start developing.
 
@@ -44,7 +44,7 @@ In order to keep some structure to the contribution process, we will not accept 
 
 If you have questions about the codebase itself, we recommend submitting a discussion in the [Q&A discussion section](https://github.com/tsdataclinic/scout/discussions/categories/q-a).
 
-5. Submitting pull requests
+## 5. Submitting pull requests
 
 All development should be done in a separate branch, and each pull request should represent a single discrete feature. Well-constrained updates rather than all-encompassing changes are easier to review and much more likely to be incorporated into the codebase.
 
