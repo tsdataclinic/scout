@@ -2,11 +2,22 @@ import { AuthenticationResult } from '@azure/msal-browser';
 import { MSAL_INSTANCE } from './AuthProvider';
 import AuthConfig from './AuthConfig';
 
+const INTERACTION_STATE = {
+  interactionInProgress: false,
+};
+
 /**
  * Returns a new auth token that can be used as a Bearer token for
- * authenticated API calls.
+ * API calls that require authentication.
  *
- * Returns undefined if there is no user authenticated.
+ * This function requires that the user already be authenticated, so
+ * you should have done a `login` call already (check out
+ * `useLoginLogout.ts`), otherwise it will return undefined.
+ *
+ * It's recommended that you call `getAuthToken` before every API call
+ * so that you can always have an unexpired token available.
+ *
+ * @returns token as a string or undefined if the user is not authenticated
  */
 export default async function getAuthToken(): Promise<string | undefined> {
   const allAuthenticatedAccounts = MSAL_INSTANCE.getAllAccounts();
@@ -15,12 +26,27 @@ export default async function getAuthToken(): Promise<string | undefined> {
   );
 
   if (account) {
-    const tokenResponse: AuthenticationResult =
-      await MSAL_INSTANCE.acquireTokenSilent({
+    let tokenResponse: AuthenticationResult | undefined;
+
+    try {
+      tokenResponse = await MSAL_INSTANCE.acquireTokenSilent({
         account,
         scopes: AuthConfig.api.b2cScopes,
       });
-    return tokenResponse.accessToken;
+      return tokenResponse.accessToken;
+    } catch (_) {
+      if (!INTERACTION_STATE.interactionInProgress) {
+        INTERACTION_STATE.interactionInProgress = true;
+        tokenResponse = await MSAL_INSTANCE.acquireTokenPopup({
+          scopes: AuthConfig.api.b2cScopes,
+        });
+        INTERACTION_STATE.interactionInProgress = false;
+      } else {
+        tokenResponse = undefined;
+      }
+    }
+
+    return tokenResponse?.accessToken;
   }
 
   return undefined;
