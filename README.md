@@ -64,7 +64,7 @@ sudo sysctl -w vm.max_map_count=262144
 
 ### 3.4 Populating your local database
 
-The `ormconfig.json` in `packages/server/` is configured to point to a local postgres `scout` database. So we will need to create this database locally. First, start your postgres client:
+The `TYPEORM` variables in `packages/server/.env` are configured to point to a local postgres `scout` database. So we will need to create this database locally. First, start your postgres client:
 
 ```
 psql postgres
@@ -193,11 +193,11 @@ Then go to `https://localhost:3000` to view the application. You're all set up n
 
 ### 4.1 Error when running `yarn sync-schema`: `client password must be a string`
 
-The `packages/server/ormconfig.json` config uses an empty password. If you installed postgres through Homebrew then by default the postgres user is configured to not required a password. If you installed postgres through a different method, the password should be whichever you used when installing the database.
+The `TYPEORM_PASSWORD` environment variable in `packages/server/.env` defaults to an empty password. If you installed postgres through Homebrew then by default the postgres user is configured to not require a password. If you installed postgres through a different method, the password should be whichever you used when installing the database.
 
-Set your postgres user's password in `packages/server/ormconfig.json`. **Make sure to not commit this password back.**
+**If you change the `TYPEORM_PASSWORD` in `.env` remember to not commit this password back.**
 
-If you change your postgres user to not require a password or a blank password then you can leave `ormconfig.json` as is.
+If you change your postgres user to not require a password or a blank password then you can leave the password in `.env` as an empty string.
 
 ### 4.2 `TypeError: JwtStrategy requires a secret or key`
 
