@@ -2,9 +2,7 @@
 
 ![Screenshot of Scout](https://scout.tsdataclinic.com/screenshot.png)
 
-Scout is a data discovery tool for open data portals. It is an open source product that eases the search and curation of thematically related and joinable datasets to broaden the application of open data to uncover new insights.
-
-Scout is designed to help surface datasets in open data portals that might have escaped your attention before.
+Scout is a data discovery tool for open data portals. It is an open source product that eases the search and curation of thematically related and joinable datasets to broaden the application of open data to uncover new insights. Scout is designed to help surface datasets in open data portals that might have escaped your attention before.
 
 At the moment, Scout only provides access to open data portals made accessible via the [Socrata API](https://socratadiscovery.docs.apiary.io/#).
 
@@ -15,7 +13,8 @@ At the moment, Scout only provides access to open data portals made accessible v
 1. [Contributing](#1-contributing)
 2. [Developing](#2-developing)
 3. [Troubleshooting](#3-troubleshooting)
-4. [Roadmap](#4-roadmap)
+4. [User Documentation](#4-user-documentation)
+5. [Roadmap](#5-roadmap)
 
 ## 1. Contributing
 
@@ -215,6 +214,10 @@ pg_ctl -D /usr/local/var/postgres start
 
 If this command doesn't work then you should replace `/usr/local/var/postgres` with the path to your Postgres data directory. If you installed Postgres through homebrew then it might be in `/opt/homebrew/var/postgres` (you can run `brew info postgres` to find out where the data directory is).
 
-## 4. Roadmap
+## 4. User guide
+
+**User guide coming soon.**
+
+## 5. Roadmap
 
 **A new roadmap is coming up soon for 2022.**
