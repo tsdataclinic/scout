@@ -28,7 +28,9 @@ jobs:
         cache: 'yarn'
     - name: Install dependencies
       run: yarn install --frozen-lockfile
-    - name: Build
+    - name: Build frontend
       run: yarn build
-    - name: Test
+      working-directory: packages/frontend
+    - name: Test frontend
       run: yarn test
+      working-directory: packages/frontend
