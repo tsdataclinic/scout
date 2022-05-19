@@ -48,6 +48,6 @@ If you have questions about the codebase itself, we recommend submitting a discu
 
 All development should be done in a separate branch, and each pull request should represent a single discrete feature. Well-constrained updates rather than all-encompassing changes are easier to review and much more likely to be incorporated into the codebase.
 
-Make sure your pull request is configured to merge to the `main` branch. This guidance likely change once a `develop` branch is set up.
+Make sure your pull request is configured to merge to the `main` branch. This guidance will likely change once a `develop` branch is set up.
 
 Add @jps327 as the reviewer and please make sure you fill out all sections of the pull request template. Any pull requests with missing information will not be accepted.
