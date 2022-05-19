@@ -36,7 +36,7 @@ The available discussion sections are:
 
 ## 4. Contributing to the codebase
 
-If you'd like to contribute to the codebase then you will first need to [set up the project locally](https://github.com/tsdataclinic/scout#3-developing). Once you have the project running on your local machine then you are ready to start developing.
+If you'd like to contribute to the codebase then you will first need to [set up the project locally](https://github.com/tsdataclinic/scout#2-developing). Once you have the project running on your local machine then you are ready to start developing.
 
 If you'd like some ideas of where to start then we recommend looking at any issues labeled [good first issue](https://github.com/tsdataclinic/scout/labels/good%20first%20issue) or [bug](https://github.com/tsdataclinic/scout/labels/bug).
 
