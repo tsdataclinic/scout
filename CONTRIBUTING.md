@@ -8,7 +8,8 @@ We love contributions and we want to make contributing to this project as easy a
 2. [Proposing new features](#2-proposing-new-features)
 3. [Submitting feedback and questions](#3-submitting-feedback-and-questions)
 4. [Contributing to the codebase](#4-contributing-to-the-codebase)
-5. [Submitting pull requests](#5-submitting-pull-requests)
+5. [Running tests](#5-running-tests)
+6. [Submitting pull requests](#6-submitting-pull-requests)
 
 ## 1. Reporting a bug
 
@@ -44,7 +45,11 @@ In order to keep some structure to the contribution process, we will not accept 
 
 If you have questions about the codebase itself, we recommend submitting a discussion in the [Q&A discussion section](https://github.com/tsdataclinic/scout/discussions/categories/q-a).
 
-## 5. Submitting pull requests
+## 5. Running tests
+
+At the moment there are no automated tests to run. This will be updated once automated tests are set up.
+
+## 6. Submitting pull requests
 
 All development should be done in a separate branch, and each pull request should represent a single discrete feature. Well-constrained updates rather than all-encompassing changes are easier to review and much more likely to be incorporated into the codebase.
 
