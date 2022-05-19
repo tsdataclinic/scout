@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [12.x, 14.x, 16.x]
+        node-version: [16.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -24,9 +24,11 @@ jobs:
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+        node-ve rsion: ${{ matrix.node-version }}
+        cache: 'yarn'
     - name: Install dependencies
       run: yarn install --frozen-lockfile
-    - run: npm run build --if-present
-    - run: npm test
+    - name: Build
+      run: yarn build
+    - name: Test
+      run: yarn test
