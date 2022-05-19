@@ -13,7 +13,7 @@ At the moment, Scout only provides access to open data portals made accessible v
 1. [Contributing](#1-contributing)
 2. [Developing](#2-developing)
 3. [Troubleshooting](#3-troubleshooting)
-4. [User Documentation](#4-user-documentation)
+4. [User guide](#4-user-guide)
 5. [Roadmap](#5-roadmap)
 
 ## 1. Contributing
