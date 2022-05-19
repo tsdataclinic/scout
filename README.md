@@ -214,6 +214,30 @@ pg_ctl -D /usr/local/var/postgres start
 
 If this command doesn't work then you should replace `/usr/local/var/postgres` with the path to your Postgres data directory. If you installed Postgres through homebrew then it might be in `/opt/homebrew/var/postgres` (you can run `brew info postgres` to find out where the data directory is).
 
+### 3.5 `Maximum call stack size exceeded` when starting the API or frontend server
+
+If you see an error like this:
+
+```
+/home/runner/work/scout/scout/node_modules/react-scripts/node_modules/dotenv-expand/lib/main.js:11
+      var parts = /(.?)\${?([a-zA-Z0-9_]+)?}?/g.exec(match)
+                                                ^
+
+RangeError: Maximum call stack size exceeded
+    at RegExp.exec (<anonymous>)
+    at /home/runner/work/scout/scout/node_modules/react-scripts/node_modules/dotenv-expand/lib/main.js:11:49
+    at Array.reduce (<anonymous>)
+    at interpolate (/home/runner/work/scout/scout/node_modules/react-scripts/node_modules/dotenv-expand/lib/main.js:10:20)
+    at /home/runner/work/scout/scout/node_modules/react-scripts/node_modules/dotenv-expand/lib/main.js:26:17
+    at Array.reduce (<anonymous>)
+    at interpolate (/home/runner/work/scout/scout/node_modules/react-scripts/node_modules/dotenv-expand/lib/main.js:10:20)
+    at /home/runner/work/scout/scout/node_modules/react-scripts/node_modules/dotenv-expand/lib/main.js:26:17
+    at Array.reduce (<anonymous>)
+    at interpolate (/home/runner/work/scout/scout/node_modules/react-scripts/node_modules/dotenv-expand/lib/main.js:10:20)
+```
+
+Then it is likely because you have not set up your local [environment variables](#25-environment-variables) which is causing an error when the servers try parsing the `.env` files.
+
 ## 4. User guide
 
 **User guide coming soon.**
