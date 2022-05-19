@@ -9,6 +9,20 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  REACT_APP_SCOUT_API_URI: 'http://localhost:5000/graphql'
+  REACT_APP_SCOUT_CLIENT_URI: 'http://localhost:3000'
+  REACT_APP_SCOUT_GITHUB_CLIENT_ID: ${{ secrets.AUTH_GITHUB_CLIENT_SECRET }}
+  REACT_APP_SCOUT_AZURE_APP_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  REACT_APP_SCOUT_AZURE_AUTHORITIES: 'twosigmadataclinic.b2clogin.com'
+  REACT_APP_SCOUT_AZURE_FULL_AUTHORITY_URL: 'https://twosigmadataclinic.b2clogin.com/twosigmadataclinic.onmicrosoft.com/B2C_1_scout_signup_signin'
+  REACT_APP_SCOUT_AZURE_B2C_SCOPES: 'https://twosigmadataclinic.onmicrosoft.com/scout-dev-api/Scout.API'
+  SCOUT_SERVER_GITHUB_CLIENT_ID: ${{ secrets.AUTH_GITHUB_CLIENT_ID }}
+  SCOUT_SERVER_GITHUB_CLIENT_SECRET: ${{ secrets.AUTH_GITHUB_CLIENT_SECRET }}
+  SCOUT_SERVER_AZURE_APP_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  SCOUT_SERVER_AZURE_B2C_AUTH_POLICY_NAME: 'B2C_1_scout_signup_signin'
+  SCOUT_SERVER_AZURE_B2C_IDENTITY_METADATA_URI: 'https://twosigmadataclinic.b2clogin.com/twosigmadataclinic.onmicrosoft.com/v2.0/.well-known/openid-configuration'
+  
 jobs:
   build:
 
