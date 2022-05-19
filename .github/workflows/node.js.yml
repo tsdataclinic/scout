@@ -45,3 +45,6 @@ jobs:
     - name: Run frontend tests
       run: yarn test
       working-directory: packages/frontend
+    - name: Run frontend build
+      run: yarn build
+      working-directory: packages/frontend
