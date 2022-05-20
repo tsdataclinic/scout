@@ -1,6 +1,13 @@
 #!/bin/bash
 # Cleanup things from the previous deployment
+
 # The `|| :` suppresses the exit code of 1 in case there are no
 # services running and forces pm2 to return an exit code 0
 pm2 stop all || :
 pm2 delete all || :
+
+if [ -d /srv/scout ]; then
+  rm -rf /srv/scout
+fi
+
+mkdir /srv/scout

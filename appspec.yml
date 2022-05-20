@@ -1,3 +1,4 @@
+# AWS CodeDeploy AppSpec for CI/CD
 version: 0.0
 os: linux
 
@@ -5,7 +6,7 @@ os: linux
 # https://docs.aws.amazon.com/codedeploy/latest/userguide/reference-appspec-file-structure-files.html
 files:
   - source: .
-    destination: /home/ec2-user/app
+    destination: /srv/scout
 
 # run our setup scripts
 hooks:
@@ -19,5 +20,9 @@ hooks:
       runas: root
   ApplicationStart:
     - location: /var/www/aws/start.sh
+      timeout: 300
+      runas: root
+  ApplicationStop:
+    - location: /var/www/aws/stop.sh
       timeout: 300
       runas: root
