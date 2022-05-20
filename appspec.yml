@@ -11,7 +11,7 @@ files:
 # run the setup scripts
 hooks:
   ApplicationStop:
-    - location: scripts/aws/stop_app.sh
+    - location: scripts/aws/stop.sh
       timeout: 300
       runas: root
   BeforeInstall:
@@ -23,6 +23,6 @@ hooks:
       timeout: 300
       runas: root
   ApplicationStart:
-    - location: scripts/aws/start_app.sh
+    - location: scripts/aws/start.sh
       timeout: 300
       runas: root
