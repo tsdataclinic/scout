@@ -32,12 +32,15 @@ jobs:
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-      - name: Run frontend tests
-        run: yarn test
-        working-directory: packages/frontend
       - name: Run frontend build
         run: yarn build
         working-directory: packages/frontend
+      - name: Run frontend tests
+        run: yarn test
+        working-directory: packages/frontend
+      - name: Run server build
+        run: yarn build
+        working-directory: packages/server
 
   # deploy the entire repo if CI job succeeded
   continuous-deployment:

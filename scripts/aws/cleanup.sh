@@ -1,3 +1,3 @@
 # Cleanup things from the previous deployment
-pm2 stop all
-pm2 delete all
+/usr/bin/pm2 stop all
+/usr/bin/pm2 delete all
