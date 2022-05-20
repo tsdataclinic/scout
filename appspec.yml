@@ -10,14 +10,14 @@ files:
 # run our setup scripts
 hooks:
   BeforeInstall:
-    - location: scripts/prod/cleanup.sh
+    - location: scripts/aws/cleanup.sh
       timeout: 300
       runas: root
   AfterInstall:
-    - location: scripts/prod/prepare.sh
+    - location: scripts/aws/prepare.sh
       timeout: 300
       runas: root
   ApplicationStart:
-    - location: /var/www/scripts/start.sh
+    - location: /var/www/aws/start.sh
       timeout: 300
       runas: root

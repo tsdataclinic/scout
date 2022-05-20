@@ -39,7 +39,7 @@ jobs:
         run: yarn build
         working-directory: packages/frontend
 
-  # deploy the entire repo
+  # deploy the entire repo if CI job succeeded
   continuous-deployment:
     runs-on: ubuntu-latest
     needs: [ continuous-integration ]
