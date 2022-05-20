@@ -10,6 +10,10 @@ files:
 
 # run the setup scripts
 hooks:
+  ApplicationStop:
+    - location: scripts/aws/stop_app.sh
+      timeout: 300
+      runas: root
   BeforeInstall:
     - location: scripts/aws/cleanup.sh
       timeout: 300
@@ -19,10 +23,6 @@ hooks:
       timeout: 300
       runas: root
   ApplicationStart:
-    - location: scripts/aws/start.sh
-      timeout: 300
-      runas: root
-  ApplicationStop:
-    - location: scripts/aws/stop.sh
+    - location: scripts/aws/start_app.sh
       timeout: 300
       runas: root
