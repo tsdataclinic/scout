@@ -8,7 +8,7 @@ files:
   - source: .
     destination: /srv/scout
 
-# run our setup scripts
+# run the setup scripts
 hooks:
   BeforeInstall:
     - location: scripts/aws/cleanup.sh
