@@ -5,9 +5,9 @@ name: CI Build & Tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [ develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
 
 env:
   REACT_APP_SCOUT_API_URI: 'http://localhost:5000/graphql'
