@@ -1,6 +1,7 @@
 import moment from 'moment';
 import { Get, Injectable } from '@nestjs/common';
 import { Cron, Timeout } from '@nestjs/schedule';
+import { Subject } from 'rxjs';
 import fetch from 'node-fetch';
 import { PortalService } from '../portals/portal.service';
 import { DatasetService } from '../dataset/dataset.service';
@@ -14,7 +15,6 @@ import { Logger } from '@nestjs/common';
 import * as fs from 'fs';
 import { SearchService } from '../search/search.service';
 import { PortalExternalInfo } from './portal-details-lookup';
-import consoleLogObject from '../util/consoleLogObject';
 
 // the portal details returned by Socrata API
 type SocrataPortalDetails = {
@@ -142,6 +142,8 @@ function usePortalListOverride(): boolean {
 
 @Injectable()
 export class PortalSyncService {
+  private shutdownListener: Subject<void> = new Subject();
+
   constructor(
     private readonly portalService: PortalService,
     private readonly datasetService: DatasetService,
@@ -171,6 +173,7 @@ export class PortalSyncService {
       }
 
       console.log('Done updating all data');
+      this.shutdown();
     }
   }
 
@@ -387,5 +390,16 @@ export class PortalSyncService {
     );
 
     console.log('IMPORT COMPLETE: All data portals have been updated');
+  }
+
+  subscribeToShutdown(shutdownCallback: () => void): void {
+    this.shutdownListener.subscribe(() => shutdownCallback());
+  }
+
+  /**
+   * Emit a shutdown event
+   */
+  shutdown(): void {
+    this.shutdownListener.next();
   }
 }

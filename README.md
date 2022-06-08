@@ -89,21 +89,19 @@ Create the necessary postgres tables:
 yarn sync-schema
 ```
 
-If you see a message that says `Schema syncronization finished successfully.` then it means you're good to go. Now that the tables are created, you need to populate them with data.
-
-We currently don't have a script you can run to populate the database. The official way is to start up the server with a few environment variable overrides to tell the server to populate the database on startup. You will need to start up the API server with the `PORTAL_OVERRIDE_LIST` and `UPDATE_ON_BOOT` environment variables set as follows:
+If you see a message that says `Schema syncronization finished successfully.` then it means you're good to go. Now that the tables are created, you need to populate them with data. To do that, run:
 
 ```
-PORTAL_OVERRIDE_LIST=data.cityofnewyork.us,data.cityofchicago.org,data.nashville.gov UPDATE_ON_BOOT=true yarn start
+yarn seed-database-dev
 ```
 
-This might take a while. It will populate postgres and elasticsearch with information from all the provided portals. In the command above, we are only populating with three portals to keep things from taking too long.
+This might take a while. It will populate postgres and elasticsearch with data from three portals (to keep things from taking too long). If you wanted to populate your database with _all_ portals, then run `yarn seed-database-full`. This is **_not_** recommended during development.
 
 When you see the following message:
 
 > Done updating all data
 
-Then it means the data refresh is done. You should quit the server now (ctrl+C to quit). Next time you start the server you can just use `yarn start` as normal, without the `UPDATE_ON_BOOT` environment variable.
+Then it means the data refresh is done.
 
 ### 2.5 Environment variables
 
@@ -148,7 +146,7 @@ To get a GitHub Client ID and GitHub Client Secret you should [register a GitHub
 
 #### 2.5.2 Azure AD B2C configuration
 
-Scout uses Azure AD B2C for authentication. This is more complicated to set up.
+Scout uses Azure AD B2C for authentication. You will need to set up an Azure AD B2C tenant to generate the API keys you need to support Scout authentication. This is more complicated to set up.
 
 1. [Register an Azure AD B2C tenant](https://docs.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-tenant).
 2. [Register a web application](https://docs.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-tenant) in your Azure AD B2C tenant.
@@ -162,16 +160,12 @@ Once these are all set up you can update the necessary Azure environment variabl
 
 ### 2.6 Running the API server
 
-If your server is running, stop the server (use Ctrl+C to end the server process) so it can pick up your newly set up environment variables.
-
 The API server uses [NestJS](https://nestjs.com/) and runs on `https://localhost:5000`. To start the API server:
 
 ```
 cd packages/server
 yarn start
 ```
-
-Note that we didn't need the `PORTAL_OVERRIDE_LIST` or `UPDATE_ON_BOOT` environment variables anymore. Those were only necessary for populating the database. You shouldn't need them again.
 
 ### 2.7 Running the frontend server
 
