@@ -17,6 +17,7 @@ type Collection {
 }
 
 type Dataset {
+  categories: [String!]!
   collections: [Collection!]!
   createdAt: DateTime
   datasetColumns: [DatasetColumn!]!

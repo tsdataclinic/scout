@@ -184,6 +184,7 @@ export default function HomePage({ portal, initialGlobalSearchVal }) {
                 showStats={false}
                 dataset={dataset}
                 query={searchTerm.trim()}
+                selectedCategories={selectedCategories}
               />
             ))
           )}
