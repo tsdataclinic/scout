@@ -7,6 +7,7 @@ import {
 } from '../dataset/dataset.service';
 import { Dataset } from '../dataset/dataset.entity';
 import { ScoredDataset } from './types/ScoredDataset';
+import consoleLogObject from '../util/consoleLogObject';
 
 import '@tensorflow/tfjs-node';
 import * as use from '@tensorflow-models/universal-sentence-encoder';
@@ -242,7 +243,7 @@ export class SearchService {
       fullQuery.push(...departmentMatches);
     }
 
-    console.log('Running elasticsearch query', {
+    consoleLogObject('Running elasticsearch query', {
       index: this.configService.get('ELASTICSEARCH_INDEX'),
       query: fullQuery,
     });
