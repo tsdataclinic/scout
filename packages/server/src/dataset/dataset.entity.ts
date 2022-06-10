@@ -31,6 +31,7 @@ export class Dataset {
   @Column({ nullable: true })
   department: string;
 
+  @Field(type => [String], { nullable: false })
   @Column({ type: 'simple-array', nullable: false, default: '' })
   categories: string[];
 

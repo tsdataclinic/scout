@@ -88,6 +88,7 @@ export const useSearchDatasets = (
           updatedAt
           permalink
           department
+          categories
         }
         total
       }

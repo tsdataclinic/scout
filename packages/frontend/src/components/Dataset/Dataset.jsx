@@ -16,6 +16,7 @@ export default function Dataset({
   query,
   showStats = true,
   showCollectionButtons = true,
+  selectedCategories = [],
 }) {
   const formattedName = hilightMatches(dataset.name, query);
   const similarDatasets = useGetSimilarDatasets(dataset).home;
@@ -72,6 +73,17 @@ export default function Dataset({
           <span>Last Update:</span>
           {formatDate(dataset.updatedAt)}
         </div>
+        {selectedCategories && (
+          <div className="dataset-matching-categories">
+            {selectedCategories
+              .filter(cat => dataset.categories.includes(cat))
+              .map(category => (
+                <div className="dataset-category-info" key={category}>
+                  <p>{category}</p>
+                </div>
+              ))}
+          </div>
+        )}
       </div>
     </div>
   );
