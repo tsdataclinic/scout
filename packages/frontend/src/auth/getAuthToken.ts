@@ -1,10 +1,5 @@
-import { AuthenticationResult } from '@azure/msal-browser';
-import { MSAL_INSTANCE } from './AuthProvider';
-import AuthConfig from './AuthConfig';
-
-const INTERACTION_STATE = {
-  interactionInProgress: false,
-};
+import isFakeAuthEnabled from './isFakeAuthEnabled';
+import getAzureAuthToken from './azure/getAzureAuthToken';
 
 /**
  * Returns a new auth token that can be used as a Bearer token for
@@ -17,37 +12,13 @@ const INTERACTION_STATE = {
  * It's recommended that you call `getAuthToken` before every API call
  * so that you can always have an unexpired token available.
  *
- * @returns token as a string or undefined if the user is not authenticated
+ * @returns token string or undefined if the user is not authenticated
  */
 export default async function getAuthToken(): Promise<string | undefined> {
-  const allAuthenticatedAccounts = MSAL_INSTANCE.getAllAccounts();
-  const account = MSAL_INSTANCE.getAccountByHomeId(
-    (allAuthenticatedAccounts[0] || {}).homeAccountId ?? '',
-  );
-
-  if (account) {
-    let tokenResponse: AuthenticationResult | undefined;
-
-    try {
-      tokenResponse = await MSAL_INSTANCE.acquireTokenSilent({
-        account,
-        scopes: AuthConfig.api.b2cScopes,
-      });
-      return tokenResponse.accessToken;
-    } catch (_) {
-      if (!INTERACTION_STATE.interactionInProgress) {
-        INTERACTION_STATE.interactionInProgress = true;
-        tokenResponse = await MSAL_INSTANCE.acquireTokenPopup({
-          scopes: AuthConfig.api.b2cScopes,
-        });
-        INTERACTION_STATE.interactionInProgress = false;
-      } else {
-        tokenResponse = undefined;
-      }
-    }
-
-    return tokenResponse?.accessToken;
+  if (isFakeAuthEnabled()) {
+    const token = localStorage.getItem('token');
+    return token ?? undefined;
   }
 
-  return undefined;
+  return getAzureAuthToken();
 }

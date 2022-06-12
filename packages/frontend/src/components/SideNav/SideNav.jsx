@@ -11,15 +11,17 @@ import { ReactComponent as DataClinicSVG } from '../../icons/dataClinicWhite.svg
 import CollectionTab from '../CollectionTab/CollectionTab';
 import { GLOBAL_PORTAL_IDENTIFIER } from '../../portals';
 import { useUserCollections } from '../../hooks/collections';
-import useLoginLogout from '../../auth/useLoginLogout';
 import useCurrentUser from '../../auth/useCurrentUser';
+import useDataClinicAuth from '../../auth/useDataClinicAuth';
+import FakeAuthModal from '../../auth/FakeAuthModal';
 
 export default function SideNav() {
   const [showCollectionTab, setShowCollectionTab] = useState(false);
   const [{ activePortalAbbreviation, globalPortalsAreActive }] =
     useUserCollections();
-  const { isAuthenticated } = useCurrentUser();
-  const { login, logout } = useLoginLogout();
+  const { login, logout, isFakeAuthModalOpen, onFakeAuthModalDismiss } =
+    useDataClinicAuth();
+  const { isAuthenticated, user } = useCurrentUser();
   const onCollectionTabDismiss = useCallback(
     () => setShowCollectionTab(false),
     [],
@@ -77,23 +79,14 @@ export default function SideNav() {
         <DataClinicSVG />
         <h1>About</h1>
       </NavLink>
-
       <div
         role="button"
         className="login"
         onClick={async () => {
-          try {
-            if (isAuthenticated) {
-              await logout();
-            } else {
-              await login();
-            }
-
-            // refresh the page after logging in or out just to make sure all
-            // application state gets reset correctly
-            window.location.reload();
-          } catch (err) {
-            console.error(err);
+          if (isAuthenticated) {
+            await logout();
+          } else {
+            await login();
           }
         }}
       >
@@ -101,6 +94,10 @@ export default function SideNav() {
         {/* <h1>{user ? user.username : 'account'}</h1> */}
         <h1>{isAuthenticated ? 'Sign out' : 'Sign in'}</h1>
       </div>
+      <FakeAuthModal
+        isOpen={isFakeAuthModalOpen}
+        onDismiss={onFakeAuthModalDismiss}
+      />
     </nav>
   );
 }

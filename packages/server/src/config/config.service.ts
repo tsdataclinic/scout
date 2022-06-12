@@ -3,7 +3,7 @@ import * as dotenvExpand from 'dotenv-expand';
 import * as fs from 'fs';
 
 export class ConfigService {
-  private readonly envConfig: { [key: string]: string };
+  private readonly envConfig: Record<string, string>;
 
   constructor(filePath: string) {
     try {

@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import styled from '@emotion/styled/macro';
+import styled from 'styled-components/macro';
 
 const StyledDiv = styled.div`
   align-items: center;

@@ -4,7 +4,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Query, Args, Mutation, Resolver } from '@nestjs/graphql';
-import { CurrentUser, AzureADGuard } from '../auth/azure-ad.guard';
+import {
+  CurrentUser,
+  DataClinicAuthGuard,
+} from '../auth/data-clinic-auth.guard';
 import { UsersService } from '../users/users.service';
 import { Collection } from './collections.entity';
 import { CollectionsService } from './collections.service';
@@ -30,7 +33,7 @@ export class CollectionsResolver {
   }
 
   @Mutation(returns => Collection)
-  @UseGuards(AzureADGuard)
+  @UseGuards(DataClinicAuthGuard)
   async createCollection(
     @CurrentUser() currentUser: User,
     @Args('name') name: string,
@@ -48,7 +51,7 @@ export class CollectionsResolver {
   }
 
   @Mutation(returns => Collection)
-  @UseGuards(AzureADGuard)
+  @UseGuards(DataClinicAuthGuard)
   async deleteCollection(
     @CurrentUser() currentUser: User,
     @Args('id') id: string,
@@ -68,7 +71,7 @@ export class CollectionsResolver {
   }
 
   @Mutation(returns => Collection)
-  @UseGuards(AzureADGuard)
+  @UseGuards(DataClinicAuthGuard)
   async addToCollection(
     @CurrentUser() currentUser: User,
     @Args('id') id: string,
@@ -92,7 +95,7 @@ export class CollectionsResolver {
   }
 
   @Mutation(returns => Collection)
-  @UseGuards(AzureADGuard)
+  @UseGuards(DataClinicAuthGuard)
   async removeDatasetFromCollection(
     @CurrentUser() currentUser: User,
     @Args('collectionId') collectionId: string,

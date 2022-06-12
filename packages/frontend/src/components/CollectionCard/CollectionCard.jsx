@@ -1,7 +1,6 @@
-/* @jsxImportSource @emotion/react */
+import 'styled-components/macro';
 import './CollectionCard.scss';
 import { useState } from 'react';
-import { css } from '@emotion/react/macro';
 import pluralize from 'pluralize';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -52,7 +51,7 @@ export default function CollectionCard({ collection }) {
   };
 
   return (
-    <div className="collection-card" css={{ position: 'relative' }}>
+    <div className="collection-card" css="position: relative">
       <div className="custom-column left">
         <h3>
           <Link to={`/collection/${collection.id}`}>{collection.name}</Link>
@@ -65,7 +64,7 @@ export default function CollectionCard({ collection }) {
       </div>
       <div className="custom-column right">
         <button
-          css={css`
+          css={`
             background: none;
             position: absolute;
             right: 4px;
@@ -76,7 +75,7 @@ export default function CollectionCard({ collection }) {
           type="button"
         >
           <FontAwesomeIcon
-            css={css`
+            css={`
               color: #8eacd1;
               font-size: 15px;
               transition: all 250ms;
@@ -91,11 +90,11 @@ export default function CollectionCard({ collection }) {
       </div>
       {showDeleteConfirmModal ? (
         <Modal isOpen onDismiss={onDismissModal}>
-          <p css={{ fontSize: '1.4rem' }}>
+          <p css="font-size: 1.4rem">
             Are you sure you want to delete this collection?
           </p>
           <div
-            css={css`
+            css={`
               display: flex;
               flex: 1;
               justify-content: center;

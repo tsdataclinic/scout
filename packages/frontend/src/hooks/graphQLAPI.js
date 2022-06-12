@@ -122,35 +122,6 @@ export const usePortals = () => {
   return useQuery(PortalListQuery);
 };
 
-export const useAttemptLogin = (email, password) => {
-  console.log('Attemping login');
-
-  const LoginAttempt = gql`
-    mutation SignIn($email: String!, $password: String!) {
-      signIn(email: $email, password: $password) {
-        token
-        error
-      }
-    }
-  `;
-
-  return useMutation(LoginAttempt, { email, password });
-};
-
-export const useAttemptSignUp = (email, password, username) => {
-  const SignUpAttempt = gql`
-    mutation SignUp($email: String!, $password: String!, $username: String!) {
-      signUp(email: $email, password: $password, username: $username) {
-        success
-        error
-        token
-      }
-    }
-  `;
-
-  return useMutation(SignUpAttempt, { email, password, username });
-};
-
 export const useCurrentUser = () => {
   const CurrentUser = gql`
     query Profile {

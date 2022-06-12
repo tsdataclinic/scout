@@ -43,7 +43,62 @@ cd scout
 yarn install
 ```
 
-### 2.3 Running Elasticsearch
+### 2.3 Environment variables
+
+You need to set up your environment variables with the necessary API keys and configurations for the Scout app to run.
+
+Add the following to your `~/.zshrc` or `~/.bash_profile` (depending on which shell you are running). If you are on Windows, you will need to add these as environment variables on your PowerShell, or whichever shell you use.
+
+```bash
+export SCOUT_AZURE_CLIENT_ID='===REPLACE_ME==='
+export SCOUT_GITHUB_CLIENT_ID='===REPLACE_ME==='
+
+export REACT_APP_SCOUT_API_URI='http://localhost:5000/graphql'
+export REACT_APP_SCOUT_CLIENT_URI='http://localhost:3000'
+export REACT_APP_SCOUT_GITHUB_CLIENT_ID=$SCOUT_GITHUB_CLIENT_ID
+export REACT_APP_SCOUT_AZURE_APP_CLIENT_ID=$SCOUT_AZURE_CLIENT_ID
+
+# should be of the form 'my_azure_team_name.b2clogin.com'
+export REACT_APP_SCOUT_AZURE_AUTHORITIES='===REPLACE_ME==='
+
+# should be of the form 'https://my_azure_team_name.b2clogin.com/my_azure_team_name.onmicrosoft.com/my_B2C_auth_policy_name'
+export REACT_APP_SCOUT_AZURE_FULL_AUTHORITY_URL='===REPLACE_ME==='
+
+# should be of the form 'https://my_azure_team_name.onmicrosoft.com/my-api/MyApi.API'
+export REACT_APP_SCOUT_AZURE_B2C_SCOPES='===REPLACE_ME==='
+
+export SCOUT_SERVER_GITHUB_CLIENT_ID=$SCOUT_GITHUB_CLIENT_ID
+export SCOUT_SERVER_GITHUB_CLIENT_SECRET='===REPLACE_ME==='
+export SCOUT_SERVER_AZURE_APP_CLIENT_ID=$SCOUT_AZURE_CLIENT_ID
+export SCOUT_SERVER_AZURE_B2C_AUTH_POLICY_NAME='===REPLACE_ME==='
+
+# should be of the form 'https://my_azure_team_name.b2clogin.com/my_azure_team_name.onmicrosoft.com/v2.0/.well-known/openid-configuration'
+export SCOUT_SERVER_AZURE_B2C_IDENTITY_METADATA_URI='===REPLACE_ME==='
+```
+
+Replace all variables that say `===REPLACE_ME===` with their appropriate values. You will need to set up a few things first to get the necessary keys.
+
+#### 2.3.1 GitHub configuration
+
+We use GitHub authentication for automated code searches to display helpful resources for datasets.
+
+To get a GitHub Client ID and GitHub Client Secret you should [register a GitHub application](https://github.com/settings/applications/new).
+
+#### 2.3.2 Azure AD B2C configuration
+
+Scout uses Azure AD B2C for authentication. You will need to set up an Azure AD B2C tenant to generate the API keys you need to support Scout authentication. This is more complicated to set up.
+
+1. [Register an Azure AD B2C tenant](https://docs.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-tenant).
+2. [Register a web application](https://docs.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-tenant) in your Azure AD B2C tenant.
+3. [Add a web API](https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-web-api-application) so Azure can accept and respond to requests of client applications that present an access token.
+4. [Add any identity providers you want](https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-identity-provider) if you want to allow social media logins, such as through Facebook or Google.
+5. [Set up a sign-up and sign-in policy for Azure AD B2C](https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-sign-up-and-sign-in-policy) so that the necessary authentication flows can be enabled.
+
+Once these are all set up you can update the necessary Azure environment variables with your keys and URIs.
+
+**Remember to run `source ~/.zshrc` or `source ~/.bash_profile` to reload your environment variables after you've changed them.**
+
+### 2.4 Running Elasticsearch
 
 The search backend uses Elasticsearch. To run it locally, the easiest way to do it is with [docker-compose](https://docs.docker.com/compose/install/):
 
@@ -57,7 +112,7 @@ Note if you see an error about max_map_count then you need to increase that numb
 sudo sysctl -w vm.max_map_count=262144
 ```
 
-### 2.4 Populating your local database
+### 2.5 Populating your local database
 
 The `TYPEORM` variables in `packages/server/.env` are configured to point to a local postgres `scout` database. So we will need to create this database locally. First, start your postgres client:
 
@@ -70,6 +125,7 @@ Then, run the following commands inside it:
 ```
 CREATE DATABASE scout;
 CREATE USER postgres;
+\c scout;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 ```
 
@@ -103,61 +159,6 @@ When you see the following message:
 
 Then it means the data refresh is done.
 
-### 2.5 Environment variables
-
-Your database should now be seeded with some initial data. Now, you need to set up your environment variables with the necessary API keys and configurations for the Scout app to run.
-
-Add the following to your `.zshrc` or `.bash_profile` (depending on which shell you are running). If you are on Windows, you will need to add these as environment variables on your PowerShell, or whichever shell you use.
-
-```bash
-export SCOUT_AZURE_CLIENT_ID='===REPLACE_ME==='
-export SCOUT_GITHUB_CLIENT_ID='===REPLACE_ME==='
-
-export REACT_APP_SCOUT_API_URI='http://localhost:5000/graphql'
-export REACT_APP_SCOUT_CLIENT_URI='http://localhost:3000'
-export REACT_APP_SCOUT_GITHUB_CLIENT_ID=$SCOUT_GITHUB_CLIENT_ID
-export REACT_APP_SCOUT_AZURE_APP_CLIENT_ID=$SCOUT_AZURE_CLIENT_ID
-
-# should be of the form 'my_azure_team_name.b2clogin.com'
-export REACT_APP_SCOUT_AZURE_AUTHORITIES='===REPLACE_ME==='
-
-# should be of the form 'https://my_azure_team_name.b2clogin.com/my_azure_team_name.onmicrosoft.com/my_B2C_auth_policy_name'
-export REACT_APP_SCOUT_AZURE_FULL_AUTHORITY_URL='===REPLACE_ME==='
-
-# should be of the form 'https://my_azure_team_name.onmicrosoft.com/my-api/MyApi.API'
-export REACT_APP_SCOUT_AZURE_B2C_SCOPES='===REPLACE_ME==='
-
-export SCOUT_SERVER_GITHUB_CLIENT_ID=$SCOUT_GITHUB_CLIENT_ID
-export SCOUT_SERVER_GITHUB_CLIENT_SECRET='===REPLACE_ME==='
-export SCOUT_SERVER_AZURE_APP_CLIENT_ID=$SCOUT_AZURE_CLIENT_ID
-export SCOUT_SERVER_AZURE_B2C_AUTH_POLICY_NAME='===REPLACE_ME==='
-
-# should be of the form 'https://my_azure_team_name.b2clogin.com/my_azure_team_name.onmicrosoft.com/v2.0/.well-known/openid-configuration'
-export SCOUT_SERVER_AZURE_B2C_IDENTITY_METADATA_URI='===REPLACE_ME==='
-```
-
-Replace all variables that say `===REPLACE_ME===` with their appropriate values. You will need to set up a few things first to get the necessary keys.
-
-#### 2.5.1 GitHub configuration
-
-We use GitHub authentication for automated code searches to display helpful resources for datasets.
-
-To get a GitHub Client ID and GitHub Client Secret you should [register a GitHub application](https://github.com/settings/applications/new).
-
-#### 2.5.2 Azure AD B2C configuration
-
-Scout uses Azure AD B2C for authentication. You will need to set up an Azure AD B2C tenant to generate the API keys you need to support Scout authentication. This is more complicated to set up.
-
-1. [Register an Azure AD B2C tenant](https://docs.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-tenant).
-2. [Register a web application](https://docs.microsoft.com/en-us/azure/active-directory-b2c/tutorial-create-tenant) in your Azure AD B2C tenant.
-3. [Add a web API](https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-web-api-application) so Azure can accept and respond to requests of client applications that present an access token.
-4. [Add any identity providers you want](https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-identity-provider) if you want to allow social media logins, such as through Facebook or Google.
-5. [Set up a sign-up and sign-in policy for Azure AD B2C](https://docs.microsoft.com/en-us/azure/active-directory-b2c/add-sign-up-and-sign-in-policy) so that the necessary authentication flows can be enabled.
-
-Once these are all set up you can update the necessary Azure environment variables with your keys and URIs.
-
-**Remember to run `source ~/.zshrc` or `source ~/.bash_profile` to reload your environment variables after you've changed them.**
-
 ### 2.6 Running the API server
 
 The API server uses [NestJS](https://nestjs.com/) and runs on `https://localhost:5000`. To start the API server:
@@ -184,11 +185,11 @@ This is a collection of common problems that might come up during setup. If you 
 
 ### 3.1 Error when running `yarn sync-schema`: `client password must be a string`
 
-The `TYPEORM_PASSWORD` environment variable in `packages/server/.env` defaults to an empty password. If you installed postgres through Homebrew then by default the postgres user is configured to not require a password. If you installed postgres through a different method, the password should be whichever you used when installing the database.
+The `TYPEORM_PASSWORD` environment variable in `packages/server/.env` defaults to an empty password. If you installed postgres through Homebrew then postgres user is configured by default to not require a password. If you installed postgres through a different method, the password should be whichever you used when installing the database. You can resolve this problem with any of these three approaches:
 
-**If you change the `TYPEORM_PASSWORD` in `.env` remember to not commit this password back.**
-
-If you change your postgres user to not require a password or a blank password then you can leave the password in `.env` as an empty string.
+1. Uninstall postgres and re-install it using homebrew: `brew install postgresql`
+2. Change your current postgres configuration to not require a password, or set the password to an empty string.
+3. Change the `TYPEORM_PASSWORD` in `.env` to be equal to the password you use to access your postgres (which should be whatever you used when installed the database). **If you add your password to `.env`, remember to NOT commit this password back.**
 
 ### 3.2 `TypeError: JwtStrategy requires a secret or key`
 

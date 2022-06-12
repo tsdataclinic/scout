@@ -1,10 +1,8 @@
-/* @jsxImportSource @emotion/react */
+import styled from 'styled-components/macro';
 import '@reach/menu-button/styles.css';
 import pluralize from 'pluralize';
 import { toast } from 'react-toastify';
 import { useCallback, useState, useMemo, ReactElement } from 'react';
-import { css } from '@emotion/react/macro';
-import styled from '@emotion/styled/macro';
 import { Menu, MenuButton, MenuList } from '@reach/menu-button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
@@ -18,17 +16,17 @@ import CollectionMenuItem from './CollectionMenuItem';
 import { usePreventCollectionTabBlur } from '../CollectionTab/CollectionTab';
 import { useUserCollections } from '../../hooks/collections';
 
-const StyledMenuList = styled(MenuList)`
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  font-size: 12px;
-  margin-top: 4px;
-`;
-
 const MenuItemHeader = styled.h6`
   font-size: 13px;
   font-weight: 700;
   padding-left: 10px;
   padding-right: 24px;
+`;
+
+const StyledMenuList = styled(MenuList)`
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  font-size: 12px;
+  margin-top: 4px;
 `;
 
 type Collection = {
@@ -98,12 +96,12 @@ export default function AddToCollectionButton({
       return (
         <BasicMenuItem
           onSelect={noop}
-          css={{
-            cursor: 'default',
-            display: 'flex',
-            justifyContent: 'center',
-            width: 130,
-          }}
+          css={`
+            cursor: default;
+            display: flex;
+            justify-content: center;
+            width: 130px;
+          `}
         >
           <LoadingSpinner />
         </BasicMenuItem>
@@ -127,11 +125,11 @@ export default function AddToCollectionButton({
         <>
           <MenuItemHeader>Collections that have this dataset</MenuItemHeader>
           {itemsWithDataset}
-          <MenuItemHeader css={{ marginTop: 8 }}>
+          <MenuItemHeader style={{ marginTop: 8 }}>
             Other collections
           </MenuItemHeader>
           {itemsWithoutDataset.length === 0 ? (
-            <p css={{ marginLeft: 10 }}>There are no other collections</p>
+            <p css="margin-left: 10px;">There are no other collections</p>
           ) : (
             itemsWithoutDataset
           )}
@@ -172,7 +170,7 @@ export default function AddToCollectionButton({
             onDescriptionChange={setDescription}
           />
           <div
-            css={css`
+            css={`
               display: flex;
               flex: 1;
               justify-content: center;

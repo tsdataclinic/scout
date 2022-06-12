@@ -1,6 +1,5 @@
-/* @jsxImportSource @emotion/react */
+import 'styled-components/macro';
 import './CollectionTabList.scss';
-import { css } from '@emotion/react/macro';
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -69,7 +68,7 @@ export default function CollectionTabList({
           <button
             type="button"
             onClick={onCreate}
-            css={css`
+            css={`
               background: none;
               color: #009aa6;
               margin: 0;
@@ -92,7 +91,7 @@ export default function CollectionTabList({
         {collections.map(collection => (
           <li key={collection.id} className="collection-tab-dataset">
             <div
-              css={css`
+              css={`
                 display: flex;
                 justify-content: space-between;
                 .collection-tab-list__chevron-right {
@@ -114,7 +113,7 @@ export default function CollectionTabList({
               }}
             >
               <div
-                css={css`
+                css={`
                   overflow: hidden;
                   padding-right: 8px !important;
                   text-overflow: ellipsis;

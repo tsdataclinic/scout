@@ -1,6 +1,5 @@
 import { MenuItem } from '@reach/menu-button';
-import { css } from '@emotion/react/macro';
-import styled from '@emotion/styled/macro';
+import styled, { css } from 'styled-components/macro';
 
 export const menuItemHoverCSS = css`
   background-color: #f7fafc;
