@@ -113,7 +113,7 @@ If you see a message that says `Schema syncronization finished successfully.` th
 yarn seed-database-dev
 ```
 
-This might take a while. It will populate postgres and elasticsearch with data from three portals. We intentionally do not add all portals to keep things from taking too long. If you wanted to populate your database with _all_ portals, then run `yarn seed-database-full`. This is **_not_** recommended during development.
+This might take a while. It will populate postgres and elasticsearch with data from three open data portals. We intentionally do not add all 120+ portals to avoid waiting hours for this command to complete. If you wanted to populate your database with _all_ portals, then run `yarn seed-database-full`. This is **_not_** recommended during development.
 
 When you see the following message:
 
