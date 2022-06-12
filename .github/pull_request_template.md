@@ -8,7 +8,7 @@ Include screenshots or video recordings to show off your change (if applicable).
 
 ## Related Issues
 
-List the related issues to this change.
+List the related issues to this change. For example, `Closes #xyz`
 
 ## Test Plan
 
@@ -21,6 +21,7 @@ Please describe the exact steps you followed to test your change. Be as clear as
 5. ...
 
 ## Checklist Before Requesting a Review
+
 - [ ] I have performed a self-review of my code
 - [ ] My code follows the Style Guidelines and Best Practices outlined in the project wiki
 - [ ] I have commented my code, particularly in hard-to-understand areas
