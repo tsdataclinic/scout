@@ -4,7 +4,7 @@ import { DatasetColumnsService } from '../dataset-columns/dataset-columns.servic
 import { Portal } from './portal.entity';
 import { Resolver, Query, Parent, Args, ResolveField } from '@nestjs/graphql';
 import { FieldCount } from '../dataset-columns/dataset-column.entity';
-import { PagedDatasets } from 'src/dataset/dataset.entity';
+import { PagedDatasets } from '../dataset/dataset.entity';
 
 @Resolver(of => Portal)
 export class PortalResolver {

@@ -1,6 +1,5 @@
 import { CSSProperties } from 'react';
-import { keyframes } from '@emotion/react/macro';
-import styled from '@emotion/styled/macro';
+import styled, { keyframes } from 'styled-components/macro';
 
 const rotateAnimation = keyframes`
   from {

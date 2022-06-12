@@ -1,4 +1,3 @@
-/* @jsxImportSource @emotion/react */
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import moment from 'moment';

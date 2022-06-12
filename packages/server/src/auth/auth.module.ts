@@ -1,12 +1,13 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LocalStrategy } from './local.strategy';
+import { AuthController } from './auth.controller';
+import { FakeLocalStrategy } from './fake-local.strategy';
 import { UsersModule } from '../users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '../config/config.service';
-import { JwtStrategy } from './jwt.strategy';
+import { FakeJWTStrategy } from './fake-jwt.strategy';
 import { AzureADStrategy } from './azure-ad.strategy';
 
 @Module({
@@ -15,6 +16,9 @@ import { AzureADStrategy } from './azure-ad.strategy';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
+        // since we only use the JWT token in development, we
+        // set a 50 day expiry so that we don't have to bother
+        // with refresh tokens.
         secret: configService.get('JWTSecret'),
         signOptions: { expiresIn: '50d' },
       }),
@@ -23,7 +27,8 @@ import { AzureADStrategy } from './azure-ad.strategy';
     PassportModule,
     ConfigModule,
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy, AzureADStrategy],
+  controllers: [AuthController],
+  providers: [AuthService, FakeLocalStrategy, FakeJWTStrategy, AzureADStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}

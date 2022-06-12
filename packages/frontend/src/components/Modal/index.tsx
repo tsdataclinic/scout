@@ -1,9 +1,8 @@
-/* @jsxImportSource @emotion/react */
+import 'styled-components/macro';
+import '@reach/dialog/styles.css';
 import { ReactNode } from 'react';
-import { css } from '@emotion/react/macro';
 import { Dialog } from '@reach/dialog';
 import { VisuallyHidden } from '@reach/visually-hidden';
-import '@reach/dialog/styles.css';
 
 type Props = {
   children: ReactNode;
@@ -20,7 +19,7 @@ export default function Modal({
     <Dialog isOpen={isOpen} onDismiss={onDismiss}>
       <div style={{ position: 'relative' }}>
         <button
-          css={css`
+          css={`
             background: none;
             color: black;
             font-size: 16px;
