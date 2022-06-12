@@ -195,6 +195,21 @@ RangeError: Maximum call stack size exceeded
 
 Then it is likely because you have not set up your local [environment variables](#25-environment-variables) which is causing an error when the servers try parsing the `.env` files.
 
+### 3.6 Port 5000 already in use when seeding database
+
+If you're on MacOS running `yarn seed-database-dev` and you're getting an error that says that port 5000 is already in use, something that looks like this:
+
+```
+[Nest] 2416 - 06/10/2022, 10:17:30 AM ERROR [NestApplication] Error: listen EADDRINUSE: address already in use :::5000 +2ms
+Error: listen EADDRINUSE: address already in use :::5000
+  at Server.setupListenHandle [as _listen2] (node:net:1372:16)
+  at listenInCluster (node:net:1420:12)
+  at Server.listen (node:net:1508:7)
+  at ExpressAdapter.listen
+```
+
+Then this could be because of AirPlay Receiver listening on that port by default. You can turn this off by following the instructions in this [Apple support thread](https://developer.apple.com/forums/thread/682332).
+
 ## 4. User guide
 
 **User guide coming soon.**
