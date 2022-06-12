@@ -1,4 +1,5 @@
 import 'styled-components/macro';
+import { toast } from 'react-toastify';
 import { useCallback } from 'react';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
@@ -32,6 +33,13 @@ async function post(
   return response;
 }
 
+function showError(e: unknown): void {
+  console.error(e);
+  if (e instanceof Error) {
+    toast.error(e.message);
+  }
+}
+
 export default function FakeAuthModal({
   isOpen,
   onDismiss,
@@ -48,8 +56,8 @@ export default function FakeAuthModal({
         // refresh the page after logging in to make sure all application state
         // gets reset correctly
         window.location.reload();
-      } catch (e) {
-        console.error(e);
+      } catch (e: unknown) {
+        showError(e);
       }
     },
     [onDismiss],
@@ -69,8 +77,8 @@ export default function FakeAuthModal({
         });
         await storeToken(response);
         onDismiss();
-      } catch (e) {
-        console.error(e);
+      } catch (e: unknown) {
+        showError(e);
       }
     },
     [onDismiss],

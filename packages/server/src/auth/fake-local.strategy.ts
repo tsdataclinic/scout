@@ -3,6 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ConfigService } from '../config/config.service';
+import { User } from '../users/users.entity';
 
 /**
  * This Auth strategy is used by the FakeLocalAuthGuard to validate that
@@ -32,10 +33,10 @@ export class FakeLocalStrategy extends PassportStrategy(
    * password as the second argument because this fake auth strategy should
    * only be used in development.
    */
-  async validate(email: string): Promise<any> {
+  async validate(email: string): Promise<User> {
     if (this.authService.isFakeAuthEnabled()) {
       const user = await this.authService.fakeValidateUser(email);
-      if (user) {
+      if (user && user.identityProvider === 'FAKE') {
         return user;
       }
     }
