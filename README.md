@@ -22,7 +22,7 @@ We love all contributions, be it a bug report, feature request, or change to the
 
 ## 2. Developing
 
-If you want to help with the development of Scout, you need to be able to run the code locally.
+If you want to help with the development of Scout, you need to be able to run the code locally. The following steps will get you set up locally. If you run into problems, check out the [troubleshooting](#3-troubleshooting) section to see if the solution is already documented.
 
 ### 2.1 Prerequisites
 
