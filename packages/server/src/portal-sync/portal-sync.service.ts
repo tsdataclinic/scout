@@ -246,6 +246,7 @@ export class PortalSyncService {
     dataset.portal = Promise.resolve(portal);
     dataset.categories = allCategories;
     dataset.downloads = resource.download_count;
+    dataset.isTest = resource.name.toLowerCase().includes("test") && resource.name.split(" ").length <= 3
     return dataset;
   }
 

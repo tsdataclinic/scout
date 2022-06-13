@@ -25,6 +25,7 @@ type Dataset {
   description: String!
   downloads: Float
   id: String!
+  isTest: Boolean!
   metadataUpdatedAt: DateTime
   name: String!
   permalink: String

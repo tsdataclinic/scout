@@ -84,6 +84,10 @@ export class Dataset {
 
   @Field(type => [ScoredDataset])
   thematicallySimilarDatasets: Promise<Dataset[]>;
+
+  @Field({ nullable: false })
+  @Column({ nullable: false, default: false })
+  isTest: boolean;
 }
 
 @ObjectType()
