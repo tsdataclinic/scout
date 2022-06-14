@@ -107,6 +107,9 @@ export class SearchService {
                 columns: {
                   type: 'text',
                 },
+                isTest: {
+                  type: 'boolean',
+                },
               },
             },
           },
@@ -210,7 +213,18 @@ export class SearchService {
     };
     const matchAll = { match_all: {} };
 
-    const query = search && search.length > 0 ? matchQuery : matchAll;
+    // deprioritize test datasets
+    const query = {
+      boosting: {
+        positive: (search && search.length > 0 ? matchQuery : matchAll),
+        negative: {
+          match: {
+            isTest: true
+          }
+        },
+        negative_boost: 0.01
+      }
+    };
     const fullQuery: any[] = [query];
 
     // add portal query
@@ -413,6 +427,7 @@ export class SearchService {
               department: item.department,
               categories: item.categories,
               columns: item.datasetColumnFields,
+              isTest: item.isTest
             },
           );
         } catch (err) {

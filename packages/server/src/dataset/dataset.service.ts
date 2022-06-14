@@ -21,6 +21,7 @@ export type DatasetForElasticSearch = {
   department: string;
   categories: string[];
   datasetColumnFields: string[];
+  isTest: boolean;
 };
 
 @Injectable()
@@ -283,6 +284,7 @@ export class DatasetService {
         'portalId',
         'department',
         'categories',
+        'isTest'
       ],
       relations: ['datasetColumns'],
       order: {
