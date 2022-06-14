@@ -246,6 +246,9 @@ export class PortalSyncService {
     dataset.portal = Promise.resolve(portal);
     dataset.categories = allCategories;
     dataset.downloads = resource.download_count;
+    // TODO: find a better method to classify test datasets
+    // Looking at some of the datasets with "test" in the name, it seems most of the
+    // actual test datasets have shorter names. Choosing 3 as an arbitrary cutoff.
     dataset.isTest = resource.name.toLowerCase().includes("test") && resource.name.split(" ").length <= 3
     return dataset;
   }

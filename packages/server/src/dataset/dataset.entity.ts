@@ -85,6 +85,10 @@ export class Dataset {
   @Field(type => [ScoredDataset])
   thematicallySimilarDatasets: Promise<Dataset[]>;
 
+  /**
+   * Indicates this dataset is a non-production, test database
+   * that should be deprioritized in search results
+   */
   @Field({ nullable: false })
   @Column({ nullable: false, default: false })
   isTest: boolean;
