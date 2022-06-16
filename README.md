@@ -104,6 +104,7 @@ cd packages/server
 Now create the necessary postgres tables:
 
 ```bash
+yarn build
 yarn sync-schema
 ```
 
