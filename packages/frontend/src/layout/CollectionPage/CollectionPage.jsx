@@ -26,7 +26,9 @@ const EMPTY_COLLECTION = {
 function getShareableURLForUnauthenticated(collectionName, datasetIds) {
   const urlOrigin = window.location.origin;
   const datasetIdsStr = datasetIds.join(',');
-  return `${urlOrigin}/collection/${collectionName}/${datasetIdsStr}`;
+  return `${urlOrigin}/collection/${encodeURIComponent(
+    collectionName,
+  )}/${datasetIdsStr}`;
 }
 
 // TODO: $CollectionsManagement - make shareable URLs for authenticated users work
