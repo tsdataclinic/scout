@@ -134,3 +134,9 @@ $LightGrey: #b2b2b2;
   box-sizing: border-box;
   padding: 10px 20px;
 }
+
+.portal-switch{
+  &:focus-visible{
+    outline:3px solid #000000;
+  } 
+}
