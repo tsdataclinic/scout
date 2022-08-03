@@ -35,7 +35,7 @@
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.15",
     "lunr": "^2.3.8",
-    "moment": "^2.29.2",
+    "moment": "^2.29.4",
     "node-sass": "^6.0.0",
     "normalize.css": "^8.0.1",
     "numeral": "^2.0.6",
