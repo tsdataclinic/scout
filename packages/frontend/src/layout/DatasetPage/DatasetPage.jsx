@@ -149,7 +149,7 @@ export default function DatasetPage() {
             checked={globalSearch}
             onChange={setGlobalSearch}
             checkedChildren="All portals"
-            unCheckedChildren="Just this portal"
+            unCheckedChildren="Selected Portal"
             style={{ background: '#009aa6' }}
           />
         </div>
