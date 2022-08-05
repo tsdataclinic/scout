@@ -1,9 +1,9 @@
 .dataset {
   display: grid;
 
-  .data-link-title{
-    &:focus-visible{
-      outline:3px solid #000;
+  .data-link-title {
+    &:focus-visible {
+      outline: 3px solid #000;
     }
   }
   button {
