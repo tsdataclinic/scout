@@ -50,8 +50,25 @@ export default function CollectionCard({ collection }) {
     }
   };
 
+  const onClickCard = () => {
+    window.location.href = `/collection/${collection.id}`;
+  };
+
+  const onCardFocusEnter = event => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      window.location.href = `/collection/${collection.id}`;
+    }
+  };
+
   return (
-    <div className="collection-card" css="position: relative">
+    <div
+      className="collection-card"
+      css="position: relative"
+      onClick={onClickCard}
+      onKeyDown={onCardFocusEnter}
+      role="link"
+      tabIndex={0}
+    >
       <div className="custom-column left">
         <h3>
           <Link to={`/collection/${collection.id}`}>{collection.name}</Link>
