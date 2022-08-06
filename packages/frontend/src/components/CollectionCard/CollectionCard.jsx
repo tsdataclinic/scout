@@ -54,6 +54,7 @@ export default function CollectionCard({ collection }) {
     window.location.href = `/collection/${collection.id}`;
   };
 
+  // If you press space or enter it will send you to the collection page (same as click)
   const onCardFocusEnter = event => {
     if (event.key === 'Enter' || event.key === ' ') {
       window.location.href = `/collection/${collection.id}`;
@@ -61,6 +62,11 @@ export default function CollectionCard({ collection }) {
   };
 
   return (
+    /**
+     * onClick sends you to the collection page
+     * onKeyDown and tabIndex are required by React to allow pages to be navigated by pressing tab
+     * tabIndex of 0 allows this div to be tab navigated to
+     */
     <div
       className="collection-card"
       css="position: relative"
