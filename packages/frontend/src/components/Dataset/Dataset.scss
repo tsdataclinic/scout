@@ -1,6 +1,12 @@
 .dataset {
   display: grid;
 
+  .data-link-title{
+    color:red;
+    &:focus-visible{
+      color:aqua;
+    }
+  }
   button {
     height: 24px;
     width: 100%;
