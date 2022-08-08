@@ -33,8 +33,8 @@ export default function Dataset({
           <p>{dataset.department}</p>
         </div>
 
-        <DatasetLink className="title" dataset={dataset}>
-          <h2>{formattedName}</h2>
+        <DatasetLink className="data-link-title title" dataset={dataset}>
+          <h2>{formattedName}</h2>asdf
         </DatasetLink>
         {dataset.permalink}
       </div>

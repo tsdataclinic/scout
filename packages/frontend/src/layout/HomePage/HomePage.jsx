@@ -108,6 +108,7 @@ export default function HomePage({ portal, initialGlobalSearchVal }) {
 
   return (
     <div className="home-page">
+      hello
       <Filters
         onCollapseFilterBar={setCollapseFilterBar}
         collapsed={collapseFilterBar}
