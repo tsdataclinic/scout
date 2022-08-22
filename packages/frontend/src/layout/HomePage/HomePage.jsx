@@ -130,6 +130,7 @@ export default function HomePage({ portal, initialGlobalSearchVal }) {
           </div>
 
           <Switch
+            className="portal-switch"
             checked={globalSearch}
             onChange={isOn => {
               setGlobalSearch(isOn);
@@ -147,7 +148,7 @@ export default function HomePage({ portal, initialGlobalSearchVal }) {
               navigate(`/explore/${portalAbbr}`);
             }}
             checkedChildren="All portals"
-            unCheckedChildren="Specific portal"
+            unCheckedChildren="Selected Portal"
             style={{ margin: '0px 10px', background: '#009aa6' }}
           />
         </div>
