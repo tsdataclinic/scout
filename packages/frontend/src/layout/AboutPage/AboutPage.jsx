@@ -16,24 +16,24 @@ export default function AboutPage() {
     <div className="about-page">
       <section className="about-dark-header">
         <div className="about-header-full">
-          <h3>Introducing scout</h3>
+          <h3>Introducing Scout</h3>
           <h2>Uncover the city&apos;s data.</h2>
         </div>
         <div className="content">
           <div>
-            <p>We built scout to make data more accessible.</p>
+            <p>We built Scout to make data more accessible.</p>
           </div>
           <div>
             <p>
-              scout is a new way to browse New York&apos;s open data portal. It
+              Scout is a new way to browse governmental open data portals. It
               focuses on data discoverability, joinability and creating curated
               collections of datasets that deal with a specific subject.
             </p>
             <p>
-              By focusing not on agencies, or departments, scout allows you to
+              By focusing not on agencies, or departments, Scout allows you to
               quickly identify datasets that are related to each other and can
               even potentially be joined together using a common ID. Having
-              found these collections of datasets, scout makes it easy to share
+              found these collections of datasets, Scout makes it easy to share
               your findings with others through our data collections.
             </p>
           </div>
@@ -129,7 +129,7 @@ export default function AboutPage() {
         <div>
           <h3>How can I contribute?</h3>
           <p>
-            We want scout to grow to help support the needs of the open data
+            We want Scout to grow to help support the needs of the open data
             community. That means that we need a lot of voices helping us shape
             the features we are developing. If you would like to suggest a
             feature, please either open a ticket on github or reach out to us on
