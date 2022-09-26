@@ -130,6 +130,7 @@ export default function HomePage({ portal, initialGlobalSearchVal }) {
           </div>
 
           <Switch
+            className="portal-switch"
             checked={globalSearch}
             onChange={isOn => {
               setGlobalSearch(isOn);

@@ -10,15 +10,21 @@ import { SearchController } from './search.controller';
   imports: [
     ElasticsearchModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        node: configService.get('ELASTICSEARCH_NODE'),
-        /*
-        maxRetries: 10,
-        requestTimeout: 60,
-        pingTimeout: 1,
-        sniffOnStart: true,
-        */
-      }),
+      useFactory: async (configService: ConfigService) => {
+        const username = configService.get('ELASTICSEARCH_USERNAME');
+        const password = configService.get('ELASTICSEARCH_PASSWORD');
+        const authBlock =
+          username && password ? { auth: { username, password } } : {};
+
+        return {
+          node: configService.get('ELASTICSEARCH_NODE'),
+          ...authBlock,
+          // maxRetries: 10,
+          // requestTimeout: 60,
+          // pingTimeout: 1,
+          // sniffOnStart: true,
+        };
+      },
       inject: [ConfigService],
     }),
     ConfigModule,
