@@ -21,6 +21,11 @@ export class SearchService {
     private readonly datasetService: DatasetService,
   ) {}
 
+  /**
+   * This function creates the elasticsearch index to store dataset metadata.
+   * If `recreate` is `true` then we check if there is an existing index, delete it
+   * if it exists, and create a new one.
+   */
   async createIndex({ recreate }: { recreate: boolean }) {
     console.log('Creating elasticsearch index', {
       index: this.configService.get('ELASTICSEARCH_INDEX'),
@@ -216,14 +221,14 @@ export class SearchService {
     // deprioritize test datasets
     const query = {
       boosting: {
-        positive: (search && search.length > 0 ? matchQuery : matchAll),
+        positive: search && search.length > 0 ? matchQuery : matchAll,
         negative: {
           match: {
-            isTest: true
-          }
+            isTest: true,
+          },
         },
-        negative_boost: 0.01
-      }
+        negative_boost: 0.01,
+      },
     };
     const fullQuery: any[] = [query];
 
@@ -427,7 +432,7 @@ export class SearchService {
               department: item.department,
               categories: item.categories,
               columns: item.datasetColumnFields,
-              isTest: item.isTest
+              isTest: item.isTest,
             },
           );
         } catch (err) {

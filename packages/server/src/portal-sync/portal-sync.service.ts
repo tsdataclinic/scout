@@ -160,6 +160,7 @@ export class PortalSyncService {
         await this.refreshPortalList();
       }
 
+      // The elasticsearch index gets rebuilt entirely
       if (!DATA_REFRESH_CONFIG.skipElasticSearchRebuild) {
         await this.searchService.createIndex({ recreate: true });
         await this.searchService.populateIndex({
@@ -249,10 +250,15 @@ export class PortalSyncService {
     // TODO: find a better method to classify test datasets
     // Looking at some of the datasets with "test" in the name, it seems most of the
     // actual test datasets have shorter names. Choosing 3 as an arbitrary cutoff.
-    dataset.isTest = resource.name.toLowerCase().includes("test") && resource.name.split(" ").length <= 3
+    dataset.isTest =
+      resource.name.toLowerCase().includes('test') &&
+      resource.name.split(' ').length <= 3;
     return dataset;
   }
 
+  /**
+   * Given a portal, get a single page of its datasets from Socrata.
+   */
   async getPageOfDatasets(
     portal: Portal,
     page: number,
@@ -272,6 +278,11 @@ export class PortalSyncService {
     }
   }
 
+  /**
+   * Create all the dataset columns for a given dataset. Write all these
+   * columns to the db. Create any columns that are new, otherwise update the
+   * ones that already exist.
+   */
   async makeColumnsForDataset(
     datasetDetails: SocrataDataset,
     dataset: Dataset,
@@ -287,7 +298,7 @@ export class PortalSyncService {
         datasetColumn.type = column_types[index];
         datasetColumn.dataset = Promise.resolve(dataset);
         datasetColumn.portal = Promise.resolve(portal);
-        // datasetColumn.id = dataset.id + '_' + column_fields[index];
+        datasetColumn.id = dataset.id + '__' + column_fields[index];
         const savedColumn = await this.datasetColumnsService.createOrUpdate(
           datasetColumn,
         );
@@ -298,6 +309,13 @@ export class PortalSyncService {
     return columns;
   }
 
+  /**
+   * Given a portal, get all of its datasets from Socrata.
+   * Socrata doesn't let us just query for the datasets whose metadata have
+   * been most recently updated, so we have to get *all* datasets. This is fine
+   * because it lets us get all existing dataset ids per portal and delete any
+   * that no longer exist.
+   */
   async refreshDatasetsForPortal(portal: Portal): Promise<void> {
     console.log(`Beginning dataset refresh for ${portal.id}`);
     const perPage = 100;
@@ -339,6 +357,9 @@ export class PortalSyncService {
     console.log('Completed dataset refresh for', portal.id);
   }
 
+  /**
+   * Create a new portal, or if it already exists update the existing one.
+   */
   async createAndUpdatePortal(portalDetails: SocrataPortalDetails) {
     const portal = new Portal();
     const externalDetails = PortalExternalInfo[portalDetails.domain];
@@ -363,8 +384,11 @@ export class PortalSyncService {
     await this.refreshDatasetsForPortal(savedPortal);
   }
 
+  /**
+   * Query for all socrata portals and update them in postgres.
+   */
   async refreshPortalList() {
-    console.log('BEGINNING IMPORT INTO DATABASE');
+    console.log('BEGINNING IMPORT INTO POSTGRES DATABASE');
     const portalListRequest = await fetch(
       'http://api.us.socrata.com/api/catalog/v1/domains',
     );

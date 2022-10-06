@@ -41,7 +41,7 @@ type DatasetColumn {
   dataset: Dataset!
   description: String!
   field: String!
-  id: Float!
+  id: String!
   joinSuggestionCount(global: Boolean = false): Float!
   joinSuggestions(global: Boolean = false, limit: Int, offset: Int): [JoinSuggestion!]!
   name: String!
