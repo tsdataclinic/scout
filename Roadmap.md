@@ -1,10 +1,8 @@
 # Roadmap 2022
 
-**This roadmap is out of date and needs updating.**
-
 This document outlines the roadmap for development of Scout.
 
-If you would like to request a new feature or prioritize one over the others, open a GitHub discussion.
+If you would like to request a new feature or prioritize one over the others, please open a GitHub discussion.
 
 ## Multi-portal Scout
 
