@@ -36,7 +36,7 @@ Add Azure AD B2C authentication to Scout. Authentication should support email/pa
 
 Allow Scout to explore **all** portals on Socrata instead of just New York City. This is a major design and functionality overhaul that will involve rewriting the majority of the codebase. Also fix many bugs that stand in the way of launching a multi-portal version of Scout.
 
-## Platform Stability
+## Platform stability
 
 ### DevOps
 
