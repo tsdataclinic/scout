@@ -217,4 +217,4 @@ Then this could be because of AirPlay Receiver listening on that port by default
 
 ## 5. Roadmap
 
-**A new roadmap is coming up soon for 2022.**
+[The 2022 Roadmap can be found here](Roadmap.md).
