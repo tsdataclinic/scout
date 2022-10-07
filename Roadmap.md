@@ -88,6 +88,8 @@ Change server's TypeScript setting to `strict=true` and fix the type errors.
 - Allow basic collections management, such as being able to delete a collection.
 - Improve the Collections popover by making it easier to navigate through collections and view the datasets they contain. Also make it easier to remove datasets from a collection directly from this popover.
 
+## Ecosystem integration
+
 ### Integration with [Smooshr](https://smooshr.tsdataclinic.com)
 
 **Status:** Stalled
@@ -95,6 +97,8 @@ Change server's TypeScript setting to `strict=true` and fix the type errors.
 Allow users to send Scout datasets to Smooshr and vice versa.
 
 This item has been paused pending a re-imagining of Smooshr.
+
+## New data integrations
 
 ### Add CKAN or other data portal
 
