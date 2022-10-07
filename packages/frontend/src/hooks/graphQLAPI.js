@@ -192,7 +192,7 @@ export const useDeleteCollection = () => {
 
 export const useDatasetColumnsWithSuggestionCounts = (id, global) => {
   const Query = gql`
-    query DatasetColumnWithSuggestions($id: Int!, $global: Boolean!) {
+    query DatasetColumnWithSuggestions($id: String!, $global: Boolean!) {
       datasetColumn(id: $id) {
         name
         field
@@ -398,7 +398,12 @@ export const useColumnsGQL = (portal, { limit, page, search, isGlobal }) => {
 
 export const useJoinableDatasetsPaged = (columnID, global, limit, offset) => {
   const query = gql`
-    query ColumnJoins($id: Int!, $global: Boolean!, $limit: Int, $offset: Int) {
+    query ColumnJoins(
+      $id: String!
+      $global: Boolean!
+      $limit: Int
+      $offset: Int
+    ) {
       datasetColumn(id: $id) {
         joinSuggestions(global: $global, limit: $limit, offset: $offset) {
           potentialOverlap

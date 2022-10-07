@@ -15,7 +15,7 @@ export class DatasetColumnsResolver {
   constructor(private datasetColumnsService: DatasetColumnsService) {}
 
   @Query(returns => DatasetColumn)
-  async datasetColumn(@Args('id', { type: () => Int }) id: number) {
+  async datasetColumn(@Args('id', { type: () => String }) id: number) {
     return this.datasetColumnsService.findById(id);
   }
 

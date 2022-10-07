@@ -116,7 +116,7 @@ type Query {
   collection(id: String!): Collection!
   collections: [Collection!]!
   dataset(id: String!): Dataset!
-  datasetColumn(id: Int!): DatasetColumn!
+  datasetColumn(id: String!): DatasetColumn!
   datasetColumns: [DatasetColumn!]!
   datasets(limit: Float, offset: Float): [Dataset!]!
   datasetsByIds(ids: [String!]!): [Dataset!]!
