@@ -16,7 +16,7 @@ export default function AboutPage() {
     <div className="about-page">
       <section className="about-dark-header">
         <div className="about-header-full">
-          <h3>Introducing Scout</h3>
+          <h3>Welcome to Scout</h3>
           <h2>Uncover the city&apos;s data.</h2>
         </div>
         <div className="content">

@@ -22,8 +22,8 @@ export default function WelcomeModal() {
 
           <p>
             You can also create <b>collections</b> of datasets which you can
-            share with others. To do so start collecting or click on the{' '}
-            <b>Collections tab</b>.
+            share with others. To do so, start collecting or click on the{' '}
+            <b>Collections</b> tab.
           </p>
         </div>
       </Dialog>
