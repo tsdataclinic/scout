@@ -14,12 +14,16 @@ export class UsersService {
     return this.userRepo.findOne({ id });
   }
 
+  async findByEmail(email: string): Promise<User | undefined> {
+    return this.userRepo.findOne({ email });
+  }
+
   async createUser(userObj: {
+    email: string;
+    familyName: string;
+    givenName: string;
     id: string;
     identityProvider: string;
-    email: string;
-    givenName: string;
-    familyName: string;
   }): Promise<User> {
     const user = this.userRepo.create(userObj);
     return this.userRepo.save(user);

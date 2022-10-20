@@ -1,20 +1,33 @@
 .collection-card {
     background-color: white;
-    padding: 12px 20px 12px 20px;
-    box-sizing: border-box;
-    display: table;
-    width: 100%;
-    flex-direction: column;
     border-radius: 1px;
     border: 1px solid #c5cede;
+    box-sizing: border-box;
     box-shadow: 1px 1px 2px rgba(90, 117, 152, 0.3);
+    display: table;
+    flex-direction: column;
+    position: relative;
+    padding: 12px 20px 12px 20px;
+    transition: all 200ms;
+    width: 100%;
+
+    &:hover {
+        box-shadow: 1px 3px 10px rgba(90, 117, 152, 0.4);
+    }
+
+    &:focus-visible {
+        border: 2px solid blue;
+    }
+
     .collection-stats {
+        color: #152935;
         font-weight: 700;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
     }
+    
     .created-at {
         color: #5a7598;
         font-size: 11px;
@@ -22,11 +35,15 @@
         margin: 0px;
         margin-bottom: 2px;
     }
+
     h3 {
-        color: #152935;
         font-size: 14px;
         font-weight: 700;
         margin-bottom: 20px;
+        transition: color 200ms;
+        &:hover {
+            color: #40a9ff;
+        }
     }
     button {
         display: block;

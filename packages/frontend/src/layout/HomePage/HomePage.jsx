@@ -80,7 +80,7 @@ export default function HomePage({ portal, initialGlobalSearchVal }) {
     {
       limit: datasetsPerPage,
       offset: datasetsPerPage * currentPage,
-      search: searchTerm,
+      search: searchTerm.trim(),
       datasetColumns: selectedColumns,
       categories: selectedCategories,
       departments: selectedDepartments,
@@ -92,7 +92,7 @@ export default function HomePage({ portal, initialGlobalSearchVal }) {
   const [pageNo, { pageButtons }] = usePagination({
     totalCount: totalDatasets,
     perPage: datasetsPerPage,
-    invalidators: [searchTerm, portal?.socrataDomain],
+    invalidators: [searchTerm.trim(), portal?.socrataDomain],
   });
 
   useEffect(() => {
@@ -130,6 +130,7 @@ export default function HomePage({ portal, initialGlobalSearchVal }) {
           </div>
 
           <Switch
+            className="portal-switch"
             checked={globalSearch}
             onChange={isOn => {
               setGlobalSearch(isOn);
@@ -147,17 +148,17 @@ export default function HomePage({ portal, initialGlobalSearchVal }) {
               navigate(`/explore/${portalAbbr}`);
             }}
             checkedChildren="All portals"
-            unCheckedChildren="Specific portal"
+            unCheckedChildren="Selected Portal"
             style={{ margin: '0px 10px', background: '#009aa6' }}
           />
         </div>
         <div className="count-and-sort">
           <p>
             <span className="bold">{numeral(totalDatasets).format('0,0')}</span>{' '}
-            datasets {searchTerm ? 'sorted by relevance' : ''}
+            datasets {searchTerm.trim() ? 'sorted by relevance' : ''}
           </p>
 
-          {searchTerm || HIDE_SORT_MENU ? null : (
+          {searchTerm.trim() || HIDE_SORT_MENU ? null : (
             <SortMenu
               options={[
                 'Name',
@@ -183,7 +184,8 @@ export default function HomePage({ portal, initialGlobalSearchVal }) {
                 key={dataset?.id}
                 showStats={false}
                 dataset={dataset}
-                query={searchTerm}
+                query={searchTerm.trim()}
+                selectedCategories={selectedCategories}
               />
             ))
           )}

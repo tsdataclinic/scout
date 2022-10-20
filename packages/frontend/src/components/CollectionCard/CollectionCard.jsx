@@ -1,7 +1,6 @@
-/* @jsxImportSource @emotion/react */
+import 'styled-components/macro';
 import './CollectionCard.scss';
 import { useState } from 'react';
-import { css } from '@emotion/react/macro';
 import pluralize from 'pluralize';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -22,7 +21,10 @@ export default function CollectionCard({ collection }) {
 
   const onDismissModal = () => setShowDeleteConfirmModal(false);
 
-  const onRequestDelete = () => {
+  const onRequestDelete = event => {
+    // Prevent the Card's link from triggering when Delete is clicked
+    event.preventDefault();
+    event.stopPropagation();
     setShowDeleteConfirmModal(true);
   };
 
@@ -52,50 +54,50 @@ export default function CollectionCard({ collection }) {
   };
 
   return (
-    <div className="collection-card" css={{ position: 'relative' }}>
-      <div className="custom-column left">
-        <h3>
-          <Link to={`/collection/${collection.id}`}>{collection.name}</Link>
-        </h3>
-        <div className="collection-stats">
-          <span>
-            {pluralize('dataset', collection.datasetIds?.length ?? 0, true)}
-          </span>
+    <>
+      <Link to={`/collection/${collection.id}`} className="collection-card">
+        <div className="custom-column left">
+          <h3>{collection.name}</h3>
+          <div className="collection-stats">
+            <span>
+              {pluralize('dataset', collection.datasetIds?.length ?? 0, true)}
+            </span>
+          </div>
         </div>
-      </div>
-      <div className="custom-column right">
-        <button
-          css={css`
-            background: none;
-            position: absolute;
-            right: 4px;
-            top: -6px;
-            width: auto;
-          `}
-          onClick={onRequestDelete}
-          type="button"
-        >
-          <FontAwesomeIcon
-            css={css`
-              color: #8eacd1;
-              font-size: 15px;
-              transition: all 250ms;
-              &:hover {
-                color: #657790;
-              }
+        <div className="custom-column right">
+          <button
+            css={`
+              background: none;
+              position: absolute;
+              right: 4px;
+              top: -6px;
+              width: auto;
             `}
-            size="1x"
-            icon={faTrash}
-          />
-        </button>
-      </div>
+            onClick={onRequestDelete}
+            type="button"
+          >
+            <FontAwesomeIcon
+              css={`
+                color: #8eacd1;
+                font-size: 15px;
+                transition: all 250ms;
+                &:hover {
+                  color: #657790;
+                }
+              `}
+              size="1x"
+              icon={faTrash}
+            />
+          </button>
+        </div>
+      </Link>
       {showDeleteConfirmModal ? (
         <Modal isOpen onDismiss={onDismissModal}>
-          <p css={{ fontSize: '1.4rem' }}>
+          <p css="font-size: 1.4rem">
             Are you sure you want to delete this collection?
           </p>
           <div
-            css={css`
+            css={`
               display: flex;
               flex: 1;
               justify-content: center;
@@ -115,6 +117,6 @@ export default function CollectionCard({ collection }) {
           </div>
         </Modal>
       ) : null}
-    </div>
+    </>
   );
 }

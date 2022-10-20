@@ -32,7 +32,16 @@ type AzureADB2CToken = {
 };
 
 /**
- * Extracts ID token from header and validates it
+ * Extracts ID token from header and validates it.
+ *
+ * This auth strategy is used to extract user information from the token,
+ * or add the user to the database if they don't exist yet.
+ *
+ * We do not have to do any real validation because by the time this
+ * auth strategy is called, the 'passport-azure-ad' library has already
+ * interacted with the AzureAD B2C server for us and validated the token.
+ * So by the time we get to this class we can be sure that the token is
+ * valid.
  */
 @Injectable()
 export class AzureADStrategy extends PassportStrategy(
@@ -73,7 +82,7 @@ export class AzureADStrategy extends PassportStrategy(
       return user;
     }
 
-    // user could not be found, so let's create it
+    // user could not be found, so let's create them
     return this.userService.createUser({
       id: userId,
       email: token.emails[0] || '', // just take the first email

@@ -1,4 +1,3 @@
-/* @jsxImportSource @emotion/react */
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import moment from 'moment';
@@ -150,7 +149,7 @@ export default function DatasetPage() {
             checked={globalSearch}
             onChange={setGlobalSearch}
             checkedChildren="All portals"
-            unCheckedChildren="Just this portal"
+            unCheckedChildren="Selected Portal"
             style={{ background: '#009aa6' }}
           />
         </div>

@@ -88,6 +88,7 @@ export const useSearchDatasets = (
           updatedAt
           permalink
           department
+          categories
         }
         total
       }
@@ -120,35 +121,6 @@ export const usePortals = () => {
     }
   `;
   return useQuery(PortalListQuery);
-};
-
-export const useAttemptLogin = (email, password) => {
-  console.log('Attemping login');
-
-  const LoginAttempt = gql`
-    mutation SignIn($email: String!, $password: String!) {
-      signIn(email: $email, password: $password) {
-        token
-        error
-      }
-    }
-  `;
-
-  return useMutation(LoginAttempt, { email, password });
-};
-
-export const useAttemptSignUp = (email, password, username) => {
-  const SignUpAttempt = gql`
-    mutation SignUp($email: String!, $password: String!, $username: String!) {
-      signUp(email: $email, password: $password, username: $username) {
-        success
-        error
-        token
-      }
-    }
-  `;
-
-  return useMutation(SignUpAttempt, { email, password, username });
 };
 
 export const useCurrentUser = () => {
@@ -220,7 +192,7 @@ export const useDeleteCollection = () => {
 
 export const useDatasetColumnsWithSuggestionCounts = (id, global) => {
   const Query = gql`
-    query DatasetColumnWithSuggestions($id: Int!, $global: Boolean!) {
+    query DatasetColumnWithSuggestions($id: String!, $global: Boolean!) {
       datasetColumn(id: $id) {
         name
         field
@@ -426,7 +398,12 @@ export const useColumnsGQL = (portal, { limit, page, search, isGlobal }) => {
 
 export const useJoinableDatasetsPaged = (columnID, global, limit, offset) => {
   const query = gql`
-    query ColumnJoins($id: Int!, $global: Boolean!, $limit: Int, $offset: Int) {
+    query ColumnJoins(
+      $id: String!
+      $global: Boolean!
+      $limit: Int
+      $offset: Int
+    ) {
       datasetColumn(id: $id) {
         joinSuggestions(global: $global, limit: $limit, offset: $offset) {
           potentialOverlap

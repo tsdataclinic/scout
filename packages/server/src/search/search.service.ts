@@ -7,6 +7,7 @@ import {
 } from '../dataset/dataset.service';
 import { Dataset } from '../dataset/dataset.entity';
 import { ScoredDataset } from './types/ScoredDataset';
+import consoleLogObject from '../util/consoleLogObject';
 
 import '@tensorflow/tfjs-node';
 import * as use from '@tensorflow-models/universal-sentence-encoder';
@@ -20,12 +21,61 @@ export class SearchService {
     private readonly datasetService: DatasetService,
   ) {}
 
-  async createIndex({ recreate }: { recreate: boolean }) {
-    console.log('Creating elasticsearch index', {
+  /**
+   * This function refreshes the Elasticsearch index (and creates it if it
+   * didn't already exist).
+   *
+   * The options that are expected are:
+   * - `recreate` (boolean): whether or not to delete and recreate the index
+   * - `lastMetadataUpdateDate` (string): only update datasets whose
+   *      `metadataUpdatedAt` date is later than this date. The date should be
+   *      a string specified in YYYY-MM-DD format.
+   * - `datasetIdsToDelete` (string[]): array of dataset ids to delete.
+   * - `portalIds` (string[]): an optional array of portal IDs to restrict our
+   *      update.
+   * - `skipMLDatasetProcessing` (boolean): whether or not we should skip
+   *      processing datasets using tensorflow. This is only really used in
+   *      local development to speed up data ingestion during testing.
+   */
+  async refreshIndex({
+    recreate,
+    lastMetadataUpdateDate,
+    datasetIdsToDelete,
+    portalIds = undefined,
+    skipMLDatasetProcessing = false,
+  }: {
+    recreate: boolean;
+    lastMetadataUpdateDate: string;
+    datasetIdsToDelete: string[];
+    portalIds: string[] | undefined;
+    skipMLDatasetProcessing: boolean;
+  }) {
+    console.log('Using elasticsearch index', {
       index: this.configService.get('ELASTICSEARCH_INDEX'),
       node: this.configService.get('ELASTICSEARCH_NODE'),
     });
+    await this.createIndex({ recreate });
+
+    // now populate the index
+    await this.populateIndex({
+      skipMLDatasetProcessing,
+      portalIds,
+      lastMetadataUpdateDate,
+    });
+
+    // now delete datasets from the index
+    await this.deleteDatasetsFromIndex(datasetIdsToDelete);
+    console.log('Done making changes to Elasticsearch index');
+  }
+
+  /**
+   * Create a new Elasticsearch index if it doesn't exist already.
+   * If `recreate` is true then we will delete the index if it already exists
+   * and recreate it.
+   */
+  async createIndex({ recreate }: { recreate: boolean }) {
     console.log('First checking if index already exists...');
+
     const checkIndex = await this.esService.indices.exists({
       index: this.configService.get('ELASTICSEARCH_INDEX'),
     });
@@ -106,6 +156,9 @@ export class SearchService {
                 columns: {
                   type: 'text',
                 },
+                isTest: {
+                  type: 'boolean',
+                },
               },
             },
           },
@@ -116,6 +169,8 @@ export class SearchService {
           }
         },
       );
+    } else {
+      console.log("Index exists already and we aren't recreating it.");
     }
   }
 
@@ -209,7 +264,18 @@ export class SearchService {
     };
     const matchAll = { match_all: {} };
 
-    const query = search && search.length > 0 ? matchQuery : matchAll;
+    // deprioritize test datasets
+    const query = {
+      boosting: {
+        positive: search && search.length > 0 ? matchQuery : matchAll,
+        negative: {
+          match: {
+            isTest: true,
+          },
+        },
+        negative_boost: 0.01,
+      },
+    };
     const fullQuery: any[] = [query];
 
     // add portal query
@@ -242,7 +308,7 @@ export class SearchService {
       fullQuery.push(...departmentMatches);
     }
 
-    console.log('Running elasticsearch query', {
+    consoleLogObject('Running elasticsearch query', {
       index: this.configService.get('ELASTICSEARCH_INDEX'),
       query: fullQuery,
     });
@@ -300,6 +366,26 @@ export class SearchService {
     });
   }
 
+  async deleteBatchFromIndex(
+    batch: Array<{ delete: { _index: string; _id: string } }>,
+  ) {
+    return new Promise((resolve, reject) => {
+      this.esService.bulk(
+        {
+          index: this.configService.get('ELASTICSEARCH_INDEX'),
+          body: batch,
+        },
+        err => {
+          if (err) {
+            console.log('Failed to delete a batch', err);
+            reject(err);
+          }
+          resolve(undefined);
+        },
+      );
+    });
+  }
+
   /**
    * Populate the entire elastic search database
    *
@@ -309,10 +395,11 @@ export class SearchService {
   async populateIndex(options: {
     skipMLDatasetProcessing: boolean;
     portalIds?: string[];
+    lastMetadataUpdateDate: string;
   }) {
-    console.log('Populating Elasticsearch index');
-
     console.log(
+      'Populating Elasticsearch index.\n',
+      `Updating only datasets with metadata last changed after ${options.lastMetadataUpdateDate}\n`,
       'Processing dataset batches with the magic of ML (this might take a while)...',
     );
     if (options.skipMLDatasetProcessing) {
@@ -323,7 +410,56 @@ export class SearchService {
       ...options,
       model: await (options.skipMLDatasetProcessing ? undefined : use.load()),
     });
-    console.log('Done creating Elasticsearch index');
+
+    console.log('Done populating Elasticsearch index');
+  }
+
+  async deleteDatasetsFromIndex(datasetIdsToDelete: string[]) {
+    console.log(
+      `Deleting ${datasetIdsToDelete.length} datasets from Elasticsearch index`,
+    );
+
+    if (datasetIdsToDelete.length === 0) {
+      console.log('There is nothing to delete!');
+      return;
+    }
+
+    const deletionBatchSize = 100;
+
+    // create all deletion requests
+    const requestBody = datasetIdsToDelete.map(datasetId => ({
+      delete: {
+        _index: this.configService.get('ELASTICSEARCH_INDEX'),
+        _id: datasetId,
+      },
+    }));
+
+    // split requests into batches
+    const deletionBatches: Array<
+      Array<{ delete: { _index: string; _id: string } }>
+    > = [];
+    requestBody.forEach((req, idx) => {
+      const batchIdx = Math.floor(idx / deletionBatchSize);
+      if (deletionBatches[batchIdx]) {
+        deletionBatches[batchIdx].push(req);
+      } else {
+        deletionBatches[batchIdx] = [req];
+      }
+    });
+
+    console.log('Sending deletion requests to Elasticsearch...');
+    await deletionBatches.reduce(async (previousPromise, nextBatch, index) => {
+      await previousPromise;
+      console.log(
+        'Deleting sub-batch ',
+        index + 1,
+        ' of ',
+        deletionBatches.length,
+      );
+      return this.deleteBatchFromIndex(nextBatch);
+    }, Promise.resolve());
+
+    console.log('Done deleting from Elasticsearch index');
   }
 
   async generateEmbeddingVectors(
@@ -347,7 +483,8 @@ export class SearchService {
 
   /**
    * Pull datasets from the database and prepare the batches to load into
-   * elasticsearch.
+   * elasticsearch. We only pull datasets that have a `metadataUpdatedAt` date
+   * after the `lastMetadataUpdateDate`.
    *
    * If `options.portalIds` is provided, then we will only load the
    * datasets from the given portal ids.
@@ -356,14 +493,16 @@ export class SearchService {
     skipMLDatasetProcessing: boolean;
     portalIds?: string[];
     model?: any;
+    lastMetadataUpdateDate: string;
   }): Promise<void> {
     console.log('Getting all datasets from db');
 
     const totalDatasets = options.portalIds
-      ? await this.datasetService.countForPortals(options.portalIds)
-      : await this.datasetService.countAll();
-
-    console.log('Found total datasets', totalDatasets);
+      ? await this.datasetService.countForPortals(
+          options.portalIds,
+          options.lastMetadataUpdateDate,
+        )
+      : await this.datasetService.countAll(options.lastMetadataUpdateDate);
 
     const parsingBatchSize = 500;
     const uploadBatchSize = 100;
@@ -386,6 +525,7 @@ export class SearchService {
           parsingBatchSize,
           index * parsingBatchSize,
           options?.portalIds,
+          options.lastMetadataUpdateDate,
         );
 
       console.log('Processing batch', index, datasets[0].id);
@@ -399,19 +539,23 @@ export class SearchService {
         try {
           body.push(
             {
-              index: {
+              update: {
                 _index: this.configService.get('ELASTICSEARCH_INDEX'),
                 _id: item.id,
               },
             },
             {
-              title: item.name,
-              description: item.description,
-              vector: Array.from(item.vector),
-              portal: item.portalId,
-              department: item.department,
-              categories: item.categories,
-              columns: item.datasetColumnFields,
+              doc: {
+                title: item.name,
+                description: item.description,
+                vector: Array.from(item.vector),
+                portal: item.portalId,
+                department: item.department,
+                categories: item.categories,
+                columns: item.datasetColumnFields,
+                isTest: item.isTest,
+              },
+              doc_as_upsert: true,
             },
           );
         } catch (err) {
@@ -436,10 +580,11 @@ export class SearchService {
         await previousPromise;
         console.log(
           'Loading in sub-batch ',
-          index,
+          index + 1,
           ' of ',
           uploadBatches.length,
         );
+
         return this.populateIndexBatch(nextBatch);
       }, Promise.resolve());
     }, Promise.resolve([]));

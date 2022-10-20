@@ -1,4 +1,4 @@
-import styled from '@emotion/styled/macro';
+import styled from 'styled-components/macro';
 import { MenuItem } from '@reach/menu-button';
 import BasicMenuItem, {
   menuItemMaxWidth,

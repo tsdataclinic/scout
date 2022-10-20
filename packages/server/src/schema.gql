@@ -17,6 +17,7 @@ type Collection {
 }
 
 type Dataset {
+  categories: [String!]!
   collections: [Collection!]!
   createdAt: DateTime
   datasetColumns: [DatasetColumn!]!
@@ -24,6 +25,7 @@ type Dataset {
   description: String!
   downloads: Float
   id: String!
+  isTest: Boolean!
   metadataUpdatedAt: DateTime
   name: String!
   permalink: String
@@ -39,7 +41,7 @@ type DatasetColumn {
   dataset: Dataset!
   description: String!
   field: String!
-  id: Float!
+  id: String!
   joinSuggestionCount(global: Boolean = false): Float!
   joinSuggestions(global: Boolean = false, limit: Int, offset: Int): [JoinSuggestion!]!
   name: String!
@@ -114,7 +116,7 @@ type Query {
   collection(id: String!): Collection!
   collections: [Collection!]!
   dataset(id: String!): Dataset!
-  datasetColumn(id: Int!): DatasetColumn!
+  datasetColumn(id: String!): DatasetColumn!
   datasetColumns: [DatasetColumn!]!
   datasets(limit: Float, offset: Float): [Dataset!]!
   datasetsByIds(ids: [String!]!): [Dataset!]!

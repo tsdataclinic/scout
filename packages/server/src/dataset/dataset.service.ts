@@ -7,10 +7,9 @@ import {
   CategoryCount,
 } from './dataset.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MoreThanOrEqual, Repository, In } from 'typeorm';
 import { Portal } from '../portals/portal.entity';
 import { SearchService } from '../search/search.service';
-import { In } from 'typeorm';
 import { DatasetColumn } from '../dataset-columns/dataset-column.entity';
 
 export type DatasetForElasticSearch = {
@@ -21,6 +20,7 @@ export type DatasetForElasticSearch = {
   department: string;
   categories: string[];
   datasetColumnFields: string[];
+  isTest: boolean;
 };
 
 @Injectable()
@@ -254,6 +254,35 @@ export class DatasetService {
     }) as Promise<PagedDatasets>;
   }
 
+  /**
+   * Get all the dataset ids that exist in a given portal
+   */
+  async getAllDatasetIds(portalId: string): Promise<string[]> {
+    const pageSize = 300;
+    const numDatasets = await this.datasetRepo.count({
+      where: { portalId },
+    });
+    const numPages = Math.ceil(numDatasets / pageSize);
+    const datasetPages = await Promise.all(
+      [...Array(numPages)].map((_, pageIdx: number) =>
+        this.datasetRepo.find({
+          order: { id: 'ASC' },
+          select: ['id'],
+          where: {
+            portalId,
+          },
+          take: pageSize,
+          skip: pageSize * pageIdx,
+        }),
+      ),
+    );
+    const allIds: string[] = [];
+    datasetPages.forEach(datasets => {
+      allIds.push(...datasets.map(dataset => dataset.id));
+    });
+    return allIds;
+  }
+
   findAll(limit?: number, offset?: number): Promise<Dataset[]> {
     return this.datasetRepo.find({
       order: {
@@ -266,15 +295,25 @@ export class DatasetService {
   }
 
   /**
-   * Get all datasets with their columns to insert into elasticsearch.
+   * Get all datasets with their columns to insert into elasticsearch. We only
+   * get datasets how `metadataUpdatedAt` date is after the
+   * `lastMetadataUpdateDate` arg (which should be formatted in YYYY-MM-DD format).
    * If `portalIds` are passed then we limit the datasets to just those portals.
    */
   async findAllForElasticSearchInsertion(
     limit?: number,
     offset?: number,
     portalIds?: string[],
+    lastMetadataUpdateDate: string = '1970-01-01',
   ): Promise<DatasetForElasticSearch[]> {
-    const whereClause = portalIds ? { portalId: In(portalIds) } : {};
+    const metadataUpdateDateFilter = {
+      metadataUpdatedAt: MoreThanOrEqual(lastMetadataUpdateDate),
+    };
+
+    const whereClause = portalIds
+      ? { ...metadataUpdateDateFilter, portalId: In(portalIds) }
+      : metadataUpdateDateFilter;
+
     const datasets = await this.datasetRepo.find({
       select: [
         'id',
@@ -283,6 +322,7 @@ export class DatasetService {
         'portalId',
         'department',
         'categories',
+        'isTest',
       ],
       relations: ['datasetColumns'],
       order: {
@@ -301,16 +341,32 @@ export class DatasetService {
     }));
   }
 
-  async countForPortals(portalIds: string[]): Promise<number> {
+  /**
+   * Get a count of how many datasets exist in the given portals with a
+   * `metadataUpdatedAt` date that is after the `lastMetadataUpdateDate`
+   */
+  async countForPortals(
+    portalIds: string[],
+    lastMetadataUpdateDate: string,
+  ): Promise<number> {
     return this.datasetRepo.count({
       where: {
         portalId: In(portalIds),
+        metadataUpdatedAt: MoreThanOrEqual(lastMetadataUpdateDate),
       },
     });
   }
 
-  async countAll(): Promise<number> {
-    return this.datasetRepo.count();
+  /**
+   * Get a count of how many datasets exist in the entire db with a
+   * `metadataUpdatedAt` date that is after the `lastMetadataUpdateDate`
+   */
+  async countAll(lastMetadataUpdateDate: string): Promise<number> {
+    return this.datasetRepo.count({
+      where: {
+        metadataUpdatedAt: MoreThanOrEqual(lastMetadataUpdateDate),
+      },
+    });
   }
 
   async findAllForPortal(
@@ -327,5 +383,9 @@ export class DatasetService {
 
   createOrUpdate(dataset: Dataset) {
     return this.datasetRepo.save(dataset);
+  }
+
+  async deleteDatasets(datasetIds: string[]) {
+    return this.datasetRepo.delete(datasetIds);
   }
 }

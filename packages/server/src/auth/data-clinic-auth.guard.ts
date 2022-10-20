@@ -6,8 +6,20 @@ import {
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
 
+/**
+ * This auth guard applies two auth strategies:
+ * - AzureADStrategy (which in turn applies the BearerStrategy from the
+ *   passport-azure-ad class)
+ * - FakeJWTStrategy (which in turn applies passport-jwt's Strategy)
+ *
+ * Both of these validate the request's token in order to determine if
+ * a user is authenticated.
+ *
+ * FakeJWTStrategy will only be used if AzureADStrategy fails and if
+ * fake auth is enabled (which should only happen in development).
+ */
 @Injectable()
-export class AzureADGuard extends AuthGuard('azure-ad') {
+export class DataClinicAuthGuard extends AuthGuard(['azure-ad', 'fake-jwt']) {
   /**
    * We need to override the `getRequest()` method in order
    * to use the AuthGuard with GraphQL. This is taken straight

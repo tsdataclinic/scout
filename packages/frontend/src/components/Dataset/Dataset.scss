@@ -1,6 +1,11 @@
 .dataset {
   display: grid;
 
+  .data-link-title {
+    &:focus-visible {
+      outline: 3px solid #000;
+    }
+  }
   button {
     height: 24px;
     width: 100%;
@@ -110,12 +115,35 @@
   text-align: left;
   display: flex;
   flex-direction: row;
+  align-items: center;
   span {
     font-weight: bold;
     margin-right: 5px;
   }
   .update-frequency {
     margin-right: 10px;
+  }
+  .dataset-last-updated {
+    margin-right: 10px;
+  }
+  .dataset-matching-categories {
+    .dataset-category-info {
+      display: inline-block;
+      box-sizing: border-box;
+      padding: 4px;
+      border: 2px solid #e7eef7;
+      background-color: #e7eef7;
+      border-radius: 2px;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+      p {
+        padding: 0px;
+        margin: 0px;
+        color: #152935;
+        margin: 0px;
+      }
+    }
   }
 }
 .dataset-title {

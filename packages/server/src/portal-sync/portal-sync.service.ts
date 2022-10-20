@@ -1,6 +1,7 @@
 import moment from 'moment';
 import { Get, Injectable } from '@nestjs/common';
 import { Cron, Timeout } from '@nestjs/schedule';
+import { Subject } from 'rxjs';
 import fetch from 'node-fetch';
 import { PortalService } from '../portals/portal.service';
 import { DatasetService } from '../dataset/dataset.service';
@@ -14,7 +15,6 @@ import { Logger } from '@nestjs/common';
 import * as fs from 'fs';
 import { SearchService } from '../search/search.service';
 import { PortalExternalInfo } from './portal-details-lookup';
-import consoleLogObject from '../util/consoleLogObject';
 
 // the portal details returned by Socrata API
 type SocrataPortalDetails = {
@@ -106,23 +106,49 @@ type SocrataDataset = {
  * suit your testing needs.
  */
 const DATA_REFRESH_CONFIG = {
-  // set this to true to ignore populating elastic search
-  skipElasticSearchRebuild: false,
+  // Set this to true to ignore populating elastic search. There is no env var
+  // for this. This is useful when testing data ingestion.
+  skipElasticSearchRefresh: false,
+
+  // Set this to true to avoid refreshing postgres. There is no env var for
+  // this. This is useful when testing data ingestion.
   skipPostgresRefresh: false,
+
+  // Set this to true to avoid processing the dataset descriptions with
+  // tensorflow. This is useful when testing data ingestion, since the ML step
+  // is the slowest. There is no env var for this.
   skipMLDatasetProcessing: false,
 
-  // set this to true to use a hardcoded list of portals
+  // Set this to true if you want to recreate the elasticsearch index from
+  // scratch. It's recommended to pass this as an env var instead.
+  // Env var: RECREATE_ELASTICSEARCH_INDEX
+  recreateElasticsearchIndex: false,
+
+  // Set this to true to use a hardcoded list of portals. If a
+  // PORTAL_OVERRIDE_LIST env var is set, then we will consider
+  // `usePortalListOverride` to be true even if this isn't explicitly set.
   usePortalListOverride: false,
 
+  // This is used to control what datasets get updated in Elasticsearch.
+  // Only datasets with a `metadataUpdatedAt` after this date will be updated.
+  // Indexing to Elasticsearch is expensive so we try to avoid updating *all*
+  // datasets. Set this timestamp to an old date (e.g. '1970-01-01') if you want
+  // to update all datasets. Dates must be a YYYY-MM-DD string.
+  // It's recommended to pass this as an env var instead.
+  // Env var: LAST_METADATA_UPDATE_DATE
+  lastMetadataUpdateDate: '2022-01-01',
+
   // if `usePortalListOverride` is true, then use this list of portals instead
-  // of pulling all portals from Socrata
+  // of pulling all portals from Socrata. It's recommended to use an env var
+  // instead.
+  // Env var: PORTAL_OVERRIDE_LIST
   portalList: process.env.PORTAL_OVERRIDE_LIST
     ? process.env.PORTAL_OVERRIDE_LIST.split(',')
     : [
-        // 'data.ct.gov',
+        'data.ct.gov',
         'data.cityofchicago.org',
         'data.cityofnewyork.us',
-        // 'data.ny.gov',
+        'data.ny.gov',
         'data.nashville.gov',
       ],
 };
@@ -140,8 +166,37 @@ function usePortalListOverride(): boolean {
   return DATA_REFRESH_CONFIG.usePortalListOverride;
 }
 
+/**
+ * This function decides if we should recreate the elasticsearch index.
+ * If the RECREATE_ELASTICSEARCH_INDEX env var is set then that takes priority.
+ * Otherwise, we use whatever is set in the DATA_REFRESH_CONFIG object.
+ */
+function shouldRecreateElasticsearchIndex(): boolean {
+  if (
+    process.env.RECREATE_ELASTICSEARCH_INDEX &&
+    process.env.RECREATE_ELASTICSEARCH_INDEX === 'true'
+  ) {
+    return true;
+  }
+  return DATA_REFRESH_CONFIG.recreateElasticsearchIndex;
+}
+
+/**
+ * Get the lastMetadataUpdateDate we will use as the cutoff to update datasets
+ * in Elasticsearch. Only datasets with a `metadataUpdatedAt` date that is after
+ * this date will be updated.
+ */
+function getLastMetadataUpdateDate(): string {
+  if (process.env.LAST_METADATA_UPDATE_DATE) {
+    return process.env.LAST_METADATA_UPDATE_DATE;
+  }
+  return DATA_REFRESH_CONFIG.lastMetadataUpdateDate;
+}
+
 @Injectable()
 export class PortalSyncService {
+  private shutdownListener: Subject<void> = new Subject();
+
   constructor(
     private readonly portalService: PortalService,
     private readonly datasetService: DatasetService,
@@ -154,23 +209,27 @@ export class PortalSyncService {
   @Timeout(0)
   async onceAtStartup() {
     if (this.configService.get('UPDATE_ON_BOOT')) {
+      let datasetIdsToDelete = [];
       if (!DATA_REFRESH_CONFIG.skipPostgresRefresh) {
-        await this.refreshPortalList();
+        datasetIdsToDelete = await this.refreshPortalList();
       }
 
-      if (!DATA_REFRESH_CONFIG.skipElasticSearchRebuild) {
-        await this.searchService.createIndex({ recreate: true });
-        await this.searchService.populateIndex({
-          skipMLDatasetProcessing: DATA_REFRESH_CONFIG.skipMLDatasetProcessing,
+      if (!DATA_REFRESH_CONFIG.skipElasticSearchRefresh) {
+        await this.searchService.refreshIndex({
+          datasetIdsToDelete,
+          recreate: shouldRecreateElasticsearchIndex(),
+          lastMetadataUpdateDate: getLastMetadataUpdateDate(),
           portalIds: usePortalListOverride()
             ? DATA_REFRESH_CONFIG.portalList
             : undefined,
+          skipMLDatasetProcessing: DATA_REFRESH_CONFIG.skipMLDatasetProcessing,
         });
       } else {
         console.log('Skipping elasticsearch update');
       }
 
       console.log('Done updating all data');
+      this.shutdown();
     }
   }
 
@@ -243,9 +302,18 @@ export class PortalSyncService {
     dataset.portal = Promise.resolve(portal);
     dataset.categories = allCategories;
     dataset.downloads = resource.download_count;
+    // TODO: find a better method to classify test datasets
+    // Looking at some of the datasets with "test" in the name, it seems most of the
+    // actual test datasets have shorter names. Choosing 3 as an arbitrary cutoff.
+    dataset.isTest =
+      resource.name.toLowerCase().includes('test') &&
+      resource.name.split(' ').length <= 3;
     return dataset;
   }
 
+  /**
+   * Given a portal, get a single page of its datasets from Socrata.
+   */
   async getPageOfDatasets(
     portal: Portal,
     page: number,
@@ -265,6 +333,11 @@ export class PortalSyncService {
     }
   }
 
+  /**
+   * Create all the dataset columns for a given dataset. Write all these
+   * columns to the db. Create any columns that are new, otherwise update the
+   * ones that already exist.
+   */
   async makeColumnsForDataset(
     datasetDetails: SocrataDataset,
     dataset: Dataset,
@@ -280,7 +353,7 @@ export class PortalSyncService {
         datasetColumn.type = column_types[index];
         datasetColumn.dataset = Promise.resolve(dataset);
         datasetColumn.portal = Promise.resolve(portal);
-        // datasetColumn.id = dataset.id + '_' + column_fields[index];
+        datasetColumn.id = dataset.id + '__' + column_fields[index];
         const savedColumn = await this.datasetColumnsService.createOrUpdate(
           datasetColumn,
         );
@@ -291,10 +364,21 @@ export class PortalSyncService {
     return columns;
   }
 
-  async refreshDatasetsForPortal(portal: Portal): Promise<void> {
+  /**
+   * Given a portal, get all of its datasets from Socrata.
+   * Socrata doesn't let us just query for the datasets whose metadata have
+   * been most recently updated, so we have to get *all* datasets. This is fine
+   * because it lets us get all existing dataset ids per portal and delete any
+   * that no longer exist.
+   *
+   * This function returns the list of dataset ids that were deleted from the
+   * portal, which is used later to keep in sync with elasticsearch.
+   */
+  async refreshDatasetsForPortal(portal: Portal): Promise<string[]> {
     console.log(`Beginning dataset refresh for ${portal.id}`);
     const perPage = 100;
     const pages = Math.ceil(portal.datasetCount / perPage);
+
     const allDatasets = await Promise.all(
       [...Array(pages)].map((_, page: number) =>
         this.getPageOfDatasets(portal, page, perPage),
@@ -306,6 +390,7 @@ export class PortalSyncService {
       flattenedDatasets.push(...datasets);
     });
 
+    // write all datasets and the dataset columns to db
     await Promise.all(
       flattenedDatasets.map(async (datasetDetails: SocrataDataset) => {
         // const tags = await this.makeTagsForDataset(datasetDetails);
@@ -329,9 +414,33 @@ export class PortalSyncService {
       }),
     );
 
-    console.log('Completed dataset refresh for', portal.id);
+    // delete datasets that exist in the db but no longer exist in Socrata
+    const idsInSocrata = new Set(
+      flattenedDatasets.map(dataset => dataset.resource.id),
+    );
+    const idsInDb = await this.datasetService.getAllDatasetIds(portal.id);
+    const idsToDelete = idsInDb.filter(id => !idsInSocrata.has(id));
+    if (idsToDelete.length > 0) {
+      const idsToDeleteStr = idsToDelete.join(', ');
+      console.log(
+        `Found ${idsToDelete.length} datasets to delete: ${idsToDeleteStr}`,
+      );
+
+      // now delete these datasets
+      await this.datasetService.deleteDatasets(idsToDelete);
+      console.log('Finished deleting datasets from db');
+    } else {
+      console.log('There are no datasets to delete for this portal.');
+    }
+
+    return idsToDelete;
   }
 
+  /**
+   * Create a new portal, or if it already exists update the existing one.
+   * Return all dataset ids deleted from this portal, in order to keep in sync
+   * with elasticsearch.
+   */
   async createAndUpdatePortal(portalDetails: SocrataPortalDetails) {
     const portal = new Portal();
     const externalDetails = PortalExternalInfo[portalDetails.domain];
@@ -353,11 +462,18 @@ export class PortalSyncService {
     const savedPortal = await this.portalService.createOrUpdatePortal(portal);
     console.log('Finished saving portal', portalDetails.domain);
 
-    await this.refreshDatasetsForPortal(savedPortal);
+    const datasetIdsToDelete = await this.refreshDatasetsForPortal(savedPortal);
+    return datasetIdsToDelete;
   }
 
+  /**
+   * Query for all socrata portals and update them in postgres.
+   *
+   * Return all dataset ids deleted from postgres, in order to keep in sync
+   * with elasticsearch.
+   */
   async refreshPortalList() {
-    console.log('BEGINNING IMPORT INTO DATABASE');
+    console.log('BEGINNING IMPORT INTO POSTGRES DATABASE');
     const portalListRequest = await fetch(
       'http://api.us.socrata.com/api/catalog/v1/domains',
     );
@@ -375,17 +491,32 @@ export class PortalSyncService {
 
     // Process all portals sequentially
     // TODO: can this be safely done in parallel?
-    await portalList.reduce(
+    const allDatasetIdsToDelete: string[] = await portalList.reduce(
       async (
-        prevPromise: Promise<void>,
+        prevPromise: Promise<string[]>,
         portalDetails: SocrataPortalDetails,
-      ): Promise<void> => {
-        await prevPromise;
-        return this.createAndUpdatePortal(portalDetails);
+      ): Promise<string[]> => {
+        const datasetIdsToDelete: string[] = await prevPromise;
+        const moreIdsToDelete: string[] = await this.createAndUpdatePortal(
+          portalDetails,
+        );
+        return datasetIdsToDelete.concat(moreIdsToDelete);
       },
-      Promise.resolve(),
+      Promise.resolve([]),
     );
 
     console.log('IMPORT COMPLETE: All data portals have been updated');
+    return allDatasetIdsToDelete;
+  }
+
+  subscribeToShutdown(shutdownCallback: () => void): void {
+    this.shutdownListener.subscribe(() => shutdownCallback());
+  }
+
+  /**
+   * Emit a shutdown event
+   */
+  shutdown(): void {
+    this.shutdownListener.next();
   }
 }
