@@ -4,10 +4,9 @@ import {
   JoinSuggestion,
   PagedFieldCount,
 } from './dataset-column.entity';
-import { Portal } from '../portals/portal.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Not, Like } from 'typeorm';
+import { Not } from 'typeorm';
 
 @Injectable()
 export class DatasetColumnsService {
