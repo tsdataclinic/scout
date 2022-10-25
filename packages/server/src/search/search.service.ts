@@ -210,7 +210,7 @@ export class SearchService {
               query: query,
               script: {
                 source:
-                  "(cosineSimilarity(params.query_vector, 'vector') + 1.0)/2.0",
+                  "(cosineSimilarity(params.query_vector, doc['vector']) + 1.0)/2.0",
                 params: { query_vector: Array.from(embedding) },
               },
             },
