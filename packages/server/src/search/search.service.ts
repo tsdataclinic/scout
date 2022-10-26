@@ -144,8 +144,8 @@ export class SearchService {
                   type: 'text',
                 },
                 vector: {
-                  type: 'dense_vector',
-                  dims: 512,
+                  type: 'knn_vector',
+                  dimension: 512,
                 },
                 department: {
                   type: 'text',
