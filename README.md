@@ -60,9 +60,9 @@ We use GitHub authentication for automated code searches to display helpful reso
 
 **NOTE:** these instructions are just for local development which is all you need if you want to contribute. To deploy in production, you need to configure Azure AD B2C authentication as well. You can find the instructions on how to do that in the [repo wiki](https://github.com/tsdataclinic/scout/wiki/Setting-up-Azure-AD-B2C-authentication-in-production).
 
-### 2.4 Running Elasticsearch
+### 2.4 Running OpenSearch
 
-The search backend uses Elasticsearch. To run it locally, the easiest way to do it is with [docker-compose](https://docs.docker.com/compose/install/):
+The search backend uses OpenSearch. To run it locally, the easiest way to do it is with [docker-compose](https://docs.docker.com/compose/install/):
 
 ```
 docker-compose -f docker-compose.yml up
@@ -114,7 +114,7 @@ If you see a message that says `Schema syncronization finished successfully.` th
 yarn seed-database-dev
 ```
 
-This might take a while. It will populate postgres and elasticsearch with data from three open data portals. We intentionally do not add all 120+ portals to avoid waiting hours for this command to complete. If you wanted to populate your database with _all_ portals, then run `yarn seed-database-full`. This is **_not_** recommended during development.
+This might take a while. It will populate postgres and OpenSearch with data from three open data portals. We intentionally do not add all 120+ portals to avoid waiting hours for this command to complete. If you wanted to populate your database with _all_ portals, then run `yarn seed-database-full-new`. This is **_not_** recommended during development.
 
 When you see the following message:
 
