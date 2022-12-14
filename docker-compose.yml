@@ -1,16 +1,18 @@
 version: '2.2'
 services:
-  # Elasticsearch service
-  es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.2
-    container_name: es01
+  # OpenSearch service
+  opensearch-node:
+    image: opensearchproject/opensearch:1.3.2
+    container_name: opensearch-node
     environment:
-      - node.name=es01
-      - cluster.name=es-docker-cluster
-      # - discovery.seed_hosts=es01,es03
-      - cluster.initial_master_nodes=es01
+      - cluster.name=opensearch-docker-cluster
+      - node.name=opensearch-node
+      - discovery.seed_hosts=opensearch-node
+      - cluster.initial_master_nodes=opensearch-node
       - bootstrap.memory_lock=true
       - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+      - 'DISABLE_INSTALL_DEMO_CONFIG=true'
+      - 'DISABLE_SECURITY_PLUGIN=true'
     ulimits:
       memlock:
         soft: -1
@@ -19,15 +21,15 @@ services:
         soft: 262144
         hard: 262144
     volumes:
-      - data01:/usr/share/elasticsearch/data
+      - data01:/usr/share/opensearch/data
     ports:
-      - 9200:9200
-      - 9300:9300
+      - 9200:9200 # REST API
+      - 9600:9600 # Performance Analyzer
     networks:
-      - elastic
+      - opensearch-net
 volumes:
   data01:
     driver: local
 networks:
-  elastic:
+  opensearch-net:
     driver: bridge

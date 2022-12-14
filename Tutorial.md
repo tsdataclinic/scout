@@ -1,6 +1,6 @@
 # Getting started with scout 
 
-Thanks for trying out _scout_, a new way to explore the New York City (NYC) Open Data portal. This document will walk you through some exercises to help you get familiar with _scout_'s features.
+Thanks for trying out _scout_, a new way to explore governmental open data portals. This document will walk you through some exercises to help you get familiar with _scout_'s features.
 
 To get started, load up _scout_ in another browser tab or window by going to this link: [https://www.twosigma.com/scout](https://www.twosigma.com/scout)
 
@@ -111,6 +111,6 @@ You could find more datasets that can potentially join with the _Capital Budget_
 
 If you click on that tab, you will see a list of datasets that _scout_ thinks have a similar theme as the current dataset. To do this, _scout_ employs machine learning to find datasets that may pertain to a similar topic based on their names and descriptions. For example, here you can see a lot of datasets about how the city spends money. Some of these have similar words in their titles and descriptions as the _Capital Budget_ dataset, but, notably, _Expense Actuals_ does not. The machine learning used behind the scenes is smart enough to know that they are about a similar topic and offers it up as a suggestion. You can easily add it to your collection as before.
 
-In this tutorial, you have explored some of _scout_’s features. It allows you to quickly filter and search datasets on the New York Open Data portal, find datasets that might easily be joined together or have a similar theme, and create collections of datasets for your own use or for sharing. We think that _scout_ will make everyone's interactions with open data just a little bit easier and hopefully help people find the information they need for their next open source project, or just to satisfy their own curiosity.
+In this tutorial, you have explored some of _scout_’s features. It allows you to quickly filter and search datasets on the governmental open data portal, find datasets that might easily be joined together or have a similar theme, and create collections of datasets for your own use or for sharing. We think that _scout_ will make everyone's interactions with open data just a little bit easier and hopefully help people find the information they need for their next open source project, or just to satisfy their own curiosity.
 
 ~~~~~~~~

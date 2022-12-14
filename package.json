@@ -1,6 +1,6 @@
 {
-  "name": "scout",
-  "version": "1.0.0",
+  "name": "Scout",
+  "version": "0.1.1",
   "main": "index.js",
   "repository": "git@github.com:tsdataclinic/scout.git",
   "author": "Stuart Lynn <stuart.lynn@gmail.com>",

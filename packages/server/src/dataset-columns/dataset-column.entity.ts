@@ -1,10 +1,4 @@
-import {
-  Entity,
-  Column,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  Index,
-} from 'typeorm';
+import { Entity, Column, ManyToOne, PrimaryColumn, Index } from 'typeorm';
 import { ObjectType, Field } from '@nestjs/graphql';
 import { Dataset } from '../dataset/dataset.entity';
 import { Portal } from '../portals/portal.entity';
@@ -13,8 +7,8 @@ import { Portal } from '../portals/portal.entity';
 @Entity()
 export class DatasetColumn {
   @Field()
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryColumn()
+  id: string;
 
   @Index()
   @Field()
@@ -46,7 +40,10 @@ export class DatasetColumn {
   portal: Promise<Portal>;
 
   @Field(type => Dataset)
-  @ManyToOne(type => Dataset, dataset => dataset.id, { nullable: true })
+  @ManyToOne(type => Dataset, dataset => dataset.id, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
   dataset: Promise<Dataset>;
 }
 
