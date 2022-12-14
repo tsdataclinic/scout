@@ -5,6 +5,7 @@ import {
   ManyToOne,
   OneToMany,
   ManyToMany,
+  DeleteDateColumn,
 } from 'typeorm';
 import { ObjectType, Field } from '@nestjs/graphql';
 import { Portal } from '../portals/portal.entity';
@@ -69,6 +70,10 @@ export class Dataset {
 
   @Column({ nullable: false })
   portalId: string;
+
+  @Field({ nullable: true })
+  @DeleteDateColumn()
+  deletedAt?: Date;
 
   @Field(type => Portal)
   @ManyToOne(type => Portal, portal => portal.id)
