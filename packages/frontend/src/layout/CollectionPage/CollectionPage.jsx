@@ -145,7 +145,7 @@ export default function CollectionPage() {
       <div className="collection-content">
         {datasets.map(dataset => (
           <Dataset
-            showCollectionButtons={false}
+            showCollectionButtons
             viewInOpenPortal
             key={dataset.id}
             dataset={dataset}
