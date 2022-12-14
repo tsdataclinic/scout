@@ -40,10 +40,7 @@ export class DatasetColumn {
   portal: Promise<Portal>;
 
   @Field(type => Dataset)
-  @ManyToOne(type => Dataset, dataset => dataset.id, {
-    nullable: true,
-    onDelete: 'CASCADE',
-  })
+  @ManyToOne(type => Dataset, dataset => dataset.id, { nullable: true })
   dataset: Promise<Dataset>;
 }
 
