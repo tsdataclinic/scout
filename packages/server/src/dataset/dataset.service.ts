@@ -385,7 +385,12 @@ export class DatasetService {
     return this.datasetRepo.save(dataset);
   }
 
+  /** Restore a soft-deleted dataset */
+  restoreDataset(dataset: Dataset) {
+    return this.datasetRepo.restore(dataset);
+  }
+
   async deleteDatasets(datasetIds: string[]) {
-    return this.datasetRepo.delete(datasetIds);
+    return this.datasetRepo.softDelete(datasetIds);
   }
 }
