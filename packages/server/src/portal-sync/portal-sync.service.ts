@@ -399,6 +399,12 @@ export class PortalSyncService {
           const savedDataset = await this.datasetService.createOrUpdate(
             dataset,
           );
+
+          // restore the dataset if it is "undeleted" now
+          if (savedDataset.deletedAt) {
+            this.datasetService.restoreDataset(dataset);
+          }
+
           await this.makeColumnsForDataset(
             datasetDetails,
             savedDataset,
@@ -421,13 +427,25 @@ export class PortalSyncService {
     const idsInDb = await this.datasetService.getAllDatasetIds(portal.id);
     const idsToDelete = idsInDb.filter(id => !idsInSocrata.has(id));
     if (idsToDelete.length > 0) {
-      const idsToDeleteStr = idsToDelete.join(', ');
-      console.log(
-        `Found ${idsToDelete.length} datasets to delete: ${idsToDeleteStr}`,
+      console.log(`Found ${idsToDelete.length} datasets to delete`);
+
+      // paginate the deletion
+      const pageSize = 100;
+      const numPages = Math.ceil(idsToDelete.length / perPage);
+      await Promise.all(
+        Array.from({ length: numPages }).map((_, pageIndex) => {
+          const idsInPage = idsToDelete.slice(
+            pageSize * pageIndex,
+            pageSize * (pageIndex + 1),
+          );
+          const idsToDeleteStr = idsInPage.join(', ');
+          console.log(`Deleting ids: ${idsToDeleteStr}`);
+
+          // now delete these datasets
+          this.datasetService.deleteDatasets(idsToDelete);
+        }),
       );
 
-      // now delete these datasets
-      await this.datasetService.deleteDatasets(idsToDelete);
       console.log('Finished deleting datasets from db');
     } else {
       console.log('There are no datasets to delete for this portal.');
