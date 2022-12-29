@@ -7,7 +7,7 @@ import {
   CategoryCount,
 } from './dataset.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MoreThanOrEqual, Repository, In } from 'typeorm';
+import { IsNull, MoreThanOrEqual, Repository, In } from 'typeorm';
 import { Portal } from '../portals/portal.entity';
 import { SearchService } from '../search/search.service';
 import { DatasetColumn } from '../dataset-columns/dataset-column.entity';
@@ -306,13 +306,14 @@ export class DatasetService {
     portalIds?: string[],
     lastMetadataUpdateDate: string = '1970-01-01',
   ): Promise<DatasetForElasticSearch[]> {
-    const metadataUpdateDateFilter = {
+    const baseWhereFilter = {
       metadataUpdatedAt: MoreThanOrEqual(lastMetadataUpdateDate),
+      deletedAt: IsNull(),
     };
 
     const whereClause = portalIds
-      ? { ...metadataUpdateDateFilter, portalId: In(portalIds) }
-      : metadataUpdateDateFilter;
+      ? { ...baseWhereFilter, portalId: In(portalIds) }
+      : baseWhereFilter;
 
     const datasets = await this.datasetRepo.find({
       select: [
