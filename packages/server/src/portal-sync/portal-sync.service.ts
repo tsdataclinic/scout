@@ -1,6 +1,7 @@
 import moment from 'moment';
 import { Get, Injectable } from '@nestjs/common';
 import { Cron, Timeout } from '@nestjs/schedule';
+import { Not, IsNull } from 'typeorm';
 import { Subject } from 'rxjs';
 import fetch from 'node-fetch';
 import { PortalService } from '../portals/portal.service';
@@ -400,7 +401,7 @@ export class PortalSyncService {
             dataset,
           );
 
-          // restore the dataset if it is "undeleted" now
+          // restore the dataset if it was previously deleted
           if (savedDataset.deletedAt) {
             this.datasetService.restoreDataset(dataset);
           }
@@ -424,8 +425,8 @@ export class PortalSyncService {
     const idsInSocrata = new Set(
       flattenedDatasets.map(dataset => dataset.resource.id),
     );
-    const idsInDb = await this.datasetService.getAllDatasetIds(portal.id);
-    const idsToDelete = idsInDb.filter(id => !idsInSocrata.has(id));
+    const idsInDB = await this.datasetService.getAllDatasetIds(portal.id);
+    const idsToDelete = idsInDB.filter(id => !idsInSocrata.has(id));
     if (idsToDelete.length > 0) {
       console.log(`Found ${idsToDelete.length} datasets to delete`);
 
