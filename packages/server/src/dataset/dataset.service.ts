@@ -7,7 +7,13 @@ import {
   CategoryCount,
 } from './dataset.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MoreThanOrEqual, Repository, In } from 'typeorm';
+import {
+  FindConditions,
+  IsNull,
+  MoreThanOrEqual,
+  Repository,
+  In,
+} from 'typeorm';
 import { Portal } from '../portals/portal.entity';
 import { SearchService } from '../search/search.service';
 import { DatasetColumn } from '../dataset-columns/dataset-column.entity';
@@ -257,7 +263,10 @@ export class DatasetService {
   /**
    * Get all the dataset ids that exist in a given portal
    */
-  async getAllDatasetIds(portalId: string): Promise<string[]> {
+  async getAllDatasetIds(
+    portalId: string,
+    where?: FindConditions<Dataset>,
+  ): Promise<string[]> {
     const pageSize = 300;
     const numDatasets = await this.datasetRepo.count({
       where: { portalId },
@@ -270,6 +279,7 @@ export class DatasetService {
           select: ['id'],
           where: {
             portalId,
+            ...where,
           },
           take: pageSize,
           skip: pageSize * pageIdx,
@@ -306,13 +316,14 @@ export class DatasetService {
     portalIds?: string[],
     lastMetadataUpdateDate: string = '1970-01-01',
   ): Promise<DatasetForElasticSearch[]> {
-    const metadataUpdateDateFilter = {
+    const baseWhereFilter = {
       metadataUpdatedAt: MoreThanOrEqual(lastMetadataUpdateDate),
+      deletedAt: IsNull(),
     };
 
     const whereClause = portalIds
-      ? { ...metadataUpdateDateFilter, portalId: In(portalIds) }
-      : metadataUpdateDateFilter;
+      ? { ...baseWhereFilter, portalId: In(portalIds) }
+      : baseWhereFilter;
 
     const datasets = await this.datasetRepo.find({
       select: [
@@ -381,13 +392,17 @@ export class DatasetService {
     });
   }
 
-  createOrUpdate(dataset: Dataset) {
-    return this.datasetRepo.save(dataset);
+  async createOrUpdate(dataset: Dataset) {
+    const savedDataset = await this.datasetRepo.save(dataset);
+    // the `save()` operation doesn't return the `deletedAt` field due to a
+    // TypeORM bug, so we `findOne` operation to get this dataset so we can
+    // make sure all columns get returned.
+    return this.datasetRepo.findOne(savedDataset.id, { withDeleted: true });
   }
 
   /** Restore a soft-deleted dataset */
   restoreDataset(dataset: Dataset) {
-    return this.datasetRepo.restore(dataset);
+    return this.datasetRepo.restore(dataset.id);
   }
 
   async deleteDatasets(datasetIds: string[]) {
