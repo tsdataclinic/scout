@@ -21,6 +21,7 @@ type Dataset {
   collections: [Collection!]!
   createdAt: DateTime
   datasetColumns: [DatasetColumn!]!
+  deletedAt: DateTime
   department: String
   description: String!
   downloads: Float
