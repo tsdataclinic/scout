@@ -27,7 +27,7 @@
     "@elastic/elasticsearch": "^7.9.1",
     "@nestjs/apollo": "^10.0.3",
     "@nestjs/common": "^8.3.0",
-    "@nestjs/core": "^8.3.0",
+    "@nestjs/core": "^9.0.5",
     "@nestjs/elasticsearch": "^8.1.0",
     "@nestjs/graphql": "^10.0.4",
     "@nestjs/jwt": "^8.0.0",
