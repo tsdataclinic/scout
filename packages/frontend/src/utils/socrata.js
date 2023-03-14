@@ -1,3 +1,5 @@
+import Papa from 'papaparse';
+
 const socrataEndpoint = domain =>
   `https://api.us.socrata.com/api/catalog/v1?domains=${domain}&search_context=${domain}`;
 async function getMaifestPage(domain, pageNo, limit = 100) {
@@ -216,3 +218,28 @@ export const datasetToDB = dataset => {
     owner: dataset.owner.display_name,
   };
 };
+
+export async function getFullDataset(datasetId, portalDomain) {
+  const datasetURL = `https://${portalDomain}/resource/${datasetId}`;
+  const jsonCountResponse = await (
+    await fetch(`${datasetURL}.json?$select=count(*)`)
+  ).json();
+
+  if (Array.isArray(jsonCountResponse) && jsonCountResponse[0]) {
+    const { count: countString } = jsonCountResponse[0];
+    const count = Number(countString);
+    if (Number.isFinite(count)) {
+      const csvString = await (
+        await fetch(
+          `https://${portalDomain}/resource/${datasetId}.csv?$limit=${count}`,
+        )
+      ).text();
+
+      const parsedCSV = Papa.parse(csvString, {
+        header: true,
+      });
+      return parsedCSV;
+    }
+  }
+  return { data: [], errors: [] };
+}

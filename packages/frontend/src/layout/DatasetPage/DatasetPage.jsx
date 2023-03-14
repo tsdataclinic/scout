@@ -13,6 +13,7 @@ import { useDatasetGQL } from '../../hooks/graphQLAPI';
 import { ThematicSimilarityExplorer } from '../../components/ThematicSimilarityExplorer/ThematicSimilarityExplorer';
 import ResourcesExplorer from './ResourcesExplorer';
 import AddToCollectionButton from '../../components/AddToCollectionButton';
+import VisualizationExplorer from './VisualizationExplorer';
 
 const formatDate = date => moment(date).format('MMMM DD, YYYY');
 
@@ -22,8 +23,6 @@ export default function DatasetPage() {
   const { datasetId, tab: urlTab } = useParams();
   const { loading, error, data } = useDatasetGQL(datasetId);
   const dataset = loading || error ? null : data.dataset;
-
-  // const parentId = dataset?.parentDatasetID;
   const parentDataset = null; // useDataset(parentId);
   const [activeTab, setActiveTab] = useState(urlTab || 'joins');
 
@@ -57,8 +56,6 @@ export default function DatasetPage() {
   useEffect(() => {
     window.fathom('trackPageview', { path: '/about' });
   }, []);
-
-  // const mostSimilarDatasetsAway = similarDatasetsAway.filter(suggetsion);
 
   const renderNotFound = (currentDataset, parentData) => {
     if (parentData) {
@@ -170,6 +167,13 @@ export default function DatasetPage() {
           </button>
           <button
             type="button"
+            className={activeTab === 'visualize' ? 'active' : ''}
+            onClick={() => onChangeTab('visualize')}
+          >
+            Visualize
+          </button>
+          <button
+            type="button"
             className={activeTab === 'resources' ? 'active' : ''}
             onClick={() => onChangeTab('resources')}
           >
@@ -201,6 +205,9 @@ export default function DatasetPage() {
         ) : null}
         {activeTab === 'resources' && (
           <ResourcesExplorer datasetId={datasetId} />
+        )}
+        {activeTab === 'visualize' && (
+          <VisualizationExplorer dataset={dataset} />
         )}
       </div>
     </div>

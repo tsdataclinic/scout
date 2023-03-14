@@ -39,6 +39,7 @@
     "node-sass": "^6.0.0",
     "normalize.css": "^8.0.1",
     "numeral": "^2.0.6",
+    "papaparse": "^5.4.0",
     "pluralize": "^8.0.0",
     "react": "^17.0.2",
     "react-bootstrap": "^1.0.0-beta.16",
@@ -51,12 +52,14 @@
     "react-share": "^4.4.0",
     "react-toastify": "^8.2.0",
     "react-use-fuse": "^0.5.2",
+    "remeda": "^1.9.0",
     "styled-components": "^5.3.5",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@types/numeral": "^2.0.2",
     "@types/jwt-decode": "^3.1.0",
+    "@types/numeral": "^2.0.2",
+    "@types/papaparse": "^5.3.7",
     "gh-pages": "^2.2.0",
     "husky": "1.2.0",
     "lint-staged": "^9.2.1",

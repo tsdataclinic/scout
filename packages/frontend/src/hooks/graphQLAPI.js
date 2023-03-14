@@ -262,6 +262,7 @@ export const useDatasetGQL = datasetId => {
           name
           type
           id
+          field
         }
         portal {
           id
