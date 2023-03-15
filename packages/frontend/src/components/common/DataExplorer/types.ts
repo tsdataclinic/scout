@@ -23,4 +23,4 @@ export type Dataframe = {
   fields: readonly Field[];
 };
 
-export type VizType = 'table';
+export type VizType = 'table' | 'histogram' | 'scatterplot' | 'map';

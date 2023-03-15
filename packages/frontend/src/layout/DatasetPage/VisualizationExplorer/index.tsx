@@ -12,6 +12,18 @@ const VIZ_OPTIONS: ReadonlyArray<SelectOption<DX.VizType>> = [
     displayValue: 'Table',
     value: 'table',
   },
+  {
+    displayValue: 'Histogram',
+    value: 'histogram',
+  },
+  {
+    displayValue: 'Scatterplot',
+    value: 'scatterplot',
+  },
+  {
+    displayValue: 'Map',
+    value: 'map',
+  },
 ];
 
 export default function VisualizationExplorer({ dataset }: Props): JSX.Element {
@@ -40,11 +52,7 @@ export default function VisualizationExplorer({ dataset }: Props): JSX.Element {
       {isLoading ? 'Loading...' : null}
       {dataframe ? (
         <div className="space-y-4">
-          <Select
-            className="!text-xl"
-            options={VIZ_OPTIONS}
-            defaultValue="table"
-          />
+          <Select options={VIZ_OPTIONS} defaultValue="table" />
           <DX.Table dataframe={dataframe} />
         </div>
       ) : null}
