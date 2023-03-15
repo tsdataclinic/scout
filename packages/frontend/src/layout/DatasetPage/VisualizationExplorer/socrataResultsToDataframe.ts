@@ -1,4 +1,6 @@
+import * as R from 'remeda';
 import assertUnreachable from '../../../utils/assertUnreachable';
+import * as DX from '../../../components/common/DataExplorer';
 
 type DatasetColumnType =
   | 'Calendar date'
@@ -42,7 +44,7 @@ export type Dataset = {
 };
 
 export type ParsedCSVResults = {
-  data: Array<Record<string, string>>;
+  data: Array<Record<string, string | null | undefined>>;
   errors: Array<{
     code: string;
     message: string;
@@ -59,23 +61,12 @@ export type ParsedCSVResults = {
   };
 };
 
-export type VizFieldType = 'text' | 'date' | 'url' | 'number' | 'boolean';
-
-export type VizDataframe = {
-  data: ReadonlyArray<Record<string, string>>;
-  fields: ReadonlyArray<{
-    id: string;
-    type: VizFieldType;
-    displayName: string;
-  }>;
-};
-
 /**
  * The DatasetColumns might have many different types of data types, based
  * on how they're stored in socrata. We want to convert all of those different
  * types to a known set of base type that we can use within visualizations.
  */
-function socrataFieldTypeToVizFieldType(type: DatasetColumnType): VizFieldType {
+function socrataFieldTypeToVizFieldType(type: DatasetColumnType): DX.FieldType {
   switch (type) {
     case 'Date':
     case 'Calendar date':
@@ -105,7 +96,7 @@ function socrataFieldTypeToVizFieldType(type: DatasetColumnType): VizFieldType {
 export default function socrataResultsToDataframe(
   dataset: Dataset,
   parsedSocrataCSV: ParsedCSVResults,
-): VizDataframe {
+): DX.Dataframe {
   // first remove any rows with errors
   const rowsWithErrors = new Set(
     parsedSocrataCSV.errors.map(error => error.row),
@@ -114,7 +105,7 @@ export default function socrataResultsToDataframe(
     (_, i) => !rowsWithErrors.has(i),
   );
 
-  // now get all column configurations
+  // now get all column configurations and generate the field objects
   const { datasetColumns } = dataset;
   const datasetColumnsMap = new Map(
     datasetColumns.map(col => [col.field, col]),
@@ -136,8 +127,42 @@ export default function socrataResultsToDataframe(
       return { id: field, type: 'text' as const, displayName: field };
     }) ?? [];
 
+  // Now that we have field configurations, process the rows into their
+  // correct datatypes
+  const fieldsMap = new Map(fields.map(field => [field.id, field]));
+
+  const transformedRows = rawRows.map(rawRow => {
+    const newRow = R.mapValues(
+      rawRow,
+      (rowValue: DX.RowValue, fieldId: string) => {
+        const field = fieldsMap.get(fieldId);
+        if (field) {
+          switch (field.type) {
+            case 'text':
+              return rowValue;
+            case 'date':
+              return new Date(String(rowValue));
+            case 'url':
+              return rowValue;
+            case 'number':
+              return Number(rowValue);
+            case 'boolean':
+              return Boolean(rowValue);
+            default:
+              return assertUnreachable(field.type);
+          }
+        }
+        return rowValue;
+      },
+    );
+
+    return newRow;
+  });
+
   return {
     fields,
-    data: rawRows,
+    id: dataset.id,
+    name: dataset.name,
+    data: transformedRows,
   };
 }
