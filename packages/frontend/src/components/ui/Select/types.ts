@@ -1,12 +1,12 @@
 import * as React from 'react';
 
-export type DropdownOption<T> = {
+export type SelectOption<T> = {
   disabled?: boolean;
   displayValue: React.ReactNode;
   value: T;
 };
 
-export type DropdownOptionGroup<T> = {
+export type SelectOptionGroup<T> = {
   label: string;
-  options: ReadonlyArray<DropdownOption<T>>;
+  options: ReadonlyArray<SelectOption<T>>;
 };

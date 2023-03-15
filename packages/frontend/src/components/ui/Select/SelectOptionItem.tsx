@@ -2,7 +2,7 @@ import * as IconType from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as Select from '@radix-ui/react-select';
 import styled from 'styled-components';
-import type { DropdownOption } from './types';
+import type { SelectOption } from './types';
 
 const StyledSelectItem = styled(Select.Item)`
   align-items: center;
@@ -36,10 +36,10 @@ const StyledItemIndicator = styled(Select.ItemIndicator)`
   top: 0;
 `;
 
-export default function DropdownOptionItem<T extends string>({
+export default function SelectOptionItem<T extends string>({
   option,
 }: {
-  option: DropdownOption<T>;
+  option: SelectOption<T>;
 }): JSX.Element {
   return (
     <StyledSelectItem value={option.value} disabled={!!option.disabled}>

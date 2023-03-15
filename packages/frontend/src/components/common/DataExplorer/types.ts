@@ -22,3 +22,5 @@ export type Dataframe = {
   /** The header fields of this dataframe */
   fields: readonly Field[];
 };
+
+export type VizType = 'table';

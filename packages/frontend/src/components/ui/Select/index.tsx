@@ -2,15 +2,15 @@ import * as IconType from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useMemo } from 'react';
 import styled from 'styled-components/macro';
-import * as Select from '@radix-ui/react-select';
-import DropdownOptionItem from './DropdownOptionItem';
-import type { DropdownOption, DropdownOptionGroup } from './types';
+import * as RadixSelect from '@radix-ui/react-select';
+import SelectOptionItem from './SelectOptionItem';
+import type { SelectOption, SelectOptionGroup } from './types';
 import Tooltip from '../Tooltip';
 
 // re-export these types
-export type { DropdownOption, DropdownOptionGroup };
+export type { SelectOption, SelectOptionGroup };
 
-export const StyledTriggerButton = styled(Select.Trigger)`
+export const StyledTriggerButton = styled(RadixSelect.Trigger)`
   all: unset;
   background: white;
   border-radius: 4px;
@@ -38,7 +38,7 @@ export const StyledTriggerButton = styled(Select.Trigger)`
   }
 `;
 
-const StyledSelectContent = styled(Select.Content)`
+const StyledSelectContent = styled(RadixSelect.Content)`
   background-color: white;
   border-radius: 4px;
   box-shadow: 0px 10px 38px -10px rgba(22, 23, 24, 0.35),
@@ -47,18 +47,18 @@ const StyledSelectContent = styled(Select.Content)`
   z-index: 9999;
 `;
 
-const StyledSelectViewport = styled(Select.Viewport)`
+const StyledSelectViewport = styled(RadixSelect.Viewport)`
   padding: 5px;
 `;
 
-const StyledGroupLabel = styled(Select.Label)`
+const StyledGroupLabel = styled(RadixSelect.Label)`
   color: #94a3b8; // slate-400
   font-size: 0.95rem;
   line-height: 1.5rem;
   padding: 0 1.5rem;
 `;
 
-const StyledSeparator = styled(Select.Separator)`
+const StyledSeparator = styled(RadixSelect.Separator)`
   height: 1px;
   background-color: #cbd5e1;
   margin: 5px;
@@ -73,7 +73,7 @@ type Props<T> = {
   id?: string;
   name?: string;
   onChange?: (value: T) => void;
-  options: ReadonlyArray<DropdownOptionGroup<T> | DropdownOption<T>>;
+  options: ReadonlyArray<SelectOptionGroup<T> | SelectOption<T>>;
   /**
    * The button label to display when no option is selected.
    * This will also be the default value for `ariaLabel` too.
@@ -83,7 +83,7 @@ type Props<T> = {
   value?: T | undefined;
 };
 
-export default function Dropdown<T extends string>({
+export default function Select<T extends string>({
   ariaLabel,
   className,
   defaultValue,
@@ -102,21 +102,21 @@ export default function Dropdown<T extends string>({
     () =>
       options.map((obj, i) => {
         if ('options' in obj) {
-          // if 'options' is present then this is a DropdownOptionGroup
+          // if 'options' is present then this is a SelectOptionGroup
           return (
             <>
-              <Select.Group>
+              <RadixSelect.Group>
                 <StyledGroupLabel>{obj.label}</StyledGroupLabel>
                 {obj.options.map(option => (
-                  <DropdownOptionItem key={option.value} option={option} />
+                  <SelectOptionItem key={option.value} option={option} />
                 ))}
-              </Select.Group>
+              </RadixSelect.Group>
               {i !== options.length - 1 ? <StyledSeparator /> : null}
             </>
           );
         }
 
-        return <DropdownOptionItem key={obj.value} option={obj} />;
+        return <SelectOptionItem key={obj.value} option={obj} />;
       }),
     [options],
   );
@@ -128,15 +128,15 @@ export default function Dropdown<T extends string>({
       aria-label={ariaLabelToUse}
       disabled={disabled || options.length === 0}
     >
-      <Select.Value placeholder={placeholder} />
-      <Select.Icon>
+      <RadixSelect.Value placeholder={placeholder} />
+      <RadixSelect.Icon>
         <FontAwesomeIcon style={{ marginLeft: 8 }} icon={iconType} size="xs" />
-      </Select.Icon>
+      </RadixSelect.Icon>
     </StyledTriggerButton>
   );
 
   return (
-    <Select.Root
+    <RadixSelect.Root
       value={value}
       defaultValue={defaultValue}
       onValueChange={onChange}
@@ -149,11 +149,11 @@ export default function Dropdown<T extends string>({
         triggerButton
       )}
 
-      <Select.Portal>
+      <RadixSelect.Portal>
         <StyledSelectContent>
           <StyledSelectViewport>{selectItems}</StyledSelectViewport>
         </StyledSelectContent>
-      </Select.Portal>
-    </Select.Root>
+      </RadixSelect.Portal>
+    </RadixSelect.Root>
   );
 }
