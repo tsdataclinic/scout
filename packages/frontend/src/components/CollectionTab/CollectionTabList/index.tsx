@@ -53,7 +53,7 @@ export default function CollectionTabList({
       }}
     >
       <FontAwesomeIcon
-        className="collection-tab-list__back-arrow"
+        className="collection-tab-list__back-arrow !w-4 !h-4"
         size="1x"
         icon={faArrowLeft}
       />
@@ -96,8 +96,11 @@ export default function CollectionTabList({
               css={`
                 display: flex;
                 justify-content: space-between;
+                align-items: center;
                 .collection-tab-list__chevron-right {
                   color: #a6b9d2 !important;
+                  height: 16px;
+                  width: 16px;
                 }
                 &:hover .collection-tab-list__chevron-right {
                   color: #5a7598 !important;
