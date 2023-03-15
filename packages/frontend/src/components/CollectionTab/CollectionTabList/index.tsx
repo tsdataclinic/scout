@@ -64,24 +64,26 @@ export default function CollectionTabList({
     if (collections.length === 0) {
       return (
         <EmptyPanelContent>
-          No collections exist yet. Click{' '}
-          <button
-            type="button"
-            onClick={onCreate}
-            css={`
-              background: none;
-              color: #009aa6;
-              margin: 0;
-              padding: 0;
-              width: auto;
-              &:hover {
-                color: #006f77;
-              }
-            `}
-          >
-            Create Collection
-          </button>{' '}
-          to start!
+          <p className="w-full">
+            No collections exist yet. Click{' '}
+            <button
+              type="button"
+              onClick={onCreate}
+              css={`
+                background: none;
+                color: #009aa6;
+                margin: 0;
+                padding: 0;
+                width: auto;
+                &:hover {
+                  color: #006f77;
+                }
+              `}
+            >
+              Create Collection
+            </button>{' '}
+            to start!
+          </p>
         </EmptyPanelContent>
       );
     }
@@ -165,12 +167,12 @@ export default function CollectionTabList({
         </div>
       </div>
       <div className="collection-tab-buttons">
-        <button type="submit" onClick={onCreate}>
+        <button className="primary-button" type="submit" onClick={onCreate}>
           Create Collection
         </button>
 
         <Link to="/collections">
-          <button onClick={onDismiss} type="submit">
+          <button className="primary-button" onClick={onDismiss} type="submit">
             My Collections
           </button>
         </Link>
