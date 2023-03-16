@@ -16,7 +16,7 @@ const StyledSelectItem = styled(Select.Item)`
 
   &[data-highlighted] {
     color: white;
-    background: #3b82f6;
+    background: #009aa6;
   }
 
   &[data-disabled] {
