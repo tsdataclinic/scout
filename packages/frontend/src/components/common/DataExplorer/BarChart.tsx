@@ -18,6 +18,7 @@ type BarData = BarDatum[];
 
 const BOTTOM_AXIS_TICK_MAX_LENGTH = 12;
 const MAX_BARS = 100;
+const MAX_INITIAL_BARS = 20;
 
 function renderBottomAxisTick(v: string): JSX.Element | string {
   if (v.length > BOTTOM_AXIS_TICK_MAX_LENGTH) {
@@ -121,7 +122,9 @@ export function BarChart({ dataframe }: Props): JSX.Element {
   // displaying all bars is due to performance reasons
   const isNumBinsTruncated = fullBarData.length > MAX_BARS;
 
-  const [numBins, setNumBins] = React.useState(maxAllowableNumBins);
+  const [numBins, setNumBins] = React.useState(
+    Math.min(maxAllowableNumBins, MAX_INITIAL_BARS),
+  );
 
   // if we switch fields, the currently selected numBins might be greater
   // than the new max, so we want to make sure we don't exceed the max
