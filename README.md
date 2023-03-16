@@ -50,8 +50,9 @@ You need to set up your environment variables with the necessary API keys and co
 Add the following to your `~/.zshrc` or `~/.bash_profile` (depending on which shell you are running). If you are on Windows, you will need to add these as environment variables on your PowerShell, or whichever shell you use.
 
 ```bash
-export SCOUT_GITHUB_CLIENT_ID='===REPLACE_ME==='
-export SCOUT_GITHUB_CLIENT_SECRET='===REPLACE_ME==='
+export SCOUT_GITHUB_CLIENT_ID='REPLACE_ME'
+export SCOUT_GITHUB_CLIENT_SECRET='REPLACE_ME
+export SCOUT_MAPBOX_API_KEY='REPLACE_ME'
 ```
 
 We use GitHub authentication for automated code searches to display helpful resources for datasets. You will need to replace these values with your GitHub Client ID and GitHub Client Secret which you can get by [registering a GitHub application](https://github.com/settings/applications/new).

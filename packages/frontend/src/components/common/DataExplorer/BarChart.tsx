@@ -6,7 +6,6 @@ import Select from '../../ui/Select';
 import LabelWrapper from '../../ui/LabelWrapper';
 import Slider from '../../ui/Slider';
 import assertUnreachable from '../../../utils/assertUnreachable';
-
 import type { Dataframe } from './types';
 
 type Props = {
@@ -162,7 +161,7 @@ export function BarChart({ dataframe }: Props): JSX.Element {
   );
 
   return (
-    <div>
+    <div className="h-full flex flex-col">
       <div className="flex space-x-4">
         <LabelWrapper label="X axis">
           <Select
@@ -203,71 +202,73 @@ export function BarChart({ dataframe }: Props): JSX.Element {
           />
         </LabelWrapper>
       </div>
-      <div className="w-full" style={{ height: '55vh' }}>
-        <ResponsiveBar
-          keys={['count']}
-          data={processedBarData}
-          indexBy={xField}
-          valueScale={{ type: 'linear' }}
-          indexScale={{ type: 'band', round: true }}
-          margin={{ top: 50, right: 130, bottom: 70, left: 60 }}
-          padding={0.3}
-          colors={{ scheme: 'nivo' }}
-          defs={[
-            {
-              id: 'dots',
-              type: 'patternDots',
-              background: 'inherit',
-              color: '#38bcb2',
-              size: 4,
-              padding: 1,
-              stagger: true,
-            },
-            {
-              id: 'lines',
-              type: 'patternLines',
-              background: 'inherit',
-              color: '#eed312',
-              rotation: -45,
-              lineWidth: 6,
-              spacing: 10,
-            },
-          ]}
-          borderColor={{
-            from: 'color',
-            modifiers: [['darker', 1.6]],
-          }}
-          axisTop={null}
-          axisRight={null}
-          axisBottom={{
-            format: renderBottomAxisTick,
-            tickSize: 5,
-            tickPadding: 5,
-            tickRotation: -30,
-            legend: xFieldName,
-            legendPosition: 'middle',
-            legendOffset: 32,
-          }}
-          axisLeft={{
-            tickSize: 5,
-            tickPadding: 5,
-            tickRotation: 0,
-            legend: 'count',
-            legendPosition: 'middle',
-            legendOffset: -40,
-          }}
-          labelSkipWidth={12}
-          labelSkipHeight={12}
-          labelTextColor={{
-            from: 'color',
-            modifiers: [['darker', 1.6]],
-          }}
-          role="application"
-          ariaLabel="Bar chart"
-          barAriaLabel={e =>
-            `${e.id} ${e.formattedValue} in ${xField}: ${e.indexValue}`
-          }
-        />
+      <div className="h-full">
+        <div className="w-full h-[90%]">
+          <ResponsiveBar
+            keys={['count']}
+            data={processedBarData}
+            indexBy={xField}
+            valueScale={{ type: 'linear' }}
+            indexScale={{ type: 'band', round: true }}
+            margin={{ top: 50, right: 130, bottom: 70, left: 60 }}
+            padding={0.3}
+            colors={{ scheme: 'nivo' }}
+            defs={[
+              {
+                id: 'dots',
+                type: 'patternDots',
+                background: 'inherit',
+                color: '#38bcb2',
+                size: 4,
+                padding: 1,
+                stagger: true,
+              },
+              {
+                id: 'lines',
+                type: 'patternLines',
+                background: 'inherit',
+                color: '#eed312',
+                rotation: -45,
+                lineWidth: 6,
+                spacing: 10,
+              },
+            ]}
+            borderColor={{
+              from: 'color',
+              modifiers: [['darker', 1.6]],
+            }}
+            axisTop={null}
+            axisRight={null}
+            axisBottom={{
+              format: renderBottomAxisTick,
+              tickSize: 5,
+              tickPadding: 5,
+              tickRotation: -30,
+              legend: xFieldName,
+              legendPosition: 'middle',
+              legendOffset: 32,
+            }}
+            axisLeft={{
+              tickSize: 5,
+              tickPadding: 5,
+              tickRotation: 0,
+              legend: 'count',
+              legendPosition: 'middle',
+              legendOffset: -40,
+            }}
+            labelSkipWidth={12}
+            labelSkipHeight={12}
+            labelTextColor={{
+              from: 'color',
+              modifiers: [['darker', 1.6]],
+            }}
+            role="application"
+            ariaLabel="Bar chart"
+            barAriaLabel={e =>
+              `${e.id} ${e.formattedValue} in ${xField}: ${e.indexValue}`
+            }
+          />
+        </div>
       </div>
     </div>
   );

@@ -62,9 +62,13 @@ export default function VisualizationExplorer({ dataset }: Props): JSX.Element {
         case 'histogram':
           return <DX.BarChart dataframe={dataframe} />;
         case 'scatterplot':
-          return <div>scatterplot</div>;
+          return (
+            <p>
+              This visualization is under construction and not yet available.
+            </p>
+          );
         case 'map':
-          return <div>map</div>;
+          return <DX.Map dataframe={dataframe} />;
         default:
           return assertUnreachable(selectedViz);
       }
@@ -76,9 +80,9 @@ export default function VisualizationExplorer({ dataset }: Props): JSX.Element {
   };
 
   return (
-    <div>
+    <div className="h-full">
       {dataframe ? (
-        <div className="space-y-4">
+        <div className="space-y-4 h-full">
           <Select
             options={VIZ_OPTIONS}
             value={selectedViz}
