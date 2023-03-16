@@ -28,7 +28,7 @@ export default function Dataset({
   return (
     <div className="dataset" key={dataset.id}>
       <div className="dataset-title">
-        <div className="hierarchy">
+        <div className="hierarchy mb-2">
           <PortalInfo portal={portal} />
           <p>{dataset.department}</p>
         </div>
@@ -36,7 +36,7 @@ export default function Dataset({
         <DatasetLink className="data-link-title title" dataset={dataset}>
           <h2>{formattedName}</h2>
         </DatasetLink>
-        {dataset.permalink}
+        <span className="text-sm">{dataset.permalink}</span>
       </div>
       {showCollectionButtons ? (
         <AddToCollectionButton datasetId={dataset.id} />
@@ -63,13 +63,13 @@ export default function Dataset({
           </div>
         )
       }
-      <div className="dataset-description">{formattedDescription}</div>
+      <div className="dataset-description text-sm">{formattedDescription}</div>
       <div className="dataset-meta">
-        <div className="update-frequency">
+        <div className="update-frequency text-sm">
           <span>Update frequency:</span>
           {dataset.updateFrequency}
         </div>
-        <div className="dataset-last-updated">
+        <div className="dataset-last-updated text-sm">
           <span>Last Update:</span>
           {formatDate(dataset.updatedAt)}
         </div>

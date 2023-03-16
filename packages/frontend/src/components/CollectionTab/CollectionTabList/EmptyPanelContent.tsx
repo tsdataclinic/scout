@@ -7,11 +7,6 @@ const StyledDiv = styled.div`
   padding: 10px 12px;
   text-align: center;
   width: 100%;
-  p {
-    width: 100%;
-    font-size: 1.2rem;
-    line-height: 1.4rem;
-  }
 `;
 
 type Props = {
@@ -19,9 +14,5 @@ type Props = {
 };
 
 export default function EmptyPanelContent({ children }: Props): JSX.Element {
-  return (
-    <StyledDiv>
-      <p>{children}</p>
-    </StyledDiv>
-  );
+  return <StyledDiv>{children}</StyledDiv>;
 }

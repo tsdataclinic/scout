@@ -53,7 +53,7 @@ export default function CollectionTabList({
       }}
     >
       <FontAwesomeIcon
-        className="collection-tab-list__back-arrow"
+        className="collection-tab-list__back-arrow !w-4 !h-4"
         size="1x"
         icon={faArrowLeft}
       />
@@ -64,24 +64,26 @@ export default function CollectionTabList({
     if (collections.length === 0) {
       return (
         <EmptyPanelContent>
-          No collections exist yet. Click{' '}
-          <button
-            type="button"
-            onClick={onCreate}
-            css={`
-              background: none;
-              color: #009aa6;
-              margin: 0;
-              padding: 0;
-              width: auto;
-              &:hover {
-                color: #006f77;
-              }
-            `}
-          >
-            Create Collection
-          </button>{' '}
-          to start!
+          <p className="w-full">
+            No collections exist yet. Click{' '}
+            <button
+              type="button"
+              onClick={onCreate}
+              css={`
+                background: none;
+                color: #009aa6;
+                margin: 0;
+                padding: 0;
+                width: auto;
+                &:hover {
+                  color: #006f77;
+                }
+              `}
+            >
+              Create Collection
+            </button>{' '}
+            to start!
+          </p>
         </EmptyPanelContent>
       );
     }
@@ -94,8 +96,11 @@ export default function CollectionTabList({
               css={`
                 display: flex;
                 justify-content: space-between;
+                align-items: center;
                 .collection-tab-list__chevron-right {
                   color: #a6b9d2 !important;
+                  height: 16px;
+                  width: 16px;
                 }
                 &:hover .collection-tab-list__chevron-right {
                   color: #5a7598 !important;
@@ -165,12 +170,12 @@ export default function CollectionTabList({
         </div>
       </div>
       <div className="collection-tab-buttons">
-        <button type="submit" onClick={onCreate}>
+        <button className="primary-button" type="submit" onClick={onCreate}>
           Create Collection
         </button>
 
         <Link to="/collections">
-          <button onClick={onDismiss} type="submit">
+          <button className="primary-button" onClick={onDismiss} type="submit">
             My Collections
           </button>
         </Link>

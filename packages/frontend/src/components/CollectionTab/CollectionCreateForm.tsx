@@ -26,16 +26,18 @@ export default function CollectionCreateForm({
   return (
     <>
       <h2>Create Collection</h2>
-      <div className="collections-tab-create-options">
+      <div className="collections-tab-create-options space-y-2">
         <p>Name your new collection</p>
         <input
           placeholder="Name"
+          className="border !border-gray-400"
           type="text"
           value={name}
           onChange={onNameChangeFn}
         />
         <p>Describe your collection</p>
         <input
+          className="border !border-gray-400"
           placeholder="Description"
           type="text"
           value={description}
