@@ -52,6 +52,21 @@
         "components": ["Link"],
         "specialLink": ["to"]
       }
+    ],
+    "jsx-a11y/label-has-associated-control": [
+      "error",
+      {
+        "labelComponents": ["LabelWrapper"],
+        "labelAttributes": ["label"],
+        "controlComponents": [
+          "InputText",
+          "InputNumber",
+          "Select",
+          "MixedCheckbox",
+          "MultiSelect",
+          "TextArea"
+        ]
+      }
     ]
   },
   "settings": {

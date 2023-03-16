@@ -49,6 +49,9 @@ export default function VisualizationExplorer({ dataset }: Props): JSX.Element {
         fields: [],
       };
     },
+    {
+      refetchOnWindowFocus: false,
+    },
   );
 
   const renderVisualization = (): JSX.Element => {
@@ -57,7 +60,7 @@ export default function VisualizationExplorer({ dataset }: Props): JSX.Element {
         case 'table':
           return <DX.Table dataframe={dataframe} />;
         case 'histogram':
-          return <div>histogram</div>;
+          return <DX.BarChart dataframe={dataframe} />;
         case 'scatterplot':
           return <div>scatterplot</div>;
         case 'map':

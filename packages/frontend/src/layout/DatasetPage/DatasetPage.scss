@@ -15,8 +15,9 @@
   }
   .dataset-details {
     @media (min-width: 875px) {
-      width: 360px;
+      min-width: 360px;
       height: 100%;
+      width: 360px;
     }
 
     height: 400px;
