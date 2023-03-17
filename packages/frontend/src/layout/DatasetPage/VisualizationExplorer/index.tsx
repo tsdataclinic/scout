@@ -18,10 +18,13 @@ const VIZ_OPTIONS: ReadonlyArray<SelectOption<DX.VizType>> = [
     displayValue: 'Bar Chart',
     value: 'bars',
   },
+  // TODO: add scatterplot back once it's ready
+  /*
   {
     displayValue: 'Scatterplot',
     value: 'scatterplot',
   },
+  */
   {
     displayValue: 'Map',
     value: 'map',
