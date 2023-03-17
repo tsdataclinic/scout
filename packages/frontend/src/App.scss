@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 // Color Variables
 $PaleGrey: #f1f1f2;
 $LightGrey: #b2b2b2;
@@ -18,7 +22,7 @@ body {
   margin: 0px;
   padding: 0px;
   font-family: 'Lato', sans-serif;
-  font-size: 11px;
+  font-size: 16px;
 }
 ul {
   list-style: None;
@@ -28,18 +32,18 @@ ul {
 
 h1 {
   width: 100%;
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: normal;
-  line-height: 22px;
+  line-height: 1.75rem;
   margin: 0;
   padding: 2px 0;
 }
 
 h2 {
   width: 100%;
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 700;
-  line-height: 17px;
+  line-height: 1.75rem;
   text-align: left;
 }
 
@@ -49,15 +53,15 @@ a.title {
 }
 
 h3 {
-  font-size: 11px;
+  font-size: 0.875rem;
   font-weight: bold;
-  line-height: 13px;
+  line-height: 1.25rem;
 }
 
 p {
   font-weight: normal;
-  font-size: 11px;
-  line-height: 13px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
 
 #root {
@@ -115,17 +119,17 @@ p {
   font-weight: bold;
 }
 
-button {
-  font-weight: bold;
-  color: white;
+button.primary-button {
   border: none;
   background: none;
   background-color: #1c4d5e;
-  //    background-color: #e7f2ff;
-  height: 24px;
-  width: 131px;
+  font-weight: bold;
+  color: white;
   outline: none;
+  padding: 0.25rem 0.75rem;
+  min-width: 135px;
 }
+
 button::-moz-focus-inner {
   border: 0;
 }
@@ -134,19 +138,6 @@ input[type='button'] {
 }
 input[type='button']::-moz-focus-inner {
   border: 0;
-}
-
-button.header-button {
-  color: white;
-  width: 100%;
-  background-color: transparent;
-  color: white;
-  border: none;
-  display: flex;
-  justify-content: space-between;
-  &:active {
-    outline: none;
-  }
 }
 
 button.header-button {

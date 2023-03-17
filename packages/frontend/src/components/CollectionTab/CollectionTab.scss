@@ -108,7 +108,6 @@
         height: 44px;
         .collection-name {
             color: #152935;
-            font-size: 14px;
             font-weight: normal;
             padding-bottom: 0px;
             margin-bottom: 4px;
@@ -131,9 +130,6 @@
     padding: 0px;
     color: black;
     display: flex;
-    p {
-        font-size: 12px;
-    }
     ul {
         overflow-y: auto;
         flex: 1;

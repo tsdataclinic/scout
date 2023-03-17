@@ -18,6 +18,7 @@ export function CollectionTabCreate({ onDone }) {
       />
       <div className="collection-tab-buttons">
         <button
+          className="primary-button"
           type="submit"
           onClick={async () => {
             await onTryCreateCollection(name, description);
@@ -27,7 +28,11 @@ export function CollectionTabCreate({ onDone }) {
         >
           Create
         </button>
-        <button type="button" onClick={() => onDone()}>
+        <button
+          className="primary-button"
+          type="button"
+          onClick={() => onDone()}
+        >
           Cancel
         </button>
       </div>

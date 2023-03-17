@@ -17,15 +17,17 @@ import { usePreventCollectionTabBlur } from '../CollectionTab/CollectionTab';
 import { useUserCollections } from '../../hooks/collections';
 
 const MenuItemHeader = styled.h6`
-  font-size: 13px;
+  font-size: 0.9rem;
   font-weight: 700;
+  line-height: 1.25rem;
   padding-left: 10px;
   padding-right: 24px;
 `;
 
 const StyledMenuList = styled(MenuList)`
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  font-size: 12px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
   margin-top: 4px;
 `;
 
@@ -123,9 +125,11 @@ export default function AddToCollectionButton({
     if (itemsWithDataset.length > 0) {
       return (
         <>
-          <MenuItemHeader>Collections that have this dataset</MenuItemHeader>
+          <MenuItemHeader className="mb-1">
+            Collections that have this dataset
+          </MenuItemHeader>
           {itemsWithDataset}
-          <MenuItemHeader style={{ marginTop: 8 }}>
+          <MenuItemHeader className="mb-1 mt-2">
             Other collections
           </MenuItemHeader>
           {itemsWithoutDataset.length === 0 ? (
@@ -148,7 +152,7 @@ export default function AddToCollectionButton({
   return (
     /* eslint-disable jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events */
     <Menu>
-      <MenuButton>
+      <MenuButton className="primary-button text-sm w-40">
         <div onClick={preventCollectionTabBlur}>
           {menuButtonText}
           <FontAwesomeIcon
@@ -169,14 +173,9 @@ export default function AddToCollectionButton({
             onNameChange={setName}
             onDescriptionChange={setDescription}
           />
-          <div
-            css={`
-              display: flex;
-              flex: 1;
-              justify-content: center;
-            `}
-          >
+          <div className="flex flex-1 justify-center mt-2">
             <button
+              className="primary-button"
               type="button"
               style={{ marginRight: 8 }}
               disabled={isCreating}
@@ -192,7 +191,11 @@ export default function AddToCollectionButton({
             >
               Create and add dataset
             </button>
-            <button type="button" onClick={onDismissModal}>
+            <button
+              className="primary-button !text-slate-700 !bg-gray-200"
+              type="button"
+              onClick={onDismissModal}
+            >
               Cancel
             </button>
           </div>

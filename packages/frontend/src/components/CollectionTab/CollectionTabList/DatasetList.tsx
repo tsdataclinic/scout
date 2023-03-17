@@ -65,6 +65,7 @@ export default function DatasetList({ collection }: Props): JSX.Element {
           </div>
           <button
             type="button"
+            className="px-2 hover:bg-slate-200 transition-colors"
             onClick={async () => {
               removeFromCollection(dataset.id, collection.id);
             }}

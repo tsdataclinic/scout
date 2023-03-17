@@ -18,6 +18,14 @@ nav.side-nav {
     fill: white;
     stroke: white;
   }
+
+  .explore,
+  .about {
+      svg {
+        margin: 0 auto;
+      }
+  }
+
   .active-nav {
     border-right: none;
     border-top: 4px solid #ffbb00;

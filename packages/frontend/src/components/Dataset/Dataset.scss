@@ -7,8 +7,6 @@
     }
   }
   button {
-    height: 24px;
-    width: 100%;
     align-self: center;
     order: 10;
     margin-top: 20px;
@@ -25,7 +23,6 @@
     button {
       order: 0;
       align-self: center;
-      width: 131px;
       margin-top: 0px;
     }
   }
@@ -64,7 +61,6 @@
   .hierarchy {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
   }
 }
 .comparison-stats {

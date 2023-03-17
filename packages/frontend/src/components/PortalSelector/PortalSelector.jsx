@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
 import { useCollectionsValue } from '../../contexts/CollectionsContext';
 import PortalInfo from '../PortalInfo/PortalInfo';
-
 import './PortalSelector.scss';
 
 const AVAILABLE_PORTALS = gql`
@@ -64,9 +63,10 @@ export default function PortalSelector({ selectedPortal }) {
           >
             <PortalInfo portal={selectedPortal} />
           </button>
-          <div className={`portal-menu ${showMenu ? 'show-menu' : ''}`}>
+          <div className={`w-full portal-menu ${showMenu ? 'show-menu' : ''}`}>
             <input
               type="text"
+              className="w-full"
               placeholder="Filter portals"
               value={search}
               onChange={e => setSearch(e.target.value)}
