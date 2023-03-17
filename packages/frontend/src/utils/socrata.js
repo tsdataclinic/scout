@@ -219,6 +219,11 @@ export const datasetToDB = dataset => {
   };
 };
 
+/**
+ * Load a complete dataset from socrata.
+ * NOTE: for now this is not actually complete. We max out at 100k rows to
+ * prevent crashing the user's browser.
+ */
 export async function getFullDataset(datasetId, portalDomain) {
   const datasetURL = `https://${portalDomain}/resource/${datasetId}`;
   const jsonCountResponse = await (
@@ -231,7 +236,10 @@ export async function getFullDataset(datasetId, portalDomain) {
     if (Number.isFinite(count)) {
       const csvString = await (
         await fetch(
-          `https://${portalDomain}/resource/${datasetId}.csv?$limit=${count}`,
+          `https://${portalDomain}/resource/${datasetId}.csv?$limit=${Math.min(
+            count,
+            100000,
+          )}`,
         )
       ).text();
 
