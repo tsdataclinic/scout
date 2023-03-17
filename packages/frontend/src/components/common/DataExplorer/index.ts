@@ -1,4 +1,4 @@
 export * from './BarChart';
-export * from './Map';
+export * from './MapViz';
 export * from './Table';
 export * from './types';

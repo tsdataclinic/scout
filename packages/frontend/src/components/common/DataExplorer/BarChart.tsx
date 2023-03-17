@@ -62,7 +62,7 @@ export function BarChart({ dataframe }: Props): JSX.Element {
     [categoricalFields, xField],
   );
 
-  const [sortOrder, selectedSortOrder] = React.useState<SortOrder>('asc');
+  const [sortOrder, selectedSortOrder] = React.useState<SortOrder>('desc');
   const [sortBy, selectedSortBy] = React.useState<SortBy>('count');
 
   // prepare any Select options
@@ -134,7 +134,7 @@ export function BarChart({ dataframe }: Props): JSX.Element {
       R.pipe(
         fullBarData,
         R.sort((bar1, bar2) => {
-          const sortOrderSign = sortOrder === 'asc' ? 1 : -1;
+          const sortOrderSign = sortOrder === 'desc' ? 1 : -1;
           switch (sortBy) {
             case 'count':
               invariant(

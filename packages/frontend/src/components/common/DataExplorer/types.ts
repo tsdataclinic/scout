@@ -1,7 +1,7 @@
 export type FieldType = 'text' | 'date' | 'url' | 'number' | 'boolean';
 
 export type RowValue = string | number | Date | boolean | null | undefined;
-export type Row = { [fieldId: string]: RowValue };
+export type DataframeRow = { [fieldId: string]: RowValue };
 
 export type Field = {
   id: string;
@@ -17,10 +17,10 @@ export type Dataframe = {
   name: string;
 
   /** all data rows */
-  data: readonly Row[];
+  data: readonly DataframeRow[];
 
   /** The header fields of this dataframe */
   fields: readonly Field[];
 };
 
-export type VizType = 'table' | 'histogram' | 'scatterplot' | 'map';
+export type VizType = 'table' | 'bars' | 'scatterplot' | 'map';

@@ -15,8 +15,8 @@ const VIZ_OPTIONS: ReadonlyArray<SelectOption<DX.VizType>> = [
     value: 'table',
   },
   {
-    displayValue: 'Histogram',
-    value: 'histogram',
+    displayValue: 'Bar Chart',
+    value: 'bars',
   },
   {
     displayValue: 'Scatterplot',
@@ -59,7 +59,7 @@ export default function VisualizationExplorer({ dataset }: Props): JSX.Element {
       switch (selectedViz) {
         case 'table':
           return <DX.Table dataframe={dataframe} />;
-        case 'histogram':
+        case 'bars':
           return <DX.BarChart dataframe={dataframe} />;
         case 'scatterplot':
           return (
@@ -68,7 +68,7 @@ export default function VisualizationExplorer({ dataset }: Props): JSX.Element {
             </p>
           );
         case 'map':
-          return <DX.Map dataframe={dataframe} />;
+          return <DX.MapViz dataframe={dataframe} />;
         default:
           return assertUnreachable(selectedViz);
       }
