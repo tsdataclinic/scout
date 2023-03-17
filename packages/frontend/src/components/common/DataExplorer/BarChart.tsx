@@ -185,7 +185,7 @@ export function BarChart({ dataframe }: Props): JSX.Element {
           />
         </LabelWrapper>
         <LabelWrapper
-          label="Number of bins"
+          label="Number of bars"
           labelTextClassName="pb-2"
           infoTooltip={
             isNumBinsTruncated
@@ -212,7 +212,7 @@ export function BarChart({ dataframe }: Props): JSX.Element {
             indexScale={{ type: 'band', round: true }}
             margin={{ top: 50, right: 130, bottom: 70, left: 60 }}
             padding={0.3}
-            colors={{ scheme: 'nivo' }}
+            colors={['#00a5bd']}
             defs={[
               {
                 id: 'dots',
@@ -252,7 +252,7 @@ export function BarChart({ dataframe }: Props): JSX.Element {
               tickSize: 5,
               tickPadding: 5,
               tickRotation: 0,
-              legend: 'count',
+              legend: 'Count',
               legendPosition: 'middle',
               legendOffset: -40,
             }}
@@ -260,7 +260,7 @@ export function BarChart({ dataframe }: Props): JSX.Element {
             labelSkipHeight={12}
             labelTextColor={{
               from: 'color',
-              modifiers: [['darker', 1.6]],
+              modifiers: [['darker', 3.5]],
             }}
             role="application"
             ariaLabel="Bar chart"
