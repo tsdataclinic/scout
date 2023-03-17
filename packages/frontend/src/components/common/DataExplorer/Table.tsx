@@ -44,6 +44,7 @@ function BaseTable(
       fields.map(field => ({
         field: field.id,
         headerName: field.displayName,
+        resizable: true,
       })),
     [fields],
   );

@@ -15,13 +15,16 @@ const VIZ_OPTIONS: ReadonlyArray<SelectOption<DX.VizType>> = [
     value: 'table',
   },
   {
-    displayValue: 'Histogram',
-    value: 'histogram',
+    displayValue: 'Bar Chart',
+    value: 'bars',
   },
+  // TODO: add scatterplot back once it's ready
+  /*
   {
     displayValue: 'Scatterplot',
     value: 'scatterplot',
   },
+  */
   {
     displayValue: 'Map',
     value: 'map',
@@ -59,12 +62,16 @@ export default function VisualizationExplorer({ dataset }: Props): JSX.Element {
       switch (selectedViz) {
         case 'table':
           return <DX.Table dataframe={dataframe} />;
-        case 'histogram':
+        case 'bars':
           return <DX.BarChart dataframe={dataframe} />;
         case 'scatterplot':
-          return <div>scatterplot</div>;
+          return (
+            <p>
+              This visualization is under construction and not yet available.
+            </p>
+          );
         case 'map':
-          return <div>map</div>;
+          return <DX.MapViz dataframe={dataframe} />;
         default:
           return assertUnreachable(selectedViz);
       }
@@ -76,9 +83,9 @@ export default function VisualizationExplorer({ dataset }: Props): JSX.Element {
   };
 
   return (
-    <div>
+    <div className="h-full">
       {dataframe ? (
-        <div className="space-y-4">
+        <div className="space-y-4 h-full">
           <Select
             options={VIZ_OPTIONS}
             value={selectedViz}
