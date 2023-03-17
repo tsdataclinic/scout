@@ -9,7 +9,7 @@ export default function ViewOnOpenPortal({ permalink }) {
       rel="noopener noreferrer"
       href={permalink}
     >
-      <button type="button">
+      <button type="button" className="primary-button">
         View on Open Data&nbsp;
         <FontAwesomeIcon icon={faExternalLinkAlt} />
       </button>

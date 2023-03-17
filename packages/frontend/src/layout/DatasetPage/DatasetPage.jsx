@@ -107,7 +107,7 @@ export default function DatasetPage() {
             html={dataset?.description}
           />
           {dataset ? (
-            <div css={{ marginTop: 8 }}>
+            <div className="mt-2">
               <AddToCollectionButton datasetId={dataset.id} />
             </div>
           ) : null}
