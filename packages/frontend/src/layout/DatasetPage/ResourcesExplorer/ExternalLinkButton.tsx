@@ -15,16 +15,18 @@ export default function ExternalLinkButton({
   const icon = iconType === 'search' ? faSearch : faExternalLinkAlt;
 
   return (
-    <a target="_blank" rel="noopener noreferrer" href={href}>
-      <button
-        className="github-result-row-header__external-link-btn"
-        type="button"
-      >
-        <span className="github-result-row-header__external-link-text">
-          {label}
-        </span>
-        <FontAwesomeIcon icon={icon} />
-      </button>
-    </a>
+    <div>
+      <a target="_blank" rel="noopener noreferrer" href={href}>
+        <button
+          className="primary-button github-result-row-header__external-link-btn"
+          type="button"
+        >
+          <span className="github-result-row-header__external-link-text">
+            {label}
+          </span>
+          <FontAwesomeIcon icon={icon} />
+        </button>
+      </a>
+    </div>
   );
 }

@@ -50,19 +50,19 @@ export default function GithubResultGroup({
   }
 
   return (
-    <div className="github-result-group">
+    <div className="github-result-group space-y-3">
       <p className="github-result-group__header-label">
         {resultTypeToLabel(resultType)}
       </p>
       {resultType === 'CODE' && githubAuthToken === undefined ? (
-        <>
+        <div className="space-y-3">
           <div>Searching for code examples requires GitHub authentication</div>
           <ExternalLinkButton
             href={getGithubRequestAuthURL()}
             iconType="external"
             label="Login to GitHub"
           />
-        </>
+        </div>
       ) : (
         renderRows()
       )}

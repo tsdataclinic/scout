@@ -14,7 +14,7 @@ export default function ResourcesExplorer({ datasetId }: Props): JSX.Element {
   const codeResults = useGithubCodeSearch(datasetId);
 
   return (
-    <div className="resources-explorer">
+    <div className="resources-explorer space-y-4">
       <p>Find code examples on GitHub</p>
       <GithubResultGroup
         datasetId={datasetId}

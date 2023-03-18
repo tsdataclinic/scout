@@ -122,10 +122,10 @@ export default function CollectionPage() {
             {createdAt ? formatDate(new Date(createdAt)) : 'Unknown'}
           </p>
         </section>
-        <div>
+        <div className="space-y-1">
           <h3>Share this collection:</h3>
           <p className="dataset-url">{shareableURL} </p>
-          <button type="button" onClick={setCopied}>
+          <button className="px-2 py-1" type="button" onClick={setCopied}>
             Copy link
           </button>
           <span>{isCopied ? 'Copied!' : ' '} </span>
