@@ -5,6 +5,7 @@ import socrataResultsToDataframe from './socrataResultsToDataframe';
 import type { Dataset, ParsedCSVResults } from './socrataResultsToDataframe';
 import * as DX from '../../../components/common/DataExplorer';
 import Select, { type SelectOption } from '../../../components/ui/Select';
+import LoadingIndicator from '../../../components/ui/LoadingIndicator';
 import assertUnreachable from '../../../utils/assertUnreachable';
 
 type Props = { dataset: Dataset };
@@ -77,13 +78,16 @@ export default function VisualizationExplorer({ dataset }: Props): JSX.Element {
       }
     }
 
-    return (
-      <p>{isLoading ? 'Loading...' : 'An error occurred loading the data'}</p>
-    );
+    return <p>An error occurred loading the data</p>;
   };
 
   return (
     <div className="h-full">
+      {isLoading ? (
+        <div className="mt-4">
+          <LoadingIndicator />
+        </div>
+      ) : null}
       {dataframe ? (
         <div className="space-y-4 h-full">
           <Select

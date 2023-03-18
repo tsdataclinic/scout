@@ -182,7 +182,7 @@ export default function DatasetPage() {
         </div>
         {activeTab === 'joins' &&
           (!dataset || dataset.datasetColumns.length > 0 ? (
-            <>
+            <div className="space-y-3">
               <p className="intro">
                 Find datasets that share a column with the current dataset.
               </p>
@@ -191,7 +191,7 @@ export default function DatasetPage() {
                 current dataset to add additional details or bring in context
               </p>
               <ColumnMatchTable global={globalSearch} dataset={dataset} />
-            </>
+            </div>
           ) : (
             renderNotFound(dataset, parentDataset)
           ))}

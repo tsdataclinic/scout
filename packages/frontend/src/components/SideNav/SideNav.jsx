@@ -22,10 +22,9 @@ export default function SideNav() {
   const { login, logout, isFakeAuthModalOpen, onFakeAuthModalDismiss } =
     useDataClinicAuth();
   const { isAuthenticated, user } = useCurrentUser();
-  const onCollectionTabDismiss = useCallback(
-    () => setShowCollectionTab(false),
-    [],
-  );
+  const onCollectionTabDismiss = useCallback(() => {
+    setShowCollectionTab(false);
+  }, []);
 
   return (
     <nav className="side-nav">
@@ -52,7 +51,10 @@ export default function SideNav() {
       </NavLink>
       <div className="collections-button" style={{ position: 'relative' }}>
         <button
-          onClick={() => setShowCollectionTab(!showCollectionTab)}
+          onClick={e => {
+            e.stopPropagation();
+            setShowCollectionTab(prev => !prev);
+          }}
           type="button"
           className="header-button"
         >
