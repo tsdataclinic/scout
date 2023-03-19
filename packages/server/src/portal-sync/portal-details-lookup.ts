@@ -787,7 +787,7 @@ export const PortalExternalInfo = {
   'data.ct.gov': {
     logo:
       'https://data.ct.gov/api/assets/58B1625E-0B18-457A-A5B6-07287B76E1B3?Data_Portal.png',
-    name: 'Conneticut',
+    name: 'Connecticut',
     adminLevel: 'state',
     abbreviation: 'CON',
   },
