@@ -37,7 +37,7 @@ The available discussion sections are:
 
 ## 4. Contributing to the codebase
 
-If you'd like to contribute to the codebase then you will first need to [set up the project locally](https://github.com/tsdataclinic/scout#2-developing). Once you have the project running on your local machine then you are ready to start developing.
+If you'd like to contribute to the codebase then you should fork the repo and [set up the project locally](https://github.com/tsdataclinic/scout#2-developing). Once you have the project running on your local machine then you are ready to start developing.
 
 If you'd like some ideas of where to start then we recommend looking at any issues labeled [good first issue](https://github.com/tsdataclinic/scout/labels/good%20first%20issue) or [bug](https://github.com/tsdataclinic/scout/labels/bug).
 
@@ -51,8 +51,8 @@ At the moment there are no automated tests to run. This will be updated once aut
 
 ## 6. Submitting pull requests
 
-All development should be done in a separate branch, and each pull request should represent a single discrete feature. Well-constrained updates rather than all-encompassing changes are easier to review and much more likely to be incorporated into the codebase.
+Fork the repo and submit a pull request for each single discrete feature. Well-constrained updates rather than all-encompassing changes are easier to review and more likely to be incorporated into the codebase.
 
 Make sure your pull request is configured to merge to the `develop` branch.
 
-Add @jps327 as the reviewer and please make sure you fill out all sections of the pull request template. Any pull requests with missing information will not be accepted.
+Add @jps327 as the reviewer and please make sure you fill out all sections of the pull request template.
