@@ -51,6 +51,7 @@ export default function VisualizationExplorer({ dataset }: Props): JSX.Element {
         name: 'Empty Dataframe',
         data: [],
         fields: [],
+        city: 'empty-city',
       };
     },
     {

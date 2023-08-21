@@ -21,6 +21,9 @@ export type Dataframe = {
 
   /** The header fields of this dataframe */
   fields: readonly Field[];
+
+  /** city fields of this dataframe */
+  city: string;
 };
 
 export type VizType = 'table' | 'bars' | 'scatterplot' | 'map';

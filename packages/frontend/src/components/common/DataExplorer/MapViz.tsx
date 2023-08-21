@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl, { GeoJSONSourceRaw } from 'mapbox-gl';
 import GeoJSON from 'geojson';
+import coordinate from './coordinates.json';
 import type { Dataframe, DataframeRow, Field } from './types';
 
 type Props = {
@@ -47,7 +48,8 @@ const LATITUDE_FIELD_POSSIBILITIES = ['latitude', 'lat', 'y'];
 const LONGITUDE_FIELD_POSSIBILITIES = ['longitude', 'long', 'x'];
 
 export function MapViz({ dataframe }: Props): JSX.Element {
-  const { data, fields } = dataframe;
+  const { data, fields, city} = dataframe;
+  console.log(dataframe.city);
   const mapRef = React.useRef<mapboxgl.Map | null>(null);
   const tooltipRef = React.useRef(
     new mapboxgl.Popup({
@@ -101,7 +103,7 @@ export function MapViz({ dataframe }: Props): JSX.Element {
         accessToken: process.env.REACT_APP_SCOUT_MAPBOX_API_KEY ?? '',
         container: 'map',
         style: 'mapbox://styles/mapbox/light-v11',
-        center: [-73.95, 40.72],
+        center: coordinate[city as keyof typeof coordinate],
         zoom: 10,
         bearing: 0,
         pitch: 0,
@@ -155,7 +157,7 @@ export function MapViz({ dataframe }: Props): JSX.Element {
         });
       });
     }
-  }, [geojson, fields]);
+  }, [geojson, fields, city]);
 
   return (
     <>
