@@ -49,7 +49,6 @@ const LONGITUDE_FIELD_POSSIBILITIES = ['longitude', 'long', 'x'];
 
 export function MapViz({ dataframe }: Props): JSX.Element {
   const { data, fields, city} = dataframe;
-  console.log(dataframe.city);
   const mapRef = React.useRef<mapboxgl.Map | null>(null);
   const tooltipRef = React.useRef(
     new mapboxgl.Popup({
