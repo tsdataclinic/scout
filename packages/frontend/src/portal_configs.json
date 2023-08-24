@@ -5,7 +5,8 @@
     "logo": "https://opendata.cityofnewyork.us/wp-content/themes/opendata-wp/assets/img/nyc-open-data-logo.svg",
     "socrataDomain": "data.cityofnewyork.us",
     "urlSuffix": "NYC",
-    "adminLevel": "city"
+    "adminLevel": "city",
+    "coordinate": [-73.98, 40.73]
   },
   "NYS": {
     "prefix": "ny_state",
@@ -13,7 +14,8 @@
     "logo": "https://static-assets.ny.gov/sites/all/themes/ny_gov/images/nygov-logo.png",
     "socrataDomain": "data.ny.gov",
     "urlSuffix": "NYS",
-    "adminLevel": "state"
+    "adminLevel": "state",
+    "coordinate": [-73.98, 40.73]
   },
   "CHI": {
     "prefix": "chicago",
@@ -21,7 +23,8 @@
     "logo": "https://data.cityofchicago.org/api/assets/73F1665C-0FE6-4183-8AD1-E91DB8EFAFA4?7CB02402-8E06-48B0-8C9A-3890182D58C7.png",
     "socrataDomain": "data.cityofchicago.org",
     "urlSuffix": "CHI",
-    "adminLevel": "city"
+    "adminLevel": "city",
+    "coordinate": [-87.62, 41.88]
   },
   "NAS": {
     "prefix": "Nashville",
@@ -29,6 +32,7 @@
     "logo": "https://data.nashville.gov/api/assets/097E3AD5-B563-42CD-8EBB-05635C6E28F8?site-title.png",
     "socrataDomain": "data.nashville.gov",
     "urlSuffix": "NAS",
-    "adminLevel": "city"
+    "adminLevel": "city",
+    "coordinate": [-86.74, 36.19]
   }
 }
