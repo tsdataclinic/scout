@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl, { GeoJSONSourceRaw } from 'mapbox-gl';
 import GeoJSON from 'geojson';
-import coordinate from './coordinates.json';
+import coordinate from '../../../portal_configs.json';
 import type { Dataframe, DataframeRow, Field } from './types';
 
 type Props = {
@@ -102,8 +102,8 @@ export function MapViz({ dataframe }: Props): JSX.Element {
         accessToken: process.env.REACT_APP_SCOUT_MAPBOX_API_KEY ?? '',
         container: 'map',
         style: 'mapbox://styles/mapbox/light-v11',
-        center: coordinate[city as keyof typeof coordinate],
-        zoom: 10,
+        center: city in coordinate ? coordinate[city as keyof typeof coordinate].coordinate as [number, number] : [0, 0],
+        zoom: city in coordinate ? 10: 2,
         bearing: 0,
         pitch: 0,
         pitchWithRotate: false,
