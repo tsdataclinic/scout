@@ -164,5 +164,6 @@ export default function socrataResultsToDataframe(
     id: dataset.id,
     name: dataset.name,
     data: transformedRows,
+    city: dataset.portal.abbreviation,
   };
 }

@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl, { GeoJSONSourceRaw } from 'mapbox-gl';
 import GeoJSON from 'geojson';
+import PortalConfig from '../../../portal_configs.json';
 import type { Dataframe, DataframeRow, Field } from './types';
 
 type Props = {
@@ -47,7 +48,7 @@ const LATITUDE_FIELD_POSSIBILITIES = ['latitude', 'lat', 'y'];
 const LONGITUDE_FIELD_POSSIBILITIES = ['longitude', 'long', 'x'];
 
 export function MapViz({ dataframe }: Props): JSX.Element {
-  const { data, fields } = dataframe;
+  const { data, fields, city} = dataframe;
   const mapRef = React.useRef<mapboxgl.Map | null>(null);
   const tooltipRef = React.useRef(
     new mapboxgl.Popup({
@@ -101,8 +102,14 @@ export function MapViz({ dataframe }: Props): JSX.Element {
         accessToken: process.env.REACT_APP_SCOUT_MAPBOX_API_KEY ?? '',
         container: 'map',
         style: 'mapbox://styles/mapbox/light-v11',
-        center: [-73.95, 40.72],
-        zoom: 10,
+        center:
+          city in PortalConfig
+            ? (PortalConfig[city as keyof typeof PortalConfig].coordinate as [
+              number,
+              number,
+            ])
+            : [0, 0],
+        zoom: city in PortalConfig ? 10 : 2,
         bearing: 0,
         pitch: 0,
         pitchWithRotate: false,
@@ -155,7 +162,7 @@ export function MapViz({ dataframe }: Props): JSX.Element {
         });
       });
     }
-  }, [geojson, fields]);
+  }, [geojson, fields, city]);
 
   return (
     <>

@@ -3,7 +3,7 @@ import { useCallback, useState, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import './SideNav.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faCommentDots } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
 import { ReactComponent as ExploreSVG } from '../../icons/explore.svg';
 import { ReactComponent as CollectionsSVG } from '../../icons/collection.svg';
@@ -81,6 +81,14 @@ export default function SideNav() {
         <DataClinicSVG />
         <h1>About</h1>
       </NavLink>
+      <a
+        href="https://datagather.tsdataclinic.com/published/data-clinic-product-feedback"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <FontAwesomeIcon size="2x" icon={faCommentDots} />
+        <h1>Feedback</h1>
+      </a>
       <div
         role="button"
         className="login"
