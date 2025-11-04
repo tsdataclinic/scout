@@ -1,3 +1,13 @@
+# NOTICE
+
+This repository is no longer maintained by Two Sigma.
+
+We're excited to announce that BetaNYC is now leading future development of Scout!
+
+You can find more information at [https://github.com/BetaNYC/scout](https://github.com/BetaNYC/scout)
+
+The Scout website has moved to [https://scoutopendata.com/](https://scoutopendata.com/)
+
 # Scout
 
 ![Screenshot of Scout](https://scout.tsdataclinic.com/screenshot.png)
@@ -6,7 +16,7 @@ Scout is a data discovery tool for open data portals. It is an open source produ
 
 At the moment, Scout only provides access to open data portals made accessible via the [Socrata API](https://socratadiscovery.docs.apiary.io/#).
 
-[Try it out here](https://scout.tsdataclinic.com).
+[Try it out here](https://scoutopendata.com/).
 
 ## Table of Contents
 
